@@ -1,0 +1,12 @@
+*.o
+*.d
+*.bin
+*.ini
+*.png
+*.asc
+*.map
+__pycache__/
+archive_codes/
+c1_dmc/
+gEcoHydro
+
