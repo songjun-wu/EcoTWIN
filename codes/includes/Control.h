@@ -12,9 +12,9 @@ struct Control{
   double _dx0, _nodata0;
 
   /* Folders */
-  string path_BasinFolder; //folder where basin property maps are located
-  string path_ClimateFolder; //folder where weather maps series are located
-  string path_ResultsFolder; //folder where results will be placed
+  string path_BasinFolder;  //folder where basin property maps are located
+  string path_ClimateFolder;  //folder where weather maps series are located
+  string path_ResultsFolder;  //folder where results will be placed
   /* end of Folders */
 
   /* Settings */ 
@@ -23,12 +23,15 @@ struct Control{
   int Simul_tstep;
   int Clim_input_tstep;
   int Report_interval;
+  int Update_interval;
+  int num_category;  // Number of categories for parameterisation
+  int num_cliamte_zones;  // Number of climate zones
   /* end of Settings */
 
   /* Options */
-  int opt_climate_input_format;  //how is climate inputs orgainsed? 1 = raster; 2 = aggregated binary file (climate_zone file should be specified)
-  int opt_tracking_isotope;  //if enable isotopic tracking?
-  int opt_canopy;  //Which canopy process to use?
+  int opt_climate_input_format;  //How is climate inputs orgainsed? 1 = raster; 2 = aggregated binary file (climate_zone file should be specified)
+  int opt_tracking_isotope;  //Enable isotopic tracking? 0:disabled, 1:enabled
+  int opt_snow;  //Snow accumulation method. 1:Degree day factor method
   /* end of Options */
 
 
@@ -38,60 +41,67 @@ struct Control{
   /* end of Internal varaibles */
 
   /* GIS */
-  string fn__dem;  // surface evelation [m]
-  string fn__fdir;  // flow direction [d8 method]
-  string fn__chnwidth;  // channel width [m]
-  string fn__chndepth;  // channel depth [m]
-  string fn__chnlength;  // channel length [m]
-  string fn__depth1;  // depth of soil layer 1 [m]
-  string fn__depth2;  // depth of soil layer 2 [m]
-  string fn__depth3;  // depth of soil layer 3 [m]
+  string fn__dem;  // Surface evelation [m]
+  string fn__fdir;  // Flow direction [d8 method]
+  string fn__chnwidth;  // Channel width [m]
+  string fn__chndepth;  // Channel depth [m]
+  string fn__chnlength;  // Channel length [m]
+  string fn__depth1;  // Depth of soil layer 1 [m]
+  string fn__depth2;  // Depth of soil layer 2 [m]
+  string fn__depth3;  // Depth of soil layer 3 [m]
   string fn__Gauge_to_Report;  // Gauges that require outputs
   /* end of GIS */ 
 
   /* Climate */
-  string fn__P;  // precipitation [m]
-  string fn__Ta;  // air temperature [degree C]
-  string fn__Tmin;  // minimum air temperature [degree C]
-  string fn__Tmax;  // maximum air temperature [degree C]
-  string fn__RH;  // relative humidity [decimal]
-  string fn__LAI;  // leaf area index [decimal]
+  string fn__P;  // Precipitation [m]
+  string fn__Ta;  // Air temperature [degree C]
+  string fn__Tmin;  // Minimum air temperature [degree C]
+  string fn__Tmax;  // Maximum air temperature [degree C]
+  string fn__RH;  // Relative humidity [decimal]
+  string fn__LAI;  // Leaf area index [decimal]
   /* end of Climate */
 
   /* Storages */
-  string fn__I;  // interception/canopy storage [m]
-  string fn__snow;  // snow depth in [m]
-  string fn__theta1;  // soil moisture in layer 1 [decimal]
-  string fn__theta2;  // soil moisture in layer 2 [decimal]
-  string fn__theta3;  // soil moisture in layer 3 [decimal]
+  string fn__I;  // Interception/canopy storage [m]
+  string fn__snow;  // Snow depth in [m]
+  string fn__theta1;  // Soil moisture in layer 1 [decimal]
+  string fn__theta2;  // Soil moisture in layer 2 [decimal]
+  string fn__theta3;  // Soil moisture in layer 3 [decimal]
   /* end of Storages */
   
   /* Fluxes */
   /* end of Fluxes */
 
+  /* Parameters */
+  string fn__snow_rain_thre;  // The temperature  [m]
+  string fn__deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
+  string fn__deg_day_max;  // Maximum Degree-day factor [m-1 degreeC-1]
+  string fn__deg_day_increase;  // Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]
+  /* end of Parameters */
+
   /* Report */
   // 1: report time series at gauging stations; 2: report maps
-  int report__I;  // report interception/canopy storage [m]
-  int report__snow;  // report snow depth in [m]
-  int report__theta1;  // report soil moisture in layer 1 [decimal]
-  int report__theta2;  // report soil moisture in layer 2 [decimal]
-  int report__theta3;  // report soil moisture in layer 3 [decimal]
-  int report__D;  // report interception [m]
-  int report__Th;  // report throughfall [m]
-  int report__snowmelt;  // report snow melt [m]
-  int report__Qs;  // report overland flow [m]
-  int report__infilt;  // report inflitration into soil layer 1 [m]
-  int report__preferential2;  // report preferential flow to layer 2 [m]
-  int report__preferential3;  // report preferential flow to layer 3 [m]
-  int report__Perc1;  // report percolation into layer 2 [m]
-  int report__Perc2;  // report percolation into layer 3 [m]
-  int report__Perc3;  // report percolation into gw reservior [m]
-  int report__Ei;  // report canopy evaporation [m]
-  int report__Es;  // report soil evaporation [m]
-  int report__Tr;  // report total transpiration in three layers [m]
-  int report__Tr1;  // report transpiration in layer 1 [m]
-  int report__Tr2;  // report transpiration in layer 2 [m]
-  int report__Tr3;  // report transpiration in layer 3 [m]
+  int report__I;  // report Interception/canopy storage [m]
+  int report__snow;  // report Snow depth in [m]
+  int report__theta1;  // report Soil moisture in layer 1 [decimal]
+  int report__theta2;  // report Soil moisture in layer 2 [decimal]
+  int report__theta3;  // report Soil moisture in layer 3 [decimal]
+  int report__D;  // report Interception [m]
+  int report__Th;  // report Throughfall [m]
+  int report__snowmelt;  // report Snow melt [m]
+  int report__Qs;  // report Overland flow [m]
+  int report__infilt;  // report Inflitration into soil layer 1 [m]
+  int report__preferential2;  // report Preferential flow to layer 2 [m]
+  int report__preferential3;  // report Preferential flow to layer 3 [m]
+  int report__Perc1;  // report Percolation into layer 2 [m]
+  int report__Perc2;  // report Percolation into layer 3 [m]
+  int report__Perc3;  // report Percolation into gw reservior [m]
+  int report__Ei;  // report Canopy evaporation [m]
+  int report__Es;  // report Soil evaporation [m]
+  int report__Tr;  // report Total transpiration in three layers [m]
+  int report__Tr1;  // report Transpiration in layer 1 [m]
+  int report__Tr2;  // report Transpiration in layer 2 [m]
+  int report__Tr3;  // report Transpiration in layer 3 [m]
   /* end of Report */
 
   public:
@@ -102,6 +112,7 @@ struct Control{
 
   int getAsciiHeader(string fname);
   int ReadConfigFile(string confilename = "config.ini");
+  
 
   template<class T> static T string_as_T( const string& s);
   template<class T> void readInto(T &value, string key, vector<string> lines);

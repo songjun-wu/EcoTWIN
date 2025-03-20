@@ -15,7 +15,6 @@ class Basin {
   /* Properties */
   int _rowNum, _colNum;
   double _dx, _nodata;
-  
   /* end of Properties */
 
   public:
@@ -81,9 +80,6 @@ class Basin {
   int reportTS(const grid *input, string varname, string filepath);
 
 
-
-
-  
 
 };
 

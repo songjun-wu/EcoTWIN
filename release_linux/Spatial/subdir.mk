@@ -4,21 +4,21 @@
 
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
+../codes/Spatial/grid.cpp \
 ../codes/Spatial/sortGridLDD.cpp \
 ../codes/Spatial/sortTSmask.cpp \
-../codes/Spatial/grid.cpp \
 
 
 OBJS += \
+./Spatial/grid.o \
 ./Spatial/sortGridLDD.o \
 ./Spatial/sortTSmask.o \
-./Spatial/grid.o \
 
 
 CPP_DEPS += \
+./Spatial/grid.d \
 ./Spatial/sortGridLDD.d \
 ./Spatial/sortTSmask.d \
-./Spatial/grid.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

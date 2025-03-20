@@ -5,10 +5,9 @@ import GIS_tools
 import prep_tools
 
 home_dir = '/home/wusongj/GEM/c1_dmc/'
-
 nan_value = -9999
 
-"""
+""""""
 # sort DEM and flow direction
 dem = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/DEM.map'), np.nan)
 ldd = GIS_tools.pcraster_ldd_to_d8(pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/ldd.map'), np.nan))
@@ -42,14 +41,14 @@ prep_tools.saveToASCII(unit_soil*0.2, 'depth2', home_dir+'spatial/', 'float64', 
 prep_tools.saveToASCII(unit_soil*0.6, 'depth3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
 GaugetoReport = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/Tsmask.map'), np.nan)
-prep_tools.saveToASCII(GaugetoReport, 'GaugetoReport', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(GaugetoReport, 'Gauge_to_Report', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
 prep_tools.saveToASCII(unit_soil*0.0, 'I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.0, 'snow', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.3, 'theta1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.3, 'theta2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.3, 'theta3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-"""
+
 
 df = pd.read_csv('/home/wusongj/dmc/forHydrology/Climate/climate_interpolated.csv')
 np.repeat(df['precip_3015'], 30*22).to_numpy().tofile(home_dir+'climate/P.bin')

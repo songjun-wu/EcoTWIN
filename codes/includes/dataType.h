@@ -14,6 +14,17 @@ struct grid{
     ~grid();
 };
 
+struct grid_3d{
+    int n_category, nrow, ncol;
+    double ***matrix;
+    //ctor from raster ascii file
+    grid_3d(int num_category, int rowNum, int colNum);
+    //dtor
+    ~grid_3d();
+};
+
+
+
 struct sortedGrid{
     int numCells;
     int zone_climate;

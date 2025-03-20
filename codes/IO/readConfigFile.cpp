@@ -28,12 +28,15 @@ int Control::ReadConfigFile(string fname){
   readInto(Simul_tstep, "Simul_tstep", lines);
   readInto(Clim_input_tstep, "Clim_input_tstep", lines);
   readInto(Report_interval, "Report_interval", lines);
+  readInto(Update_interval, "Update_interval", lines);
+  readInto(num_cliamte_zones, "num_cliamte_zones", lines);
+  readInto(num_category, "num_category", lines);
   /* end of Settings */
 
   /* Options */
   readInto(opt_climate_input_format, "opt_climate_input_format", lines);
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
-  readInto(opt_canopy, "opt_canopy", lines);
+  readInto(opt_snow, "opt_snow", lines);
   /* end of Options */
 
   /* GIS */
@@ -71,6 +74,10 @@ int Control::ReadConfigFile(string fname){
 
 
   /* Parameters */
+  readInto(fn__snow_rain_thre, "snow_rain_threshold", lines);
+  readInto(fn__deg_day_min, "deg_day_min", lines);
+  readInto(fn__deg_day_max, "deg_day_max", lines);
+  readInto(fn__deg_day_increase, "deg_day_increase", lines);
   /* end of Parameters */
 
   /* Report */

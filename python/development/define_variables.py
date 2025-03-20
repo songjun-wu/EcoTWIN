@@ -6,14 +6,18 @@ from develop_tools import *
 
 
 
-def includes(fname, signs, datas):
+def includes(fname, signs, datas, max_category):
     for j in range(len(signs)):
         sign = signs[j]
-        data = datas[j] 
+        data = datas[j]
+        content = []
+        if sign == 'Parameters':
+            for kk in range(len(data)):
+                content.append('  vector<double> ' + data[kk][0][1:] + ';\n')
         with open(fname, 'r') as f:
             lines = f.readlines()
             start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')
-            content = []
+            
             keys, grouped_data = group_text(data)
             for key in keys:
                 for i in range(len(grouped_data[key])):
@@ -131,7 +135,7 @@ def destructor(fname, signs, datas):
                 for i in range(len(grouped_data[key])):                  
                     if grouped_data[key][i][4] == 'spatial_TS':
                         content.append('  if (+if_'+grouped_data[key][i][0]+'.is_open())  if_'+grouped_data[key][i][0]+'.close();\n')  
-                    if grouped_data[key][i][3] == 'grid':
+                    if grouped_data[key][i][3] == 'grid' or grouped_data[key][i][3] == 'grid_param':
                         content.append('  if('+grouped_data[key][i][0]+') delete '+grouped_data[key][i][0]+';\n')               
             content = lines[:start] + content + lines[end:]
         with open(fname, 'w') as f:
@@ -141,20 +145,24 @@ def destructor(fname, signs, datas):
 def constructor(fname, signs, datas):
     for j in range(len(signs)):
         sign = signs[j]
-        data = datas[j] 
+        data = datas[j]
+        
+        content = []
+        
+
         with open(fname, 'r') as f:
             lines = f.readlines()
             start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')
-            content = []
+            
             keys, grouped_data = group_text(data)
             for key in keys:
                 text = []
                 for i in range(len(grouped_data[key])):                  
-                    if grouped_data[key][i][4] == 'new' or grouped_data[key][i][4] == 'spatial_TS':
+                    if grouped_data[key][i][4] == 'new' or grouped_data[key][i][4] == 'spatial_TS' or grouped_data[key][i][4] == 'spatial_param':
                         text.append('  '+grouped_data[key][i][0]+' = new grid(_rowNum, _colNum);\n')  
                     if grouped_data[key][i][4] == 'spatial':
                         text.append('  '+grouped_data[key][i][0]+' = new grid(ctrl.path_BasinFolder + ctrl.fn_'+grouped_data[key][i][0]+', _rowNum, _colNum);\n')  
-                content.append(if_condition_build(key, text))               
+                content.append(if_condition_build(key, text))
             content = lines[:start] + content + lines[end:]
         with open(fname, 'w') as f:
             f.writelines(content)  
@@ -167,8 +175,16 @@ def control_includes(fname, options, signs, datas, reports):
         start, end = locate_text(lines, '/* Options */', '/* end of Options */')
 
         content = []
-        for i in range(len(options)):
-            content.append('  int ' + options[i][0] + ';  //' + options[i][1] + '\n')
+
+        opt_list = []
+        for key in options.keys():
+            item = options.get(key)
+            if item['key'] is None:
+                continue
+            if not item['key'] in opt_list:
+                opt_list.append(item['key'])
+                content.append('  int ' + item['key'] + ';  //' + item['general_description'] + '\n')
+
         content = lines[:start] + content + lines[end:]
     with open(fname, 'w') as f:
             f.writelines(content)

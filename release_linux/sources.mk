@@ -24,9 +24,9 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-Constructors \
 Destructors \
-Control \
 Spatial \
 Atmosphere \
+Constructors \
+IO \
 . \

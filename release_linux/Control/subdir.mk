@@ -4,20 +4,20 @@
 
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
-../codes/Control/readConfigFile.cpp \
 ../codes/Control/IO_function.cpp \
+../codes/Control/readConfigFile.cpp \
 ../codes/Control/report.cpp \
 
 
 OBJS += \
-./Control/readConfigFile.o \
 ./Control/IO_function.o \
+./Control/readConfigFile.o \
 ./Control/report.o \
 
 
 CPP_DEPS += \
-./Control/readConfigFile.d \
 ./Control/IO_function.d \
+./Control/readConfigFile.d \
 ./Control/report.d \
 
 
