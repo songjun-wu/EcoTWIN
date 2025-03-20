@@ -7,7 +7,7 @@ import prep_tools
 home_dir = '/home/wusongj/GEM/c1_dmc/'
 nan_value = -9999
 
-""""""
+
 # sort DEM and flow direction
 dem = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/DEM.map'), np.nan)
 ldd = GIS_tools.pcraster_ldd_to_d8(pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/ldd.map'), np.nan))
@@ -31,7 +31,7 @@ prep_tools.saveToASCII(fdir, 'fdir', home_dir+'spatial/', 'float64', mask, xllco
 
 chanlength = unit_soil * 500
 chandepth = chanwidth / 3
-
+"""
 prep_tools.saveToASCII(chanwidth, 'chnwidth', home_dir+'spatial/', 'float64', chanmask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(chandepth, 'chndepth', home_dir+'spatial/', 'float64', chanmask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(chanlength, 'chnlength', home_dir+'spatial/', 'float64', chanmask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
@@ -61,6 +61,12 @@ np.repeat(df['Tmax_3015'], 30*22).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['Tmax_3015'], 30*22).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['lai_2'], 30*22).to_numpy().tofile(home_dir+'climate/LAI.bin')
 np.repeat(df['d2H_14dMV_3015'], 30*22).to_numpy().tofile(home_dir+'climate/d2h_P.bin')
+"""
+
+p_cat_list = [1, 0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.06, 0.04]
+for i in range(len(p_cat_list)):
+    p_cat = p_cat_list[i]
+    prep_tools.saveToASCII(unit_soil*p_cat, 'category_'+str(i), home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
 
 

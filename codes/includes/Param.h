@@ -38,7 +38,7 @@ class Param {
 
   // Functions
   int ReadParamFile(Control &ctrl, string fname = "param.ini");  // Read parameters into array
-
+  int Parameterisation(Control &ctrl); // Assign parameter values to each grid
 
   void readIntoParam(vector<double>& param_arr, string key, vector<string> lines);
 

@@ -18,7 +18,7 @@ class Opt:
 
 
 class setting:
-    max_category = 30
+    max_category = 10
 
 
     

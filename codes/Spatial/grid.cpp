@@ -36,9 +36,19 @@ grid::grid(int rowNum, int colNum){
   }
   for (int i=0; i<rowNum; i++){
     for (int j=0; j<colNum; j++){
+      this->matrix[i][j] = 0;
+    }
+  }
+}
+
+
+int grid::reset(){
+  for (int i=0; i<nrow; i++){
+    for (int j=0; j<ncol; j++){
       matrix[i][j] = 0;
     }
   }
+  return EXIT_SUCCESS;
 }
 
 grid::~grid(){
@@ -58,13 +68,12 @@ grid_3d::~grid_3d(){
 }
 
 
-grid_3d::grid_3d(int num_category, int rowNum, int colNum){
+grid_3d::grid_3d(string fname, int num_category, int rowNum, int colNum){
   ifstream input;
   string tags;
   n_category = num_category;
   nrow = rowNum;
   ncol = colNum;
-  string fname = "category_";
   matrix = new double**[rowNum];
 
   for (int k=0; k<num_category; k++){
@@ -75,10 +84,9 @@ grid_3d::grid_3d(int num_category, int rowNum, int colNum){
 }
 
   for (int k=0; k<num_category; k++){
-  cout<<(fname+"_"+to_string(k)+".asc").c_str()<<endl;
   input.open((fname+to_string(k)+".asc").c_str());
   if (!input.good()){
-    throw runtime_error(string("file not found: ") + (fname+"_"+to_string(k)+".asc").c_str());
+    throw runtime_error(string("file not found: ") + (fname+to_string(k)+".asc").c_str());
   }
   for (int i=0; i<6; i++){
     getline(input, tags);

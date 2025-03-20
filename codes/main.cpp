@@ -19,23 +19,35 @@ int main(){
   
   while (oControl->current_ts < oControl->Simul_end){
 
+
+    
     oBasin->report(*oControl); // report all basin outputs
-    oAtmosphere->read_climate(*oControl);
+
+
+
+
+    // Update timesteps
     oControl->current_ts += oControl->Simul_tstep;
+    advance_climate += oControl->Simul_tstep;
+    advance_landuse += oControl->Simul_tstep;
+
+    // Update climate inputs
+    if (advance_climate >= oControl->Clim_input_tstep) {
+      oAtmosphere->read_climate(*oControl);
+      advance_climate = 0;
+    }
+    // Update land use inputs
+    if (advance_landuse >= oControl->Clim_input_tstep) {
+      oParam->Parameterisation(*oControl); // Parameterisation
+      advance_landuse = 0;
   }
 
-  advance_climate += oControl->Simul_tstep;
-  advance_landuse += oControl->Simul_tstep;
-  // Update climate inputs
-  if (advance_climate >= oControl->Clim_input_tstep) {
-    oAtmosphere->read_climate(*oControl);
-    advance_climate = 0;
   }
-  // Update land use inputs
-  if (advance_landuse >= oControl->Clim_input_tstep) {
-    // do the parameterisation again; todo
-    advance_landuse = 0;
-  }
+
+
+
+
+  
 
   //delete oControl;
   delete oBasin;

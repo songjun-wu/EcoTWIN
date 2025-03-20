@@ -12,13 +12,15 @@ struct grid{
     grid(string fname, int rowNum, int colNum);
     //dtor
     ~grid();
+
+    int reset();
 };
 
 struct grid_3d{
     int n_category, nrow, ncol;
     double ***matrix;
     //ctor from raster ascii file
-    grid_3d(int num_category, int rowNum, int colNum);
+    grid_3d(string fname, int num_category, int rowNum, int colNum);
     //dtor
     ~grid_3d();
 };

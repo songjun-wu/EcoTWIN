@@ -10,7 +10,7 @@ os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development
 os.system('python3 develop.py')
 
 os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/preprocessing')
-#os.system('python3 test_run.py')
+os.system('python3 test_run.py')
 
 GEM_tools.set_env(Path)
 GEM_tools.set_config(Path)

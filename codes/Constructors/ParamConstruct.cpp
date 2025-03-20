@@ -15,8 +15,12 @@ Param::Param(Control &ctrl){
     _deg_day_increase = new grid(_rowNum, _colNum);
   }
   /* end of Parameters */
+
+  // Read parameter values from param.ini
   ReadParamFile(ctrl, fname);
 
-  param_category = new grid_3d(ctrl.num_category ,_rowNum, _colNum);
-
+  param_category = new grid_3d(ctrl.path_BasinFolder+"category_", ctrl.num_category ,_rowNum, _colNum);
+  
+  // Assign parameter spatially
+  Parameterisation(ctrl);
 }

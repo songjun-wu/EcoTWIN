@@ -2,6 +2,7 @@ import os
 import config_build
 import linux_build
 import define_variables
+import parameterisation_build
 import numpy as np
 from def_develop import *
 
@@ -131,6 +132,8 @@ define_variables.includes(fname=path + 'includes/Param.h', signs=signs_param, da
 define_variables.constructor(fname=path + 'Constructors/ParamConstruct.cpp', signs=signs_param, datas=datas_param)
 config_build.read_param(fname=path+'IO/readParamFile.cpp', parameters=Parameters)
 define_variables.destructor(fname=path + 'Destructors/ParamDestruct.cpp', signs=signs_param, datas=datas_param)
+parameterisation_build.parameterisation_build(fname=path + 'Spatial/parameterisation.cpp', parameters=Parameters)
+
 
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)
