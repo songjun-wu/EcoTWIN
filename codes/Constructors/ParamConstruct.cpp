@@ -1,10 +1,10 @@
 #include "Param.h"
 
 Param::Param(Control &ctrl){
-  _rowNum = ctrl._rowNum0;
-  _colNum = ctrl._colNum0;
-  _dx = ctrl._dx0;
-  _nodata = ctrl._nodata0;
+  _rowNum = ctrl._rowNum;
+  _colNum = ctrl._colNum;
+  _dx = ctrl._dx;
+  _nodata = ctrl._nodata;
 
   string fname = "param.ini";
   /* Parameters */

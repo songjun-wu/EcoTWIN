@@ -41,13 +41,13 @@ int Control::ReadConfigFile(string fname){
 
   /* GIS */
   readInto(fn__dem, "Ground_elevation", lines);
-  readInto(fn__fdir, "flow_direction", lines);
   readInto(fn__chnwidth, "Channel_width", lines);
   readInto(fn__chndepth, "Channel_depth", lines);
   readInto(fn__chnlength, "Channel_length", lines);
   readInto(fn__depth1, "Soil_depth1", lines);
   readInto(fn__depth2, "Soil_depth2", lines);
   readInto(fn__depth3, "Soil_depth3", lines);
+  readInto(fn__fdir, "flow_direction", lines);
   readInto(fn__Gauge_to_Report, "Gauge_mask", lines);
   /* end of GIS */
 

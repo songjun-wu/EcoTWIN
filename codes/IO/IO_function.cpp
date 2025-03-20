@@ -9,18 +9,18 @@ int Control::getAsciiHeader(string fname){
     throw runtime_error(string("file not found: ") + fname.c_str());
   }
   input >> tags;
-  input >> _colNum0;
+  input >> _colNum;
   input >> tags;
-  input >> _rowNum0;
+  input >> _rowNum;
 
   for (int i=0; i<3; i++){
     getline(input, tags);
   }
 
   input >> tags;
-  input >> _dx0;
+  input >> _dx;
   input >> tags;
-  input >> _nodata0;
+  input >> _nodata;
 
   input.close();
   return EXIT_SUCCESS;

@@ -1,7 +1,7 @@
 #ifndef Atmosphere_H_
 #define Atmosphere_H_
 
-#include "Basin.h"
+#include "Param.h"
 
 #include <cmath>
 #include <iostream>
@@ -23,23 +23,23 @@ class Atmosphere {
   grid *_climzones; // climate zones should corresponds to the number of columns for climate inputs
 
   /* Climate */
-  grid *_P;  // precipitation [m]
-  ifstream if__P;  // precipitation [m]
-  grid *_Ta;  // air temperature [degree C]
-  ifstream if__Ta;  // air temperature [degree C]
-  grid *_Tmin;  // minimum air temperature [degree C]
-  ifstream if__Tmin;  // minimum air temperature [degree C]
-  grid *_Tmax;  // maximum air temperature [degree C]
-  ifstream if__Tmax;  // maximum air temperature [degree C]
-  grid *_RH;  // relative humidity [decimal]
-  ifstream if__RH;  // relative humidity [decimal]
-  grid *_LAI;  // leaf area index [decimal]
-  ifstream if__LAI;  // leaf area index [decimal]
+  grid *_P;  // Precipitation [m]
+  ifstream if__P;  // Precipitation [m]
+  grid *_Ta;  // Air temperature [degree C]
+  ifstream if__Ta;  // Air temperature [degree C]
+  grid *_Tmin;  // Minimum air temperature [degree C]
+  ifstream if__Tmin;  // Minimum air temperature [degree C]
+  grid *_Tmax;  // Maximum air temperature [degree C]
+  ifstream if__Tmax;  // Maximum air temperature [degree C]
+  grid *_RH;  // Relative humidity [decimal]
+  ifstream if__RH;  // Relative humidity [decimal]
+  grid *_LAI;  // Leaf area index [decimal]
+  ifstream if__LAI;  // Leaf area index [decimal]
   /* end of Climate */
 
 
   
-  Atmosphere(Control &ctrl, Basin &Bsn);  // constrcuctor of Basin
+  Atmosphere(Control &ctrl);  // constrcuctor of Basin
   //dtor
   ~Atmosphere();  // destrcuctor of Basin
 

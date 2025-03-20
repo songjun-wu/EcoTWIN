@@ -7,18 +7,21 @@ CPP_SRCS += \
 ../codes/Destructors/AtmosphereDestruct.cpp \
 ../codes/Destructors/BasinDestruct.cpp \
 ../codes/Destructors/ParamDestruct.cpp \
+../codes/Destructors/ControlDestruct.cpp \
 
 
 OBJS += \
 ./Destructors/AtmosphereDestruct.o \
 ./Destructors/BasinDestruct.o \
 ./Destructors/ParamDestruct.o \
+./Destructors/ControlDestruct.o \
 
 
 CPP_DEPS += \
 ./Destructors/AtmosphereDestruct.d \
 ./Destructors/BasinDestruct.d \
 ./Destructors/ParamDestruct.d \
+./Destructors/ControlDestruct.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

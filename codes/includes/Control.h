@@ -1,3 +1,8 @@
+
+#ifndef CONTROL_H_
+#define CONTROL_H_
+
+#include "dataType.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -8,8 +13,8 @@ using namespace std;
 
 struct Control{
 
-  int _rowNum0, _colNum0;
-  double _dx0, _nodata0;
+  int _rowNum, _colNum;
+  double _dx, _nodata;
 
   /* Folders */
   string path_BasinFolder;  //folder where basin property maps are located
@@ -42,15 +47,17 @@ struct Control{
 
   /* GIS */
   string fn__dem;  // Surface evelation [m]
-  string fn__fdir;  // Flow direction [d8 method]
   string fn__chnwidth;  // Channel width [m]
   string fn__chndepth;  // Channel depth [m]
   string fn__chnlength;  // Channel length [m]
   string fn__depth1;  // Depth of soil layer 1 [m]
   string fn__depth2;  // Depth of soil layer 2 [m]
   string fn__depth3;  // Depth of soil layer 3 [m]
-  string fn__Gauge_to_Report;  // Gauges that require outputs
   /* end of GIS */ 
+  string fn__fdir;  // flow direction [d8 method]
+  string fn__Gauge_to_Report;  // Gauges that require outputs
+  grid *_Gauge_to_Report;  // Gauges that require outputs
+  grid *_fdir;  // flow direction [d8 method]
 
   /* Climate */
   string fn__P;  // Precipitation [m]
@@ -108,14 +115,23 @@ struct Control{
   //ctor from raster ascii file
   Control();
   //dtor
+  ~Control();
+  
 
-
+  // Read configurations
   int getAsciiHeader(string fname);
   int ReadConfigFile(string confilename = "config.ini");
-  
+
+  /* Grids sorting */
+  sortedGrid _sortedGrid;
+  sortedTSmask _Tsmask;  // Gauges that require outputs
+  sortedGrid SortGridLDD();
+  sortedTSmask sortTSmask();
+  /* end of Grids sorting*/
 
   template<class T> static T string_as_T( const string& s);
   template<class T> void readInto(T &value, string key, vector<string> lines);
   
 };
 
+#endif /* CONTROL_H_ */

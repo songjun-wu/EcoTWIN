@@ -1,21 +1,19 @@
  #include "Basin.h"
 
  Basin::Basin(Control &ctrl){
-  _rowNum = ctrl._rowNum0;
-  _colNum = ctrl._colNum0;
-  _dx = ctrl._dx0;
-  _nodata = ctrl._nodata0;
+  _rowNum = ctrl._rowNum;
+  _colNum = ctrl._colNum;
+  _dx = ctrl._dx;
+  _nodata = ctrl._nodata;
 
   /* GIS */
   _dem = new grid(ctrl.path_BasinFolder + ctrl.fn__dem, _rowNum, _colNum);
-  _fdir = new grid(ctrl.path_BasinFolder + ctrl.fn__fdir, _rowNum, _colNum);
   _chnwidth = new grid(ctrl.path_BasinFolder + ctrl.fn__chnwidth, _rowNum, _colNum);
   _chndepth = new grid(ctrl.path_BasinFolder + ctrl.fn__chndepth, _rowNum, _colNum);
   _chnlength = new grid(ctrl.path_BasinFolder + ctrl.fn__chnlength, _rowNum, _colNum);
   _depth1 = new grid(ctrl.path_BasinFolder + ctrl.fn__depth1, _rowNum, _colNum);
   _depth2 = new grid(ctrl.path_BasinFolder + ctrl.fn__depth2, _rowNum, _colNum);
   _depth3 = new grid(ctrl.path_BasinFolder + ctrl.fn__depth3, _rowNum, _colNum);
-  _Gauge_to_Report = new grid(ctrl.path_BasinFolder + ctrl.fn__Gauge_to_Report, _rowNum, _colNum);
   /* end of GIS */
 
   /* Storages */
@@ -46,8 +44,6 @@
   _Tr3 = new grid(_rowNum, _colNum);
   /* end of Fluxes */
 
-  //sort grids spatially
-  _sortedGrid = SortGridLDD();
-  _Tsmask = sortTSmask();
+  
  
  }

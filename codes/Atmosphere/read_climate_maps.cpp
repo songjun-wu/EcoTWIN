@@ -23,7 +23,7 @@ int Atmosphere::read_climate(Control &ctrl){
 int Atmosphere::open_climate_maps(string fname, ifstream &ifHandle){
   ifHandle.open(fname, ios::binary);
   if (!ifHandle.good()){
-    throw runtime_error("file now found    :" + fname);
+    throw runtime_error("file not found    :" + fname);
   }
   return EXIT_SUCCESS;
 }
@@ -67,6 +67,7 @@ int Atmosphere::init_climate_maps(string fname, ifstream &ifHandle){
   int max = 0;
   int r, c;
   ifHandle.open(fname, ios::binary);
+  
   if (!ifHandle.good()){
     throw runtime_error("file now found    :" + fname);
   }
@@ -85,16 +86,15 @@ int Atmosphere::update_climate_maps(ifstream &ifHandle, grid &climateMap){
   double *data=NULL;
   int r, c;
   int zoneID;
-
   data = new double[_nzones];
   ifHandle.read((char *)data, sizeof(double)*_nzones);  
-  
   for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 	  r = _sortedGrid.row[j];
 	  c = _sortedGrid.col[j];
     zoneID = _climzones->matrix[r][c];
     climateMap.matrix[r][c] = data[zoneID];
     }
+  
   delete[] data;
   return EXIT_SUCCESS;
 }

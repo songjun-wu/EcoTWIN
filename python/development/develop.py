@@ -28,14 +28,14 @@ Climate = [ ['_P', Opt.cond['none'], 'Precipitation [m]', 'grid', 'spatial_TS', 
         ]
         
 GIS = [ ['_dem', Opt.cond['none'], 'Surface evelation [m]', 'grid', 'spatial', 'Ground_elevation'],
-        ['_fdir', Opt.cond['none'], 'Flow direction [d8 method]', 'grid', 'spatial', 'flow_direction'],
+        #['_fdir', Opt.cond['none'], 'Flow direction [d8 method]', 'grid', 'spatial', 'flow_direction'],
         ['_chnwidth', Opt.cond['none'], 'Channel width [m]', 'grid', 'spatial', 'Channel_width'],
         ['_chndepth', Opt.cond['none'], 'Channel depth [m]', 'grid', 'spatial', 'Channel_depth'],
         ['_chnlength', Opt.cond['none'], 'Channel length [m]', 'grid', 'spatial', 'Channel_length'],
         ['_depth1', Opt.cond['none'], 'Depth of soil layer 1 [m]', 'grid', 'spatial', 'Soil_depth1'],
         ['_depth2', Opt.cond['none'], 'Depth of soil layer 2 [m]', 'grid', 'spatial', 'Soil_depth2'],
         ['_depth3', Opt.cond['none'], 'Depth of soil layer 3 [m]', 'grid', 'spatial', 'Soil_depth3'],
-        ['_Gauge_to_Report', Opt.cond['none'], 'Gauges that require outputs', 'grid', 'spatial', 'Gauge_mask'],
+        #['_Gauge_to_Report', Opt.cond['none'], 'Gauges that require outputs', 'grid', 'spatial', 'Gauge_mask'],
         ]
 
 
@@ -100,13 +100,8 @@ signs_control = signs_atmos + signs_basin + signs_param
 datas_control = datas_atmos + datas_basin + datas_param
 
 
-#signs_control = np.copy(signs_atmos).tolist()
-#datas_control = np.copy(datas_atmos).tolist()
-#signs_control.extend(signs_basin)
-#datas_control.extend(datas_basin)
-
-
 """
+
 define_variables.includes(fname=path + 'includes/Atmosphere.h', signs=signs_atmos, datas=datas_atmos, max_category=setting.max_category)
 
 define_variables.destructor(fname=path + 'Destructors/AtmosphereDestruct.cpp', signs=signs_atmos, datas=datas_atmos)
@@ -121,7 +116,7 @@ define_variables.includes(fname=path + 'includes/Basin.h', signs=signs_basin, da
 define_variables.constructor(fname=path + 'Constructors/BasinConstruct.cpp', signs=signs_basin, datas=datas_basin)
 
 define_variables.destructor(fname=path + 'Destructors/BasinDestruct.cpp', signs=signs_basin, datas=datas_basin)
-"""
+
 define_variables.control_includes(fname=path + 'includes/Control.h', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports)
 config_build.read_configs(fname=path+'IO/readConfigFile.cpp', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports)
 config_build.gen_config_template(homepath, signs=signs_control, options=Opt.cond, datas=datas_control, reports=Reports, parameters=Parameters, max_category=setting.max_category)
@@ -133,6 +128,7 @@ define_variables.constructor(fname=path + 'Constructors/ParamConstruct.cpp', sig
 config_build.read_param(fname=path+'IO/readParamFile.cpp', parameters=Parameters)
 define_variables.destructor(fname=path + 'Destructors/ParamDestruct.cpp', signs=signs_param, datas=datas_param)
 parameterisation_build.parameterisation_build(fname=path + 'Spatial/parameterisation.cpp', parameters=Parameters)
+"""
 
 
 linux_build.release_linux(path, release_path)

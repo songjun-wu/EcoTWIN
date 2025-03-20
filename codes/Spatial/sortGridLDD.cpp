@@ -1,6 +1,6 @@
-#include "Basin.h"
+#include "Control.h"
 
-sortedGrid Basin::SortGridLDD(){
+sortedGrid Control::SortGridLDD(){
   int value, value1, value2, value3, value4, value6, value7, value8, value9 = 0;
   int r, c;
   int counter=0;
@@ -14,12 +14,14 @@ sortedGrid Basin::SortGridLDD(){
   for (r=1; r<_rowNum; r++){
     for (c=1; c<_colNum; c++){
       value = temp->matrix[r][c];
-      if (value>0 && value <=9){
+      if (value>0 && value <130 && value!=5){
         counter++;
+        
       }     
     }
   }
 
+  
   int x, i = 0;
   do{
     x++;
@@ -35,6 +37,7 @@ sortedGrid Basin::SortGridLDD(){
 	      value1 = temp->matrix[r+1][c-1];
 	      value2 = temp->matrix[r+1][c];
 	      value3 = temp->matrix[r+1][c+1];
+        
         if (value7 != 2 &&
 	          value8 != 4 &&
 	          value9 != 8 &&

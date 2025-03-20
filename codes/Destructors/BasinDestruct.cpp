@@ -4,14 +4,12 @@ Basin::~Basin(){
   
   /* GIS */
   if(_dem) delete _dem;
-  if(_fdir) delete _fdir;
   if(_chnwidth) delete _chnwidth;
   if(_chndepth) delete _chndepth;
   if(_chnlength) delete _chnlength;
   if(_depth1) delete _depth1;
   if(_depth2) delete _depth2;
   if(_depth3) delete _depth3;
-  if(_Gauge_to_Report) delete _Gauge_to_Report;
   /* end of GIS */
 
   /* Storages */

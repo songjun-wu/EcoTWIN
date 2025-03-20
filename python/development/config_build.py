@@ -33,6 +33,9 @@ def read_configs(fname, options, signs, datas, reports):
             content = []          
             for i in range(len(Contents)):
                 content.append('  readInto('+'fn_'+Contents[i][0]+', "'+Contents[i][5]+'", lines);\n')
+            if sign == 'GIS':
+                content.append('  readInto(fn__fdir, "flow_direction", lines);\n')
+                content.append('  readInto(fn__Gauge_to_Report, "Gauge_mask", lines);\n')
             content = lines[:start] + content + lines[end:]
             
         with open(fname, 'w') as f:
@@ -93,7 +96,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
             continue
         if not item['key'] in opt_list:
             opt_list.append(item['key'])
-            text.append(item['key'] + ' = 1  # ' + item['general_description'] + '\n')
+            text.append(item['key'] + ' = '+str(item['value'])+'  # ' + item['general_description'] + '\n')
         
     
     
@@ -114,6 +117,9 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                     elif signs[i] == 'Climate':
                         text.append('num_cliamte_zones = 10 # The number of climate zones for parameterisation.\n' )
                         text.append('climate_zones = climate_zones.asc # Needed if opt_climate_input_format = 2; Zone ID should start from 0!\n')
+                    elif signs[i] == 'GIS':
+                        text.append('flow_direction  =  fdir.asc   # Flow direction [int; d8 method]\n')
+                        text.append('Gauge_mask  =  Gauge_to_Report.asc   # Gauges that require outputs [int; start from 0]\n')
                 if data[0][0] == '_':
                     var_name = data[0][1:]
                 else:
@@ -157,8 +163,8 @@ def report_build(fname, reports):
         content.append('  // 1: report time series at gauging stations; 2: report maps\n')  
         for i in range(len(reports)):
             data = reports[i]
-            content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS('+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n')
-            content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap('+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n\n')
+            content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS(ctrl, Bsn.'+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n')
+            content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, Bsn.'+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n\n')
 
         content = lines[:start] + content + lines[end:]
     

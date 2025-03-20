@@ -1,6 +1,7 @@
+#ifndef PARAM_H_
+#define PARAM_H_
 
-#include "Basin.h"
-
+#include "Control.h"
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -44,3 +45,5 @@ class Param {
 
 
 };
+
+#endif /* PARAM_H_ */

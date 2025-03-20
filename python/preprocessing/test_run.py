@@ -23,7 +23,7 @@ unit_chan[~chanmask] = np.nan
 sorted_cells = GIS_tools.sort_grid_based_on_fdir(ldd)
 dem = GIS_tools.modify_dem_based_on_fdir(dem, ldd, sorted_cells)
 #fdir0 = pcraster.lddcreate('/home/wusongj/dmc/forHydrology/Spatial_500m/DEM.map', 1e9,1e9,1e9,1e9)
-fdir = GIS_tools.d8_flow_direction(dem)
+fdir = GIS_tools.d8_flow_direction(dem, nodata=-9999)
 prep_tools.saveToASCII(dem, 'dem', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(fdir, 'fdir', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
@@ -31,10 +31,12 @@ prep_tools.saveToASCII(fdir, 'fdir', home_dir+'spatial/', 'float64', mask, xllco
 
 chanlength = unit_soil * 500
 chandepth = chanwidth / 3
-"""
+""""""
 prep_tools.saveToASCII(chanwidth, 'chnwidth', home_dir+'spatial/', 'float64', chanmask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(chandepth, 'chndepth', home_dir+'spatial/', 'float64', chanmask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(chanlength, 'chnlength', home_dir+'spatial/', 'float64', chanmask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
+prep_tools.saveToASCII(unit_soil*0, 'climate_zones', home_dir+'spatial/', 'float64', chanmask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
 prep_tools.saveToASCII(unit_soil*0.2, 'depth1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.2, 'depth2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
@@ -51,17 +53,19 @@ prep_tools.saveToASCII(unit_soil*0.3, 'theta3', home_dir+'spatial/', 'float64', 
 
 
 df = pd.read_csv('/home/wusongj/dmc/forHydrology/Climate/climate_interpolated.csv')
-np.repeat(df['precip_3015'], 30*22).to_numpy().tofile(home_dir+'climate/P.bin')
-np.repeat(df['Tmean_3015'], 30*22).to_numpy().tofile(home_dir+'climate/Ta.bin')
-np.repeat(df['Tmin_3015'], 30*22).to_numpy().tofile(home_dir+'climate/Tmin.bin')
-np.repeat(df['Tmax_3015'], 30*22).to_numpy().tofile(home_dir+'climate/Tmax.bin')
+np.repeat(df['precip_3015'], 1).to_numpy().tofile(home_dir+'climate/P.bin')
+np.repeat(df['Tmean_3015'], 1).to_numpy().tofile(home_dir+'climate/Ta.bin')
+np.repeat(df['Tmin_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmin.bin')
+np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 
-np.repeat(df['RH_3015'], 30*22).to_numpy().tofile(home_dir+'climate/RH.bin')
-np.repeat(df['Tmax_3015'], 30*22).to_numpy().tofile(home_dir+'climate/Tmax.bin')
-np.repeat(df['Tmax_3015'], 30*22).to_numpy().tofile(home_dir+'climate/Tmax.bin')
-np.repeat(df['lai_2'], 30*22).to_numpy().tofile(home_dir+'climate/LAI.bin')
-np.repeat(df['d2H_14dMV_3015'], 30*22).to_numpy().tofile(home_dir+'climate/d2h_P.bin')
-"""
+np.repeat(df['RH_3015'], 1).to_numpy().tofile(home_dir+'climate/RH.bin')
+np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
+np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
+np.repeat(df['lai_2'], 1).to_numpy().tofile(home_dir+'climate/LAI.bin')
+np.repeat(df['d2H_14dMV_3015'], 1).to_numpy().tofile(home_dir+'climate/d2h_P.bin')
+
+
+print(np.fromfile(home_dir+'climate/Ta.bin'))
 
 p_cat_list = [1, 0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.06, 0.04]
 for i in range(len(p_cat_list)):

@@ -20,7 +20,7 @@ grid::grid(string fname, int rowNum, int colNum){
 
   for (int i=0; i<rowNum; i++){
     for (int j=0; j<colNum; j++){
-      input >> matrix[i][j];
+      input >> matrix[i][j]; 
     }
   }
   input.close();  

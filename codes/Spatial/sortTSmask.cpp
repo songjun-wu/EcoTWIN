@@ -1,9 +1,9 @@
-#include "Basin.h"
+#include "Control.h"
 
-sortedTSmask Basin::sortTSmask(){
+sortedTSmask Control::sortTSmask(){
   sortedTSmask TSmask;
   for(int i = 1; i < _rowNum-1; i++){
-    for(int j = 1; j < _colNum-1; j++){ 
+    for(int j = 1; j < _colNum-1; j++){
         if (_Gauge_to_Report->matrix[i][j] > 1){
             TSmask.row.push_back(i);
             TSmask.col.push_back(j);

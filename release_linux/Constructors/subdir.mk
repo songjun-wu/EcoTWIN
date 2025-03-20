@@ -8,6 +8,7 @@ CPP_SRCS += \
 ../codes/Constructors/BasinConstruct.cpp \
 ../codes/Constructors/ControlConstruct.cpp \
 ../codes/Constructors/ParamConstruct.cpp \
+../codes/Constructors/ReportConstruct.cpp \
 
 
 OBJS += \
@@ -15,6 +16,7 @@ OBJS += \
 ./Constructors/BasinConstruct.o \
 ./Constructors/ControlConstruct.o \
 ./Constructors/ParamConstruct.o \
+./Constructors/ReportConstruct.o \
 
 
 CPP_DEPS += \
@@ -22,6 +24,7 @@ CPP_DEPS += \
 ./Constructors/BasinConstruct.d \
 ./Constructors/ControlConstruct.d \
 ./Constructors/ParamConstruct.d \
+./Constructors/ReportConstruct.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -1,10 +1,10 @@
 import numpy as np
 
-def d8_flow_direction(dem):
+def d8_flow_direction(dem, nodata):
     kernel = np.array([[32, 64, 128],
                        [16,  0,   1],
                        [8,   4,   2]])
-    directions = np.zeros_like(dem, dtype=np.uint8)
+    directions = np.full(dem.shape, nodata)
     
     for i in range(1, dem.shape[0] - 1):
         for j in range(1, dem.shape[1] - 1):
