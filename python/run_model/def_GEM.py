@@ -6,11 +6,12 @@ from datetime import datetime
 import numpy as np
 
 class Path:
-    model_path = '/home/wusongj/GEM/release_linux/'  # The path for model executable file
+    path = '/home/wusongj/GEM/'
+    model_path = path + 'GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
     path_EXEC = 'gEcoHydro'
-    data_path = '/home/wusongj/GEM/c1_dmc/'  # the path with spatial and climate data
-    config_path = '/home/wusongj/GEM/c1_dmc/' # the path with configuration files (.ini)
-    main_path = '/home/wusongj/GEM/c1_dmc/'  # the path for model runs and output saving
+    data_path = path + 'c1_dmc/'  # the path with spatial and climate data
+    config_path = data_path # the path with configuration files (.ini)
+    main_path = data_path  # the path for model runs and output saving
     run_path = main_path + 'run/'
 
 

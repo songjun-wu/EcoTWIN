@@ -15,7 +15,7 @@ def set_env(Path):
     shutil.copytree(Path.data_path+'spatial/', Path.run_path+'spatial/')
     # copy configs
     shutil.copyfile(Path.config_path+'config.ini',  Path.run_path+'config.ini')
-    print(Path.config_path+'config.ini')
+    shutil.copyfile(Path.config_path+'param.ini',  Path.run_path+'param.ini')
 
 
 def set_config(Path):
