@@ -1,7 +1,6 @@
 *.o
 *.d
 *.bin
-*.ini
 *.png
 *.asc
 *.map
