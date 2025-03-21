@@ -3,17 +3,23 @@ from develop_tools import *
 def parameterisation_build(fname, parameters):
 
     content = []
+    content.append('  int r;\n  int c;\n\n')
     keys, grouped_data = group_text(parameters)
     for key in keys:
         text = []
         for i in range(len(grouped_data[key])):
-            
             text.append('  ' + grouped_data[key][i][0] + '->reset();\n')
-            text.append('  for (int k=0; k<param_category->n_category; k++){\n')
-            text.append('    for (int i=0; i<param_category->nrow; i++){\n')
-            text.append('      for (int j=0; j<param_category->ncol; j++){\n')
-            text.append('        ' + grouped_data[key][i][0] + '->matrix[i][j] += param_category->matrix[k][i][j] * ' + grouped_data[key][i][0][1:] + '[k];\n')
-            text.append('  }' + '}' +'}\n')
+        text.append('\n  for (unsigned int j = 0; j < ctrl._sortedGrid.row.size(); j++) {\n')
+        text.append('    r = ctrl._sortedGrid.row[j];\n')
+        text.append('    c = ctrl._sortedGrid.col[j];\n\n')
+        text.append('    for (int k=0; k<param_category->n_category; k++){\n')
+
+        for i in range(len(grouped_data[key])):
+            text.append('      '+grouped_data[key][i][0]+'->matrix[r][c] += param_category->matrix[k][r][c] * '+grouped_data[key][i][0][1:]+'[k];\n')
+        text.append('   }\n')
+        text.append('   }\n\n')
+
+        print(text)
         content.append(if_condition_build(key, text))
     
     with open(fname, 'r') as f:

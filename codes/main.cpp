@@ -23,12 +23,11 @@ int main(){
 
 
 
-
-    oReport->report(*oControl, *oBasin); // report outputs
-
-    
+    // report outputs
+    oReport->report(*oControl, *oBasin); 
 
     
+   
     // Update climate and land use status
     oControl->current_ts += oControl->Simul_tstep;
     advance_climate += oControl->Simul_tstep;
