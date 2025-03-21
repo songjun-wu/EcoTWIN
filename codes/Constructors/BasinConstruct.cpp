@@ -6,6 +6,8 @@
   _dx = ctrl._dx;
   _nodata = ctrl._nodata;
 
+  _sortedGrid = ctrl._sortedGrid;
+
   /* GIS */
   _dem = new grid(ctrl.path_BasinFolder + ctrl.fn__dem, _rowNum, _colNum);
   _chnwidth = new grid(ctrl.path_BasinFolder + ctrl.fn__chnwidth, _rowNum, _colNum);

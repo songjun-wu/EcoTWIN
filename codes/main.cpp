@@ -3,7 +3,11 @@
 #include "Atmosphere.h"
 #include "Report.h"
 
+#include <chrono>
+
 int main(){
+
+  auto start = std::chrono::high_resolution_clock::now();
   Control *oControl;
   Basin *oBasin;
   Atmosphere *oAtmosphere;
@@ -13,10 +17,14 @@ int main(){
   float advance_climate = 0; // resets to zero when Clim_input is updated
   float advance_landuse = 0; // resets to zero when land use inputs is updated
   
+  
+
   oControl = new Control;
   oBasin = new Basin(*oControl);
   oAtmosphere = new Atmosphere(*oControl);
   oParam = new Param(*oControl);
+  
+  auto stop1 = std::chrono::high_resolution_clock::now();
   
   while (oControl->current_ts < oControl->Simul_end){
     
@@ -26,8 +34,6 @@ int main(){
     // report outputs
     oReport->report(*oControl, *oBasin); 
 
-    
-   
     // Update climate and land use status
     oControl->current_ts += oControl->Simul_tstep;
     advance_climate += oControl->Simul_tstep;
@@ -51,12 +57,22 @@ int main(){
 
   }
 
-
+  
 
   //delete oControl;
   delete oBasin;
   delete oAtmosphere;
   delete oParam;
+
+  auto stop2  = std::chrono::high_resolution_clock::now();
+
+  auto duration1 = chrono::duration_cast<chrono::microseconds>(stop1 - start);
+  auto duration2 = chrono::duration_cast<chrono::microseconds>(stop2 - stop1);
+
+  cout << "Configuration takes : "
+         << duration1.count() / 1e6 << " seconds" << endl;
+  cout << "Iteration takes : "
+         << duration2.count() / 1e6 << " seconds" << endl;
 
   return 0;
 }

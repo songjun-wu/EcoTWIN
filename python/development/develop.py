@@ -129,7 +129,7 @@ config_build.read_param(fname=path+'IO/readParamFile.cpp', parameters=Parameters
 define_variables.destructor(fname=path + 'Destructors/ParamDestruct.cpp', signs=signs_param, datas=datas_param)
 parameterisation_build.parameterisation_build(fname=path + 'Spatial/parameterisation.cpp', parameters=Parameters)
 """
-parameterisation_build.parameterisation_build(fname=path + 'Spatial/parameterisation.cpp', parameters=Parameters)
+
 
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)

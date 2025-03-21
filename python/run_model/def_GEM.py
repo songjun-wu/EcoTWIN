@@ -6,24 +6,16 @@ from datetime import datetime
 import numpy as np
 
 class Path:
-    path = '/home/wusongj/GEM/'
-    model_path = path + 'GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
-    path_EXEC = 'gEcoHydro'
-    data_path = path + 'c1_dmc/'  # the path with spatial and climate data
-    config_path = data_path # the path with configuration files (.ini)
-    main_path = data_path  # the path for model runs and output saving
-    run_path = main_path + 'run/'
 
+    model_path = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
+    path_EXEC = 'gEcoHydro'  
 
-class Site:
-    # Soil types
-    soils = ['BE','GL','PE','PZ']
-    nsoil = len(soils)
-    sfiles = ['unit.soil_' + s + '.map' for s in soils]
-    # Vegetation types
-    vegs = ['Crops','Broad','Conif','Past']
-    nveg = len(vegs)
-    vfile = ['unit.veg_' + s + '.map' for s in soils]
+    work_path = '/home/wusongj/GEM/291110/'            # Working directory
+    data_path = work_path                   # The path with spatial and climate data
+    config_path = work_path                 # The path with configuration files (.ini)
+    run_path = work_path + 'run/'           # The path for model runs
+    output_path = work_path + 'output/'     # The path for output saving
+
     
 class Data:
     # Simulation begining

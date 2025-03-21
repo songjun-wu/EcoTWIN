@@ -24,3 +24,14 @@ def set_config(Path):
         lines = np.append('\nClim_Maps_Folder = ' + Path.data_path + 'climate/\n', lines)
     with open(Path.run_path+'config.ini', 'w') as f:
         f.writelines(lines)
+    
+
+
+def save_to_ascii(data, path, ref_path):
+    with open(ref_path) as f:
+        header = f.readlines()[:6]
+
+    with open(path, 'w') as f:
+        f.writelines(header)
+    with open(path, 'a') as f:
+        np.savetxt(f, data.astype(np.float64))

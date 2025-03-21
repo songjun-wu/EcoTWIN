@@ -14,6 +14,7 @@ class Param {
   /* Properties */
   int _rowNum, _colNum;
   double _dx, _nodata;
+  sortedGrid _sortedGrid;
   /* end of Properties */
 
   string line_string;

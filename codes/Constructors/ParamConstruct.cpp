@@ -6,6 +6,7 @@ Param::Param(Control &ctrl){
   _dx = ctrl._dx;
   _nodata = ctrl._nodata;
   
+  _sortedGrid = ctrl._sortedGrid;
 
   string fname = "param.ini";
   /* Parameters */

@@ -147,7 +147,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     with open(path + 'param.ini', 'w') as f:
         text = []
         for i in range(len(parameters)):
-            text.append(parameters[i][0][1:] + ',' + (',').join(np.full(max_category, 0).astype('str')) + '\n')
+            text.append(parameters[i][0][1:] + ',' + (',').join(np.full(max_category, -9999).astype('str')) + '\n')
         f.writelines(text)
 
 
