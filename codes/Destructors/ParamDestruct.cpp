@@ -3,6 +3,8 @@
 Param::~Param(){
   
   /* Parameters */
+  if(_alpha) delete _alpha;
+  if(_rE) delete _rE;
   if(_snow_rain_thre) delete _snow_rain_thre;
   if(_deg_day_min) delete _deg_day_min;
   if(_deg_day_max) delete _deg_day_max;

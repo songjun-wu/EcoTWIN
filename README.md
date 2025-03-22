@@ -11,7 +11,7 @@ The hydrological conceptualisation are adopted and modified from EcoPlot ([Landg
 
 The isotopic module contains the mixing process and Craig-Gordon model, which is modified from EcH2O-iso ([Kupple et al., 2018](https://gmd.copernicus.org/articles/11/3045/2018/)).  
 
-The nitrogen module are mainly based on (HYPE)[https://hypeweb.smhi.se/] and mHM-Nitrate ([Yang et al., 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2017WR022380)).
+The nitrogen module are mainly based on [HYPE](https://hypeweb.smhi.se/) and mHM-Nitrate ([Yang et al., 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2017WR022380)).
 
 ## Instruction
 ### 1 .Compliation  

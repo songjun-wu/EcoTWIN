@@ -36,6 +36,7 @@ int Control::ReadConfigFile(string fname){
   /* Options */
   readInto(opt_climate_input_format, "opt_climate_input_format", lines);
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
+  readInto(opt_intecept, "opt_intecept", lines);
   readInto(opt_snow, "opt_snow", lines);
   /* end of Options */
 
@@ -74,6 +75,8 @@ int Control::ReadConfigFile(string fname){
 
 
   /* Parameters */
+  readInto(fn__alpha, "alpha", lines);
+  readInto(fn__rE, "alpha", lines);
   readInto(fn__snow_rain_thre, "snow_rain_threshold", lines);
   readInto(fn__deg_day_min, "deg_day_min", lines);
   readInto(fn__deg_day_max, "deg_day_max", lines);

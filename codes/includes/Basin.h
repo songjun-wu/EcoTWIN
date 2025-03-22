@@ -2,6 +2,7 @@
 #define BASIN_H_
 
 #include "Param.h"
+#include "Atmosphere.h"
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -64,6 +65,18 @@ class Basin {
   ~Basin();  // destrcuctor of Basin
 
 
+  int Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm);
+
+  // Canopy interception
+  int Solve_canopy_fluxes(Control &ctrl, Param &par, Atmosphere &atm);
+  int Interception_1(Param &par, Atmosphere &atm, int r, int c);
+  int Interception_2(Param &par, Atmosphere &atm, int r, int c);
+
+  // Snow accumulation and melt
+  int Snow_acc_melt(Control &ctrl, Param &par, Atmosphere &atm);
+
+  // routing
+  int Routing_ovf(Control &ctrl, Param &par); // overland flow routing
 
 };
 

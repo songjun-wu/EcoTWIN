@@ -13,6 +13,7 @@ RM := rm -rf
 -include Spatial/subdir.mk
 -include Atmosphere/subdir.mk
 -include Constructors/subdir.mk
+-include Hydrology/subdir.mk
 -include IO/subdir.mk
 -include subdir.mk
 -include objects.mk

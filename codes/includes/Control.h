@@ -36,6 +36,7 @@ struct Control{
   /* Options */
   int opt_climate_input_format;  //How is climate inputs orgainsed? 1 = raster; 2 = aggregated binary file (climate_zone file should be specified)
   int opt_tracking_isotope;  //Enable isotopic tracking? 0:disabled, 1:enabled
+  int opt_intecept;  //Canopy interception. 1:maximum canopy storage unmodified; 2:storage corrected (Landarf et al., 2024)
   int opt_snow;  //Snow accumulation method. 1:Degree day factor method
   /* end of Options */
 
@@ -69,7 +70,7 @@ struct Control{
   /* end of Climate */
 
   /* Storages */
-  string fn__I;  // Interception/canopy storage [m]
+  string fn__I;  // Canopy storage [m]
   string fn__snow;  // Snow depth in [m]
   string fn__theta1;  // Soil moisture in layer 1 [decimal]
   string fn__theta2;  // Soil moisture in layer 2 [decimal]
@@ -80,7 +81,9 @@ struct Control{
   /* end of Fluxes */
 
   /* Parameters */
-  string fn__snow_rain_thre;  // The temperature  [m]
+  string fn__alpha;  // The weighting parameter that links LAI and maximum canopy storage
+  string fn__rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
+  string fn__snow_rain_thre;  // The temperature for snow melt  [m]
   string fn__deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
   string fn__deg_day_max;  // Maximum Degree-day factor [m-1 degreeC-1]
   string fn__deg_day_increase;  // Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]
@@ -88,7 +91,7 @@ struct Control{
 
   /* Report */
   // 1: report time series at gauging stations; 2: report maps
-  int report__I;  // report Interception/canopy storage [m]
+  int report__I;  // report Canopy storage [m]
   int report__snow;  // report Snow depth in [m]
   int report__theta1;  // report Soil moisture in layer 1 [decimal]
   int report__theta2;  // report Soil moisture in layer 2 [decimal]

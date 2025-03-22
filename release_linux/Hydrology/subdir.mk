@@ -4,28 +4,28 @@
 
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
-../codes/IO/IO_function.cpp \
-../codes/IO/readConfigFile.cpp \
-../codes/IO/readParamFile.cpp \
-../codes/IO/report.cpp \
+../codes/Hydrology/Canopy.cpp \
+../codes/Hydrology/Snow.cpp \
+../codes/Hydrology/routing_overland_flow.cpp \
+../codes/Hydrology/Solve_timesteps.cpp \
 
 
 OBJS += \
-./IO/IO_function.o \
-./IO/readConfigFile.o \
-./IO/readParamFile.o \
-./IO/report.o \
+./Hydrology/Canopy.o \
+./Hydrology/Snow.o \
+./Hydrology/routing_overland_flow.o \
+./Hydrology/Solve_timesteps.o \
 
 
 CPP_DEPS += \
-./IO/IO_function.d \
-./IO/readConfigFile.d \
-./IO/readParamFile.d \
-./IO/report.d \
+./Hydrology/Canopy.d \
+./Hydrology/Snow.d \
+./Hydrology/routing_overland_flow.d \
+./Hydrology/Solve_timesteps.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-IO/%.o: ../codes/IO/%.cpp
+Hydrology/%.o: ../codes/Hydrology/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
 	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../codes/includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

@@ -39,12 +39,12 @@ GIS = [ ['_dem', Opt.cond['none'], 'Surface evelation [m]', 'grid', 'spatial', '
         ]
 
 
-Storages = [['_I',       Opt.cond['none'], 'Interception/canopy storage [m]', 'grid', 'spatial', 'inteception_storage'],
+Storages = [['_I',       Opt.cond['none'], 'Canopy storage [m]', 'grid', 'spatial', 'canopy_storage'], 
             ['_snow',    Opt.cond['none'], 'Snow depth in [m]', 'grid', 'spatial', 'snow_depth'],
             ['_theta1',  Opt.cond['none'], 'Soil moisture in layer 1 [decimal]', 'grid', 'spatial', 'SMC_layer1'],
             ['_theta2',  Opt.cond['none'], 'Soil moisture in layer 2 [decimal]', 'grid', 'spatial', 'SMC_layer2'],
             ['_theta3',  Opt.cond['none'], 'Soil moisture in layer 3 [decimal]', 'grid', 'spatial', 'SMC_layer3'],
-            ['_I_old',   Opt.cond['none'], 'Interception/canopy storage in previous timestep in [m]', 'grid', 'new', 'none'],
+            #['_I_old',   Opt.cond['none'], 'Interception/canopy storage in previous timestep in [m]', 'grid', 'new', 'none'],
             #['_snow_old',    Opt.cond['none'], 'Snow pack in previous timestep in [m]', 'grid', 'new', 'none'],
             #['_theta1_old',  Opt.cond['none'], 'Soil moisture in layer 1 in previous timestep [decimal]', 'grid', 'new', 'none'],
             #['_theta2_old',  Opt.cond['none'], 'Soil moisture in layer 2 in previous timestep [decimal]', 'grid', 'new', 'none'],
@@ -69,7 +69,9 @@ Fluxes   = [['_D', Opt.cond['none'], 'Interception [m]', 'grid', 'new', 'interce
             ['_Tr3', Opt.cond['none'], 'Transpiration in layer 3 [m]', 'grid', 'new', 'transp_layer3']
             ]
 
-Parameters = [['_snow_rain_thre', Opt.cond['snow_1'], 'The temperature  [m]', 'grid', 'spatial_param', 'snow_rain_threshold'],
+Parameters = [['_alpha', Opt.cond['none'], 'The weighting parameter that links LAI and maximum canopy storage', 'grid', 'spatial_param', 'alpha'],
+              ['_rE', Opt.cond['intecept_2'], 'Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)', 'grid', 'spatial_param', 'alpha'],
+              ['_snow_rain_thre', Opt.cond['snow_1'], 'The temperature for snow melt  [m]', 'grid', 'spatial_param', 'snow_rain_threshold'],
               ['_deg_day_min', Opt.cond['snow_1'], 'Degree-day factor with no precipitation [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_min'],
               ['_deg_day_max', Opt.cond['snow_1'], 'Maximum Degree-day factor [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_max'],
               ['_deg_day_increase', Opt.cond['snow_1'], 'Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_increase']
@@ -100,8 +102,8 @@ signs_control = signs_atmos + signs_basin + signs_param
 datas_control = datas_atmos + datas_basin + datas_param
 
 
-"""
 
+"""
 define_variables.includes(fname=path + 'includes/Atmosphere.h', signs=signs_atmos, datas=datas_atmos, max_category=setting.max_category)
 
 define_variables.destructor(fname=path + 'Destructors/AtmosphereDestruct.cpp', signs=signs_atmos, datas=datas_atmos)

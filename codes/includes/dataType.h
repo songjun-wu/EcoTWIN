@@ -32,6 +32,7 @@ struct sortedGrid{
     int zone_climate;
     vector<int> row;
     vector<int> col;
+    vector<int> dir;
 };
 
 struct sortedTSmask{

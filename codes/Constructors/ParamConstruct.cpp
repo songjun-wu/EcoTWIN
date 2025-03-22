@@ -10,6 +10,10 @@ Param::Param(Control &ctrl){
 
   string fname = "param.ini";
   /* Parameters */
+  _alpha = new grid(_rowNum, _colNum);
+  if (ctrl.opt_intecept == 2){
+    _rE = new grid(_rowNum, _colNum);
+  }
   if (ctrl.opt_snow == 1){
     _snow_rain_thre = new grid(_rowNum, _colNum);
     _deg_day_min = new grid(_rowNum, _colNum);

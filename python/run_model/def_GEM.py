@@ -14,7 +14,7 @@ class Path:
     data_path = work_path                   # The path with spatial and climate data
     config_path = work_path                 # The path with configuration files (.ini)
     run_path = work_path + 'run/'           # The path for model runs
-    output_path = work_path + 'output/'     # The path for output saving
+    output_path = run_path + 'outputs/'     # The path for output saving
 
     
 class Data:

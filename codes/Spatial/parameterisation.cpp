@@ -8,6 +8,35 @@ int Param::Parameterisation(Control &ctrl){
 int nodata = ctrl._nodata;
 
 
+  _alpha->reset();
+  for (int k=0; k<param_category->n_category; k++){
+    if (alpha[k]!=nodata) {
+
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      r = _sortedGrid.row[j];
+      c = _sortedGrid.col[j];
+      _alpha->matrix[r][c] += param_category->matrix[k][r][c] * alpha[k];
+   }
+   }
+   }
+
+
+  if (ctrl.opt_intecept == 2){
+  
+  _rE->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (rE[k]!=nodata) {
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        r = _sortedGrid.row[j];
+        c = _sortedGrid.col[j];
+        _rE->matrix[r][c] += param_category->matrix[k][r][c] * rE[k];
+     }
+     }
+     }
+
+
+  }
+
   if (ctrl.opt_snow == 1){
   
   _snow_rain_thre->reset();

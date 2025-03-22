@@ -21,11 +21,15 @@ class Param {
 
   public:
   /* Parameters */
+  vector<double> alpha;
+  vector<double> rE;
   vector<double> snow_rain_thre;
   vector<double> deg_day_min;
   vector<double> deg_day_max;
   vector<double> deg_day_increase;
-  grid *_snow_rain_thre;  // The temperature  [m]
+  grid *_alpha;  // The weighting parameter that links LAI and maximum canopy storage
+  grid *_rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
+  grid *_snow_rain_thre;  // The temperature for snow melt  [m]
   grid *_deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
   grid *_deg_day_max;  // Maximum Degree-day factor [m-1 degreeC-1]
   grid *_deg_day_increase;  // Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]

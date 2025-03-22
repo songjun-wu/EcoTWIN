@@ -49,6 +49,7 @@ sortedGrid Control::SortGridLDD(){
 	          value != _nodata){
               map2array.row.push_back(r);
               map2array.col.push_back(c);
+              map2array.dir.push_back((int)value);
             }  
       }
     }

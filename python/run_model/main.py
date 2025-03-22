@@ -5,6 +5,7 @@ from def_GEM import *
 """"""
 # set the env for model runs
 
+current_path = os.getcwd()
 
 # Model structure update
 os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
@@ -22,4 +23,6 @@ GEM_tools.set_config(Path)
 os.chdir(Path.run_path)
 os.system('./gEcoHydro')
 
+os.chdir(current_path)
+os.system('python3 posterior_anlalysis.py')
 

@@ -18,7 +18,6 @@ int main(){
   float advance_landuse = 0; // resets to zero when land use inputs is updated
   
   
-
   oControl = new Control;
   oBasin = new Basin(*oControl);
   oAtmosphere = new Atmosphere(*oControl);
@@ -27,9 +26,9 @@ int main(){
   auto stop1 = std::chrono::high_resolution_clock::now();
   
   while (oControl->current_ts < oControl->Simul_end){
-    
 
 
+    oBasin->Solve_timesteps(*oControl, *oParam, *oAtmosphere);
 
     // report outputs
     oReport->report(*oControl, *oBasin); 

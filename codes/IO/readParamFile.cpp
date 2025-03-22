@@ -17,6 +17,8 @@ int Param::ReadParamFile(Control &ctrl, string fname){
     }
 
   /* Parameters */
+  readIntoParam(alpha, "alpha", lines);
+  readIntoParam(rE, "rE", lines);
   readIntoParam(snow_rain_thre, "snow_rain_thre", lines);
   readIntoParam(deg_day_min, "deg_day_min", lines);
   readIntoParam(deg_day_max, "deg_day_max", lines);

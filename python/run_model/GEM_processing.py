@@ -12,6 +12,7 @@ spatial_path = Path.data_path + 'spatial/'
 nodata = -9999.0
 
 tmp = np.loadtxt(spatial_path + 'dem.asc', skiprows=6)
+unit_nodata = np.full(tmp.shape, nodata)
 unit_soil = np.full(tmp.shape, nodata)
 unit_soil[tmp > 0] = 1
 
@@ -20,7 +21,10 @@ unit_zero[unit_soil==1] = 0
 
 
 GEM_tools.save_to_ascii(data=unit_zero, path=spatial_path+'climate_zones.asc', ref_path=spatial_path+'dem.asc')
-GEM_tools.save_to_ascii(data=unit_soil, path=spatial_path+'Gauge_to_Report.asc', ref_path=spatial_path+'dem.asc')
+
+tmpp = np.copy(unit_nodata)
+tmpp[200,200] = 0
+GEM_tools.save_to_ascii(data=tmpp, path=spatial_path+'Gauge_to_Report.asc', ref_path=spatial_path+'dem.asc')
 
 
 #for fname in ['chnwidth', 'chndepth', 'chnlength', 'depth1', 'depth2', 'depth3', 'I', 'snow', 'theta1', 'theta2', 'theta3']:

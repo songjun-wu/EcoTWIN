@@ -82,7 +82,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('Output_Folder = ./outputs/\n\n')
     text.append('# Model configuration\n')
     text.append('Simul_start = 0 # always 0\n')
-    text.append('Simul_end = 157766400 # in second\n')
+    text.append('Simul_end = 31536000 # in second\n')
     text.append('Simul_tstep = 86400 # seconds (daily)\n')
     text.append('Clim_input_tstep = 86400 # seconds (daily)\n')
     text.append('Report_interval = 86400 # seconds (daily)\n')
