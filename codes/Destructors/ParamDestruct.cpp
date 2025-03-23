@@ -5,6 +5,7 @@ Param::~Param(){}
 int Param::dtor(Control &ctrl){
   
   /* Parameters */
+  if(_depth3) delete _depth3;
   if(_alpha) delete _alpha;
   if (ctrl.opt_intecept == 2){
     if(_rE) delete _rE;

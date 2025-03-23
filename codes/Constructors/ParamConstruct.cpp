@@ -10,6 +10,7 @@ Param::Param(Control &ctrl){
 
   string fname = "param.ini";
   /* Parameters */
+  _depth3 = new svector(_sortedGrid.size);
   _alpha = new svector(_sortedGrid.size);
   if (ctrl.opt_intecept == 2){
     _rE = new svector(_sortedGrid.size);
@@ -25,8 +26,8 @@ Param::Param(Control &ctrl){
   // Read parameter values from param.ini
   ReadParamFile(ctrl, fname);
 
-  param_category = new svector_2d(ctrl.path_BasinFolder+"category_", ctrl.num_category ,_rowNum, _colNum, _sortedGrid);
-  
+  param_category = new svector_2d(ctrl.num_category , _sortedGrid);
+
   // Assign parameter spatially
   Parameterisation(ctrl);
 }

@@ -27,8 +27,6 @@ def set_config(Path):
     
 
 def gen_param(Path, Info, Param, param_arr):
-    
-    
     landuse_index = Info.landuse_index
     soil_index = Info.soil_index
 
@@ -41,15 +39,19 @@ def gen_param(Path, Info, Param, param_arr):
     for key in Param.ref.keys():
         dict = Param.ref.get(key)
         param_values = np.full(N_total, Info.nodata)
-
+        mins = np.array(dict['min'])
+        maxs = np.array(dict['max'])
         if dict['type'] == 'global':  # The first column is for global parameters
-            param_values[0] = param_arr[counter]
+            if dict['log'] == 0:
+                param_values[0] = mins + (maxs - mins) * param_arr[counter] 
             counter += 1
         elif dict['type'] == 'landuse':
-            param_values[landuse_index] = param_arr[counter:counter+N_land_use]
+            if dict['log'] == 0:
+                param_values[landuse_index] = mins + (maxs - mins) * param_arr[counter:counter+N_land_use]
             counter += N_land_use
         elif dict['type'] == 'soil':
-            param_values[soil_index] = param_arr[counter:counter+N_soil]
+            if dict['log'] == 0:
+                param_values[soil_index] = mins + (maxs - mins) * param_arr[counter:counter+N_soil]
             counter += N_soil
         text = key + ',' + (',').join(param_values.astype(np.str)) + '\n'
         lines.append(text)

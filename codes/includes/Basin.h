@@ -25,7 +25,6 @@ class Basin {
   svector *_chnlength;  // Channel length [m]
   svector *_depth1;  // Depth of soil layer 1 [m]
   svector *_depth2;  // Depth of soil layer 2 [m]
-  svector *_depth3;  // Depth of soil layer 3 [m]
   /* end of GIS */
 
 

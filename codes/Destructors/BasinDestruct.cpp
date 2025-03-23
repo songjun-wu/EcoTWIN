@@ -11,7 +11,6 @@ int Basin::dtor(Control &ctrl){
   if(_chnlength) delete _chnlength;
   if(_depth1) delete _depth1;
   if(_depth2) delete _depth2;
-  if(_depth3) delete _depth3;
   /* end of GIS */
 
   /* Storages */

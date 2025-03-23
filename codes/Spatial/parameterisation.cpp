@@ -2,9 +2,19 @@
 
 int Param::Parameterisation(Control &ctrl){
 
+  // Update the parameterisation due to the changes in land use types
+  param_category->update(ctrl.path_BasinFolder+"category_", ctrl.num_category ,_rowNum, _colNum, _sortedGrid);
+
   /* Parameters */
   int nodata = ctrl._nodata;
 
+
+  _depth3->reset();
+  for (int k=0; k<param_category->n_category; k++){
+    if (depth3[k]!=nodata) {
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _depth3->val[j] += param_category->val[k][j] * depth3[k];
+   }}}
 
   _alpha->reset();
   for (int k=0; k<param_category->n_category; k++){
@@ -12,8 +22,6 @@ int Param::Parameterisation(Control &ctrl){
       for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
       _alpha->val[j] += param_category->val[k][j] * alpha[k];
    }}}
-  
-  
 
   if (ctrl.opt_intecept == 2){
   
@@ -58,6 +66,6 @@ int Param::Parameterisation(Control &ctrl){
 
   }
   /* end of Parameters */
-
+  
   return EXIT_SUCCESS;
 }

@@ -17,6 +17,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
     }
 
   /* Parameters */
+  readIntoParam(depth3, "depth3", lines);
   readIntoParam(alpha, "alpha", lines);
   readIntoParam(rE, "rE", lines);
   readIntoParam(snow_rain_thre, "snow_rain_thre", lines);

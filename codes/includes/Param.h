@@ -21,12 +21,14 @@ class Param {
 
   public:
   /* Parameters */
+  vector<double> depth3;
   vector<double> alpha;
   vector<double> rE;
   vector<double> snow_rain_thre;
   vector<double> deg_day_min;
   vector<double> deg_day_max;
   vector<double> deg_day_increase;
+  svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage
   svector *_rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
   svector *_snow_rain_thre;  // The temperature for snow melt  [m]

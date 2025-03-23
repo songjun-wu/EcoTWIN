@@ -34,7 +34,6 @@ GIS = [ ['_dem', Opt.cond['none'], 'Surface evelation [m]', 'grid', 'spatial', '
         ['_chnlength', Opt.cond['none'], 'Channel length [m]', 'grid', 'spatial', 'Channel_length'],
         ['_depth1', Opt.cond['none'], 'Depth of soil layer 1 [m]', 'grid', 'spatial', 'Soil_depth1'],
         ['_depth2', Opt.cond['none'], 'Depth of soil layer 2 [m]', 'grid', 'spatial', 'Soil_depth2'],
-        ['_depth3', Opt.cond['none'], 'Depth of soil layer 3 [m]', 'grid', 'spatial', 'Soil_depth3'],
         #['_Gauge_to_Report', Opt.cond['none'], 'Gauges that require outputs', 'grid', 'spatial', 'Gauge_mask'],
         ]
 
@@ -69,13 +68,14 @@ Fluxes   = [['_D', Opt.cond['none'], 'Interception [m]', 'grid', 'new', 'interce
             ['_Tr3', Opt.cond['none'], 'Transpiration in layer 3 [m]', 'grid', 'new', 'transp_layer3']
             ]
 
-Parameters = [['_alpha', Opt.cond['none'], 'The weighting parameter that links LAI and maximum canopy storage', 'grid', 'spatial_param', 'alpha'],
+Parameters = [['_depth3', Opt.cond['none'], 'Depth of soil layer 3 [m]', 'grid', 'spatial_param', 'Soil_depth3'],
+              ['_alpha', Opt.cond['none'], 'The weighting parameter that links LAI and maximum canopy storage', 'grid', 'spatial_param', 'alpha'],
               ['_rE', Opt.cond['intecept_2'], 'Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)', 'grid', 'spatial_param', 'alpha'],
               ['_snow_rain_thre', Opt.cond['snow_1'], 'The temperature for snow melt  [m]', 'grid', 'spatial_param', 'snow_rain_threshold'],
               ['_deg_day_min', Opt.cond['snow_1'], 'Degree-day factor with no precipitation [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_min'],
               ['_deg_day_max', Opt.cond['snow_1'], 'Maximum Degree-day factor [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_max'],
               ['_deg_day_increase', Opt.cond['snow_1'], 'Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_increase']
-
+              
             ]
               
 

@@ -15,8 +15,8 @@ The nitrogen module are mainly based on [HYPE](https://hypeweb.smhi.se/) and mHM
 
 ## Instruction
 ### 1 .Compliation  
-Currently, GEM can only be deployed on Linux. 
-To run GEM, simply direct to ***Release-Linux*** and compile the model.
+Currently, GEM can only be deployed on Linux.  
+For compilation, simply direct to ***Release-Linux*** and make.
 
     cd MODEL_PATH/Release_linux  
     make  

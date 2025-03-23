@@ -47,12 +47,14 @@ struct svector{
 };
 
 struct svector_2d{
+    int parameterisation_count; // How many times of parametersation have been done?
     int n_category, size;
     double **val;
     //ctor from raster ascii file
-    svector_2d(string fname, int num_category, int rowNum, int colNum, sortedGrid _sortedGrid);
+    svector_2d(int num_category, sortedGrid _sortedGrid);
     //dtor
     ~svector_2d();
+    int update(string fname, int num_category, int rowNum, int colNum, sortedGrid _sortedGrid);
 };
 
 #endif /* dataType_H_ */

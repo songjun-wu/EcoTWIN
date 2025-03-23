@@ -54,7 +54,6 @@ struct Control{
   string fn__chnlength;  // Channel length [m]
   string fn__depth1;  // Depth of soil layer 1 [m]
   string fn__depth2;  // Depth of soil layer 2 [m]
-  string fn__depth3;  // Depth of soil layer 3 [m]
   /* end of GIS */ 
   string fn__fdir;  // flow direction [d8 method]
   string fn__Gauge_to_Report;  // Gauges that require outputs
@@ -83,6 +82,7 @@ struct Control{
   /* end of Fluxes */
 
   /* Parameters */
+  string fn__depth3;  // Depth of soil layer 3 [m]
   string fn__alpha;  // The weighting parameter that links LAI and maximum canopy storage
   string fn__rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
   string fn__snow_rain_thre;  // The temperature for snow melt  [m]

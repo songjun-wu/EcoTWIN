@@ -15,7 +15,6 @@
   _chnlength = new svector(ctrl.path_BasinFolder + ctrl.fn__chnlength, _rowNum, _colNum, _sortedGrid);
   _depth1 = new svector(ctrl.path_BasinFolder + ctrl.fn__depth1, _rowNum, _colNum, _sortedGrid);
   _depth2 = new svector(ctrl.path_BasinFolder + ctrl.fn__depth2, _rowNum, _colNum, _sortedGrid);
-  _depth3 = new svector(ctrl.path_BasinFolder + ctrl.fn__depth3, _rowNum, _colNum, _sortedGrid);
   /* end of GIS */
 
   /* Storages */

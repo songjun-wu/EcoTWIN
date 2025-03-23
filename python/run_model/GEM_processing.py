@@ -11,8 +11,6 @@ spatial_path = Path.data_path + 'spatial/'
 
 nodata = -9999.0
 
-
-
 tmp = np.loadtxt(spatial_path + 'dem.asc', skiprows=6)
 
 mask = tmp != nodata
