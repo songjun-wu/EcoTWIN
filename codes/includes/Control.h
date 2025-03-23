@@ -34,10 +34,11 @@ struct Control{
   /* end of Settings */
 
   /* Options */
-  int opt_climate_input_format;  //How is climate inputs orgainsed? 1 = raster; 2 = aggregated binary file (climate_zone file should be specified)
-  int opt_tracking_isotope;  //Enable isotopic tracking? 0:disabled, 1:enabled
-  int opt_intecept;  //Canopy interception. 1:maximum canopy storage unmodified; 2:storage corrected (Landarf et al., 2024)
-  int opt_snow;  //Snow accumulation method. 1:Degree day factor method
+  int opt_climate_input_format;  //How is climate inputs orgainsed? 1: raster; 2: aggregated binary file (climate_zone file should be specified)
+  int opt_tracking_isotope;  //Enable isotopic tracking? 0: disabled, 1: enabled
+  int opt_intecept;  //Canopy interception. 1 :maximum canopy storage unmodified; 2 :storage corrected (Landarf et al., 2024)
+  int opt_snow;  //Snow accumulation method. 1: Degree day factor method
+  int opt_infilt;  //Infiltration function. 1: 
   /* end of Options */
 
 
@@ -57,8 +58,9 @@ struct Control{
   /* end of GIS */ 
   string fn__fdir;  // flow direction [d8 method]
   string fn__Gauge_to_Report;  // Gauges that require outputs
-  grid *_Gauge_to_Report;  // Gauges that require outputs
+
   grid *_fdir;  // flow direction [d8 method]
+  svector *_Gauge_to_Report;  // Gauges that require outputs
 
   /* Climate */
   string fn__P;  // Precipitation [m]
@@ -119,6 +121,7 @@ struct Control{
   Control();
   //dtor
   ~Control();
+  int dtor();
   
 
   // Read configurations

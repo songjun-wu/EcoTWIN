@@ -22,7 +22,8 @@ int main(){
   oBasin = new Basin(*oControl);
   oAtmosphere = new Atmosphere(*oControl);
   oParam = new Param(*oControl);
-  
+
+
   auto stop1 = std::chrono::high_resolution_clock::now();
   
   while (oControl->current_ts < oControl->Simul_end){
@@ -49,20 +50,20 @@ int main(){
     }
 
     // Update land use inputs
-    if (advance_landuse >= oControl->Clim_input_tstep) {
+    if (advance_landuse >= oControl->Update_interval) {
       oParam->Parameterisation(*oControl); // Parameterisation
       advance_landuse = 0;
   }
 
   }
 
+  // Deconstructor
+  oAtmosphere->dtor(*oControl);
+  oBasin->dtor(*oControl);
+  oParam->dtor(*oControl);
+  oControl->dtor();
+
   
-
-  //delete oControl;
-  delete oBasin;
-  delete oAtmosphere;
-  delete oParam;
-
   auto stop2  = std::chrono::high_resolution_clock::now();
 
   auto duration1 = chrono::duration_cast<chrono::microseconds>(stop1 - start);

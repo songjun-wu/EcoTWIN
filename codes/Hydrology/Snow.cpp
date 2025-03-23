@@ -1,6 +1,51 @@
 #include "Basin.h"
 
-int Basin::Snow_acc_melt(Control &ctrl, Param &par, Atmosphere &atm){
+int Basin::Solve_snowpack(Control &ctrl, Param &par, Atmosphere &atm){
+
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+
+        if (ctrl.opt_snow == 1){
+            Snow_acc_melt(par, atm, j);
+        }
+    }
 
     return EXIT_SUCCESS;
+}
+
+
+int Basin::Snow_acc_melt(Param &par, Atmosphere &atm, int j){
+
+    // Parameters
+    double _snow_rain_thre = par._snow_rain_thre->val[j];
+    double _deg_day_min = par._deg_day_min->val[j];
+    double _deg_day_max = par._deg_day_max->val[j];
+    double _deg_day_increase = par._deg_day_increase->val[j];
+    double degree_day;  // Degree day factor
+
+    // States and flxues
+    double Th = _Th->val[j];;  // Throughfall
+    double Ta = atm._Ta->val[j]; // Mean air temperature
+    double snow_pack = _snow->val[j]; // Snow pack
+    double snow_melt;
+
+    
+
+    if (Ta < _snow_rain_thre) {  // snow accumulation
+        snow_melt = 0;
+        _snow->val[j] += Th;
+        _Th->val[j] = 0;
+
+    } else { 
+        // snow melt
+        degree_day = min<double>(_deg_day_min + _deg_day_increase * Th, _deg_day_max);
+        snow_melt = min<double>(degree_day*(Ta - _snow_rain_thre), snow_pack);
+        snow_pack -= snow_melt;
+        Th += snow_melt;
+    }
+
+    _snow->val[j] = snow_pack;
+    _Th->val[j] = Th;
+
+    return EXIT_SUCCESS;
+
 }

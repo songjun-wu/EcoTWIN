@@ -1,7 +1,8 @@
 #include "Atmosphere.h"
 
-Atmosphere::~Atmosphere(){
-  
+Atmosphere::~Atmosphere(){}
+
+int Atmosphere::dtor(Control &ctrl){
 
   if(_climzones)  delete _climzones;
 
@@ -21,5 +22,7 @@ Atmosphere::~Atmosphere(){
   if (+if__LAI.is_open())  if__LAI.close();
   if(_LAI) delete _LAI;
   /* end of Climate */
+
+  return EXIT_SUCCESS;
 
 }

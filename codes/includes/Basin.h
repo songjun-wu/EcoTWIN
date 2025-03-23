@@ -19,43 +19,42 @@ class Basin {
 
   public:
   /* GIS */
-  grid *_dem;  // Surface evelation [m]
-  grid *_chnwidth;  // Channel width [m]
-  grid *_chndepth;  // Channel depth [m]
-  grid *_chnlength;  // Channel length [m]
-  grid *_depth1;  // Depth of soil layer 1 [m]
-  grid *_depth2;  // Depth of soil layer 2 [m]
-  grid *_depth3;  // Depth of soil layer 3 [m]
+  svector *_dem;  // Surface evelation [m]
+  svector *_chnwidth;  // Channel width [m]
+  svector *_chndepth;  // Channel depth [m]
+  svector *_chnlength;  // Channel length [m]
+  svector *_depth1;  // Depth of soil layer 1 [m]
+  svector *_depth2;  // Depth of soil layer 2 [m]
+  svector *_depth3;  // Depth of soil layer 3 [m]
   /* end of GIS */
 
 
   /* Storages */ 
-  grid *_I;  // Interception/canopy storage [m]
-  grid *_snow;  // Snow depth in [m]
-  grid *_theta1;  // Soil moisture in layer 1 [decimal]
-  grid *_theta2;  // Soil moisture in layer 2 [decimal]
-  grid *_theta3;  // Soil moisture in layer 3 [decimal]
-  grid *_I_old;  // Interception/canopy storage in previous timestep in [m]
+  svector *_I;  // Canopy storage [m]
+  svector *_snow;  // Snow depth in [m]
+  svector *_theta1;  // Soil moisture in layer 1 [decimal]
+  svector *_theta2;  // Soil moisture in layer 2 [decimal]
+  svector *_theta3;  // Soil moisture in layer 3 [decimal]
   /* end of Storages */ 
  
 
   /* Fluxes */
-  grid *_D;  // Interception [m]
-  grid *_Th;  // Throughfall [m]
-  grid *_snowmelt;  // Snow melt [m]
-  grid *_Qs;  // Overland flow [m]
-  grid *_infilt;  // Inflitration into soil layer 1 [m]
-  grid *_preferential2;  // Preferential flow to layer 2 [m]
-  grid *_preferential3;  // Preferential flow to layer 3 [m]
-  grid *_Perc1;  // Percolation into layer 2 [m]
-  grid *_Perc2;  // Percolation into layer 3 [m]
-  grid *_Perc3;  // Percolation into gw reservior [m]
-  grid *_Ei;  // Canopy evaporation [m]
-  grid *_Es;  // Soil evaporation [m]
-  grid *_Tr;  // Total transpiration in three layers [m]
-  grid *_Tr1;  // Transpiration in layer 1 [m]
-  grid *_Tr2;  // Transpiration in layer 2 [m]
-  grid *_Tr3;  // Transpiration in layer 3 [m]
+  svector *_D;  // Interception [m]
+  svector *_Th;  // Throughfall [m]
+  svector *_snowmelt;  // Snow melt [m]
+  svector *_Qs;  // Overland flow [m]
+  svector *_infilt;  // Inflitration into soil layer 1 [m]
+  svector *_preferential2;  // Preferential flow to layer 2 [m]
+  svector *_preferential3;  // Preferential flow to layer 3 [m]
+  svector *_Perc1;  // Percolation into layer 2 [m]
+  svector *_Perc2;  // Percolation into layer 3 [m]
+  svector *_Perc3;  // Percolation into gw reservior [m]
+  svector *_Ei;  // Canopy evaporation [m]
+  svector *_Es;  // Soil evaporation [m]
+  svector *_Tr;  // Total transpiration in three layers [m]
+  svector *_Tr1;  // Transpiration in layer 1 [m]
+  svector *_Tr2;  // Transpiration in layer 2 [m]
+  svector *_Tr3;  // Transpiration in layer 3 [m]
   /* end of Fluxes */
 
  
@@ -63,17 +62,22 @@ class Basin {
   Basin(Control &ctrl);  // constrcuctor of Basin
   //dtor
   ~Basin();  // destrcuctor of Basin
+  int dtor(Control &ctrl);
 
 
   int Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm);
 
   // Canopy interception
-  int Solve_canopy_fluxes(Control &ctrl, Param &par, Atmosphere &atm);
-  int Interception_1(Param &par, Atmosphere &atm, int r, int c);
-  int Interception_2(Param &par, Atmosphere &atm, int r, int c);
+  int Solve_canopy(Control &ctrl, Param &par, Atmosphere &atm);
+  int Interception_1(Param &par, Atmosphere &atm, int j);
+  int Interception_2(Param &par, Atmosphere &atm, int j);
 
   // Snow accumulation and melt
-  int Snow_acc_melt(Control &ctrl, Param &par, Atmosphere &atm);
+  int Solve_snowpack(Control &ctrl, Param &par, Atmosphere &atm);
+  int Snow_acc_melt(Param &par, Atmosphere &atm, int j);
+
+  // Soil profiles
+  int Solve_soil_profile(Control &ctrl, Param &par);
 
   // routing
   int Routing_ovf(Control &ctrl, Param &par); // overland flow routing

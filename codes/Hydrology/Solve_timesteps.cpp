@@ -2,10 +2,12 @@
 
 
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
+    
+    Solve_canopy(ctrl, par, atm);
 
-    //Solve_canopy_fluxes(ctrl, par, atm);
+    Solve_snowpack(ctrl, par, atm);
 
-    Snow_acc_melt(ctrl, par, atm);
+    Solve_soil_profile(ctrl, par);
 
     //Routing_ovf(ctrl, par);
 

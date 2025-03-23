@@ -13,8 +13,7 @@ for fname in fnames:
 
 """
 ovf = np.fromfile(output_path + 'overland_flow_map.bin').reshape(-1, 630, 481)
-
 plt.imshow(np.log(ovf[0,:,:]))
-plt.savefig(output_path + 'ovf.png')
-print(ovf.shape)"
+plt.savefig(output_path + 'ovf.png', dpi=300)
+print(ovf.shape)
 """

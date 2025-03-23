@@ -22,7 +22,7 @@ def includes(fname, signs, datas, max_category):
             for key in keys:
                 for i in range(len(grouped_data[key])):
                     if grouped_data[key][i][3] == 'grid':
-                        content.append('  grid *' + grouped_data[key][i][0] + ';  // ' + grouped_data[key][i][2] + '\n')
+                        content.append('  svector *' + grouped_data[key][i][0] + ';  // ' + grouped_data[key][i][2] + '\n')
                     if grouped_data[key][i][4] == 'spatial_TS':
                         content.append('  ifstream if_' + grouped_data[key][i][0] + ';  // ' + grouped_data[key][i][2] + '\n')         
             content = lines[:start] + content + lines[end:]
@@ -132,11 +132,14 @@ def destructor(fname, signs, datas):
             content = []
             keys, grouped_data = group_text(data)
             for key in keys:
+                text = []
                 for i in range(len(grouped_data[key])):                  
                     if grouped_data[key][i][4] == 'spatial_TS':
-                        content.append('  if (+if_'+grouped_data[key][i][0]+'.is_open())  if_'+grouped_data[key][i][0]+'.close();\n')  
+                        text.append('  if (+if_'+grouped_data[key][i][0]+'.is_open())  if_'+grouped_data[key][i][0]+'.close();\n')  
                     if grouped_data[key][i][3] == 'grid' or grouped_data[key][i][3] == 'grid_param':
-                        content.append('  if('+grouped_data[key][i][0]+') delete '+grouped_data[key][i][0]+';\n')               
+                        text.append('  if('+grouped_data[key][i][0]+') delete '+grouped_data[key][i][0]+';\n')
+
+                content.append(if_condition_build(key, text))              
             content = lines[:start] + content + lines[end:]
         with open(fname, 'w') as f:
             f.writelines(content)
@@ -159,9 +162,9 @@ def constructor(fname, signs, datas):
                 text = []
                 for i in range(len(grouped_data[key])):                  
                     if grouped_data[key][i][4] == 'new' or grouped_data[key][i][4] == 'spatial_TS' or grouped_data[key][i][4] == 'spatial_param':
-                        text.append('  '+grouped_data[key][i][0]+' = new grid(_rowNum, _colNum);\n')  
+                        text.append('  '+grouped_data[key][i][0]+' = new svector(_sortedGrid.size);\n')  
                     if grouped_data[key][i][4] == 'spatial':
-                        text.append('  '+grouped_data[key][i][0]+' = new grid(ctrl.path_BasinFolder + ctrl.fn_'+grouped_data[key][i][0]+', _rowNum, _colNum);\n')  
+                        text.append('  '+grouped_data[key][i][0]+' = new svector(ctrl.path_BasinFolder + ctrl.fn_'+grouped_data[key][i][0]+', _rowNum, _colNum, _sortedGrid);\n')  
                 content.append(if_condition_build(key, text))
             content = lines[:start] + content + lines[end:]
         with open(fname, 'w') as f:

@@ -15,7 +15,7 @@ def set_env(Path):
     shutil.copytree(Path.data_path+'spatial/', Path.run_path+'spatial/')
     # copy configs
     shutil.copyfile(Path.config_path+'config.ini',  Path.run_path+'config.ini')
-    shutil.copyfile(Path.config_path+'param.ini',  Path.run_path+'param.ini')
+    #shutil.copyfile(Path.config_path+'param.ini',  Path.run_path+'param.ini')
 
 
 def set_config(Path):
@@ -26,6 +26,35 @@ def set_config(Path):
         f.writelines(lines)
     
 
+def gen_param(Path, Info, Param, param_arr):
+    
+    
+    landuse_index = Info.landuse_index
+    soil_index = Info.soil_index
+
+    N_land_use = len(landuse_index)
+    N_soil = len(soil_index)
+    N_total = N_land_use + N_soil + 1
+
+    counter = 0
+    lines = []
+    for key in Param.ref.keys():
+        dict = Param.ref.get(key)
+        param_values = np.full(N_total, Info.nodata)
+
+        if dict['type'] == 'global':  # The first column is for global parameters
+            param_values[0] = param_arr[counter]
+            counter += 1
+        elif dict['type'] == 'landuse':
+            param_values[landuse_index] = param_arr[counter:counter+N_land_use]
+            counter += N_land_use
+        elif dict['type'] == 'soil':
+            param_values[soil_index] = param_arr[counter:counter+N_soil]
+            counter += N_soil
+        text = key + ',' + (',').join(param_values.astype(np.str)) + '\n'
+        lines.append(text)
+    with open(Path.run_path+'param.ini', 'w') as f:
+        f.writelines(lines)
 
 def save_to_ascii(data, path, ref_path):
     with open(ref_path) as f:

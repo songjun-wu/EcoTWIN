@@ -10,17 +10,17 @@
   _sortedGrid = ctrl._sortedGrid;
 
   /* Climate */
-  _P = new grid(_rowNum, _colNum);
-  _Ta = new grid(_rowNum, _colNum);
-  _Tmin = new grid(_rowNum, _colNum);
-  _Tmax = new grid(_rowNum, _colNum);
-  _RH = new grid(_rowNum, _colNum);
-  _LAI = new grid(_rowNum, _colNum);
+  _P = new svector(_sortedGrid.size);
+  _Ta = new svector(_sortedGrid.size);
+  _Tmin = new svector(_sortedGrid.size);
+  _Tmax = new svector(_sortedGrid.size);
+  _RH = new svector(_sortedGrid.size);
+  _LAI = new svector(_sortedGrid.size);
   /* end of Climate */
 
 
   if (ctrl.opt_climate_input_format == 2) {
-    _climzones = new grid(ctrl.path_BasinFolder + ctrl.fn__climzones, _rowNum, _colNum);
+    _climzones = new svector(ctrl.path_BasinFolder + ctrl.fn__climzones, _rowNum, _colNum, _sortedGrid);
   }
   
   if (ctrl.opt_climate_input_format == 1){

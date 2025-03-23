@@ -3,7 +3,7 @@ from develop_tools import *
 def parameterisation_build(fname, parameters):
 
     content = []
-    content.append('  int r;\n  int c;\nint nodata = ctrl._nodata;\n\n')
+    content.append('  int nodata = ctrl._nodata;\n\n')
     keys, grouped_data = group_text(parameters)
     for key in keys:
         text = []
@@ -14,13 +14,10 @@ def parameterisation_build(fname, parameters):
 
             text.append('    if ('+grouped_data[key][i][0][1:]+'[k]!=nodata) {\n')
             
-            text.append('\n      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {\n')
-            text.append('      r = _sortedGrid.row[j];\n')
-            text.append('      c = _sortedGrid.col[j];\n')
-            text.append('      '+grouped_data[key][i][0]+'->matrix[r][c] += param_category->matrix[k][r][c] * '+grouped_data[key][i][0][1:]+'[k];\n')
-            text.append('   }\n')
-            text.append('   }\n')
-            text.append('   }\n\n')
+            text.append('      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {\n')
+            text.append('      '+grouped_data[key][i][0]+'->val[j] += param_category->val[k][j] * '+grouped_data[key][i][0][1:]+'[k];\n')
+            text.append('   }}}\n')
+
 
         print(text)
         content.append(if_condition_build(key, text))

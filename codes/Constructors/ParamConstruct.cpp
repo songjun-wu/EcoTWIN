@@ -10,22 +10,22 @@ Param::Param(Control &ctrl){
 
   string fname = "param.ini";
   /* Parameters */
-  _alpha = new grid(_rowNum, _colNum);
+  _alpha = new svector(_sortedGrid.size);
   if (ctrl.opt_intecept == 2){
-    _rE = new grid(_rowNum, _colNum);
+    _rE = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_snow == 1){
-    _snow_rain_thre = new grid(_rowNum, _colNum);
-    _deg_day_min = new grid(_rowNum, _colNum);
-    _deg_day_max = new grid(_rowNum, _colNum);
-    _deg_day_increase = new grid(_rowNum, _colNum);
+    _snow_rain_thre = new svector(_sortedGrid.size);
+    _deg_day_min = new svector(_sortedGrid.size);
+    _deg_day_max = new svector(_sortedGrid.size);
+    _deg_day_increase = new svector(_sortedGrid.size);
   }
   /* end of Parameters */
 
   // Read parameter values from param.ini
   ReadParamFile(ctrl, fname);
 
-  param_category = new grid_3d(ctrl.path_BasinFolder+"category_", ctrl.num_category ,_rowNum, _colNum);
+  param_category = new svector_2d(ctrl.path_BasinFolder+"category_", ctrl.num_category ,_rowNum, _colNum, _sortedGrid);
   
   // Assign parameter spatially
   Parameterisation(ctrl);

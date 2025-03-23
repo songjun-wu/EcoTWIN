@@ -1,8 +1,12 @@
 #include "Param.h"
 
-Control::~Control(){
-  
-  if(_fdir) delete _fdir;
+Control::~Control(){}
+
+
+int Control::dtor(){
+
   if (_Gauge_to_Report) delete _Gauge_to_Report;
+
+  return EXIT_SUCCESS;
 
 }

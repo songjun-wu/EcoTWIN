@@ -75,6 +75,7 @@ Parameters = [['_alpha', Opt.cond['none'], 'The weighting parameter that links L
               ['_deg_day_min', Opt.cond['snow_1'], 'Degree-day factor with no precipitation [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_min'],
               ['_deg_day_max', Opt.cond['snow_1'], 'Maximum Degree-day factor [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_max'],
               ['_deg_day_increase', Opt.cond['snow_1'], 'Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_increase']
+
             ]
               
 

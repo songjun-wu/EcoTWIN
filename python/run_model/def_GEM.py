@@ -16,24 +16,28 @@ class Path:
     run_path = work_path + 'run/'           # The path for model runs
     output_path = run_path + 'outputs/'     # The path for output saving
 
+class Info:
     
-class Data:
-    # Simulation begining
-    simbeg = datetime(1992,1,1)
-    # Total simulation timesteps
-    lsim = 10959
+    nodata = -9999.0 # nodata value for param.ini and all spatial maps
 
-    # GEM sort grids sequentially (column first)
-    sim_order = [16,14,1,12,11,13,2,6,3,10,7,8,9,15,4,17,5]
-    nts = len(sim_order)
+    N_soil = 4  # Number of soil types
+    N_landuse = 5 # Number of land use types
+    
+    soil_index = [1,2,3,4]  # Column index in param.ini
+    landuse_index = [5,6,7,8,9]  # Column index in param.ini
+    
 
-    sim_idx       = np.array([3,4,17,5]) # 32, 26, 26a, 29a
-    # variables needs for outputs
-    obs = {}
-    obs['transp']       = {'sim_file':'transp.tab' ,'sim_pts':sim_idx,'conv':1,'type':'Ts'}
+    
+
 
 
 class Param:
     ref = {}
     # parameters to calibrate
-    ref['albedoS']   = {'soil':1, 'veg':0, 'log':0, 'file':'albedo',       'min':[0.1,0.1,0.1,0.1],    'max':[0.4,0.4,0.4,0.4]}
+    ref['alpha']   =            {'type':'landuse',  'log':0, 'file':'alpha',   'min':[0.1], 'max':[0.4]}
+    ref['rE']   =               {'type':'landuse',  'log':0, 'file':'rE',   'min':[0.1], 'max':[0.4]}
+    ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[0.1], 'max':[0.4]}
+    ref['deg_day_min']   =      {'type':'global',   'log':0, 'file':'deg_day_min',   'min':[0.1], 'max':[0.4]}
+    ref['deg_day_max']   =      {'type':'global',   'log':0, 'file':'deg_day_max',   'min':[0.1], 'max':[0.4]}
+    ref['deg_day_increase']   = {'type':'global',   'log':0, 'file':'deg_day_increase',   'min':[0.1], 'max':[0.4]}
+

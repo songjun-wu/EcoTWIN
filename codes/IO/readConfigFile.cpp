@@ -38,6 +38,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
   readInto(opt_intecept, "opt_intecept", lines);
   readInto(opt_snow, "opt_snow", lines);
+  readInto(opt_infilt, "opt_infilt", lines);
   /* end of Options */
 
   /* GIS */
@@ -63,7 +64,7 @@ int Control::ReadConfigFile(string fname){
   /* end of Climate */
 
   /* Storages */ 
-  readInto(fn__I, "inteception_storage", lines);
+  readInto(fn__I, "canopy_storage", lines);
   readInto(fn__snow, "snow_depth", lines);
   readInto(fn__theta1, "SMC_layer1", lines);
   readInto(fn__theta2, "SMC_layer2", lines);
@@ -85,7 +86,7 @@ int Control::ReadConfigFile(string fname){
 
   /* Report */
   // 1: report time series at gauging stations; 2: report maps
-  readInto(report__I, "report_inteception_storage", lines);
+  readInto(report__I, "report_canopy_storage", lines);
   readInto(report__snow, "report_snow_depth", lines);
   readInto(report__theta1, "report_SMC_layer1", lines);
   readInto(report__theta2, "report_SMC_layer2", lines);

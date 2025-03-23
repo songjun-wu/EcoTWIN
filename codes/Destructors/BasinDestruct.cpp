@@ -1,6 +1,8 @@
 #include "Basin.h"
 
-Basin::~Basin(){
+Basin::~Basin(){}
+
+int Basin::dtor(Control &ctrl){
   
   /* GIS */
   if(_dem) delete _dem;
@@ -18,7 +20,6 @@ Basin::~Basin(){
   if(_theta1) delete _theta1;
   if(_theta2) delete _theta2;
   if(_theta3) delete _theta3;
-  if(_I_old) delete _I_old;
   /* end of Storages */
 
   /* Fluxes */
@@ -40,4 +41,5 @@ Basin::~Basin(){
   if(_Tr3) delete _Tr3;
   /* end of Fluxes */
 
+  return EXIT_SUCCESS;
 }

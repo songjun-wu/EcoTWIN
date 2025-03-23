@@ -11,10 +11,14 @@ spatial_path = Path.data_path + 'spatial/'
 
 nodata = -9999.0
 
+
+
 tmp = np.loadtxt(spatial_path + 'dem.asc', skiprows=6)
+
+mask = tmp != nodata
 unit_nodata = np.full(tmp.shape, nodata)
 unit_soil = np.full(tmp.shape, nodata)
-unit_soil[tmp > 0] = 1
+unit_soil[mask] = 1
 
 unit_zero = np.copy(unit_soil)
 unit_zero[unit_soil==1] = 0
@@ -32,8 +36,16 @@ GEM_tools.save_to_ascii(data=tmpp, path=spatial_path+'Gauge_to_Report.asc', ref_
 
 p_cat_list = [1, 0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.06, 0.04]
 for i in range(len(p_cat_list)):
-    p_cat = p_cat_list[i]
-    GEM_tools.save_to_ascii(data=unit_soil*p_cat, path=spatial_path+'category_'+str(i)+'.asc', ref_path=spatial_path+'dem.asc')
+    _data = []
+    for j in range(5):
+        p_cat = p_cat_list[i] * (j + 1)
+        data = np.copy(unit_nodata)
+        data[mask] = p_cat
+        _data = np.append(_data, data.flatten())
+        _data.tofile(spatial_path+'category_'+str(i)+'.bin')
+        #GEM_tools.save_to_ascii(data=data, path=spatial_path+'category_'+str(i)+'.asc', ref_path=spatial_path+'dem.asc')
+
+        tmp = np.fromfile(spatial_path+'category_'+str(i)+'.bin')
 
 
 

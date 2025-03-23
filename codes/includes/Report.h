@@ -20,7 +20,7 @@ class Report {
 
     // report time series at gauging stations or maps
     int report(Control &ctrl, Basin &Bsn);
-    int reportTS(Control &ctrl, const grid *input, string varname, string filepath);
-    int reportMap(Control &ctrl, const grid *input, string varname, string filepath);
+    int reportTS(Control &ctrl, const svector *input, string varname, string filepath);
+    int reportMap(Control &ctrl, const svector *input, sortedGrid _sortedGrid, string varname, string filepath);
 
 };

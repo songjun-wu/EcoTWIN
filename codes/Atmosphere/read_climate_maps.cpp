@@ -28,17 +28,20 @@ int Atmosphere::open_climate_maps(string fname, ifstream &ifHandle){
   return EXIT_SUCCESS;
 }
 
-int Atmosphere::read_climate_maps(ifstream &ifHandle, grid &climateMap){
+int Atmosphere::read_climate_maps(ifstream &ifHandle, svector &climateMap){
   double *data=NULL;
   int dim  = _rowNum*_colNum;
+  int r, c;
+
   data = new double[dim];
   ifHandle.read((char *)data, sizeof(double)*dim);
 
-  for (int r = 1; r < _rowNum; r++){
-    for (int c = 1; c < _colNum; c++){
-      climateMap.matrix[r][c] = data[r*_colNum + c];
-    }
+  for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+    r = _sortedGrid.row[j];
+    c = _sortedGrid.col[j];
+    climateMap.val[j] = data[r*_colNum + c];
   }
+
   delete[] data;
   return EXIT_SUCCESS;
 }
@@ -65,34 +68,29 @@ int Atmosphere::update_climate(Control &ctrl){
 
 int Atmosphere::init_climate_maps(string fname, ifstream &ifHandle){
   int max = 0;
-  int r, c;
   ifHandle.open(fname, ios::binary);
   
   if (!ifHandle.good()){
     throw runtime_error("file now found    :" + fname);
   }
   for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-	  r = _sortedGrid.row[j];
-	  c = _sortedGrid.col[j];
-    if (_climzones->matrix[r][c] > max){
-      max = _climzones->matrix[r][c];
+    if (_climzones->val[j] > max){
+      max = _climzones->val[j];
     }
   _nzones = max+1;
   }
   return EXIT_SUCCESS;
 }
 
-int Atmosphere::update_climate_maps(ifstream &ifHandle, grid &climateMap){
+int Atmosphere::update_climate_maps(ifstream &ifHandle, svector &climateMap){
   double *data=NULL;
-  int r, c;
   int zoneID;
   data = new double[_nzones];
   ifHandle.read((char *)data, sizeof(double)*_nzones);  
   for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-	  r = _sortedGrid.row[j];
-	  c = _sortedGrid.col[j];
-    zoneID = _climzones->matrix[r][c];
-    climateMap.matrix[r][c] = data[zoneID];
+
+    zoneID = _climzones->val[j];
+    climateMap.val[j] = data[zoneID];
     }
   
   delete[] data;

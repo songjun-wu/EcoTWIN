@@ -1,3 +1,5 @@
+#ifndef dataType_H_
+#define dataType_H_
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -16,26 +18,41 @@ struct grid{
     int reset();
 };
 
-struct grid_3d{
-    int n_category, nrow, ncol;
-    double ***matrix;
-    //ctor from raster ascii file
-    grid_3d(string fname, int num_category, int rowNum, int colNum);
-    //dtor
-    ~grid_3d();
-};
-
 
 
 struct sortedGrid{
-    int numCells;
-    int zone_climate;
-    vector<int> row;
-    vector<int> col;
-    vector<int> dir;
+    int size;
+    //int zone_climate;
+    vector<int> row;  // row ID
+    vector<int> col;  // col ID
+    vector<int> to_cell;  // vector ID of downstream cell
+    vector<int> lat_ok;  // 1: there is a downstream cell; 0: outlet
 };
 
 struct sortedTSmask{
-    vector<int> row;
-    vector<int> col;
+    vector<int> cell;
 };
+
+
+struct svector{
+    int size;
+    double *val;
+    //ctor from raster ascii file
+    svector(string fname, int rowNum, int colNum, sortedGrid _sortedGrid);
+    svector(int length);
+    //dtor
+    ~svector();
+
+    int reset();
+};
+
+struct svector_2d{
+    int n_category, size;
+    double **val;
+    //ctor from raster ascii file
+    svector_2d(string fname, int num_category, int rowNum, int colNum, sortedGrid _sortedGrid);
+    //dtor
+    ~svector_2d();
+};
+
+#endif /* dataType_H_ */

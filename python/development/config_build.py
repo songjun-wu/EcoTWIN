@@ -111,8 +111,8 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                     if signs[i] == 'Parameters':
                         text.append('num_category = 10 # The number of categories for parameterisation ...\n' + \
                                     '#The categories should include the land use types, soil types, or any other types for parameterisation ...\n' + \
-                                    '#The distribution of each category should be specified in cat_id.asc ...\n' + \
-                                    '#The first category (column) should be bare soil\n' )
+                                    '#The distribution of each category (in decimal proportion) should be specified in cat_id.asc ...\n' + \
+                                    '#The first category (column) represents global parameter (i.e., cat_0.asc should be 1)\n' )
                         text.append('parameter_file = parameters.ini # The file contains all parameter name, values, and descriptio. Each column =  a category\n')
                     elif signs[i] == 'Climate':
                         text.append('num_cliamte_zones = 10 # The number of climate zones for parameterisation.\n' )
@@ -164,7 +164,7 @@ def report_build(fname, reports):
         for i in range(len(reports)):
             data = reports[i]
             content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS(ctrl, Bsn.'+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n')
-            content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, Bsn.'+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n\n')
+            content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, Bsn.'+data[0]+', ctrl._sortedGrid, "'+data[5]+'", ctrl.path_ResultsFolder);}\n\n')
 
         content = lines[:start] + content + lines[end:]
     

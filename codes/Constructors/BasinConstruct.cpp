@@ -9,41 +9,40 @@
   _sortedGrid = ctrl._sortedGrid;
 
   /* GIS */
-  _dem = new grid(ctrl.path_BasinFolder + ctrl.fn__dem, _rowNum, _colNum);
-  _chnwidth = new grid(ctrl.path_BasinFolder + ctrl.fn__chnwidth, _rowNum, _colNum);
-  _chndepth = new grid(ctrl.path_BasinFolder + ctrl.fn__chndepth, _rowNum, _colNum);
-  _chnlength = new grid(ctrl.path_BasinFolder + ctrl.fn__chnlength, _rowNum, _colNum);
-  _depth1 = new grid(ctrl.path_BasinFolder + ctrl.fn__depth1, _rowNum, _colNum);
-  _depth2 = new grid(ctrl.path_BasinFolder + ctrl.fn__depth2, _rowNum, _colNum);
-  _depth3 = new grid(ctrl.path_BasinFolder + ctrl.fn__depth3, _rowNum, _colNum);
+  _dem = new svector(ctrl.path_BasinFolder + ctrl.fn__dem, _rowNum, _colNum, _sortedGrid);
+  _chnwidth = new svector(ctrl.path_BasinFolder + ctrl.fn__chnwidth, _rowNum, _colNum, _sortedGrid);
+  _chndepth = new svector(ctrl.path_BasinFolder + ctrl.fn__chndepth, _rowNum, _colNum, _sortedGrid);
+  _chnlength = new svector(ctrl.path_BasinFolder + ctrl.fn__chnlength, _rowNum, _colNum, _sortedGrid);
+  _depth1 = new svector(ctrl.path_BasinFolder + ctrl.fn__depth1, _rowNum, _colNum, _sortedGrid);
+  _depth2 = new svector(ctrl.path_BasinFolder + ctrl.fn__depth2, _rowNum, _colNum, _sortedGrid);
+  _depth3 = new svector(ctrl.path_BasinFolder + ctrl.fn__depth3, _rowNum, _colNum, _sortedGrid);
   /* end of GIS */
 
   /* Storages */
-  _I = new grid(ctrl.path_BasinFolder + ctrl.fn__I, _rowNum, _colNum);
-  _snow = new grid(ctrl.path_BasinFolder + ctrl.fn__snow, _rowNum, _colNum);
-  _theta1 = new grid(ctrl.path_BasinFolder + ctrl.fn__theta1, _rowNum, _colNum);
-  _theta2 = new grid(ctrl.path_BasinFolder + ctrl.fn__theta2, _rowNum, _colNum);
-  _theta3 = new grid(ctrl.path_BasinFolder + ctrl.fn__theta3, _rowNum, _colNum);
-  _I_old = new grid(_rowNum, _colNum);
+  _I = new svector(ctrl.path_BasinFolder + ctrl.fn__I, _rowNum, _colNum, _sortedGrid);
+  _snow = new svector(ctrl.path_BasinFolder + ctrl.fn__snow, _rowNum, _colNum, _sortedGrid);
+  _theta1 = new svector(ctrl.path_BasinFolder + ctrl.fn__theta1, _rowNum, _colNum, _sortedGrid);
+  _theta2 = new svector(ctrl.path_BasinFolder + ctrl.fn__theta2, _rowNum, _colNum, _sortedGrid);
+  _theta3 = new svector(ctrl.path_BasinFolder + ctrl.fn__theta3, _rowNum, _colNum, _sortedGrid);
   /* end of Storages */
 
   /* Fluxes */
-  _D = new grid(_rowNum, _colNum);
-  _Th = new grid(_rowNum, _colNum);
-  _snowmelt = new grid(_rowNum, _colNum);
-  _Qs = new grid(_rowNum, _colNum);
-  _infilt = new grid(_rowNum, _colNum);
-  _preferential2 = new grid(_rowNum, _colNum);
-  _preferential3 = new grid(_rowNum, _colNum);
-  _Perc1 = new grid(_rowNum, _colNum);
-  _Perc2 = new grid(_rowNum, _colNum);
-  _Perc3 = new grid(_rowNum, _colNum);
-  _Ei = new grid(_rowNum, _colNum);
-  _Es = new grid(_rowNum, _colNum);
-  _Tr = new grid(_rowNum, _colNum);
-  _Tr1 = new grid(_rowNum, _colNum);
-  _Tr2 = new grid(_rowNum, _colNum);
-  _Tr3 = new grid(_rowNum, _colNum);
+  _D = new svector(_sortedGrid.size);
+  _Th = new svector(_sortedGrid.size);
+  _snowmelt = new svector(_sortedGrid.size);
+  _Qs = new svector(_sortedGrid.size);
+  _infilt = new svector(_sortedGrid.size);
+  _preferential2 = new svector(_sortedGrid.size);
+  _preferential3 = new svector(_sortedGrid.size);
+  _Perc1 = new svector(_sortedGrid.size);
+  _Perc2 = new svector(_sortedGrid.size);
+  _Perc3 = new svector(_sortedGrid.size);
+  _Ei = new svector(_sortedGrid.size);
+  _Es = new svector(_sortedGrid.size);
+  _Tr = new svector(_sortedGrid.size);
+  _Tr1 = new svector(_sortedGrid.size);
+  _Tr2 = new svector(_sortedGrid.size);
+  _Tr3 = new svector(_sortedGrid.size);
   /* end of Fluxes */
 
   
