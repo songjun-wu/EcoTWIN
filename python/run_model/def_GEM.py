@@ -42,6 +42,20 @@ class Param:
     ref['deg_day_max']   =      {'type':'global',   'log':0, 'file':'deg_day_max',   'min':[2e-3], 'max':[1e-2]}
     ref['deg_day_increase']   = {'type':'global',   'log':0, 'file':'deg_day_increase',   'min':[0.1], 'max':[0.9]}
 
+    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.9999]*Info.N_landuse, 'max':[0.99999]*Info.N_landuse}
+
+    ref['ref_thetaS']   = {'type':'landuse',   'log':0, 'file':'ref_thetaS',   'min':[0.5]*Info.N_landuse, 'max':[0.99]*Info.N_landuse}
+    ref['PTF_VG_clay']   = {'type':'landuse',   'log':0, 'file':'PTF_VG_clay',   'min':[-5e-3]*Info.N_landuse, 'max':[5e-3]*Info.N_landuse}
+    ref['PTF_VG_Db']   = {'type':'landuse',   'log':0, 'file':'PTF_VG_Db',   'min':[5e-2]*Info.N_landuse, 'max':[0.6]*Info.N_landuse}
+
+    ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-1.2]*Info.N_soil, 'max':[-0.2]*Info.N_soil}
+    ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[1e-4]*Info.N_soil, 'max':[0.026]*Info.N_soil}
+    ref['PTF_Ks_clay']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_clay',   'min':[-1.3e-2]*Info.N_soil, 'max':[-3e-3]*Info.N_soil}
+    ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[15]*Info.N_soil}
+
+    ref['SWP']   = {'type':'soil',   'log':0, 'file':'SWP',   'min':[10]*Info.N_soil, 'max':[33]*Info.N_soil}
+
+
 
 
 """

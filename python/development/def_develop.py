@@ -1,5 +1,9 @@
 
 
+
+class setting:
+    max_category = 10
+
 class Opt:
     cond = {}
     # Options
@@ -27,10 +31,34 @@ class Opt:
     cond['infilt_1']   = {'key':'opt_infilt', 'value':1, 
                         'general_description':'Infiltration function. 1: ',
                         'description':'Degree day factor method for snow melt'}
+    
+    cond['evap_1']   = {'key':'opt_evap', 'value':1, 
+                        'general_description':'Evapotranspiration function. 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)',
+                        'description':'Evapotranspiration calculation based on Feddes et al., (1976)'}
+    
+    cond['pedotransf_1']   = {'key':'opt_pedotransf', 'value':1, 
+                        'general_description':'Pedo-transfer function to estimate Van Genuchten parameters. 1: Wosten et al., (1999); 2: Wosten et al., (1997);  3: Zacharias et al., (2007)',
+                        'description':'Pedo-transfer function to estimate Van Genuchten parameters based on silt, clay, and OM content, Wosten et al., (1999)'}
+    
+    cond['pedotransf_2']   = {'key':'opt_pedotransf', 'value':2, 
+                        'general_description':'Pedo-transfer function to estimate Van Genuchten parameters. 1: Wosten et al., (1999); 2: Wosten et al., (1997);  3: Zacharias et al., (2007)',
+                        'description':'Pedo-transfer function to estimate Van Genuchten parameters based on silt, clay, and OM content, Wosten et al., (1997)'}
+
+    cond['pedotransf_3']   = {'key':'opt_pedotransf', 'value':3, 
+                        'general_description':'Pedo-transfer function to estimate Van Genuchten parameters. 1: Wosten et al., (1999); 2: Wosten et al., (1997);  3: Zacharias et al., (2007)',
+                        'description':'Pedo-transfer function to estimate Van Genuchten parameters based on sand and clay, Zacharias et al., (2007)'}
+    
+    cond['fc_2']   = {'key':'opt_fieldcapacity', 'value':2, 
+                        'general_description':'Method to estimate field capacity. 1: based on Van Genuchten Model; 2: Ks considered, Twarakavi et al., (2007)',
+                        'description':'Method to estimate field capacity based on Ks and Van Genuchten Model, Twarakavi et al., (2007)'}
+    
+    cond['fc_1']   = {'key':'opt_fieldcapacity', 'value':1, 
+                        'general_description':'Method to estimate field capacity. 1: based on Van Genuchten Model; 2: Ks considered, Twarakavi et al., (2007)',
+                        'description':'Method to estimate field capacity based on Van Genuchten Model'}
+    
 
 
-class setting:
-    max_category = 10
+
 
 
     

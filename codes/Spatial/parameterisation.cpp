@@ -23,7 +23,7 @@ int Param::Parameterisation(Control &ctrl){
       _alpha->val[j] += param_category->val[k][j] * alpha[k];
    }}}
 
-  if (ctrl.opt_intecept == 2){
+  if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){
   
   _rE->reset();
     for (int k=0; k<param_category->n_category; k++){
@@ -62,6 +62,81 @@ int Param::Parameterisation(Control &ctrl){
       if (deg_day_increase[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _deg_day_increase->val[j] += param_category->val[k][j] * deg_day_increase[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_evap == 1){
+  
+  _froot_coeff->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (froot_coeff[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _froot_coeff->val[j] += param_category->val[k][j] * froot_coeff[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_pedotransf == 1){
+  
+  _ref_thetaS->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (ref_thetaS[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _ref_thetaS->val[j] += param_category->val[k][j] * ref_thetaS[k];
+     }}}
+  
+  _PTF_VG_clay->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (PTF_VG_clay[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _PTF_VG_clay->val[j] += param_category->val[k][j] * PTF_VG_clay[k];
+     }}}
+  
+  _PTF_VG_Db->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (PTF_VG_Db[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _PTF_VG_Db->val[j] += param_category->val[k][j] * PTF_VG_Db[k];
+     }}}
+  
+  _PTF_Ks_const->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (PTF_Ks_const[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _PTF_Ks_const->val[j] += param_category->val[k][j] * PTF_Ks_const[k];
+     }}}
+  
+  _PTF_Ks_sand->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (PTF_Ks_sand[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _PTF_Ks_sand->val[j] += param_category->val[k][j] * PTF_Ks_sand[k];
+     }}}
+  
+  _PTF_Ks_clay->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (PTF_Ks_clay[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _PTF_Ks_clay->val[j] += param_category->val[k][j] * PTF_Ks_clay[k];
+     }}}
+  
+  _PTF_Ks_slope->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (PTF_Ks_slope[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _PTF_Ks_slope->val[j] += param_category->val[k][j] * PTF_Ks_slope[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_fieldcapacity == 1){
+  
+  _SWP->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (SWP[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _SWP->val[j] += param_category->val[k][j] * SWP[k];
      }}}
 
   }

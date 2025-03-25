@@ -43,8 +43,6 @@ class Basin {
   svector *_snowmelt;  // Snow melt [m]
   svector *_Qs;  // Overland flow [m]
   svector *_infilt;  // Inflitration into soil layer 1 [m]
-  svector *_preferential2;  // Preferential flow to layer 2 [m]
-  svector *_preferential3;  // Preferential flow to layer 3 [m]
   svector *_Perc1;  // Percolation into layer 2 [m]
   svector *_Perc2;  // Percolation into layer 3 [m]
   svector *_Perc3;  // Percolation into gw reservior [m]
@@ -54,6 +52,18 @@ class Basin {
   svector *_Tr1;  // Transpiration in layer 1 [m]
   svector *_Tr2;  // Transpiration in layer 2 [m]
   svector *_Tr3;  // Transpiration in layer 3 [m]
+  svector *_Ks1;  // Saturated hydraulic conductivity in layer 1
+  svector *_Ks2;  // Saturated hydraulic conductivity in layer 2
+  svector *_Ks3;  // Saturated hydraulic conductivity in layer 3
+  svector *_thetaFC1;  // Field capacity in layer 1
+  svector *_thetaFC2;  // Field capacity in layer 2
+  svector *_thetaFC3;  // Field capacity in layer 3
+  svector *_thetaWP1;  // Wilting point in layer 1
+  svector *_thetaWP2;  // Wilting point in layer 2
+  svector *_thetaWP3;  // Wilting point in layer 3
+  svector *_froot_soil;  // froot coefficient for all soil profile
+  svector *_froot_layer2;  // froot coefficient for layer 2
+  svector *_froot_layer3;  // froot coefficient for layer 3
   /* end of Fluxes */
 
  
@@ -66,19 +76,33 @@ class Basin {
 
   int Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm);
 
-  // Canopy interception
+  /* Canopy interception */
   int Solve_canopy(Control &ctrl, Param &par, Atmosphere &atm);
   int Interception_1(Param &par, Atmosphere &atm, int j);
   int Interception_2(Param &par, Atmosphere &atm, int j);
 
-  // Snow accumulation and melt
+  /* Snow accumulation and melt */
   int Solve_snowpack(Control &ctrl, Param &par, Atmosphere &atm);
   int Snow_acc_melt(Param &par, Atmosphere &atm, int j);
 
-  // Soil profiles
-  int Solve_soil_profile(Control &ctrl, Param &par);
+  /* Soil profiles */
+  int Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm);
+  
+  int Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm, int j);
 
-  // routing
+
+  int Soil_proporty_1(int opt_pedotransf, int opt_fieldcapacity, Param &par);
+  int Soil_proporty_2(int opt_pedotransf, int opt_fieldcapacity, Param &par);
+  int Soil_proporty_3(int opt_pedotransf, int opt_fieldcapacity, Param &par);
+  int Van_Genuchten_1(double &VG_alpha, double &VG_n, double &VG_m, double clay, double silt, double organic_content, double bulk_density, int topsoil_factor);
+  int Van_Genuchten_2(double &VG_alpha, double &VG_n, double &VG_m, double clay, double organic_content, double bulk_density, int topsoil_factor);
+  int Van_Genuchten_3(double &VG_alpha, double &VG_n, double &VG_m, double clay, double sand, double organic_content, double bulk_density, int topsoil_factor);
+
+
+
+
+  
+  /* routing */
   int Routing_ovf(Control &ctrl, Param &par); // overland flow routing
 
 };

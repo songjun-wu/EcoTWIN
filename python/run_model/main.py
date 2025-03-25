@@ -8,6 +8,9 @@ from def_GEM import *
 current_path = os.getcwd()
 
 """"""
+#os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux')
+#os.system('make clean')
+
 # Model structure update
 os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
 os.system('python3 develop.py')
@@ -19,7 +22,7 @@ os.system('python3 develop.py')
 # Model preprocessing
 GEM_tools.set_env(Path)
 GEM_tools.set_config(Path)
-GEM_tools.gen_param(Path, Info, Param, np.full(19, 0.5))
+GEM_tools.gen_param(Path, Info, Param, np.full(19+5*20, 0.5))
 
 # Model run
 os.chdir(Path.run_path)

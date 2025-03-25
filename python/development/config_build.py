@@ -17,8 +17,9 @@ def read_configs(fname, options, signs, datas, reports):
                 content.append('  readInto('+item['key']+', "'+item['key']+'", lines);\n')
 
         content = lines[:start] + content + lines[end:]
-    with open(fname, 'w') as f:
-            f.writelines(content)
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+                f.writelines(content)
 
     for j in range(len(signs)):
         sign = signs[j]
@@ -37,9 +38,9 @@ def read_configs(fname, options, signs, datas, reports):
                 content.append('  readInto(fn__fdir, "flow_direction", lines);\n')
                 content.append('  readInto(fn__Gauge_to_Report, "Gauge_mask", lines);\n')
             content = lines[:start] + content + lines[end:]
-            
-        with open(fname, 'w') as f:
-            f.writelines(content)
+        if(('').join(content) != ('').join(lines)):    
+            with open(fname, 'w') as f:
+                f.writelines(content)
 
     with open(fname, 'r') as f:
         lines = f.readlines()
@@ -49,11 +50,12 @@ def read_configs(fname, options, signs, datas, reports):
         content = []     
         content.append('  // 1: report time series at gauging stations; 2: report maps\n')  
         for i in range(len(reports)):
-            content.append('  readInto('+'report_'+reports[i][0]+', "report_'+reports[i][5]+'", lines);\n')
+            if reports[i][5] is not None:
+                content.append('  readInto('+'report_'+reports[i][0]+', "report_'+reports[i][5]+'", lines);\n')
         content = lines[:start] + content + lines[end:]
-        
-    with open(fname, 'w') as f:
-        f.writelines(content)
+    if(('').join(content) != ('').join(lines)):    
+        with open(fname, 'w') as f:
+            f.writelines(content)
 
 
 def read_param(fname, parameters):
@@ -64,9 +66,9 @@ def read_param(fname, parameters):
         for i in range(len(parameters)):
             content.append('  readIntoParam(' + parameters[i][0][1:] + ', "' + parameters[i][0][1:] + '", lines);\n')
         content = lines[:start] + content + lines[end:]
-            
-    with open(fname, 'w') as f:
-        f.writelines(content)
+    if(('').join(content) != ('').join(lines)):        
+        with open(fname, 'w') as f:
+            f.writelines(content)
 
 
 def gen_config_template(path, options, signs, datas, reports, parameters, max_category):
@@ -120,6 +122,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                     elif signs[i] == 'GIS':
                         text.append('flow_direction  =  fdir.asc   # Flow direction [int; d8 method]\n')
                         text.append('Gauge_mask  =  Gauge_to_Report.asc   # Gauges that require outputs [int; start from 0]\n')
+                        text.append('# The sequence of reports follows the row-col order\n#For instance, [row 1, col 1] ->  [row 1, col 2] -> [row 2, col 1]\n')
                 if data[0][0] == '_':
                     var_name = data[0][1:]
                 else:
@@ -138,17 +141,15 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('# 1: report maps; 2: report time series at gauging stations\n')
     for i in range(len(reports)):
         data = reports[i]
-        text.append('report_'+data[5]+'  =  0   # '+data[2] + '\n')
+        if data[5] != None:
+            text.append('report_'+data[5]+'  =  0   # '+data[2] + '\n')
 
-    with open(path + 'config.ini', 'w') as f:
-        f.writelines(text)
-
-
-    with open(path + 'param.ini', 'w') as f:
-        text = []
-        for i in range(len(parameters)):
-            text.append(parameters[i][0][1:] + ',' + (',').join(np.full(max_category, -9999).astype('str')) + '\n')
-        f.writelines(text)
+    with open(path + 'config.ini', 'r') as f:
+            lines = f.readlines()
+            
+    if(('').join(text) != ('').join(lines)):
+        with open(path + 'config.ini', 'w') as f:
+            f.writelines(text)
 
 
 
@@ -163,10 +164,12 @@ def report_build(fname, reports):
         content.append('  // 1: report time series at gauging stations; 2: report maps\n')  
         for i in range(len(reports)):
             data = reports[i]
-            content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS(ctrl, Bsn.'+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n')
-            content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, Bsn.'+data[0]+', ctrl._sortedGrid, "'+data[5]+'", ctrl.path_ResultsFolder);}\n\n')
+            if data[5] is not None:
+                content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS(ctrl, Bsn.'+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n')
+                content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, Bsn.'+data[0]+', ctrl._sortedGrid, "'+data[5]+'", ctrl.path_ResultsFolder);}\n\n')
 
         content = lines[:start] + content + lines[end:]
     
-    with open(fname, 'w') as f:
-        f.writelines(content)
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+            f.writelines(content)

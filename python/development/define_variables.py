@@ -26,8 +26,10 @@ def includes(fname, signs, datas, max_category):
                     if grouped_data[key][i][4] == 'spatial_TS':
                         content.append('  ifstream if_' + grouped_data[key][i][0] + ';  // ' + grouped_data[key][i][2] + '\n')         
             content = lines[:start] + content + lines[end:]
-        with open(fname, 'w') as f:
-            f.writelines(content)
+        
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
     
 
 def atmos_read_climate_maps(fname, signs, datas):
@@ -45,8 +47,9 @@ def atmos_read_climate_maps(fname, signs, datas):
                 text = ['  open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] + ', if_' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
                 content.append(if_condition_build(key, text))               
             content = lines[:start] + content + lines[end:]
-        with open(fname, 'w') as f:
-            f.writelines(content)
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
     
     for j in range(len(signs)):
         sign = signs[j]
@@ -61,8 +64,9 @@ def atmos_read_climate_maps(fname, signs, datas):
                 text = ['  read_climate_maps(if_' + grouped_data[key][i][0] + ', *' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
                 content.append(if_condition_build(key, text))               
             content = lines[:start] + content + lines[end:]
-        with open(fname, 'w') as f:
-            f.writelines(content)
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
     
     for j in range(len(signs)):
         sign = signs[j]
@@ -77,8 +81,9 @@ def atmos_read_climate_maps(fname, signs, datas):
                 text = ['  init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] + ', if_' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
                 content.append(if_condition_build(key, text))               
             content = lines[:start] + content + lines[end:]
-        with open(fname, 'w') as f:
-            f.writelines(content)
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
 
     for j in range(len(signs)):
         sign = signs[j]
@@ -93,8 +98,9 @@ def atmos_read_climate_maps(fname, signs, datas):
                 text = ['  update_climate_maps(if_' + grouped_data[key][i][0] + ', *' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
                 content.append(if_condition_build(key, text))               
             content = lines[:start] + content + lines[end:]
-        with open(fname, 'w') as f:
-            f.writelines(content)
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
 
 
 
@@ -118,9 +124,10 @@ def basin_includes(fname, signs, datas):
                     else:
                         content.append('  '+Contents[i][3]+' ' + Contents[i][0] + ';  // ' + Contents[i][2] + '\n')
             content = lines[:start] + content + lines[end:]
-            
-        with open(fname, 'w') as f:
-            f.writelines(content)
+
+        if(('').join(content) != ('').join(lines)):  
+            with open(fname, 'w') as f:
+                f.writelines(content)
 
 def destructor(fname, signs, datas):
     for j in range(len(signs)):
@@ -141,8 +148,9 @@ def destructor(fname, signs, datas):
 
                 content.append(if_condition_build(key, text))              
             content = lines[:start] + content + lines[end:]
-        with open(fname, 'w') as f:
-            f.writelines(content)
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
 
 
 def constructor(fname, signs, datas):
@@ -167,8 +175,9 @@ def constructor(fname, signs, datas):
                         text.append('  '+grouped_data[key][i][0]+' = new svector(ctrl.path_BasinFolder + ctrl.fn_'+grouped_data[key][i][0]+', _rowNum, _colNum, _sortedGrid);\n')  
                 content.append(if_condition_build(key, text))
             content = lines[:start] + content + lines[end:]
-        with open(fname, 'w') as f:
-            f.writelines(content)  
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)  
 
 
 
@@ -189,8 +198,9 @@ def control_includes(fname, options, signs, datas, reports):
                 content.append('  int ' + item['key'] + ';  //' + item['general_description'] + '\n')
 
         content = lines[:start] + content + lines[end:]
-    with open(fname, 'w') as f:
-            f.writelines(content)
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+                f.writelines(content)
 
 
     for j in range(len(signs)):
@@ -207,8 +217,9 @@ def control_includes(fname, options, signs, datas, reports):
             for i in range(len(Contents)):
                 content.append('  string fn_'+Contents[i][0]+';  // '+Contents[i][2] +'\n')
             content = lines[:start] + content + lines[end:]
-        with open(fname, 'w') as f:
-            f.writelines(content)
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
         
     with open(fname, 'r') as f:
         lines = f.readlines()
@@ -219,5 +230,6 @@ def control_includes(fname, options, signs, datas, reports):
             content.append('  int report_'+reports[i][0]+';  // report '+reports[i][2]+'\n')
         
         content = lines[:start] + content + lines[end:]
-    with open(fname, 'w') as f:
-        f.writelines(content)
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+            f.writelines(content)

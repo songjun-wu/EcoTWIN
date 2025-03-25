@@ -12,10 +12,11 @@
   /* Climate */
   _P = new svector(_sortedGrid.size);
   _Ta = new svector(_sortedGrid.size);
-  _Tmin = new svector(_sortedGrid.size);
-  _Tmax = new svector(_sortedGrid.size);
   _RH = new svector(_sortedGrid.size);
   _LAI = new svector(_sortedGrid.size);
+  if (ctrl.opt_evap == 1){
+    _PET = new svector(_sortedGrid.size);
+  }
   /* end of Climate */
 
 

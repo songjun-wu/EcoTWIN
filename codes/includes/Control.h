@@ -1,8 +1,8 @@
-
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
 #include "dataType.h"
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -39,6 +39,9 @@ struct Control{
   int opt_intecept;  //Canopy interception. 1 :maximum canopy storage unmodified; 2 :storage corrected (Landarf et al., 2024)
   int opt_snow;  //Snow accumulation method. 1: Degree day factor method
   int opt_infilt;  //Infiltration function. 1: 
+  int opt_evap;  //Evapotranspiration function. 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
+  int opt_pedotransf;  //Pedo-transfer function to estimate Van Genuchten parameters. 1: Wosten et al., (1999); 2: Wosten et al., (1997);  3: Zacharias et al., (2007)
+  int opt_fieldcapacity;  //Method to estimate field capacity. 1: based on Van Genuchten Model; 2: Ks considered, Twarakavi et al., (2007)
   /* end of Options */
 
 
@@ -64,9 +67,8 @@ struct Control{
   /* Climate */
   string fn__P;  // Precipitation [m]
   string fn__Ta;  // Air temperature [degree C]
-  string fn__Tmin;  // Minimum air temperature [degree C]
-  string fn__Tmax;  // Maximum air temperature [degree C]
   string fn__RH;  // Relative humidity [decimal]
+  string fn__PET;  // Potential evapotranspiration [m]
   string fn__LAI;  // Leaf area index [decimal]
   /* end of Climate */
 
@@ -83,12 +85,21 @@ struct Control{
 
   /* Parameters */
   string fn__depth3;  // Depth of soil layer 3 [m]
-  string fn__alpha;  // The weighting parameter that links LAI and maximum canopy storage
+  string fn__alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
   string fn__rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
   string fn__snow_rain_thre;  // The temperature for snow melt  [m]
   string fn__deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
   string fn__deg_day_max;  // Maximum Degree-day factor [m-1 degreeC-1]
   string fn__deg_day_increase;  // Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]
+  string fn__froot_coeff;  // Root fraction coefficient [-]
+  string fn__ref_thetaS;  // Reference saturated soil moisture [-]
+  string fn__PTF_VG_clay;  // Pedotransfer function for parameter estimation of Van Genuchten Model [-]
+  string fn__PTF_VG_Db;  // Pedotransfer function for parameter estimation of Van Genuchten Model [-]
+  string fn__PTF_Ks_const;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
+  string fn__PTF_Ks_sand;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
+  string fn__PTF_Ks_clay;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
+  string fn__PTF_Ks_slope;  // Slope correction for estimation of saturated hydraulic conductivity [-]
+  string fn__SWP;  // Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1
   /* end of Parameters */
 
   /* Report */
@@ -103,8 +114,6 @@ struct Control{
   int report__snowmelt;  // report Snow melt [m]
   int report__Qs;  // report Overland flow [m]
   int report__infilt;  // report Inflitration into soil layer 1 [m]
-  int report__preferential2;  // report Preferential flow to layer 2 [m]
-  int report__preferential3;  // report Preferential flow to layer 3 [m]
   int report__Perc1;  // report Percolation into layer 2 [m]
   int report__Perc2;  // report Percolation into layer 3 [m]
   int report__Perc3;  // report Percolation into gw reservior [m]
@@ -114,6 +123,18 @@ struct Control{
   int report__Tr1;  // report Transpiration in layer 1 [m]
   int report__Tr2;  // report Transpiration in layer 2 [m]
   int report__Tr3;  // report Transpiration in layer 3 [m]
+  int report__froot_soil;  // report froot coefficient for all soil profile
+  int report__froot_layer2;  // report froot coefficient for layer 2
+  int report__froot_layer3;  // report froot coefficient for layer 3
+  int report__Ks1;  // report Saturated hydraulic conductivity in layer 1
+  int report__Ks2;  // report Saturated hydraulic conductivity in layer 2
+  int report__Ks3;  // report Saturated hydraulic conductivity in layer 3
+  int report__thetaFC1;  // report Field capacity in layer 1
+  int report__thetaFC2;  // report Field capacity in layer 2
+  int report__thetaFC3;  // report Field capacity in layer 3
+  int report__thetaWP1;  // report Wilting point in layer 1
+  int report__thetaWP2;  // report Wilting point in layer 2
+  int report__thetaWP3;  // report Wilting point in layer 3
   /* end of Report */
 
   public:

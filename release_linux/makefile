@@ -50,7 +50,7 @@ all: gEcoHydro
 gEcoHydro: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -ggdb -L"../lib" -fopenmp -o "gEcoHydro" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -ggdb -O3 -L"../lib" -fopenmp -o "gEcoHydro" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

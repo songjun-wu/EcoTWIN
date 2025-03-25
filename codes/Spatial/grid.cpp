@@ -63,6 +63,8 @@ int svector_2d::update(string fname, int num_category, int rowNum, int colNum, s
   int r,c;
   int dim = rowNum*colNum;
 
+  parameterisation_OK = 0;
+
   double *data=NULL;
   
   for (int k=0; k<num_category; k++){

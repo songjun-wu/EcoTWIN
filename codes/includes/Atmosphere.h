@@ -27,14 +27,12 @@ class Atmosphere {
   ifstream if__P;  // Precipitation [m]
   svector *_Ta;  // Air temperature [degree C]
   ifstream if__Ta;  // Air temperature [degree C]
-  svector *_Tmin;  // Minimum air temperature [degree C]
-  ifstream if__Tmin;  // Minimum air temperature [degree C]
-  svector *_Tmax;  // Maximum air temperature [degree C]
-  ifstream if__Tmax;  // Maximum air temperature [degree C]
   svector *_RH;  // Relative humidity [decimal]
   ifstream if__RH;  // Relative humidity [decimal]
   svector *_LAI;  // Leaf area index [decimal]
   ifstream if__LAI;  // Leaf area index [decimal]
+  svector *_PET;  // Potential evapotranspiration [m]
+  ifstream if__PET;  // Potential evapotranspiration [m]
   /* end of Climate */
 
 

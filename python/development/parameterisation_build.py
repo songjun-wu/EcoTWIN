@@ -18,8 +18,6 @@ def parameterisation_build(fname, parameters):
             text.append('      '+grouped_data[key][i][0]+'->val[j] += param_category->val[k][j] * '+grouped_data[key][i][0][1:]+'[k];\n')
             text.append('   }}}\n')
 
-
-        print(text)
         content.append(if_condition_build(key, text))
     
     with open(fname, 'r') as f:
@@ -29,6 +27,7 @@ def parameterisation_build(fname, parameters):
             
 
         content = lines[:start] + content + lines[end:]
-            
-    with open(fname, 'w') as f:
-        f.writelines(content)
+
+    if(('').join(content) != ('').join(lines)):     
+        with open(fname, 'w') as f:
+            f.writelines(content)

@@ -48,8 +48,12 @@ def release_linux(path, release_path):
                 text.extend(['	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../codes/includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"\n'])
                 text.extend(["	@echo 'Finished building: $<'\n"])
                 text.extend(["	@echo ' '\n"])
-                with open(release_path + fname_0 + '/subdir.mk', 'w') as f:
-                    f.writelines(text)   
+
+                with open(release_path + fname_0 + '/subdir.mk', 'r') as f:
+                    lines = f.readlines()
+                if(('').join(text) != ('').join(lines)):
+                    with open(release_path + fname_0 + '/subdir.mk', 'w') as f:
+                        f.writelines(text)   
 
     with open(release_path + 'sources.mk', 'r') as f:
         lines = f.readlines()
@@ -57,13 +61,15 @@ def release_linux(path, release_path):
     for i in range(len(lines)):
         if 'SUBDIRS :=' in lines[i]: 
             start = i
-    lines = lines[:start+1]
+    text = lines[:start+1]
     for folder in folders:
 
-        lines.extend(folder + ' \\\n')
-    lines.extend('. \\')
-    with open(release_path + 'sources.mk', 'w') as f:
-        f.writelines(lines)
+        text.extend(folder + ' \\\n')
+    text.extend('. \\')
+
+    if(('').join(text) != ('').join(lines)):
+        with open(release_path + 'sources.mk', 'w') as f:
+            f.writelines(text)
     
 
     with open(release_path + 'makefile', 'r') as f:
@@ -80,6 +86,7 @@ def release_linux(path, release_path):
     text = lines[:start+1]
     text.extend(content)
     text.extend(lines[end:])
-    with open(release_path + 'makefile', 'w') as f:
-        f.writelines(text)
+    if(('').join(text) != ('').join(lines)):
+        with open(release_path + 'makefile', 'w') as f:
+            f.writelines(text)
     

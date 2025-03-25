@@ -12,7 +12,7 @@ Param::Param(Control &ctrl){
   /* Parameters */
   _depth3 = new svector(_sortedGrid.size);
   _alpha = new svector(_sortedGrid.size);
-  if (ctrl.opt_intecept == 2){
+  if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){
     _rE = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_snow == 1){
@@ -20,6 +20,21 @@ Param::Param(Control &ctrl){
     _deg_day_min = new svector(_sortedGrid.size);
     _deg_day_max = new svector(_sortedGrid.size);
     _deg_day_increase = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_evap == 1){
+    _froot_coeff = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_pedotransf == 1){
+    _ref_thetaS = new svector(_sortedGrid.size);
+    _PTF_VG_clay = new svector(_sortedGrid.size);
+    _PTF_VG_Db = new svector(_sortedGrid.size);
+    _PTF_Ks_const = new svector(_sortedGrid.size);
+    _PTF_Ks_sand = new svector(_sortedGrid.size);
+    _PTF_Ks_clay = new svector(_sortedGrid.size);
+    _PTF_Ks_slope = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_fieldcapacity == 1){
+    _SWP = new svector(_sortedGrid.size);
   }
   /* end of Parameters */
 

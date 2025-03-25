@@ -2,10 +2,17 @@ def group_text(datas):
     grouped_data = {}
     keys = []
     for data in datas:
-        if data[1]['key'] is None:
+        if data[1][0]['key'] is None:
             key = None
         else: 
-            key = 'ctrl.' + data[1]['key'] + ' == ' + str(data[1]['value'])
+            if len(data[1]) == 1:
+                key = 'ctrl.' + data[1][0]['key'] + ' == ' + str(data[1][0]['value'])
+            else:
+                tmp = []
+                for kk in range(len(data[1])):
+
+                    tmp.append('ctrl.' + data[1][kk]['key'] + ' == ' + str(data[1][kk]['value']))
+                key = (' or ').join(tmp)
         if key in grouped_data:
             grouped_data[key].append(data)
         else:

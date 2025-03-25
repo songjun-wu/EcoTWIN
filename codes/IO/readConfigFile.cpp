@@ -39,6 +39,9 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_intecept, "opt_intecept", lines);
   readInto(opt_snow, "opt_snow", lines);
   readInto(opt_infilt, "opt_infilt", lines);
+  readInto(opt_evap, "opt_evap", lines);
+  readInto(opt_pedotransf, "opt_pedotransf", lines);
+  readInto(opt_fieldcapacity, "opt_fieldcapacity", lines);
   /* end of Options */
 
   /* GIS */
@@ -56,10 +59,9 @@ int Control::ReadConfigFile(string fname){
   /* Climate */
   readInto(fn__P, "Precipitation", lines);
   readInto(fn__Ta, "Air_temperature", lines);
-  readInto(fn__Tmin, "Minimal_air_temperature", lines);
-  readInto(fn__Tmax, "Maximum_air_temperature", lines);
   readInto(fn__RH, "Relative_humidity", lines);
-  readInto(fn__LAI, "LAI", lines);
+  readInto(fn__PET, "Potential_evapotranspiration", lines);
+  readInto(fn__LAI, "Leaf_area_index", lines);
   /* end of Climate */
 
   /* Storages */ 
@@ -77,11 +79,20 @@ int Control::ReadConfigFile(string fname){
   /* Parameters */
   readInto(fn__depth3, "Soil_depth3", lines);
   readInto(fn__alpha, "alpha", lines);
-  readInto(fn__rE, "alpha", lines);
+  readInto(fn__rE, "rE", lines);
   readInto(fn__snow_rain_thre, "snow_rain_threshold", lines);
   readInto(fn__deg_day_min, "deg_day_min", lines);
   readInto(fn__deg_day_max, "deg_day_max", lines);
   readInto(fn__deg_day_increase, "deg_day_increase", lines);
+  readInto(fn__froot_coeff, "froot_coeff", lines);
+  readInto(fn__ref_thetaS, "ref_thetaS", lines);
+  readInto(fn__PTF_VG_clay, "PTF_VG_clay", lines);
+  readInto(fn__PTF_VG_Db, "PTF_VG_Db", lines);
+  readInto(fn__PTF_Ks_const, "PTF_Db", lines);
+  readInto(fn__PTF_Ks_sand, "PTF_sand", lines);
+  readInto(fn__PTF_Ks_clay, "PTF_clay", lines);
+  readInto(fn__PTF_Ks_slope, "PTF_Ks_slope", lines);
+  readInto(fn__SWP, "SWP", lines);
   /* end of Parameters */
 
   /* Report */
@@ -96,8 +107,6 @@ int Control::ReadConfigFile(string fname){
   readInto(report__snowmelt, "report_snowmelt", lines);
   readInto(report__Qs, "report_overland_flow", lines);
   readInto(report__infilt, "report_infiltration", lines);
-  readInto(report__preferential2, "report_preferential_flow_layer2", lines);
-  readInto(report__preferential3, "report_preferential_flow_layer3", lines);
   readInto(report__Perc1, "report_perc_layer1", lines);
   readInto(report__Perc2, "report_perc_layer2", lines);
   readInto(report__Perc3, "report_perc_layer3", lines);

@@ -34,12 +34,6 @@ int Report::report(Control &ctrl, Basin &Bsn){
   if (ctrl.report__infilt==1) {reportTS(ctrl, Bsn._infilt, "infiltration", ctrl.path_ResultsFolder);}
   else if (ctrl.report__infilt==2) {reportMap(ctrl, Bsn._infilt, ctrl._sortedGrid, "infiltration", ctrl.path_ResultsFolder);}
 
-  if (ctrl.report__preferential2==1) {reportTS(ctrl, Bsn._preferential2, "preferential_flow_layer2", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__preferential2==2) {reportMap(ctrl, Bsn._preferential2, ctrl._sortedGrid, "preferential_flow_layer2", ctrl.path_ResultsFolder);}
-
-  if (ctrl.report__preferential3==1) {reportTS(ctrl, Bsn._preferential3, "preferential_flow_layer3", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__preferential3==2) {reportMap(ctrl, Bsn._preferential3, ctrl._sortedGrid, "preferential_flow_layer3", ctrl.path_ResultsFolder);}
-
   if (ctrl.report__Perc1==1) {reportTS(ctrl, Bsn._Perc1, "perc_layer1", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Perc1==2) {reportMap(ctrl, Bsn._Perc1, ctrl._sortedGrid, "perc_layer1", ctrl.path_ResultsFolder);}
 

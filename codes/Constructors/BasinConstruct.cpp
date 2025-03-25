@@ -31,8 +31,6 @@
   _snowmelt = new svector(_sortedGrid.size);
   _Qs = new svector(_sortedGrid.size);
   _infilt = new svector(_sortedGrid.size);
-  _preferential2 = new svector(_sortedGrid.size);
-  _preferential3 = new svector(_sortedGrid.size);
   _Perc1 = new svector(_sortedGrid.size);
   _Perc2 = new svector(_sortedGrid.size);
   _Perc3 = new svector(_sortedGrid.size);
@@ -42,6 +40,20 @@
   _Tr1 = new svector(_sortedGrid.size);
   _Tr2 = new svector(_sortedGrid.size);
   _Tr3 = new svector(_sortedGrid.size);
+  _Ks1 = new svector(_sortedGrid.size);
+  _Ks2 = new svector(_sortedGrid.size);
+  _Ks3 = new svector(_sortedGrid.size);
+  _thetaFC1 = new svector(_sortedGrid.size);
+  _thetaFC2 = new svector(_sortedGrid.size);
+  _thetaFC3 = new svector(_sortedGrid.size);
+  _thetaWP1 = new svector(_sortedGrid.size);
+  _thetaWP2 = new svector(_sortedGrid.size);
+  _thetaWP3 = new svector(_sortedGrid.size);
+  if (ctrl.opt_evap == 1){
+    _froot_soil = new svector(_sortedGrid.size);
+    _froot_layer2 = new svector(_sortedGrid.size);
+    _froot_layer3 = new svector(_sortedGrid.size);
+  }
   /* end of Fluxes */
 
   

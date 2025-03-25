@@ -9,6 +9,8 @@ CPP_SRCS += \
 ../codes/Hydrology/Solve_soil_profile.cpp \
 ../codes/Hydrology/Solve_timesteps.cpp \
 ../codes/Hydrology/routing_overland_flow.cpp \
+../codes/Hydrology/Evapotranspiration.cpp \
+../codes/Hydrology/Soil_proporty.cpp \
 
 
 OBJS += \
@@ -17,6 +19,8 @@ OBJS += \
 ./Hydrology/Solve_soil_profile.o \
 ./Hydrology/Solve_timesteps.o \
 ./Hydrology/routing_overland_flow.o \
+./Hydrology/Evapotranspiration.o \
+./Hydrology/Soil_proporty.o \
 
 
 CPP_DEPS += \
@@ -25,6 +29,8 @@ CPP_DEPS += \
 ./Hydrology/Solve_soil_profile.d \
 ./Hydrology/Solve_timesteps.d \
 ./Hydrology/routing_overland_flow.d \
+./Hydrology/Evapotranspiration.d \
+./Hydrology/Soil_proporty.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

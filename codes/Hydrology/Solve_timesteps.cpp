@@ -7,7 +7,7 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
 
     Solve_snowpack(ctrl, par, atm);
 
-    Solve_soil_profile(ctrl, par);
+    Solve_soil_profile(ctrl, par, atm);
 
     //Routing_ovf(ctrl, par);
 
