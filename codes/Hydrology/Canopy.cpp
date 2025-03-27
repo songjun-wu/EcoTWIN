@@ -34,7 +34,7 @@ int Basin::Interception_1(Param &par, Atmosphere &atm, int j) {
 
     double max_canopy_storage = alpha * LAI; // Maximum canopy storage
 
-    Th = C + precip <= max_canopy_storage ? 0.0 : (C + precip - max_canopy_storage);
+    Th = (C + precip) <= max_canopy_storage ? 0.0 : (C + precip - max_canopy_storage);
     Th = min<double>(Th, C + precip);
 
     // Update canopy storage

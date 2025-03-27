@@ -115,7 +115,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                                     '#The categories should include the land use types, soil types, or any other types for parameterisation ...\n' + \
                                     '#The distribution of each category (in decimal proportion) should be specified in cat_id.asc ...\n' + \
                                     '#The first category (column) represents global parameter (i.e., cat_0.asc should be 1)\n' )
-                        text.append('parameter_file = parameters.ini # The file contains all parameter name, values, and descriptio. Each column =  a category\n')
+                        text.append('parameter_file = param.ini # The file contains all parameter name, values, and descriptio. Each column =  a category\n')
                     elif signs[i] == 'Climate':
                         text.append('num_cliamte_zones = 10 # The number of climate zones for parameterisation.\n' )
                         text.append('climate_zones = climate_zones.asc # Needed if opt_climate_input_format = 2; Zone ID should start from 0!\n')

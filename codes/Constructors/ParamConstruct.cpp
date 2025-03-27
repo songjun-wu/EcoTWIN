@@ -36,6 +36,15 @@ Param::Param(Control &ctrl){
   if (ctrl.opt_fieldcapacity == 1){
     _SWP = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_infil == 1 or ctrl.opt_depthprofile == 2){
+    _KvKh = new svector(_sortedGrid.size);
+    _psiAE = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_depthprofile == 2){
+    _KKs = new svector(_sortedGrid.size);
+    _Ksat = new svector(_sortedGrid.size);
+    _BClambda = new svector(_sortedGrid.size);
+  }
   /* end of Parameters */
 
   // Read parameter values from param.ini

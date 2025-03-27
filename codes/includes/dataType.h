@@ -47,7 +47,8 @@ struct svector{
 };
 
 struct svector_2d{
-    int parameterisation_OK; // = 0 for a fresh update n parameterisation
+    int parameterisation_OK; // = 0 for a fresh update for each parameterisation
+    int sort_soil_profile_OK; // = 0 for a fresh update for each parameterisation
     int parameterisation_count; // How many times of parametersation have been done?
     int n_category, size;
     double **val;

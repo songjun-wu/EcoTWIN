@@ -37,6 +37,11 @@ class Param {
   vector<double> PTF_Ks_clay;
   vector<double> PTF_Ks_slope;
   vector<double> SWP;
+  vector<double> KvKh;
+  vector<double> psiAE;
+  vector<double> KKs;
+  vector<double> Ksat;
+  vector<double> BClambda;
   svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
   svector *_rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
@@ -53,6 +58,11 @@ class Param {
   svector *_PTF_Ks_clay;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
   svector *_PTF_Ks_slope;  // Slope correction for estimation of saturated hydraulic conductivity [-]
   svector *_SWP;  // Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1
+  svector *_KvKh;  // The coefficient to transform Ks to effective Ks [-], only needed when opt_infil = 1
+  svector *_psiAE;  // The wetting front potential for Green-Ampt model [mm], only needed when opt_infil = 1
+  svector *_KKs;  // The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2
+  svector *_Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
+  svector *_BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
   /* end of Parameters */
 
   svector_2d *param_category;

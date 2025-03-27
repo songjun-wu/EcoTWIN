@@ -4,7 +4,7 @@ Control::Control(){
   string confilename = "config.ini";
 
   ReadConfigFile(confilename);
-  getAsciiHeader(path_BasinFolder+fn__dem);
+  getAsciiHeader(path_BasinFolder+fn__depth1);
 
   //sort grids spatially
   _fdir = new grid(path_BasinFolder + fn__fdir, _rowNum, _colNum);

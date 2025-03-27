@@ -24,7 +24,7 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             ['_LAI', [Opt.cond['none']], 'Leaf area index [decimal]', 'grid', 'spatial_TS', 'Leaf_area_index']
         ]
         
-GIS = [ ['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial', 'Ground_elevation'],
+GIS = [ #['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial', 'Ground_elevation'],
         #['_fdir', [Opt.cond['none']], 'Flow direction [d8 method]', 'grid', 'spatial', 'flow_direction'],
         ['_chnwidth', [Opt.cond['none']], 'Channel width [m]', 'grid', 'spatial', 'Channel_width'],
         ['_chndepth', [Opt.cond['none']], 'Channel depth [m]', 'grid', 'spatial', 'Channel_depth'],
@@ -32,11 +32,27 @@ GIS = [ ['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial',
         ['_depth1', [Opt.cond['none']], 'Depth of soil layer 1 [m]', 'grid', 'spatial', 'Soil_depth1'],
         ['_depth2', [Opt.cond['none']], 'Depth of soil layer 2 [m]', 'grid', 'spatial', 'Soil_depth2'],
         #['_Gauge_to_Report', [Opt.cond['none']], 'Gauges that require outputs', 'grid', 'spatial', 'Gauge_mask'],
+        ['_sand1', [Opt.cond['none']], 'Sand content of layer 1 [decimal]', 'grid', 'spatial', 'sand1'],
+        ['_sand2', [Opt.cond['depthprofile_3']], 'Sand content of layer 2 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'sand2'],
+        ['_sand3', [Opt.cond['depthprofile_3']], 'Sand content of layer 3 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'sand3'],
+        ['_clay1', [Opt.cond['none']], 'Clay content of layer 1 [decimal]', 'grid', 'spatial', 'clay1'],
+        ['_clay2', [Opt.cond['depthprofile_3']], 'Clay content of layer 2 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'clay2'],
+        ['_clay3', [Opt.cond['depthprofile_3']], 'Clay content of layer 3 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'clay3'],
+        ['_silt1', [Opt.cond['pedotransf_1'], Opt.cond['pedotransf_2']], 'Silt content of layer 1 [decimal], only needed when opt_pedotransf = 1 or 2', 'grid', 'spatial', 'silt1'],
+        ['_silt2', [Opt.cond['depthprofile_3']], 'Silt content of layer 2 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'silt2'],
+        ['_silt3', [Opt.cond['depthprofile_3'], Opt.cond['pedotransf_2']], 'Silt content of layer 3 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'silt3'],
+        ['_organic1', [Opt.cond['none']], 'Organic content of layer 1 [decimal]', 'grid', 'spatial', 'organic1'],
+        ['_organic2', [Opt.cond['depthprofile_3']], 'Organic content of layer 2 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'organic2'],
+        ['_organic3', [Opt.cond['depthprofile_3']], 'Organic content of layer 3 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'organic3'],
+        ['_bulkdensity1', [Opt.cond['none']], 'Bulk density of layer 1 [g/cm3]', 'grid', 'spatial', 'bulk_density1'],
+        ['_bulkdensity2', [Opt.cond['depthprofile_3']], 'Bulk density of layer 2 [g/cm3], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'bulk_density2'],
+        ['_bulkdensity3', [Opt.cond['depthprofile_3']], 'Bulk density of layer 3 [g/cm3], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'bulk_density3'],
         ]
 
 
 Storages = [['_I',       [Opt.cond['none']], 'Canopy storage [m]', 'grid', 'spatial', 'canopy_storage'], 
             ['_snow',    [Opt.cond['none']], 'Snow depth in [m]', 'grid', 'spatial', 'snow_depth'],
+            ['_pond',    [Opt.cond['none']], 'Ponding water in [m]', 'grid', 'spatial', 'pond'],
             ['_theta1',  [Opt.cond['none']], 'Soil moisture in layer 1 [decimal]', 'grid', 'spatial', 'SMC_layer1'],
             ['_theta2',  [Opt.cond['none']], 'Soil moisture in layer 2 [decimal]', 'grid', 'spatial', 'SMC_layer2'],
             ['_theta3',  [Opt.cond['none']], 'Soil moisture in layer 3 [decimal]', 'grid', 'spatial', 'SMC_layer3'],                       
@@ -51,7 +67,7 @@ Fluxes   = [['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inter
             #['_preferential3', [Opt.cond['none']], 'Preferential flow to layer 3 [m]', 'grid', 'new', 'preferential_flow_layer3'],
             ['_Perc1', [Opt.cond['none']], 'Percolation into layer 2 [m]', 'grid', 'new', 'perc_layer1'],
             ['_Perc2', [Opt.cond['none']], 'Percolation into layer 3 [m]', 'grid', 'new', 'perc_layer2'],
-            ['_Perc3', [Opt.cond['none']], 'Percolation into gw reservior [m]', 'grid', 'new', 'perc_layer3'],
+            ['_Recharge', [Opt.cond['none']], 'Percolation into gw reservior [m]', 'grid', 'new', 'perc_layer3'],
             ['_Ei', [Opt.cond['none']], 'Canopy evaporation [m]', 'grid', 'new', 'canopy_evap'],
             ['_Es', [Opt.cond['none']], 'Soil evaporation [m]', 'grid', 'new', 'soil_evap'],
             ['_Tr', [Opt.cond['none']], 'Total transpiration in three layers [m]', 'grid', 'new', 'transp'],
@@ -66,7 +82,9 @@ Fluxes   = [['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inter
             ['_Ks1', [Opt.cond['none']], 'Saturated hydraulic conductivity in layer 1', 'grid', 'new', None],
             ['_Ks2', [Opt.cond['none']], 'Saturated hydraulic conductivity in layer 2', 'grid', 'new', None],
             ['_Ks3', [Opt.cond['none']], 'Saturated hydraulic conductivity in layer 3', 'grid', 'new', None],
-
+            ['_thetaS1', [Opt.cond['none']], 'Saturated soil moisture in layer 1', 'grid', 'new', None],
+            ['_thetaS2', [Opt.cond['none']], 'Saturated soil moisture in layer 2', 'grid', 'new', None],
+            ['_thetaS3', [Opt.cond['none']], 'Saturated soil moisture in layer 3', 'grid', 'new', None],
             ['_thetaFC1', [Opt.cond['none']], 'Field capacity in layer 1', 'grid', 'new', None],
             ['_thetaFC2', [Opt.cond['none']], 'Field capacity in layer 2', 'grid', 'new', None],
             ['_thetaFC3', [Opt.cond['none']], 'Field capacity in layer 3', 'grid', 'new', None],
@@ -99,6 +117,12 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
 
               ['_SWP', [Opt.cond['fc_1']], 'Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1', 'grid', 'spatial_param', 'SWP'],
 
+              ['_KvKh', [Opt.cond['infil_1'], Opt.cond['depthprofile_2']], 'The coefficient to transform Ks to effective Ks [-], only needed when opt_infil = 1', 'grid', 'spatial_param', 'KvKh'],
+              ['_psiAE', [Opt.cond['infil_1'], Opt.cond['depthprofile_2']], 'The wetting front potential for Green-Ampt model [mm], only needed when opt_infil = 1', 'grid', 'spatial_param', 'psiAE'],
+
+              ['_KKs', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'Ksat'],
+              ['_Ksat', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'Kporos'],
+              ['_BClambda', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'BClambda'],
 
             ]
               

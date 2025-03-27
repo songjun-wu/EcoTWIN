@@ -31,6 +31,15 @@ int Param::dtor(Control &ctrl){
   if (ctrl.opt_fieldcapacity == 1){
     if(_SWP) delete _SWP;
   }
+  if (ctrl.opt_infil == 1 or ctrl.opt_depthprofile == 2){
+    if(_KvKh) delete _KvKh;
+    if(_psiAE) delete _psiAE;
+  }
+  if (ctrl.opt_depthprofile == 2){
+    if(_KKs) delete _KKs;
+    if(_Ksat) delete _Ksat;
+    if(_BClambda) delete _BClambda;
+  }
   /* end of Parameters */
 
   if(param_category) delete param_category;

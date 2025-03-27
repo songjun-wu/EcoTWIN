@@ -35,7 +35,7 @@ class Param:
     ref = {}
     # parameters to calibrate
     ref['depth3']   =           {'type':'landuse',  'log':0, 'file':'depth3',   'min':[0.6]*Info.N_landuse, 'max':[5]*Info.N_landuse}
-    ref['alpha']   =            {'type':'landuse',  'log':0, 'file':'alpha',   'min':[0.1]*Info.N_landuse, 'max':[0.4]*Info.N_landuse}
+    ref['alpha']   =            {'type':'landuse',  'log':0, 'file':'alpha',   'min':[1e-3]*Info.N_landuse, 'max':[4e-3]*Info.N_landuse}
     ref['rE']   =               {'type':'landuse',  'log':0, 'file':'rE',   'min':[-0.5]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse}
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2]}
     ref['deg_day_min']   =      {'type':'global',   'log':0, 'file':'deg_day_min',   'min':[0], 'max':[2e-3]}
@@ -54,6 +54,13 @@ class Param:
     ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[15]*Info.N_soil}
 
     ref['SWP']   = {'type':'soil',   'log':0, 'file':'SWP',   'min':[10]*Info.N_soil, 'max':[33]*Info.N_soil}
+
+    ref['KvKh']   = {'type':'soil',   'log':0, 'file':'KvKh',   'min':[1e-2]*Info.N_soil, 'max':[0.5]*Info.N_soil}
+    ref['psiAE']   = {'type':'soil',   'log':0, 'file':'psiAE',   'min':[1e-2]*Info.N_soil, 'max':[1.3]*Info.N_soil}
+
+    ref['KKs']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil}
+    ref['Ksat']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil}
+    ref['BClambda']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[2]*Info.N_soil, 'max':[15]*Info.N_soil}
 
 
 

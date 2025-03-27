@@ -140,6 +140,49 @@ int Param::Parameterisation(Control &ctrl){
      }}}
 
   }
+
+  if (ctrl.opt_infil == 1 or ctrl.opt_depthprofile == 2){
+  
+  _KvKh->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (KvKh[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _KvKh->val[j] += param_category->val[k][j] * KvKh[k];
+     }}}
+  
+  _psiAE->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (psiAE[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _psiAE->val[j] += param_category->val[k][j] * psiAE[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_depthprofile == 2){
+  
+  _KKs->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (KKs[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _KKs->val[j] += param_category->val[k][j] * KKs[k];
+     }}}
+  
+  _Ksat->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (Ksat[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _Ksat->val[j] += param_category->val[k][j] * Ksat[k];
+     }}}
+  
+  _BClambda->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (BClambda[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _BClambda->val[j] += param_category->val[k][j] * BClambda[k];
+     }}}
+
+  }
   /* end of Parameters */
   
   return EXIT_SUCCESS;

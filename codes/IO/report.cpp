@@ -10,6 +10,9 @@ int Report::report(Control &ctrl, Basin &Bsn){
   if (ctrl.report__snow==1) {reportTS(ctrl, Bsn._snow, "snow_depth", ctrl.path_ResultsFolder);}
   else if (ctrl.report__snow==2) {reportMap(ctrl, Bsn._snow, ctrl._sortedGrid, "snow_depth", ctrl.path_ResultsFolder);}
 
+  if (ctrl.report__pond==1) {reportTS(ctrl, Bsn._pond, "pond", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__pond==2) {reportMap(ctrl, Bsn._pond, ctrl._sortedGrid, "pond", ctrl.path_ResultsFolder);}
+
   if (ctrl.report__theta1==1) {reportTS(ctrl, Bsn._theta1, "SMC_layer1", ctrl.path_ResultsFolder);}
   else if (ctrl.report__theta1==2) {reportMap(ctrl, Bsn._theta1, ctrl._sortedGrid, "SMC_layer1", ctrl.path_ResultsFolder);}
 
@@ -40,8 +43,8 @@ int Report::report(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Perc2==1) {reportTS(ctrl, Bsn._Perc2, "perc_layer2", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Perc2==2) {reportMap(ctrl, Bsn._Perc2, ctrl._sortedGrid, "perc_layer2", ctrl.path_ResultsFolder);}
 
-  if (ctrl.report__Perc3==1) {reportTS(ctrl, Bsn._Perc3, "perc_layer3", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Perc3==2) {reportMap(ctrl, Bsn._Perc3, ctrl._sortedGrid, "perc_layer3", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Recharge==1) {reportTS(ctrl, Bsn._Recharge, "perc_layer3", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__Recharge==2) {reportMap(ctrl, Bsn._Recharge, ctrl._sortedGrid, "perc_layer3", ctrl.path_ResultsFolder);}
 
   if (ctrl.report__Ei==1) {reportTS(ctrl, Bsn._Ei, "canopy_evap", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Ei==2) {reportMap(ctrl, Bsn._Ei, ctrl._sortedGrid, "canopy_evap", ctrl.path_ResultsFolder);}

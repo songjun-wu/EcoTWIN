@@ -23,7 +23,8 @@ int Basin::Snow_acc_melt(Param &par, Atmosphere &atm, int j){
     double degree_day;  // Degree day factor
 
     // States and flxues
-    double Th = _Th->val[j];;  // Throughfall
+    double Th = _Th->val[j];  // Throughfall
+    double pond = _pond->val[j];  // Ponding water
     double Ta = atm._Ta->val[j]; // Mean air temperature
     double snow_pack = _snow->val[j]; // Snow pack
     double snow_melt;
@@ -32,19 +33,21 @@ int Basin::Snow_acc_melt(Param &par, Atmosphere &atm, int j){
 
     if (Ta < _snow_rain_thre) {  // snow accumulation
         snow_melt = 0;
-        _snow->val[j] += Th;
-        _Th->val[j] = 0;
+        snow_pack += Th;  // Through fall becomes snow
 
     } else { 
+        pond += Th; // Through fall becomes ponding water
+
         // snow melt
         degree_day = min<double>(_deg_day_min + _deg_day_increase * Th, _deg_day_max);
         snow_melt = min<double>(degree_day*(Ta - _snow_rain_thre), snow_pack);
         snow_pack -= snow_melt;
-        Th += snow_melt;
+        pond += snow_melt;
+        
     }
 
     _snow->val[j] = snow_pack;
-    _Th->val[j] = Th;
+    _pond->val[j] = pond;
 
     return EXIT_SUCCESS;
 

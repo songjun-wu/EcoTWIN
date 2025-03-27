@@ -48,6 +48,7 @@ class Opt:
                         'general_description':'Pedo-transfer function to estimate Van Genuchten parameters. 1: Wosten et al., (1999); 2: Wosten et al., (1997);  3: Zacharias et al., (2007)',
                         'description':'Pedo-transfer function to estimate Van Genuchten parameters based on sand and clay, Zacharias et al., (2007)'}
     
+    
     cond['fc_2']   = {'key':'opt_fieldcapacity', 'value':2, 
                         'general_description':'Method to estimate field capacity. 1: based on Van Genuchten Model; 2: Ks considered, Twarakavi et al., (2007)',
                         'description':'Method to estimate field capacity based on Ks and Van Genuchten Model, Twarakavi et al., (2007)'}
@@ -56,7 +57,28 @@ class Opt:
                         'general_description':'Method to estimate field capacity. 1: based on Van Genuchten Model; 2: Ks considered, Twarakavi et al., (2007)',
                         'description':'Method to estimate field capacity based on Van Genuchten Model'}
     
+    cond['depthprofile_3']   = {'key':'opt_depthprofile', 'value':3, 
+                        'general_description':'The way to estimate soil characteristics in deeper layer. 1: All layers remain the same; 2: exponential profile based on depth; 3: Pedo-transfer function for each layer',
+                        'description':'The way to estimate soil characteristics in deeper layer: Pedo-transfer function for each layer'}
+    cond['depthprofile_2']   = {'key':'opt_depthprofile', 'value':2, 
+                        'general_description':'The way to estimate soil characteristics in deeper layer. 1: All layers remain the same; 2: exponential profile based on depth; 3: Pedo-transfer function for each layer',
+                        'description':'The way to estimate soil characteristics in deeper layer: exponential profile based on depth'}
+    cond['depthprofile_1']   = {'key':'opt_depthprofile', 'value':1, 
+                        'general_description':'The way to estimate soil characteristics in deeper layer. 1: All layers remain the same; 2: exponential profile based on depth; 3: Pedo-transfer function for each layer',
+                        'description':'The way to estimate soil characteristics in deeper layer: all layers remain the same'}
+    
+    
+    
+    
 
+    cond['infil_1']   = {'key':'opt_infil', 'value':1, 
+                        'general_description':'Method of iniltration and percolation. 1: Green-Ampt model; 2: Green-Ampt model',
+                        'description':'Method of iniltration and percolation based on Green-Ampt model'}
+
+    cond['infil_2']   = {'key':'opt_infil', 'value':2, 
+                        'general_description':'Method of iniltration and percolation. 1: Green-Ampt model; 2: Green-Ampt model',
+                        'description':'Method of iniltration and percolation based on Green-Ampt model'}
+    
 
 
 

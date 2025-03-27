@@ -42,6 +42,8 @@ struct Control{
   int opt_evap;  //Evapotranspiration function. 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
   int opt_pedotransf;  //Pedo-transfer function to estimate Van Genuchten parameters. 1: Wosten et al., (1999); 2: Wosten et al., (1997);  3: Zacharias et al., (2007)
   int opt_fieldcapacity;  //Method to estimate field capacity. 1: based on Van Genuchten Model; 2: Ks considered, Twarakavi et al., (2007)
+  int opt_depthprofile;  //The way to estimate soil characteristics in deeper layer. 1: All layers remain the same; 2: exponential profile based on depth; 3: Pedo-transfer function for each layer
+  int opt_infil;  //Method of iniltration and percolation. 1: Green-Ampt model; 2: Green-Ampt model
   /* end of Options */
 
 
@@ -51,12 +53,26 @@ struct Control{
   /* end of Internal varaibles */
 
   /* GIS */
-  string fn__dem;  // Surface evelation [m]
   string fn__chnwidth;  // Channel width [m]
   string fn__chndepth;  // Channel depth [m]
   string fn__chnlength;  // Channel length [m]
   string fn__depth1;  // Depth of soil layer 1 [m]
   string fn__depth2;  // Depth of soil layer 2 [m]
+  string fn__sand1;  // Sand content of layer 1 [decimal]
+  string fn__sand2;  // Sand content of layer 2 [decimal], only needed when opt_depthprofile = 3
+  string fn__sand3;  // Sand content of layer 3 [decimal], only needed when opt_depthprofile = 3
+  string fn__clay1;  // Clay content of layer 1 [decimal]
+  string fn__clay2;  // Clay content of layer 2 [decimal], only needed when opt_depthprofile = 3
+  string fn__clay3;  // Clay content of layer 3 [decimal], only needed when opt_depthprofile = 3
+  string fn__silt1;  // Silt content of layer 1 [decimal], only needed when opt_pedotransf = 1 or 2
+  string fn__silt2;  // Silt content of layer 2 [decimal], only needed when opt_depthprofile = 3
+  string fn__silt3;  // Silt content of layer 3 [decimal], only needed when opt_depthprofile = 3
+  string fn__organic1;  // Organic content of layer 1 [decimal]
+  string fn__organic2;  // Organic content of layer 2 [decimal], only needed when opt_depthprofile = 3
+  string fn__organic3;  // Organic content of layer 3 [decimal], only needed when opt_depthprofile = 3
+  string fn__bulkdensity1;  // Bulk density of layer 1 [g/cm3]
+  string fn__bulkdensity2;  // Bulk density of layer 2 [g/cm3], only needed when opt_depthprofile = 3
+  string fn__bulkdensity3;  // Bulk density of layer 3 [g/cm3], only needed when opt_depthprofile = 3
   /* end of GIS */ 
   string fn__fdir;  // flow direction [d8 method]
   string fn__Gauge_to_Report;  // Gauges that require outputs
@@ -75,6 +91,7 @@ struct Control{
   /* Storages */
   string fn__I;  // Canopy storage [m]
   string fn__snow;  // Snow depth in [m]
+  string fn__pond;  // Ponding water in [m]
   string fn__theta1;  // Soil moisture in layer 1 [decimal]
   string fn__theta2;  // Soil moisture in layer 2 [decimal]
   string fn__theta3;  // Soil moisture in layer 3 [decimal]
@@ -100,12 +117,18 @@ struct Control{
   string fn__PTF_Ks_clay;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
   string fn__PTF_Ks_slope;  // Slope correction for estimation of saturated hydraulic conductivity [-]
   string fn__SWP;  // Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1
+  string fn__KvKh;  // The coefficient to transform Ks to effective Ks [-], only needed when opt_infil = 1
+  string fn__psiAE;  // The wetting front potential for Green-Ampt model [mm], only needed when opt_infil = 1
+  string fn__KKs;  // The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2
+  string fn__Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
+  string fn__BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
   /* end of Parameters */
 
   /* Report */
   // 1: report time series at gauging stations; 2: report maps
   int report__I;  // report Canopy storage [m]
   int report__snow;  // report Snow depth in [m]
+  int report__pond;  // report Ponding water in [m]
   int report__theta1;  // report Soil moisture in layer 1 [decimal]
   int report__theta2;  // report Soil moisture in layer 2 [decimal]
   int report__theta3;  // report Soil moisture in layer 3 [decimal]
@@ -116,7 +139,7 @@ struct Control{
   int report__infilt;  // report Inflitration into soil layer 1 [m]
   int report__Perc1;  // report Percolation into layer 2 [m]
   int report__Perc2;  // report Percolation into layer 3 [m]
-  int report__Perc3;  // report Percolation into gw reservior [m]
+  int report__Recharge;  // report Percolation into gw reservior [m]
   int report__Ei;  // report Canopy evaporation [m]
   int report__Es;  // report Soil evaporation [m]
   int report__Tr;  // report Total transpiration in three layers [m]
@@ -129,6 +152,9 @@ struct Control{
   int report__Ks1;  // report Saturated hydraulic conductivity in layer 1
   int report__Ks2;  // report Saturated hydraulic conductivity in layer 2
   int report__Ks3;  // report Saturated hydraulic conductivity in layer 3
+  int report__thetaS1;  // report Saturated soil moisture in layer 1
+  int report__thetaS2;  // report Saturated soil moisture in layer 2
+  int report__thetaS3;  // report Saturated soil moisture in layer 3
   int report__thetaFC1;  // report Field capacity in layer 1
   int report__thetaFC2;  // report Field capacity in layer 2
   int report__thetaFC3;  // report Field capacity in layer 3

@@ -30,8 +30,10 @@ tmpp = np.copy(unit_nodata)
 tmpp[200,200] = 0
 GEM_tools.save_to_ascii(data=tmpp, path=spatial_path+'Gauge_to_Report.asc', ref_path=spatial_path+'dem.asc')
 
-weight_list = [50,            10,        1000,      0.3,      0.3, 0.0,    0.0,      0.4,      0.5,     0.6]
-fnames = ['chnwidth', 'chndepth', 'chnlength', 'depth1', 'depth2', 'I', 'snow', 'theta1', 'theta2', 'theta3']
+weight_list = [50,            10,        1000,      0.3,      0.3, 0.0,    0.0,    0.0,      0.3,      0.3,     0.3,
+               0.3,   0.25,     0.2,     0.1,    0.15,     0.2,     0.5,    0.55,     0.6,       0.08,       0.06,      0.03,             1.2,            1.4,               1.6]
+fnames = ['chnwidth', 'chndepth', 'chnlength', 'depth1', 'depth2', 'I', 'snow', 'pond', 'theta1', 'theta2', 'theta3',
+          'sand1', 'sand2', 'sand3', 'clay1', 'clay2', 'clay3', 'silt1', 'silt2', 'silt3', 'organic1', 'organic2', 'organic3', 'bulkdensity1', 'bulkdensity2', 'bulkdensity3']
 for i in range(len(fnames)):
     weight = weight_list[i]
     fname = fnames[i]

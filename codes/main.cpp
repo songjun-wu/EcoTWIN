@@ -58,10 +58,10 @@ int main(){
   }
 
   // Deconstructor
-  oAtmosphere->dtor(*oControl);
-  oBasin->dtor(*oControl);
-  oParam->dtor(*oControl);
-  oControl->dtor();
+  //oAtmosphere->dtor(*oControl);
+  //oBasin->dtor(*oControl);
+  //oParam->dtor(*oControl);
+  //oControl->dtor();
 
   
   auto stop2  = std::chrono::high_resolution_clock::now();

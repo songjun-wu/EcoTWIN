@@ -33,6 +33,11 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(PTF_Ks_clay, "PTF_Ks_clay", lines);
   readIntoParam(PTF_Ks_slope, "PTF_Ks_slope", lines);
   readIntoParam(SWP, "SWP", lines);
+  readIntoParam(KvKh, "KvKh", lines);
+  readIntoParam(psiAE, "psiAE", lines);
+  readIntoParam(KKs, "KKs", lines);
+  readIntoParam(Ksat, "Ksat", lines);
+  readIntoParam(BClambda, "BClambda", lines);
   /* end of Parameters */
 
   input.close();
