@@ -45,6 +45,18 @@ Param::Param(Control &ctrl){
     _Ksat = new svector(_sortedGrid.size);
     _BClambda = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_routinterf == 1){
+    _pOvf_toChn = new svector(_sortedGrid.size);
+    _interfExp = new svector(_sortedGrid.size);
+    _winterf = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_routGWf == 1){
+    _GWfExp = new svector(_sortedGrid.size);
+    _pActiveGW = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_routQ == 1){
+    _Manningn = new svector(_sortedGrid.size);
+  }
   /* end of Parameters */
 
   // Read parameter values from param.ini

@@ -195,7 +195,8 @@ def control_includes(fname, options, signs, datas, reports):
                 continue
             if not item['key'] in opt_list:
                 opt_list.append(item['key'])
-                content.append('  int ' + item['key'] + ';  //' + item['general_description'] + '\n')
+                content.append('  // ' + item['general_description'].replace('#', '  //') + '\n')
+                content.append('  int ' + item['key'] + ';\n')
 
         content = lines[:start] + content + lines[end:]
     if(('').join(content) != ('').join(lines)):

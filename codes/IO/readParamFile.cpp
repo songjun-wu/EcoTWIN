@@ -38,6 +38,12 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(KKs, "KKs", lines);
   readIntoParam(Ksat, "Ksat", lines);
   readIntoParam(BClambda, "BClambda", lines);
+  readIntoParam(pOvf_toChn, "pOvf_toChn", lines);
+  readIntoParam(interfExp, "interfExp", lines);
+  readIntoParam(winterf, "winterf", lines);
+  readIntoParam(GWfExp, "GWfExp", lines);
+  readIntoParam(pActiveGW, "pActiveGW", lines);
+  readIntoParam(Manningn, "Manningn", lines);
   /* end of Parameters */
 
   input.close();

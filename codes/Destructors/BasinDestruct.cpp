@@ -8,6 +8,7 @@ int Basin::dtor(Control &ctrl){
   if(_chnwidth) delete _chnwidth;
   if(_chndepth) delete _chndepth;
   if(_chnlength) delete _chnlength;
+  if(_slope) delete _slope;
   if(_depth1) delete _depth1;
   if(_depth2) delete _depth2;
   if(_sand1) delete _sand1;
@@ -40,17 +41,18 @@ int Basin::dtor(Control &ctrl){
   if(_theta1) delete _theta1;
   if(_theta2) delete _theta2;
   if(_theta3) delete _theta3;
+  if(_GW) delete _GW;
+  if(_chanS) delete _chanS;
   /* end of Storages */
 
   /* Fluxes */
   if(_D) delete _D;
   if(_Th) delete _Th;
   if(_snowmelt) delete _snowmelt;
-  if(_Qs) delete _Qs;
   if(_infilt) delete _infilt;
   if(_Perc1) delete _Perc1;
   if(_Perc2) delete _Perc2;
-  if(_Recharge) delete _Recharge;
+  if(_Perc3) delete _Perc3;
   if(_Ei) delete _Ei;
   if(_Es) delete _Es;
   if(_Tr) delete _Tr;
@@ -69,10 +71,24 @@ int Basin::dtor(Control &ctrl){
   if(_thetaWP1) delete _thetaWP1;
   if(_thetaWP2) delete _thetaWP2;
   if(_thetaWP3) delete _thetaWP3;
+  if(_ovf_in) delete _ovf_in;
+  if(_ovf_out) delete _ovf_out;
+  if(_ovf_toChn) delete _ovf_toChn;
+  if(_interf_in) delete _interf_in;
+  if(_interf_out) delete _interf_out;
+  if(_interf_toChn) delete _interf_toChn;
+  if(_gwf_toChn) delete _gwf_toChn;
+  if(_Q) delete _Q;
+  if(_Qupstream) delete _Qupstream;
   if (ctrl.opt_evap == 1){
     if(_froot_soil) delete _froot_soil;
     if(_froot_layer2) delete _froot_layer2;
     if(_froot_layer3) delete _froot_layer3;
+  }
+  if (ctrl.opt_percolation == 1){
+    if(_p_perc1) delete _p_perc1;
+    if(_p_perc2) delete _p_perc2;
+    if(_p_perc3) delete _p_perc3;
   }
   /* end of Fluxes */
 

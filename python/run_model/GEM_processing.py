@@ -7,11 +7,20 @@ import GEM_tools
 
 
 
+def gdal_read_raster(raster_path):
+    ds = gdal.Open(raster_path)
+    band = ds.GetRasterBand(1)
+    data = band.ReadAsArray().astype(np.float_)
+    return data
+
+
 
 spatial_path = Path.data_path + 'spatial/'
 climate_path = Path.data_path + 'climate/'
 
 nodata = -9999.0
+
+chnmask = np.loadtxt(spatial_path + 'channel.asc', skiprows=6)
 
 tmp = np.loadtxt(spatial_path + 'dem.asc', skiprows=6)
 
@@ -30,14 +39,25 @@ tmpp = np.copy(unit_nodata)
 tmpp[200,200] = 0
 GEM_tools.save_to_ascii(data=tmpp, path=spatial_path+'Gauge_to_Report.asc', ref_path=spatial_path+'dem.asc')
 
-weight_list = [50,            10,        1000,      0.3,      0.3, 0.0,    0.0,    0.0,      0.3,      0.3,     0.3,
-               0.3,   0.25,     0.2,     0.1,    0.15,     0.2,     0.5,    0.55,     0.6,       0.08,       0.06,      0.03,             1.2,            1.4,               1.6]
-fnames = ['chnwidth', 'chndepth', 'chnlength', 'depth1', 'depth2', 'I', 'snow', 'pond', 'theta1', 'theta2', 'theta3',
-          'sand1', 'sand2', 'sand3', 'clay1', 'clay2', 'clay3', 'silt1', 'silt2', 'silt3', 'organic1', 'organic2', 'organic3', 'bulkdensity1', 'bulkdensity2', 'bulkdensity3']
+weight_list = [50,            10,        1000,      0.3,      0.3, 0.0,    0.0,    0.0,      0.3,      0.3,     0.3,    20,
+               0.3,   0.25,     0.2,     0.1,    0.15,     0.2,     0.5,    0.55,     0.6,       0.08,       0.06,      0.03,             1.2,            1.4,               1.6,
+               10]
+fnames = ['chnwidth', 'chndepth', 'chnlength', 'depth1', 'depth2', 'I', 'snow', 'pond', 'theta1', 'theta2', 'theta3', 'GW',
+          'sand1', 'sand2', 'sand3', 'clay1', 'clay2', 'clay3', 'silt1', 'silt2', 'silt3', 'organic1', 'organic2', 'organic3', 'bulkdensity1', 'bulkdensity2', 'bulkdensity3',
+          'Q']
 for i in range(len(fnames)):
     weight = weight_list[i]
     fname = fnames[i]
-    GEM_tools.save_to_ascii(data=unit_soil*weight, path=spatial_path+fname+'.asc', ref_path=spatial_path+'dem.asc')
+    if 'chn' in fname or fname=='Q':
+        #weights =  np.random.uniform(low=weight*0.9, high=weight*1.1, size=(unit_soil.shape))
+        weights = np.full(unit_soil.shape, weight)
+        data = np.copy(unit_nodata)
+        data[chnmask==1] = weights[chnmask==1]
+        GEM_tools.save_to_ascii(data=data, path=spatial_path+fname+'.asc', ref_path=spatial_path+'dem.asc')
+    else:
+        #weights =  np.random.uniform(low=weight*0.9, high=weight*1.1, size=(unit_soil.shape))
+        weights = np.full(unit_soil.shape, weight)
+        GEM_tools.save_to_ascii(data=unit_soil*weights, path=spatial_path+fname+'.asc', ref_path=spatial_path+'dem.asc')
 
 p_cat_list = [1, 0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.06, 0.04]
 for i in range(len(p_cat_list)):

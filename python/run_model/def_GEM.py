@@ -63,6 +63,17 @@ class Param:
     ref['BClambda']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[2]*Info.N_soil, 'max':[15]*Info.N_soil}
 
 
+    ref['pOvf_toChn']   = {'type':'global',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3], 'max':[1e3]}
+    ref['interfExp']   = {'type':'global',   'log':1, 'file':'interfExp',   'min':[1e-5], 'max':[1]}
+    ref['winterf']   = {'type':'global',   'log':1, 'file':'winterf',   'min':[1e-2], 'max':[1e7]}
+    ref['GWfExp']   = {'type':'global',   'log':1, 'file':'GWfExp',   'min':[1e-5], 'max':[1]}
+    ref['pActiveGW']   = {'type':'global',   'log':1, 'file':'pActiveGW',   'min':[1e-8], 'max':[1e-2]}
+
+    ref['Manningn']   = {'type':'global',   'log':1, 'file':'Manningn',   'min':[0.01], 'max':[0.1]}
+    
+
+
+    
 
 
 """

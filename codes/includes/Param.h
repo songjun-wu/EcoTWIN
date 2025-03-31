@@ -42,6 +42,12 @@ class Param {
   vector<double> KKs;
   vector<double> Ksat;
   vector<double> BClambda;
+  vector<double> pOvf_toChn;
+  vector<double> interfExp;
+  vector<double> winterf;
+  vector<double> GWfExp;
+  vector<double> pActiveGW;
+  vector<double> Manningn;
   svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
   svector *_rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
@@ -63,6 +69,12 @@ class Param {
   svector *_KKs;  // The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2
   svector *_Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   svector *_BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
+  svector *_pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
+  svector *_interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
+  svector *_winterf;  // The weight parameter in kinematic wave solution  [-]
+  svector *_GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
+  svector *_pActiveGW;  // The active proportion of GW storage that contributes to channel recharge  [-]
+  svector *_Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   /* end of Parameters */
 
   svector_2d *param_category;

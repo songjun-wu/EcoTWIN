@@ -40,6 +40,18 @@ int Param::dtor(Control &ctrl){
     if(_Ksat) delete _Ksat;
     if(_BClambda) delete _BClambda;
   }
+  if (ctrl.opt_routinterf == 1){
+    if(_pOvf_toChn) delete _pOvf_toChn;
+    if(_interfExp) delete _interfExp;
+    if(_winterf) delete _winterf;
+  }
+  if (ctrl.opt_routGWf == 1){
+    if(_GWfExp) delete _GWfExp;
+    if(_pActiveGW) delete _pActiveGW;
+  }
+  if (ctrl.opt_routQ == 1){
+    if(_Manningn) delete _Manningn;
+  }
   /* end of Parameters */
 
   if(param_category) delete param_category;

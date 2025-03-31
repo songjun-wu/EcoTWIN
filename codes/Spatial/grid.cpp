@@ -49,7 +49,8 @@ svector_2d::svector_2d(int num_category, sortedGrid _sortedGrid){
   n_category = num_category;
   size = _sortedGrid.size;
   parameterisation_count = 0;
-  sort_soil_profile_OK = 0;
+  sort_PTF = 0;
+  sort_perc_travel_time_OK = 0;
 
   val = new double*[num_category];
 
@@ -65,7 +66,8 @@ int svector_2d::update(string fname, int num_category, int rowNum, int colNum, s
   int dim = rowNum*colNum;
 
   parameterisation_OK = 0;
-  sort_soil_profile_OK = 0;
+  sort_PTF = 0;
+  sort_perc_travel_time_OK = 0;
 
   double *data=NULL;
   
@@ -120,6 +122,16 @@ int svector::reset(){
 
   for (int j=0; j<size; j++){
     val[j] = 0;
+  }
+  return EXIT_SUCCESS;
+}
+
+int svector::higherthan(double minimum){
+
+  for (int j=0; j<size; j++){
+    if (val[j] < minimum){
+      val[j] = minimum;
+    }      
   }
   return EXIT_SUCCESS;
 }

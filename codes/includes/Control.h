@@ -34,16 +34,58 @@ struct Control{
   /* end of Settings */
 
   /* Options */
-  int opt_climate_input_format;  //How is climate inputs orgainsed? 1: raster; 2: aggregated binary file (climate_zone file should be specified)
-  int opt_tracking_isotope;  //Enable isotopic tracking? 0: disabled, 1: enabled
-  int opt_intecept;  //Canopy interception. 1 :maximum canopy storage unmodified; 2 :storage corrected (Landarf et al., 2024)
-  int opt_snow;  //Snow accumulation method. 1: Degree day factor method
-  int opt_infilt;  //Infiltration function. 1: 
-  int opt_evap;  //Evapotranspiration function. 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
-  int opt_pedotransf;  //Pedo-transfer function to estimate Van Genuchten parameters. 1: Wosten et al., (1999); 2: Wosten et al., (1997);  3: Zacharias et al., (2007)
-  int opt_fieldcapacity;  //Method to estimate field capacity. 1: based on Van Genuchten Model; 2: Ks considered, Twarakavi et al., (2007)
-  int opt_depthprofile;  //The way to estimate soil characteristics in deeper layer. 1: All layers remain the same; 2: exponential profile based on depth; 3: Pedo-transfer function for each layer
-  int opt_infil;  //Method of iniltration and percolation. 1: Green-Ampt model; 2: Green-Ampt model
+  // How is climate inputs orgainsed?
+  // 1: raster
+  // 2: aggregated binary file (climate_zone file should be specified)
+  int opt_climate_input_format;
+  // Enable isotopic tracking?
+  // 0: disabled
+  // 1: enabled
+  int opt_tracking_isotope;
+  // Canopy interception
+  // 1 :maximum canopy storage unmodified
+  // 2 :storage corrected (Landarf et al., 2024)
+  int opt_intecept;
+  // Snow accumulation method
+  // 1: Degree day factor method
+  int opt_snow;
+  // Pedo-transfer function to estimate Van Genuchten parameters
+  // 1: Wosten et al., (1999)
+  // 2: Wosten et al., (1997)
+  // 3: Zacharias et al., (2007)
+  int opt_pedotransf;
+  // Method to estimate field capacity
+  // 1: based on Van Genuchten Model
+  // 2: Ks considered, Twarakavi et al., (2007)
+  int opt_fieldcapacity;
+  // The way to estimate soil characteristics in deeper layer
+  // 1: All layers remain the same
+  // 2: exponential profile based on depth
+  // 3: Pedo-transfer function for each layer
+  int opt_depthprofile;
+  // Iniltration model
+  // 1: Green-Ampt model
+  // 2: Green-Ampt model
+  int opt_infil;
+  // Percolation model
+  // 1: based on travel time and excess water above FC
+  // 2: Green-Ampt model
+  int opt_percolation;
+  // Evapotranspiration function
+  // 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
+  int opt_evap;
+  // Overland flow routing
+  // 1: All ponding water goes to next cell
+  int opt_routOvf;
+  // Interflow routing
+  // 1: linear approximation of Kinematic Wave
+  int opt_routinterf;
+  // GW routing
+  // 1: linear approximation of Kinematic Wave
+  int opt_routGWf;
+  // Stream routing
+  // 1: Kinematic Wave
+  int opt_routQ;
   /* end of Options */
 
 
@@ -56,6 +98,7 @@ struct Control{
   string fn__chnwidth;  // Channel width [m]
   string fn__chndepth;  // Channel depth [m]
   string fn__chnlength;  // Channel length [m]
+  string fn__slope;  // Slope [m/m]
   string fn__depth1;  // Depth of soil layer 1 [m]
   string fn__depth2;  // Depth of soil layer 2 [m]
   string fn__sand1;  // Sand content of layer 1 [decimal]
@@ -95,9 +138,11 @@ struct Control{
   string fn__theta1;  // Soil moisture in layer 1 [decimal]
   string fn__theta2;  // Soil moisture in layer 2 [decimal]
   string fn__theta3;  // Soil moisture in layer 3 [decimal]
+  string fn__GW;  // Groundwater storage [m]
   /* end of Storages */
   
   /* Fluxes */
+  string fn__Q;  // Discharge [m3/s]
   /* end of Fluxes */
 
   /* Parameters */
@@ -122,6 +167,12 @@ struct Control{
   string fn__KKs;  // The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2
   string fn__Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   string fn__BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
+  string fn__pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
+  string fn__interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
+  string fn__winterf;  // The weight parameter in kinematic wave solution  [-]
+  string fn__GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
+  string fn__pActiveGW;  // The active proportion of GW storage that contributes to channel recharge  [-]
+  string fn__Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   /* end of Parameters */
 
   /* Report */
@@ -132,14 +183,14 @@ struct Control{
   int report__theta1;  // report Soil moisture in layer 1 [decimal]
   int report__theta2;  // report Soil moisture in layer 2 [decimal]
   int report__theta3;  // report Soil moisture in layer 3 [decimal]
+  int report__GW;  // report Groundwater storage [m]
   int report__D;  // report Interception [m]
   int report__Th;  // report Throughfall [m]
   int report__snowmelt;  // report Snow melt [m]
-  int report__Qs;  // report Overland flow [m]
   int report__infilt;  // report Inflitration into soil layer 1 [m]
   int report__Perc1;  // report Percolation into layer 2 [m]
   int report__Perc2;  // report Percolation into layer 3 [m]
-  int report__Recharge;  // report Percolation into gw reservior [m]
+  int report__Perc3;  // report Percolation into gw reservior [m]
   int report__Ei;  // report Canopy evaporation [m]
   int report__Es;  // report Soil evaporation [m]
   int report__Tr;  // report Total transpiration in three layers [m]
@@ -161,6 +212,18 @@ struct Control{
   int report__thetaWP1;  // report Wilting point in layer 1
   int report__thetaWP2;  // report Wilting point in layer 2
   int report__thetaWP3;  // report Wilting point in layer 3
+  int report__p_perc1;  // report Percolation proportion in layer 1
+  int report__p_perc2;  // report Percolation proportion in layer 2
+  int report__p_perc3;  // report Percolation proportion in layer 3
+  int report__ovf_in;  // report Overland flow from upstream cell(s) [m]
+  int report__ovf_out;  // report Overland flow to downstream cell [m]
+  int report__ovf_toChn;  // report Overland flow to Channel [m]
+  int report__interf_in;  // report Interflow from upstream cell(s) [m]
+  int report__interf_out;  // report Interflow to downstream cell [m]
+  int report__interf_toChn;  // report Interflow to Channel [m]
+  int report__gwf_toChn;  // report Groundwater flow to Channel [m]
+  int report__Q;  // report Discharge [m3/s]
+  int report__Qupstream;  // report Upstream inflow [m3/s]
   /* end of Report */
 
   public:

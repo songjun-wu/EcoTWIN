@@ -88,7 +88,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('Simul_tstep = 86400 # seconds (daily)\n')
     text.append('Clim_input_tstep = 86400 # seconds (daily)\n')
     text.append('Report_interval = 86400 # seconds (daily)\n')
-    text.append('Update_interval = 8640000 # seconds (every 100 days); the interval for land use / soil type update \n\n')
+    text.append('Update_interval = 43200000 # seconds (every 100 days); the interval for land use / soil type update \n\n')
 
     text.append('# Options \n')
     opt_list = []
@@ -98,7 +98,8 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
             continue
         if not item['key'] in opt_list:
             opt_list.append(item['key'])
-            text.append(item['key'] + ' = '+str(item['value'])+'  # ' + item['general_description'] + '\n')
+            text.append('# ' + item['general_description'] + '\n')
+            text.append(item['key'] + ' = '+str(item['value'])+ '\n')
         
     
     

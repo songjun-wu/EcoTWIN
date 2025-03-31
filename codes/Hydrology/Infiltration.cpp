@@ -78,7 +78,10 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         
 
         if (j==100){
-            //cout << ctrl.current_ts / 86400 << " " << input << " "<< _pond->val[j] <<"  "<< _infilt->val[j] << " " << _theta1->val[j] << endl << endl;
+            //if (_pond->val[j] > 0){
+            //    cout << ctrl.current_ts / 86400 << " " << input << " "<< _pond->val[j] <<"  "<< _infilt->val[j] << " " << _theta1->val[j] << endl << endl;
+            //}
+            
         }
         
 

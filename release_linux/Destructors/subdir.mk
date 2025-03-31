@@ -5,22 +5,22 @@
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
 ../codes/Destructors/AtmosphereDestruct.cpp \
-../codes/Destructors/BasinDestruct.cpp \
 ../codes/Destructors/ControlDestruct.cpp \
+../codes/Destructors/BasinDestruct.cpp \
 ../codes/Destructors/ParamDestruct.cpp \
 
 
 OBJS += \
 ./Destructors/AtmosphereDestruct.o \
-./Destructors/BasinDestruct.o \
 ./Destructors/ControlDestruct.o \
+./Destructors/BasinDestruct.o \
 ./Destructors/ParamDestruct.o \
 
 
 CPP_DEPS += \
 ./Destructors/AtmosphereDestruct.d \
-./Destructors/BasinDestruct.d \
 ./Destructors/ControlDestruct.d \
+./Destructors/BasinDestruct.d \
 ./Destructors/ParamDestruct.d \
 
 

@@ -22,6 +22,7 @@ class Basin {
   svector *_chnwidth;  // Channel width [m]
   svector *_chndepth;  // Channel depth [m]
   svector *_chnlength;  // Channel length [m]
+  svector *_slope;  // Slope [m/m]
   svector *_depth1;  // Depth of soil layer 1 [m]
   svector *_depth2;  // Depth of soil layer 2 [m]
   svector *_sand1;  // Sand content of layer 1 [decimal]
@@ -49,6 +50,8 @@ class Basin {
   svector *_theta1;  // Soil moisture in layer 1 [decimal]
   svector *_theta2;  // Soil moisture in layer 2 [decimal]
   svector *_theta3;  // Soil moisture in layer 3 [decimal]
+  svector *_GW;  // Groundwater storage [m]
+  svector *_chanS;  // Channel storage [m3]
   /* end of Storages */ 
  
 
@@ -56,11 +59,10 @@ class Basin {
   svector *_D;  // Interception [m]
   svector *_Th;  // Throughfall [m]
   svector *_snowmelt;  // Snow melt [m]
-  svector *_Qs;  // Overland flow [m]
   svector *_infilt;  // Inflitration into soil layer 1 [m]
   svector *_Perc1;  // Percolation into layer 2 [m]
   svector *_Perc2;  // Percolation into layer 3 [m]
-  svector *_Recharge;  // Percolation into gw reservior [m]
+  svector *_Perc3;  // Percolation into gw reservior [m]
   svector *_Ei;  // Canopy evaporation [m]
   svector *_Es;  // Soil evaporation [m]
   svector *_Tr;  // Total transpiration in three layers [m]
@@ -79,9 +81,21 @@ class Basin {
   svector *_thetaWP1;  // Wilting point in layer 1
   svector *_thetaWP2;  // Wilting point in layer 2
   svector *_thetaWP3;  // Wilting point in layer 3
+  svector *_ovf_in;  // Overland flow from upstream cell(s) [m]
+  svector *_ovf_out;  // Overland flow to downstream cell [m]
+  svector *_ovf_toChn;  // Overland flow to Channel [m]
+  svector *_interf_in;  // Interflow from upstream cell(s) [m]
+  svector *_interf_out;  // Interflow to downstream cell [m]
+  svector *_interf_toChn;  // Interflow to Channel [m]
+  svector *_gwf_toChn;  // Groundwater flow to Channel [m]
+  svector *_Q;  // Discharge [m3/s]
+  svector *_Qupstream;  // Upstream inflow [m3/s]
   svector *_froot_soil;  // froot coefficient for all soil profile
   svector *_froot_layer2;  // froot coefficient for layer 2
   svector *_froot_layer3;  // froot coefficient for layer 3
+  svector *_p_perc1;  // Percolation proportion in layer 1
+  svector *_p_perc2;  // Percolation proportion in layer 2
+  svector *_p_perc3;  // Percolation proportion in layer 3
   /* end of Fluxes */
 
  
@@ -94,10 +108,13 @@ class Basin {
 
   int Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm);
 
+  // Init
+  int Initialisation(Control &ctrl, Param &par);
+
   /* Canopy interception */
   int Solve_canopy(Control &ctrl, Param &par, Atmosphere &atm);
-  int Interception_1(Param &par, Atmosphere &atm, int j);
-  int Interception_2(Param &par, Atmosphere &atm, int j);
+  int Interception_1(Control &ctrl, Param &par, Atmosphere &atm);
+  int Interception_2(Control &ctrl, Param &par, Atmosphere &atm);
 
   /* Snow accumulation and melt */
   int Solve_snowpack(Control &ctrl, Param &par, Atmosphere &atm);
@@ -120,14 +137,17 @@ class Basin {
   // Infiltration
   int Infiltration_1(Control &ctrl, Param &par);
 
-  int Percolation_2(Control &ctrl, Param &par);
+  int Percolation_1(Control &ctrl, Param &par);
 
 
 
 
   
   /* routing */
-  int Routing_ovf(Control &ctrl, Param &par); // overland flow routing
+  int Routing(Control &ctrl, Param &par);
+  int Routing_ovf_1(Control &ctrl, Param &par); // overland flow routing; All ponding water goes to next cell
+  int Routing_interflow_1(Control &ctrl, Param &par); // Interflow routing based on linear approximation of Kinematic Wave
+  int Routing_Q_1(Control &ctrl, Param &par); // Stream routing based on Kinematic Wave
 
 };
 

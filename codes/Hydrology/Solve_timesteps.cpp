@@ -9,6 +9,8 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
 
     Solve_soil_profile(ctrl, par, atm);
 
+    Routing(ctrl, par);
+    
     //Routing_ovf(ctrl, par);
 
     return EXIT_SUCCESS;

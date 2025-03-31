@@ -22,6 +22,9 @@ int Report::report(Control &ctrl, Basin &Bsn){
   if (ctrl.report__theta3==1) {reportTS(ctrl, Bsn._theta3, "SMC_layer3", ctrl.path_ResultsFolder);}
   else if (ctrl.report__theta3==2) {reportMap(ctrl, Bsn._theta3, ctrl._sortedGrid, "SMC_layer3", ctrl.path_ResultsFolder);}
 
+  if (ctrl.report__GW==1) {reportTS(ctrl, Bsn._GW, "groundwater_storage", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__GW==2) {reportMap(ctrl, Bsn._GW, ctrl._sortedGrid, "groundwater_storage", ctrl.path_ResultsFolder);}
+
   if (ctrl.report__D==1) {reportTS(ctrl, Bsn._D, "interception", ctrl.path_ResultsFolder);}
   else if (ctrl.report__D==2) {reportMap(ctrl, Bsn._D, ctrl._sortedGrid, "interception", ctrl.path_ResultsFolder);}
 
@@ -30,9 +33,6 @@ int Report::report(Control &ctrl, Basin &Bsn){
 
   if (ctrl.report__snowmelt==1) {reportTS(ctrl, Bsn._snowmelt, "snowmelt", ctrl.path_ResultsFolder);}
   else if (ctrl.report__snowmelt==2) {reportMap(ctrl, Bsn._snowmelt, ctrl._sortedGrid, "snowmelt", ctrl.path_ResultsFolder);}
-
-  if (ctrl.report__Qs==1) {reportTS(ctrl, Bsn._Qs, "overland_flow", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Qs==2) {reportMap(ctrl, Bsn._Qs, ctrl._sortedGrid, "overland_flow", ctrl.path_ResultsFolder);}
 
   if (ctrl.report__infilt==1) {reportTS(ctrl, Bsn._infilt, "infiltration", ctrl.path_ResultsFolder);}
   else if (ctrl.report__infilt==2) {reportMap(ctrl, Bsn._infilt, ctrl._sortedGrid, "infiltration", ctrl.path_ResultsFolder);}
@@ -43,8 +43,8 @@ int Report::report(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Perc2==1) {reportTS(ctrl, Bsn._Perc2, "perc_layer2", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Perc2==2) {reportMap(ctrl, Bsn._Perc2, ctrl._sortedGrid, "perc_layer2", ctrl.path_ResultsFolder);}
 
-  if (ctrl.report__Recharge==1) {reportTS(ctrl, Bsn._Recharge, "perc_layer3", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Recharge==2) {reportMap(ctrl, Bsn._Recharge, ctrl._sortedGrid, "perc_layer3", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Perc3==1) {reportTS(ctrl, Bsn._Perc3, "perc_layer3", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__Perc3==2) {reportMap(ctrl, Bsn._Perc3, ctrl._sortedGrid, "perc_layer3", ctrl.path_ResultsFolder);}
 
   if (ctrl.report__Ei==1) {reportTS(ctrl, Bsn._Ei, "canopy_evap", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Ei==2) {reportMap(ctrl, Bsn._Ei, ctrl._sortedGrid, "canopy_evap", ctrl.path_ResultsFolder);}
@@ -63,6 +63,30 @@ int Report::report(Control &ctrl, Basin &Bsn){
 
   if (ctrl.report__Tr3==1) {reportTS(ctrl, Bsn._Tr3, "transp_layer3", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Tr3==2) {reportMap(ctrl, Bsn._Tr3, ctrl._sortedGrid, "transp_layer3", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__ovf_in==1) {reportTS(ctrl, Bsn._ovf_in, "overland_flow_input", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__ovf_in==2) {reportMap(ctrl, Bsn._ovf_in, ctrl._sortedGrid, "overland_flow_input", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__ovf_out==1) {reportTS(ctrl, Bsn._ovf_out, "overland_flow_output", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__ovf_out==2) {reportMap(ctrl, Bsn._ovf_out, ctrl._sortedGrid, "overland_flow_output", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__ovf_toChn==1) {reportTS(ctrl, Bsn._ovf_toChn, "overland_flow_toChn", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__ovf_toChn==2) {reportMap(ctrl, Bsn._ovf_toChn, ctrl._sortedGrid, "overland_flow_toChn", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__interf_in==1) {reportTS(ctrl, Bsn._interf_in, "interflow_input", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__interf_in==2) {reportMap(ctrl, Bsn._interf_in, ctrl._sortedGrid, "interflow_input", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__interf_out==1) {reportTS(ctrl, Bsn._interf_out, "interflow_output", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__interf_out==2) {reportMap(ctrl, Bsn._interf_out, ctrl._sortedGrid, "interflow_output", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__interf_toChn==1) {reportTS(ctrl, Bsn._interf_toChn, "interflow_toChn", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__interf_toChn==2) {reportMap(ctrl, Bsn._interf_toChn, ctrl._sortedGrid, "interflow_toChn", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__gwf_toChn==1) {reportTS(ctrl, Bsn._gwf_toChn, "groundwater_flow_toChn", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__gwf_toChn==2) {reportMap(ctrl, Bsn._gwf_toChn, ctrl._sortedGrid, "groundwater_flow_toChn", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__Q==1) {reportTS(ctrl, Bsn._Q, "discharge", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__Q==2) {reportMap(ctrl, Bsn._Q, ctrl._sortedGrid, "discharge", ctrl.path_ResultsFolder);}
 
   /* end of Report */
 

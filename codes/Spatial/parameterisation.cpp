@@ -183,7 +183,61 @@ int Param::Parameterisation(Control &ctrl){
      }}}
 
   }
-  /* end of Parameters */
+
+  if (ctrl.opt_routinterf == 1){
   
+  _pOvf_toChn->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (pOvf_toChn[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _pOvf_toChn->val[j] += param_category->val[k][j] * pOvf_toChn[k];
+     }}}
+  
+  _interfExp->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (interfExp[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _interfExp->val[j] += param_category->val[k][j] * interfExp[k];
+     }}}
+  
+  _winterf->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (winterf[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _winterf->val[j] += param_category->val[k][j] * winterf[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_routGWf == 1){
+  
+  _GWfExp->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (GWfExp[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _GWfExp->val[j] += param_category->val[k][j] * GWfExp[k];
+     }}}
+  
+  _pActiveGW->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (pActiveGW[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _pActiveGW->val[j] += param_category->val[k][j] * pActiveGW[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_routQ == 1){
+  
+  _Manningn->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (Manningn[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _Manningn->val[j] += param_category->val[k][j] * Manningn[k];
+     }}}
+
+  }
+  /* end of Parameters */
+
   return EXIT_SUCCESS;
 }

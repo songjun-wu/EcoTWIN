@@ -38,18 +38,23 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
   readInto(opt_intecept, "opt_intecept", lines);
   readInto(opt_snow, "opt_snow", lines);
-  readInto(opt_infilt, "opt_infilt", lines);
-  readInto(opt_evap, "opt_evap", lines);
   readInto(opt_pedotransf, "opt_pedotransf", lines);
   readInto(opt_fieldcapacity, "opt_fieldcapacity", lines);
   readInto(opt_depthprofile, "opt_depthprofile", lines);
   readInto(opt_infil, "opt_infil", lines);
+  readInto(opt_percolation, "opt_percolation", lines);
+  readInto(opt_evap, "opt_evap", lines);
+  readInto(opt_routOvf, "opt_routOvf", lines);
+  readInto(opt_routinterf, "opt_routinterf", lines);
+  readInto(opt_routGWf, "opt_routGWf", lines);
+  readInto(opt_routQ, "opt_routQ", lines);
   /* end of Options */
 
   /* GIS */
   readInto(fn__chnwidth, "Channel_width", lines);
   readInto(fn__chndepth, "Channel_depth", lines);
   readInto(fn__chnlength, "Channel_length", lines);
+  readInto(fn__slope, "slope", lines);
   readInto(fn__depth1, "Soil_depth1", lines);
   readInto(fn__depth2, "Soil_depth2", lines);
   readInto(fn__sand1, "sand1", lines);
@@ -87,9 +92,11 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__theta1, "SMC_layer1", lines);
   readInto(fn__theta2, "SMC_layer2", lines);
   readInto(fn__theta3, "SMC_layer3", lines);
+  readInto(fn__GW, "groundwater_storage", lines);
   /* end of Storages */ 
 
   /* Fluxes */
+  readInto(fn__Q, "discharge", lines);
   /* end of Fluxes */
 
 
@@ -115,6 +122,12 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__KKs, "Ksat", lines);
   readInto(fn__Ksat, "Kporos", lines);
   readInto(fn__BClambda, "BClambda", lines);
+  readInto(fn__pOvf_toChn, "pOvf_toChn", lines);
+  readInto(fn__interfExp, "interfExp", lines);
+  readInto(fn__winterf, "winterf", lines);
+  readInto(fn__GWfExp, "GWfExp", lines);
+  readInto(fn__pActiveGW, "pActiveGW", lines);
+  readInto(fn__Manningn, "Manningn", lines);
   /* end of Parameters */
 
   /* Report */
@@ -125,22 +138,29 @@ int Control::ReadConfigFile(string fname){
   readInto(report__theta1, "report_SMC_layer1", lines);
   readInto(report__theta2, "report_SMC_layer2", lines);
   readInto(report__theta3, "report_SMC_layer3", lines);
+  readInto(report__GW, "report_groundwater_storage", lines);
   readInto(report__D, "report_interception", lines);
   readInto(report__Th, "report_throufall", lines);
   readInto(report__snowmelt, "report_snowmelt", lines);
-  readInto(report__Qs, "report_overland_flow", lines);
   readInto(report__infilt, "report_infiltration", lines);
   readInto(report__Perc1, "report_perc_layer1", lines);
   readInto(report__Perc2, "report_perc_layer2", lines);
-  readInto(report__Recharge, "report_perc_layer3", lines);
+  readInto(report__Perc3, "report_perc_layer3", lines);
   readInto(report__Ei, "report_canopy_evap", lines);
   readInto(report__Es, "report_soil_evap", lines);
   readInto(report__Tr, "report_transp", lines);
   readInto(report__Tr1, "report_transp_layer1", lines);
   readInto(report__Tr2, "report_transp_layer2", lines);
   readInto(report__Tr3, "report_transp_layer3", lines);
+  readInto(report__ovf_in, "report_overland_flow_input", lines);
+  readInto(report__ovf_out, "report_overland_flow_output", lines);
+  readInto(report__ovf_toChn, "report_overland_flow_toChn", lines);
+  readInto(report__interf_in, "report_interflow_input", lines);
+  readInto(report__interf_out, "report_interflow_output", lines);
+  readInto(report__interf_toChn, "report_interflow_toChn", lines);
+  readInto(report__gwf_toChn, "report_groundwater_flow_toChn", lines);
+  readInto(report__Q, "report_discharge", lines);
   /* end of Report */
-
 
   return EXIT_SUCCESS;
 }
