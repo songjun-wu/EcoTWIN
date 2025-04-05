@@ -52,50 +52,41 @@ sortedGrid Control::SortGridLDD(){
 	          value3 != 32 &&
 	          value != _nodata){      
               
-              lat_ok = 0;
               switch (value) 
               {
               case 8:
                   rr = r+1;
                   cc = c-1;
-                  lat_ok = 1;
                   break;
               case 4:
                   rr = r+1;
                   cc = c;
-                  lat_ok = 1;
                   break;
               case 2:
                   rr = r+1;
                   cc = c+1;
-                  lat_ok = 1;
                   break;
               case 16:
                   rr = r;
                   cc = c-1;
-                  lat_ok = 1;
                   break;
               case 0: //if it is an outlet
                   break;
               case 1:
                   rr = r;
                   cc = c+1;
-                  lat_ok = 1;
                   break;
               case 32:
                   rr = r-1;
                   cc = c-1;
-                  lat_ok = 1;
               break;
               case 64:
                   rr = r-1;
                   cc = c;
-                  lat_ok = 1;
                   break;
               case 128:
                   rr = r-1;
                   cc = c+1;
-                  lat_ok = 1;
                   break;
               default:
                   cout<< " Sorting flow direction FAILED!" <<endl;
@@ -105,7 +96,7 @@ sortedGrid Control::SortGridLDD(){
 
               map2array.row.push_back(r);
               map2array.col.push_back(c);
-              map2array.lat_ok.push_back(lat_ok);
+              map2array.lat_ok.push_back(0);
               map2array.to_cell.push_back(0);
               to_row->matrix[r][c] = rr;
               to_col->matrix[r][c] = cc;
@@ -130,6 +121,8 @@ sortedGrid Control::SortGridLDD(){
     for (j=i; j<map2array.row.size(); j++){
       if (rr==map2array.row[j] and cc==map2array.col[j]){
         map2array.to_cell[i] = j;
+        map2array.lat_ok[i] = 1;
+        
         break;
       }
     }

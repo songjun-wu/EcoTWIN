@@ -40,6 +40,9 @@ int Param::dtor(Control &ctrl){
     if(_Ksat) delete _Ksat;
     if(_BClambda) delete _BClambda;
   }
+  if (ctrl.opt_percolation == 2){
+    if(_percExp) delete _percExp;
+  }
   if (ctrl.opt_routinterf == 1){
     if(_pOvf_toChn) delete _pOvf_toChn;
     if(_interfExp) delete _interfExp;

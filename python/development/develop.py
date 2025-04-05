@@ -125,7 +125,7 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_deg_day_increase', [Opt.cond['snow_1']], 'Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_increase'],
               
               ['_froot_coeff', [Opt.cond['evap_1']], 'Root fraction coefficient [-]', 'grid', 'spatial_param', 'froot_coeff'],
-
+              # Pedotransfer function
               ['_ref_thetaS', [Opt.cond['pedotransf_1']], 'Reference saturated soil moisture [-]', 'grid', 'spatial_param', 'ref_thetaS'],
               ['_PTF_VG_clay', [Opt.cond['pedotransf_1']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_clay'],
               ['_PTF_VG_Db', [Opt.cond['pedotransf_1']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_Db'],
@@ -136,13 +136,16 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_PTF_Ks_slope', [Opt.cond['pedotransf_1']], 'Slope correction for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Ks_slope'],
 
               ['_SWP', [Opt.cond['fc_1']], 'Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1', 'grid', 'spatial_param', 'SWP'],
-
+              # Infiltration
               ['_KvKh', [Opt.cond['infil_1'], Opt.cond['depthprofile_2']], 'The coefficient to transform Ks to effective Ks [-], only needed when opt_infil = 1', 'grid', 'spatial_param', 'KvKh'],
               ['_psiAE', [Opt.cond['infil_1'], Opt.cond['depthprofile_2']], 'The wetting front potential for Green-Ampt model [mm], only needed when opt_infil = 1', 'grid', 'spatial_param', 'psiAE'],
-
               ['_KKs', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'Ksat'],
               ['_Ksat', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'Kporos'],
               ['_BClambda', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'BClambda'],
+              
+              # Percolation
+              ['_percExp', [Opt.cond['perc_2']], 'The exponential parameter for percolation [-], only needed when opt_percolation = 2', 'grid', 'spatial_param', 'percExp'],
+
 
               ['_pOvf_toChn', [Opt.cond['routinterf_1']], 'The weighting linear parameter for overland flow routing towards channel  [-]', 'grid', 'spatial_param', 'pOvf_toChn'],
               ['_interfExp', [Opt.cond['routinterf_1']], 'The exponetial weighting parameter for interflow flow routing towards channel  [-]', 'grid', 'spatial_param', 'interfExp'],

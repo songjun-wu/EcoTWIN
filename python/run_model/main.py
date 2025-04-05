@@ -1,6 +1,6 @@
 import os
 import GEM_tools
-from def_GEM import *
+from def_GEM_test import *
 
 """"""
 # set the env for model runs

@@ -31,7 +31,7 @@ int Basin::Interception_1(Control &ctrl, Param &par, Atmosphere &atm) {
         double precip = atm._P->val[j];
         double LAI = atm._LAI->val[j];
         double C = _I->val[j]; // Canopy storage
-        
+       
 
         double max_canopy_storage = alpha * LAI; // Maximum canopy storage
 

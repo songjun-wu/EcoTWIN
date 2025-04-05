@@ -138,6 +138,8 @@ class Basin {
   int Infiltration_1(Control &ctrl, Param &par);
 
   int Percolation_1(Control &ctrl, Param &par);
+  int Percolation_2(Control &ctrl, Param &par);
+  int Percolation_3(Control &ctrl, Param &par);
 
 
 

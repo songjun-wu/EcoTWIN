@@ -17,7 +17,7 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
         
 
         Qall = (_chanS->val[j] + _ovf_toChn->val[j] + _interf_toChn->val[j] + _gwf_toChn->val[j]) * dx / dt; // Channel storage and all inflow from terrestrial grid [m] to [m2/s]
-        Qupstream = _Qupstream->val[j];                // Upstream discharge [m3/s]
+        Qupstream = _Qupstream->val[j];  // Upstream discharge [m3/s]
 
         chnwidth = _chnwidth->val[j];  // [m]
         chnlength = _chnlength->val[j];  // [m]
@@ -25,6 +25,9 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
         from_j = _sortedGrid.to_cell[j];
 
         if (Qall + Qupstream > 0){
+
+            
+
             sqrtS = pow(_slope->val[j], 0.5);
 
             Manningn = par._Manningn->val[j] * chnlength;  // Manning's N scaled with channel length
@@ -57,9 +60,15 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
 
             _chanS->val[j] = std::max(0.0,(Qupstream+Qall*_dx  - Qk1)*dt) / dx_square;
             _Q->val[j] = Qk1; // Discharge [m3/s]
+            
             if (_sortedGrid.lat_ok[j] == 1){
                 _Qupstream->val[from_j] += Qk1;  // Discharge inflow [m3/s]
             }
+
+            if (j==158794){
+                cout << Qk1 << " "<< _chanS->val[j]*dx_square / dt << " " << Qall * dx << " " << Qupstream << endl;
+            }
+
         }
             
     }

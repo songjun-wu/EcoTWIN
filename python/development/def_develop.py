@@ -67,16 +67,27 @@ class Opt:
     
 
     cond['infil_1']   = {'key':'opt_infil', 'value':1, 
-                        'general_description':'Iniltration model\n# 1: Green-Ampt model\n# 2: Green-Ampt model',
+                        'general_description':'Iniltration model\n# 1: Green-Ampt model\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)',
                         'description':'Method of iniltration and percolation based on Green-Ampt model'}
 
-    cond['infil_2']   = {'key':'opt_infil', 'value':2, 
-                        'general_description':'Iniltration model\n# 1: Green-Ampt model\n# 2: Green-Ampt model',
-                        'description':'Method of iniltration and percolation based on Green-Ampt model'}
-    
+
+
+
+
     cond['perc_1']   = {'key':'opt_percolation', 'value':1, 
-                        'general_description':'Percolation model\n# 1: based on travel time and excess water above FC\n# 2: Green-Ampt model',
-                        'description':'Evapotranspiration calculation based on Feddes et al., (1976)'}
+                        'general_description':'Percolation model\n# 1: based on travel time and excess water above FC; SWAT\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)\
+                        \n# 3: based on soil deficit',
+                        'description':'Percolation based on based on travel time and excess water above FC'}
+    
+    cond['perc_2']   = {'key':'opt_percolation', 'value':2, 
+                       'general_description':'Percolation model\n# 1: based on travel time and excess water above FC; SWAT\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)\
+                        \n# 3: based on soil deficit',
+                        'description':'Percolation based on soil deficit and a exponential parameter; Feddes et al., (1976)'}
+
+    cond['perc_3']   = {'key':'opt_percolation', 'value':2, 
+                       'general_description':'Percolation model\n# 1: based on travel time and excess water above FC; SWAT\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)\
+                        \n# 3: based on soil deficit',
+                        'description':'Percolation based on soil deficit. Percolation exists after soil saturation'}          
     
     
     cond['evap_1']   = {'key':'opt_evap', 'value':1, 

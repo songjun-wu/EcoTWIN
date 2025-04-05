@@ -45,6 +45,9 @@ Param::Param(Control &ctrl){
     _Ksat = new svector(_sortedGrid.size);
     _BClambda = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_percolation == 2){
+    _percExp = new svector(_sortedGrid.size);
+  }
   if (ctrl.opt_routinterf == 1){
     _pOvf_toChn = new svector(_sortedGrid.size);
     _interfExp = new svector(_sortedGrid.size);

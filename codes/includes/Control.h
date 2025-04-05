@@ -65,11 +65,12 @@ struct Control{
   int opt_depthprofile;
   // Iniltration model
   // 1: Green-Ampt model
-  // 2: Green-Ampt model
+  // 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)
   int opt_infil;
   // Percolation model
-  // 1: based on travel time and excess water above FC
-  // 2: Green-Ampt model
+  // 1: based on travel time and excess water above FC; SWAT
+  // 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)                        
+  // 3: based on soil deficit
   int opt_percolation;
   // Evapotranspiration function
   // 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
@@ -167,6 +168,7 @@ struct Control{
   string fn__KKs;  // The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2
   string fn__Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   string fn__BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
+  string fn__percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
   string fn__pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
   string fn__interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
   string fn__winterf;  // The weight parameter in kinematic wave solution  [-]

@@ -42,6 +42,7 @@ class Param {
   vector<double> KKs;
   vector<double> Ksat;
   vector<double> BClambda;
+  vector<double> percExp;
   vector<double> pOvf_toChn;
   vector<double> interfExp;
   vector<double> winterf;
@@ -69,6 +70,7 @@ class Param {
   svector *_KKs;  // The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2
   svector *_Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   svector *_BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
+  svector *_percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
   svector *_pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
   svector *_interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
   svector *_winterf;  // The weight parameter in kinematic wave solution  [-]

@@ -122,6 +122,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__KKs, "Ksat", lines);
   readInto(fn__Ksat, "Kporos", lines);
   readInto(fn__BClambda, "BClambda", lines);
+  readInto(fn__percExp, "percExp", lines);
   readInto(fn__pOvf_toChn, "pOvf_toChn", lines);
   readInto(fn__interfExp, "interfExp", lines);
   readInto(fn__winterf, "winterf", lines);

@@ -3,6 +3,14 @@ import shutil
 import numpy as np
 
 
+def add_edge(arr, ext=1, no_data = -9999.0):
+    rows, cols = arr.shape
+    rows += ext * 2
+    cols += ext * 2
+    arr_new = np.full((rows, cols), no_data)
+    arr_new[ext:rows-ext, ext:cols-ext] = arr
+    return arr_new
+
 def set_env(Path):
     # Clear run path
     if os.path.exists(Path.run_path):

@@ -184,6 +184,17 @@ int Param::Parameterisation(Control &ctrl){
 
   }
 
+  if (ctrl.opt_percolation == 2){
+  
+  _percExp->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (percExp[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _percExp->val[j] += param_category->val[k][j] * percExp[k];
+     }}}
+
+  }
+
   if (ctrl.opt_routinterf == 1){
   
   _pOvf_toChn->reset();
