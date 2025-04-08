@@ -1,6 +1,7 @@
 import os
 import GEM_tools
-from def_GEM_test import *
+from def_GEM import *
+import numpy as np
 
 """"""
 # set the env for model runs
@@ -31,5 +32,6 @@ os.system('./gEcoHydro')
 os.chdir(current_path)
 os.system('python3 posterior_anlalysis.py')
 
-
-
+#tmp = np.fromfile('/home/wusongj/GEM/test/run/outputs/canopy_storage_map.bin').reshape(-1, 9, 9)
+#tmp = np.mean(tmp, axis=0)
+#print(tmp, np.max(tmp))

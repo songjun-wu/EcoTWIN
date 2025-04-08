@@ -195,6 +195,17 @@ int Param::Parameterisation(Control &ctrl){
 
   }
 
+  if (ctrl.opt_recharge == 1){
+  
+  _wRecharge->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (wRecharge[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _wRecharge->val[j] += param_category->val[k][j] * wRecharge[k];
+     }}}
+
+  }
+
   if (ctrl.opt_routinterf == 1){
   
   _pOvf_toChn->reset();
@@ -229,11 +240,11 @@ int Param::Parameterisation(Control &ctrl){
         _GWfExp->val[j] += param_category->val[k][j] * GWfExp[k];
      }}}
   
-  _pActiveGW->reset();
+  _wGWf->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (pActiveGW[k]!=nodata) {
+      if (wGWf[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _pActiveGW->val[j] += param_category->val[k][j] * pActiveGW[k];
+        _wGWf->val[j] += param_category->val[k][j] * wGWf[k];
      }}}
 
   }

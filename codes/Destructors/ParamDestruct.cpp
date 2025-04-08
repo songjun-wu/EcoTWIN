@@ -43,6 +43,9 @@ int Param::dtor(Control &ctrl){
   if (ctrl.opt_percolation == 2){
     if(_percExp) delete _percExp;
   }
+  if (ctrl.opt_recharge == 1){
+    if(_wRecharge) delete _wRecharge;
+  }
   if (ctrl.opt_routinterf == 1){
     if(_pOvf_toChn) delete _pOvf_toChn;
     if(_interfExp) delete _interfExp;
@@ -50,7 +53,7 @@ int Param::dtor(Control &ctrl){
   }
   if (ctrl.opt_routGWf == 1){
     if(_GWfExp) delete _GWfExp;
-    if(_pActiveGW) delete _pActiveGW;
+    if(_wGWf) delete _wGWf;
   }
   if (ctrl.opt_routQ == 1){
     if(_Manningn) delete _Manningn;

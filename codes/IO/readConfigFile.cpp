@@ -36,14 +36,17 @@ int Control::ReadConfigFile(string fname){
   /* Options */
   readInto(opt_climate_input_format, "opt_climate_input_format", lines);
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
+  readInto(opt_reinfil, "opt_reinfil", lines);
   readInto(opt_intecept, "opt_intecept", lines);
   readInto(opt_snow, "opt_snow", lines);
   readInto(opt_pedotransf, "opt_pedotransf", lines);
   readInto(opt_fieldcapacity, "opt_fieldcapacity", lines);
   readInto(opt_depthprofile, "opt_depthprofile", lines);
   readInto(opt_infil, "opt_infil", lines);
-  readInto(opt_percolation, "opt_percolation", lines);
+  readInto(opt_canopy_evap, "opt_canopy_evap", lines);
   readInto(opt_evap, "opt_evap", lines);
+  readInto(opt_percolation, "opt_percolation", lines);
+  readInto(opt_recharge, "opt_recharge", lines);
   readInto(opt_routOvf, "opt_routOvf", lines);
   readInto(opt_routinterf, "opt_routinterf", lines);
   readInto(opt_routGWf, "opt_routGWf", lines);
@@ -123,11 +126,12 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__Ksat, "Kporos", lines);
   readInto(fn__BClambda, "BClambda", lines);
   readInto(fn__percExp, "percExp", lines);
+  readInto(fn__wRecharge, "wRecharge", lines);
   readInto(fn__pOvf_toChn, "pOvf_toChn", lines);
   readInto(fn__interfExp, "interfExp", lines);
   readInto(fn__winterf, "winterf", lines);
   readInto(fn__GWfExp, "GWfExp", lines);
-  readInto(fn__pActiveGW, "pActiveGW", lines);
+  readInto(fn__wGWf, "wGWf", lines);
   readInto(fn__Manningn, "Manningn", lines);
   /* end of Parameters */
 
@@ -140,13 +144,16 @@ int Control::ReadConfigFile(string fname){
   readInto(report__theta2, "report_SMC_layer2", lines);
   readInto(report__theta3, "report_SMC_layer3", lines);
   readInto(report__GW, "report_groundwater_storage", lines);
-  readInto(report__D, "report_interception", lines);
   readInto(report__Th, "report_throufall", lines);
   readInto(report__snowmelt, "report_snowmelt", lines);
   readInto(report__infilt, "report_infiltration", lines);
   readInto(report__Perc1, "report_perc_layer1", lines);
   readInto(report__Perc2, "report_perc_layer2", lines);
   readInto(report__Perc3, "report_perc_layer3", lines);
+  readInto(report__rinfilt, "report_rinfiltration", lines);
+  readInto(report__rPerc1, "report_rperc_layer1", lines);
+  readInto(report__rPerc2, "report_rperc_layer2", lines);
+  readInto(report__rPerc3, "report_rperc_layer3", lines);
   readInto(report__Ei, "report_canopy_evap", lines);
   readInto(report__Es, "report_soil_evap", lines);
   readInto(report__Tr, "report_transp", lines);
@@ -159,7 +166,9 @@ int Control::ReadConfigFile(string fname){
   readInto(report__interf_in, "report_interflow_input", lines);
   readInto(report__interf_out, "report_interflow_output", lines);
   readInto(report__interf_toChn, "report_interflow_toChn", lines);
-  readInto(report__gwf_toChn, "report_groundwater_flow_toChn", lines);
+  readInto(report__GWf_in, "report_GWrflow_input", lines);
+  readInto(report__GWf_out, "report_GWflow_output", lines);
+  readInto(report__GWf_toChn, "report_groundwater_flow_toChn", lines);
   readInto(report__Q, "report_discharge", lines);
   /* end of Report */
 

@@ -25,6 +25,7 @@
     _clay2 = new svector(ctrl.path_BasinFolder + ctrl.fn__clay2, _rowNum, _colNum, _sortedGrid);
     _clay3 = new svector(ctrl.path_BasinFolder + ctrl.fn__clay3, _rowNum, _colNum, _sortedGrid);
     _silt2 = new svector(ctrl.path_BasinFolder + ctrl.fn__silt2, _rowNum, _colNum, _sortedGrid);
+    _silt3 = new svector(ctrl.path_BasinFolder + ctrl.fn__silt3, _rowNum, _colNum, _sortedGrid);
     _organic2 = new svector(ctrl.path_BasinFolder + ctrl.fn__organic2, _rowNum, _colNum, _sortedGrid);
     _organic3 = new svector(ctrl.path_BasinFolder + ctrl.fn__organic3, _rowNum, _colNum, _sortedGrid);
     _bulkdensity2 = new svector(ctrl.path_BasinFolder + ctrl.fn__bulkdensity2, _rowNum, _colNum, _sortedGrid);
@@ -32,9 +33,6 @@
   }
   if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2){
     _silt1 = new svector(ctrl.path_BasinFolder + ctrl.fn__silt1, _rowNum, _colNum, _sortedGrid);
-  }
-  if (ctrl.opt_depthprofile == 3 or ctrl.opt_pedotransf == 2){
-    _silt3 = new svector(ctrl.path_BasinFolder + ctrl.fn__silt3, _rowNum, _colNum, _sortedGrid);
   }
   /* end of GIS */
 
@@ -50,7 +48,6 @@
   /* end of Storages */
 
   /* Fluxes */
-  _D = new svector(_sortedGrid.size);
   _Th = new svector(_sortedGrid.size);
   _snowmelt = new svector(_sortedGrid.size);
   _infilt = new svector(_sortedGrid.size);
@@ -81,11 +78,19 @@
   _interf_in = new svector(_sortedGrid.size);
   _interf_out = new svector(_sortedGrid.size);
   _interf_toChn = new svector(_sortedGrid.size);
-  _gwf_toChn = new svector(_sortedGrid.size);
+  _GWf_in = new svector(_sortedGrid.size);
+  _GWf_out = new svector(_sortedGrid.size);
+  _GWf_toChn = new svector(_sortedGrid.size);
   _Q = new svector(ctrl.path_BasinFolder + ctrl.fn__Q, _rowNum, _colNum, _sortedGrid);
   _Qupstream = new svector(_sortedGrid.size);
+  if (ctrl.opt_reinfil == 1){
+    _rinfilt = new svector(_sortedGrid.size);
+    _rPerc1 = new svector(_sortedGrid.size);
+    _rPerc2 = new svector(_sortedGrid.size);
+    _rPerc3 = new svector(_sortedGrid.size);
+  }
   if (ctrl.opt_evap == 1){
-    _froot_soil = new svector(_sortedGrid.size);
+    _froot_layer1 = new svector(_sortedGrid.size);
     _froot_layer2 = new svector(_sortedGrid.size);
     _froot_layer3 = new svector(_sortedGrid.size);
   }

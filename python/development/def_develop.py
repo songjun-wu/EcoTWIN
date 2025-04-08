@@ -15,6 +15,10 @@ class Opt:
     cond['tracking_isotope_1'] = {'key':'opt_tracking_isotope', 'value':1,
                                   'general_description':'Enable isotopic tracking?\n# 0: disabled\n# 1: enabled',
                                   'description':'Isotopic tracking'}
+    cond['reinfil_1']   = {'key':'opt_reinfil', 'value':1, 
+                        'general_description':'Reinfiltration during overland flow routing',
+                        'description':'Reinfiltration during overland flow routing'}
+
     
     cond['intecept_1']   = {'key':'opt_intecept', 'value':1, 
                         'general_description':'Canopy interception\n# 1 :maximum canopy storage unmodified\n# 2 :storage corrected (Landarf et al., 2024)',
@@ -69,7 +73,15 @@ class Opt:
     cond['infil_1']   = {'key':'opt_infil', 'value':1, 
                         'general_description':'Iniltration model\n# 1: Green-Ampt model\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)',
                         'description':'Method of iniltration and percolation based on Green-Ampt model'}
-
+    
+    
+    cond['canopy_evap_1']   = {'key':'opt_canopy_evap', 'value':1, 
+                        'general_description':'Canopy evaporation function\n# 1: based on PET and a exponential function Liang et al. (1994)',
+                        'description':'Canopy evaporation based on PET and a exponential function Liang et al. (1994)'}
+    
+    cond['evap_1']   = {'key':'opt_evap', 'value':1, 
+                        'general_description':'Evapotranspiration function\n# 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)',
+                        'description':'Evapotranspiration calculation based on Feddes et al., (1976)'}
 
 
 
@@ -89,10 +101,10 @@ class Opt:
                         \n# 3: based on soil deficit',
                         'description':'Percolation based on soil deficit. Percolation exists after soil saturation'}          
     
+    cond['recharge_1']   = {'key':'opt_recharge', 'value':1, 
+                        'general_description':'GW recharge\n# 1: based on travel time, excess water above FC, and a weighting parameter',
+                        'description':'GW recharge based on travel time, excess water above FC, and a weighting parameter'}
     
-    cond['evap_1']   = {'key':'opt_evap', 'value':1, 
-                        'general_description':'Evapotranspiration function\n# 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)',
-                        'description':'Evapotranspiration calculation based on Feddes et al., (1976)'}
     
     cond['routOvf_1']   = {'key':'opt_routOvf', 'value':1, 
                         'general_description':'Overland flow routing\n# 1: All ponding water goes to next cell',

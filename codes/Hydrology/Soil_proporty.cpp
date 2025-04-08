@@ -69,7 +69,6 @@ int Basin::Pedo_transfer_1(Control &ctrl, Param &par, svector &sv_sand,  svector
         sv_thetaS.val[j] = thetaS;
 
     }
-
     return EXIT_SUCCESS;
 }
 

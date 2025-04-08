@@ -41,7 +41,7 @@ GIS = [ #['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial'
         ['_clay3', [Opt.cond['depthprofile_3']], 'Clay content of layer 3 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'clay3'],
         ['_silt1', [Opt.cond['pedotransf_1'], Opt.cond['pedotransf_2']], 'Silt content of layer 1 [decimal], only needed when opt_pedotransf = 1 or 2', 'grid', 'spatial', 'silt1'],
         ['_silt2', [Opt.cond['depthprofile_3']], 'Silt content of layer 2 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'silt2'],
-        ['_silt3', [Opt.cond['depthprofile_3'], Opt.cond['pedotransf_2']], 'Silt content of layer 3 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'silt3'],
+        ['_silt3', [Opt.cond['depthprofile_3']], 'Silt content of layer 3 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'silt3'],
         ['_organic1', [Opt.cond['none']], 'Organic content of layer 1 [decimal]', 'grid', 'spatial', 'organic1'],
         ['_organic2', [Opt.cond['depthprofile_3']], 'Organic content of layer 2 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'organic2'],
         ['_organic3', [Opt.cond['depthprofile_3']], 'Organic content of layer 3 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'organic3'],
@@ -61,13 +61,21 @@ Storages = [['_I',       [Opt.cond['none']], 'Canopy storage [m]', 'grid', 'spat
             ['_chanS',  [Opt.cond['none']], 'Channel storage [m3]', 'grid', 'new', None],                       
             ]
 
-Fluxes   = [['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'interception'],
+Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'interception'],
             ['_Th', [Opt.cond['none']], 'Throughfall [m]', 'grid', 'new', 'throufall'],
             ['_snowmelt', [Opt.cond['none']], 'Snow melt [m]', 'grid', 'new', 'snowmelt'],
             ['_infilt', [Opt.cond['none']], 'Inflitration into soil layer 1 [m]', 'grid', 'new', 'infiltration'],
             ['_Perc1', [Opt.cond['none']], 'Percolation into layer 2 [m]', 'grid', 'new', 'perc_layer1'],
             ['_Perc2', [Opt.cond['none']], 'Percolation into layer 3 [m]', 'grid', 'new', 'perc_layer2'],
             ['_Perc3', [Opt.cond['none']], 'Percolation into gw reservior [m]', 'grid', 'new', 'perc_layer3'],
+
+            ['_rinfilt', [Opt.cond['reinfil_1']], 'Reinflitration into soil layer 1 [m]', 'grid', 'new', 'rinfiltration'],
+            ['_rPerc1', [Opt.cond['reinfil_1']], 'Repercolation into layer 2 [m]', 'grid', 'new', 'rperc_layer1'],
+            ['_rPerc2', [Opt.cond['reinfil_1']], 'Repercolation into layer 3 [m]', 'grid', 'new', 'rperc_layer2'],
+            ['_rPerc3', [Opt.cond['reinfil_1']], 'Repercolation into gw reservior [m]', 'grid', 'new', 'rperc_layer3'],
+
+
+            
             ['_Ei', [Opt.cond['none']], 'Canopy evaporation [m]', 'grid', 'new', 'canopy_evap'],
             ['_Es', [Opt.cond['none']], 'Soil evaporation [m]', 'grid', 'new', 'soil_evap'],
             ['_Tr', [Opt.cond['none']], 'Total transpiration in three layers [m]', 'grid', 'new', 'transp'],
@@ -78,7 +86,7 @@ Fluxes   = [['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inter
             
 
 
-            ['_froot_soil', [Opt.cond['evap_1']], 'froot coefficient for all soil profile', 'grid', 'new', None],
+            ['_froot_layer1', [Opt.cond['evap_1']], 'froot coefficient for all soil profile', 'grid', 'new', None],
             ['_froot_layer2', [Opt.cond['evap_1']], 'froot coefficient for layer 2', 'grid', 'new', None],
             ['_froot_layer3', [Opt.cond['evap_1']], 'froot coefficient for layer 3', 'grid', 'new', None],
 
@@ -105,11 +113,16 @@ Fluxes   = [['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inter
             ['_interf_in', [Opt.cond['none']], 'Interflow from upstream cell(s) [m]', 'grid', 'new', 'interflow_input'],
             ['_interf_out', [Opt.cond['none']], 'Interflow to downstream cell [m]', 'grid', 'new', 'interflow_output'],
             ['_interf_toChn', [Opt.cond['none']], 'Interflow to Channel [m]', 'grid', 'new', 'interflow_toChn'],
-
-            ['_gwf_toChn', [Opt.cond['none']], 'Groundwater flow to Channel [m]', 'grid', 'new', 'groundwater_flow_toChn'],
+            ['_GWf_in', [Opt.cond['none']], 'GW flow from upstream cell(s) [m]', 'grid', 'new', 'GWrflow_input'],
+            ['_GWf_out', [Opt.cond['none']], 'GW flow to downstream cell [m]', 'grid', 'new', 'GWflow_output'],
+            ['_GWf_toChn', [Opt.cond['none']], 'Groundwater flow to Channel [m]', 'grid', 'new', 'groundwater_flow_toChn'],
 
             ['_Q', [Opt.cond['none']], 'Discharge [m3/s]', 'grid', 'spatial', 'discharge'],
             ['_Qupstream', [Opt.cond['none']], 'Upstream inflow [m3/s]', 'grid', 'new', None],
+
+
+            # internal variables
+            #['_tmp', [Opt.cond['none']], 'Temporal variable for testing [m3/s]', 'grid', 'new', None],
             
 
             ]
@@ -146,13 +159,17 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               # Percolation
               ['_percExp', [Opt.cond['perc_2']], 'The exponential parameter for percolation [-], only needed when opt_percolation = 2', 'grid', 'spatial_param', 'percExp'],
 
+              # Recharge
+              ['_wRecharge', [Opt.cond['recharge_1']], 'The weighting parameter for GW recharge [-], only needed when opt_recharge = 1', 'grid', 'spatial_param', 'wRecharge'],
+
+              
 
               ['_pOvf_toChn', [Opt.cond['routinterf_1']], 'The weighting linear parameter for overland flow routing towards channel  [-]', 'grid', 'spatial_param', 'pOvf_toChn'],
               ['_interfExp', [Opt.cond['routinterf_1']], 'The exponetial weighting parameter for interflow flow routing towards channel  [-]', 'grid', 'spatial_param', 'interfExp'],
               ['_winterf', [Opt.cond['routinterf_1']], 'The weight parameter in kinematic wave solution  [-]', 'grid', 'spatial_param', 'winterf'],
               ['_GWfExp', [Opt.cond['routGWf_1']], 'The exponetial weighting parameter for GW flow routing towards channel  [-]', 'grid', 'spatial_param', 'GWfExp'],
-              #['_wGWf', [Opt.cond['routinterf_1']], 'The weight parameter in kinematic wave solution  [-]', 'grid', 'spatial_param', 'wGWf'],
-              ['_pActiveGW', [Opt.cond['routGWf_1']], 'The active proportion of GW storage that contributes to channel recharge  [-]', 'grid', 'spatial_param', 'pActiveGW'],
+              #['_wGWf', [Opt.cond['routGWf_1']], 'The weight parameter in kinematic wave solution  [-]', 'grid', 'spatial_param', 'wGWf'],
+              ['_wGWf', [Opt.cond['routGWf_1']], 'The active proportion of GW storage that contributes to channel recharge  [-]', 'grid', 'spatial_param', 'wGWf'],
 
               ['_Manningn', [Opt.cond['routQ_1']], 'Manning N for stream routing [-], only needed when opt_routQ = 1', 'grid', 'spatial_param', 'Manningn'],
               

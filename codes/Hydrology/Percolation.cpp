@@ -14,7 +14,8 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         par.param_category->sort_perc_travel_time_OK = 1;
 
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-            travel_time_ratio = dt / ((_thetaS1->val[j] - _thetaFC1->val[j]) / _Ks1->val[j]);  // The time for excess water to percolate versus hydraulic conductvity
+            // The time for excess water to percolate versus hydraulic conductvity
+            travel_time_ratio = dt / ((_thetaS1->val[j] - _thetaFC1->val[j]) / _Ks1->val[j]);
             _p_perc1->val[j] = (1 - exp(-1 * travel_time_ratio));
 
             travel_time_ratio = dt / ((_thetaS2->val[j] - _thetaFC2->val[j]) / _Ks2->val[j]);
@@ -23,14 +24,14 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
             travel_time_ratio = dt / ((_thetaS3->val[j] - _thetaFC3->val[j]) / _Ks3->val[j]);
             _p_perc3->val[j] = (1 - exp(-1 * travel_time_ratio));
         }
-        
     }
+    
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         double theta1 = _theta1->val[j];
         double theta2 = _theta2->val[j];
-        double theta3 = _theta2->val[j];
+        double theta3 = _theta3->val[j];
 
         double depth1 = _depth1->val[j];
         double depth2 = _depth2->val[j];
@@ -41,33 +42,29 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         double perc3 = 0;
 
         // Percolation from layer 1
-        perc1 = max((theta1 - _thetaFC1->val[j]) * _p_perc1->val[j], 0.0) * depth1;
-        theta1 -= perc1 / depth1;
-        theta2 += perc1 / depth2;
+        if (theta1 - _thetaFC1->val[j]) {
+            perc1 = (theta1 - _thetaFC1->val[j]) * depth1 * _p_perc1->val[j];
+            theta1 -= perc1 / depth1;
+            theta2 += perc1 / depth2;
+
+        }
+        
 
         // Percolation from layer 2
-        perc2 = max((theta2 - _thetaFC2->val[j]) * _p_perc2->val[j], 0.0) * depth2;
-        theta2 -= perc2 / depth2;
-        theta3 += perc2 / depth3;
+        if (theta2 > _thetaFC2->val[j]){
+            perc2 = (theta2 - _thetaFC2->val[j]) * depth2 * _p_perc2->val[j];
+            theta2 -= perc2 / depth2;
+            theta3 += perc2 / depth3;
+        }
+        
 
-        // Percolation from layer 3 (GW recharge)
-        perc3 = max((theta3 - _thetaFC3->val[j]) * _p_perc3->val[j], 0.0) * depth3;
-        theta3 -= perc3 / depth3;        
-        // Percolate to GW storage 
 
 
         _theta1->val[j] = theta1;
         _theta2->val[j] = theta2;
         _theta3->val[j] = theta3;
         _Perc1->val[j] = perc1;
-        _Perc2->val[j] = perc2;
-
- 
-        if (j==100){
-            //cout << ctrl.current_ts / 86400 << " " << perc1 << " "<<perc2 <<"  "<< theta1 << " " << theta2 << endl;
-            //cout << _p_perc1->val[j] << " "<< _thetaFC1->val[j] << endl << endl;
-        }
-        
+        _Perc2->val[j] = perc2;       
     }
     return EXIT_SUCCESS;
 }
@@ -76,16 +73,13 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
 
     double dt = ctrl.Simul_tstep;
     double travel_time_ratio;
-
     double p_perc1, p_perc2, p_perc3;
-    
-
     
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         double theta1 = _theta1->val[j];
         double theta2 = _theta2->val[j];
-        double theta3 = _theta2->val[j];
+        double theta3 = _theta3->val[j];
 
         double thetaS1 = _thetaS1->val[j];
         double thetaS2 = _thetaS2->val[j];
@@ -122,7 +116,7 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
                 perc_in -= (thetaS2 - theta2) * depth2;
             } else{
                 theta2 += delta_theta;
-                perc_in -= delta_theta * depth2;
+                perc_in -= (delta_theta * depth2);
             }
         }
         perc2 = perc_in;  // Percolation to next layer
@@ -147,15 +141,13 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
 int Basin::Percolation_3(Control &ctrl, Param &par) {
 
     double dt = ctrl.Simul_tstep;
-    double travel_time_ratio;
-
     double p_perc1, p_perc2, p_perc3;
     
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         double theta1 = _theta1->val[j];
         double theta2 = _theta2->val[j];
-        double theta3 = _theta2->val[j];
+        double theta3 = _theta3->val[j];
 
         double thetaS1 = _thetaS1->val[j];
         double thetaS2 = _thetaS2->val[j];
@@ -186,8 +178,6 @@ int Basin::Percolation_3(Control &ctrl, Param &par) {
             theta2 = thetaS2;
             theta3 += perc2 / depth3;
         }
-        
-
 
         // Local to global
         _theta1->val[j] = theta1;

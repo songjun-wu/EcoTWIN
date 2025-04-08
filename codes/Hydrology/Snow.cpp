@@ -46,6 +46,7 @@ int Basin::Snow_acc_melt(Param &par, Atmosphere &atm, int j){
         
     }
 
+    _snowmelt->val[j] = snow_melt;
     _snow->val[j] = snow_pack;
     _pond->val[j] = pond;
 

@@ -39,11 +39,12 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(Ksat, "Ksat", lines);
   readIntoParam(BClambda, "BClambda", lines);
   readIntoParam(percExp, "percExp", lines);
+  readIntoParam(wRecharge, "wRecharge", lines);
   readIntoParam(pOvf_toChn, "pOvf_toChn", lines);
   readIntoParam(interfExp, "interfExp", lines);
   readIntoParam(winterf, "winterf", lines);
   readIntoParam(GWfExp, "GWfExp", lines);
-  readIntoParam(pActiveGW, "pActiveGW", lines);
+  readIntoParam(wGWf, "wGWf", lines);
   readIntoParam(Manningn, "Manningn", lines);
   /* end of Parameters */
 

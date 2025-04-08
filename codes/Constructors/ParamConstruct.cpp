@@ -48,6 +48,9 @@ Param::Param(Control &ctrl){
   if (ctrl.opt_percolation == 2){
     _percExp = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_recharge == 1){
+    _wRecharge = new svector(_sortedGrid.size);
+  }
   if (ctrl.opt_routinterf == 1){
     _pOvf_toChn = new svector(_sortedGrid.size);
     _interfExp = new svector(_sortedGrid.size);
@@ -55,7 +58,7 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_routGWf == 1){
     _GWfExp = new svector(_sortedGrid.size);
-    _pActiveGW = new svector(_sortedGrid.size);
+    _wGWf = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_routQ == 1){
     _Manningn = new svector(_sortedGrid.size);
@@ -66,7 +69,7 @@ Param::Param(Control &ctrl){
   ReadParamFile(ctrl, fname);
 
   param_category = new svector_2d(ctrl.num_category , _sortedGrid);
-
+  
   // Assign parameter spatially
   Parameterisation(ctrl);
 }

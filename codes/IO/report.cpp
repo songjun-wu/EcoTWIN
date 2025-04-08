@@ -25,9 +25,6 @@ int Report::report(Control &ctrl, Basin &Bsn){
   if (ctrl.report__GW==1) {reportTS(ctrl, Bsn._GW, "groundwater_storage", ctrl.path_ResultsFolder);}
   else if (ctrl.report__GW==2) {reportMap(ctrl, Bsn._GW, ctrl._sortedGrid, "groundwater_storage", ctrl.path_ResultsFolder);}
 
-  if (ctrl.report__D==1) {reportTS(ctrl, Bsn._D, "interception", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__D==2) {reportMap(ctrl, Bsn._D, ctrl._sortedGrid, "interception", ctrl.path_ResultsFolder);}
-
   if (ctrl.report__Th==1) {reportTS(ctrl, Bsn._Th, "throufall", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Th==2) {reportMap(ctrl, Bsn._Th, ctrl._sortedGrid, "throufall", ctrl.path_ResultsFolder);}
 
@@ -45,6 +42,18 @@ int Report::report(Control &ctrl, Basin &Bsn){
 
   if (ctrl.report__Perc3==1) {reportTS(ctrl, Bsn._Perc3, "perc_layer3", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Perc3==2) {reportMap(ctrl, Bsn._Perc3, ctrl._sortedGrid, "perc_layer3", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__rinfilt==1) {reportTS(ctrl, Bsn._rinfilt, "rinfiltration", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__rinfilt==2) {reportMap(ctrl, Bsn._rinfilt, ctrl._sortedGrid, "rinfiltration", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__rPerc1==1) {reportTS(ctrl, Bsn._rPerc1, "rperc_layer1", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__rPerc1==2) {reportMap(ctrl, Bsn._rPerc1, ctrl._sortedGrid, "rperc_layer1", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__rPerc2==1) {reportTS(ctrl, Bsn._rPerc2, "rperc_layer2", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__rPerc2==2) {reportMap(ctrl, Bsn._rPerc2, ctrl._sortedGrid, "rperc_layer2", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__rPerc3==1) {reportTS(ctrl, Bsn._rPerc3, "rperc_layer3", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__rPerc3==2) {reportMap(ctrl, Bsn._rPerc3, ctrl._sortedGrid, "rperc_layer3", ctrl.path_ResultsFolder);}
 
   if (ctrl.report__Ei==1) {reportTS(ctrl, Bsn._Ei, "canopy_evap", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Ei==2) {reportMap(ctrl, Bsn._Ei, ctrl._sortedGrid, "canopy_evap", ctrl.path_ResultsFolder);}
@@ -82,8 +91,14 @@ int Report::report(Control &ctrl, Basin &Bsn){
   if (ctrl.report__interf_toChn==1) {reportTS(ctrl, Bsn._interf_toChn, "interflow_toChn", ctrl.path_ResultsFolder);}
   else if (ctrl.report__interf_toChn==2) {reportMap(ctrl, Bsn._interf_toChn, ctrl._sortedGrid, "interflow_toChn", ctrl.path_ResultsFolder);}
 
-  if (ctrl.report__gwf_toChn==1) {reportTS(ctrl, Bsn._gwf_toChn, "groundwater_flow_toChn", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__gwf_toChn==2) {reportMap(ctrl, Bsn._gwf_toChn, ctrl._sortedGrid, "groundwater_flow_toChn", ctrl.path_ResultsFolder);}
+  if (ctrl.report__GWf_in==1) {reportTS(ctrl, Bsn._GWf_in, "GWrflow_input", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__GWf_in==2) {reportMap(ctrl, Bsn._GWf_in, ctrl._sortedGrid, "GWrflow_input", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__GWf_out==1) {reportTS(ctrl, Bsn._GWf_out, "GWflow_output", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__GWf_out==2) {reportMap(ctrl, Bsn._GWf_out, ctrl._sortedGrid, "GWflow_output", ctrl.path_ResultsFolder);}
+
+  if (ctrl.report__GWf_toChn==1) {reportTS(ctrl, Bsn._GWf_toChn, "groundwater_flow_toChn", ctrl.path_ResultsFolder);}
+  else if (ctrl.report__GWf_toChn==2) {reportMap(ctrl, Bsn._GWf_toChn, ctrl._sortedGrid, "groundwater_flow_toChn", ctrl.path_ResultsFolder);}
 
   if (ctrl.report__Q==1) {reportTS(ctrl, Bsn._Q, "discharge", ctrl.path_ResultsFolder);}
   else if (ctrl.report__Q==2) {reportMap(ctrl, Bsn._Q, ctrl._sortedGrid, "discharge", ctrl.path_ResultsFolder);}
@@ -99,7 +114,6 @@ int Report::reportTS(Control &ctrl, const svector *input, string varname, string
   int length = ctrl._Tsmask.cell.size();
   double outdata[length];
   string filename;
-
   for (int i = 0; i<length; i++){
       outdata[i] = input->val[ctrl._Tsmask.cell[i]];
   }

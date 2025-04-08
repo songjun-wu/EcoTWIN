@@ -14,6 +14,10 @@ int Basin::Routing(Control &ctrl, Param &par){
         Routing_interflow_1(ctrl, par);
     }
 
+    if (ctrl.opt_routGWf) {
+        Routing_GWflow_1(ctrl, par);
+    }
+
     if (ctrl.opt_routQ==1) {
         Routing_Q_1(ctrl, par);
     }

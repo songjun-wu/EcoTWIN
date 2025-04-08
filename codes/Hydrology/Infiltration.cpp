@@ -32,7 +32,7 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         
         // Else infiltration starts
         double input = _pond->val[j];
-        double input_dt = input / dt;  // m/s
+        double input_dt = input / dt;  // m/s        
 
         // If all excess water can be infiltrated
         if (input_dt <= eff_Ks1){
@@ -75,11 +75,6 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         _theta1->val[j] += deltaF / depth1;
         _pond->val[j] -= deltaF;
 
-        if (j==100){
-            //if (_pond->val[j] > 0){
-            //    cout << ctrl.current_ts / 86400 << " " << input << " "<< _pond->val[j] <<"  "<< _infilt->val[j] << " " << _theta1->val[j] << endl << endl;
-            //}           
-        }
     }
     return EXIT_SUCCESS;
 }

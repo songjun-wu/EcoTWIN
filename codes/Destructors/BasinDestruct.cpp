@@ -21,6 +21,7 @@ int Basin::dtor(Control &ctrl){
     if(_clay2) delete _clay2;
     if(_clay3) delete _clay3;
     if(_silt2) delete _silt2;
+    if(_silt3) delete _silt3;
     if(_organic2) delete _organic2;
     if(_organic3) delete _organic3;
     if(_bulkdensity2) delete _bulkdensity2;
@@ -28,9 +29,6 @@ int Basin::dtor(Control &ctrl){
   }
   if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2){
     if(_silt1) delete _silt1;
-  }
-  if (ctrl.opt_depthprofile == 3 or ctrl.opt_pedotransf == 2){
-    if(_silt3) delete _silt3;
   }
   /* end of GIS */
 
@@ -46,7 +44,6 @@ int Basin::dtor(Control &ctrl){
   /* end of Storages */
 
   /* Fluxes */
-  if(_D) delete _D;
   if(_Th) delete _Th;
   if(_snowmelt) delete _snowmelt;
   if(_infilt) delete _infilt;
@@ -77,11 +74,19 @@ int Basin::dtor(Control &ctrl){
   if(_interf_in) delete _interf_in;
   if(_interf_out) delete _interf_out;
   if(_interf_toChn) delete _interf_toChn;
-  if(_gwf_toChn) delete _gwf_toChn;
+  if(_GWf_in) delete _GWf_in;
+  if(_GWf_out) delete _GWf_out;
+  if(_GWf_toChn) delete _GWf_toChn;
   if(_Q) delete _Q;
   if(_Qupstream) delete _Qupstream;
+  if (ctrl.opt_reinfil == 1){
+    if(_rinfilt) delete _rinfilt;
+    if(_rPerc1) delete _rPerc1;
+    if(_rPerc2) delete _rPerc2;
+    if(_rPerc3) delete _rPerc3;
+  }
   if (ctrl.opt_evap == 1){
-    if(_froot_soil) delete _froot_soil;
+    if(_froot_layer1) delete _froot_layer1;
     if(_froot_layer2) delete _froot_layer2;
     if(_froot_layer3) delete _froot_layer3;
   }

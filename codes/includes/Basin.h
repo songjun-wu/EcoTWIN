@@ -34,12 +34,12 @@ class Basin {
   svector *_clay2;  // Clay content of layer 2 [decimal], only needed when opt_depthprofile = 3
   svector *_clay3;  // Clay content of layer 3 [decimal], only needed when opt_depthprofile = 3
   svector *_silt2;  // Silt content of layer 2 [decimal], only needed when opt_depthprofile = 3
+  svector *_silt3;  // Silt content of layer 3 [decimal], only needed when opt_depthprofile = 3
   svector *_organic2;  // Organic content of layer 2 [decimal], only needed when opt_depthprofile = 3
   svector *_organic3;  // Organic content of layer 3 [decimal], only needed when opt_depthprofile = 3
   svector *_bulkdensity2;  // Bulk density of layer 2 [g/cm3], only needed when opt_depthprofile = 3
   svector *_bulkdensity3;  // Bulk density of layer 3 [g/cm3], only needed when opt_depthprofile = 3
   svector *_silt1;  // Silt content of layer 1 [decimal], only needed when opt_pedotransf = 1 or 2
-  svector *_silt3;  // Silt content of layer 3 [decimal], only needed when opt_depthprofile = 3
   /* end of GIS */
 
 
@@ -56,7 +56,6 @@ class Basin {
  
 
   /* Fluxes */
-  svector *_D;  // Interception [m]
   svector *_Th;  // Throughfall [m]
   svector *_snowmelt;  // Snow melt [m]
   svector *_infilt;  // Inflitration into soil layer 1 [m]
@@ -87,10 +86,16 @@ class Basin {
   svector *_interf_in;  // Interflow from upstream cell(s) [m]
   svector *_interf_out;  // Interflow to downstream cell [m]
   svector *_interf_toChn;  // Interflow to Channel [m]
-  svector *_gwf_toChn;  // Groundwater flow to Channel [m]
+  svector *_GWf_in;  // GW flow from upstream cell(s) [m]
+  svector *_GWf_out;  // GW flow to downstream cell [m]
+  svector *_GWf_toChn;  // Groundwater flow to Channel [m]
   svector *_Q;  // Discharge [m3/s]
   svector *_Qupstream;  // Upstream inflow [m3/s]
-  svector *_froot_soil;  // froot coefficient for all soil profile
+  svector *_rinfilt;  // Reinflitration into soil layer 1 [m]
+  svector *_rPerc1;  // Repercolation into layer 2 [m]
+  svector *_rPerc2;  // Repercolation into layer 3 [m]
+  svector *_rPerc3;  // Repercolation into gw reservior [m]
+  svector *_froot_layer1;  // froot coefficient for all soil profile
   svector *_froot_layer2;  // froot coefficient for layer 2
   svector *_froot_layer3;  // froot coefficient for layer 3
   svector *_p_perc1;  // Percolation proportion in layer 1
@@ -123,7 +128,7 @@ class Basin {
   /* Soil profiles */
   int Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm);
   
-  int Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm, int j);
+
 
   // Calculate soil proporties
   int Soil_proporty(Control &ctrl, Param &par);
@@ -136,20 +141,30 @@ class Basin {
   
   // Infiltration
   int Infiltration_1(Control &ctrl, Param &par);
+  int Reinfiltration_1(Control &ctrl, Param &par, int j, double &db_rinfilt, double &db_theta1, double &db_pond);
+
+  int Canopy_evaporation_1(Control &ctrl, Param &par, Atmosphere &atm);
+  int Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm);
 
   int Percolation_1(Control &ctrl, Param &par);
   int Percolation_2(Control &ctrl, Param &par);
   int Percolation_3(Control &ctrl, Param &par);
+  int Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2);
+  int Repercolation_2(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2);
+  int Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2);
+
+  int GWrecharge_1(Control &ctrl, Param &par);
+  int ReGWrecharge_1(Control &ctrl, Param &par, int j, double &db_theta3, double &db_GW, double &db_rPerc3);
 
 
-
-
-  
   /* routing */
   int Routing(Control &ctrl, Param &par);
   int Routing_ovf_1(Control &ctrl, Param &par); // overland flow routing; All ponding water goes to next cell
   int Routing_interflow_1(Control &ctrl, Param &par); // Interflow routing based on linear approximation of Kinematic Wave
   int Routing_Q_1(Control &ctrl, Param &par); // Stream routing based on Kinematic Wave
+  int Routing_GWflow_1(Control &ctrl, Param &par); // GW flow routing based on linear approximation of Kinematic Wave
+
+
 
 };
 

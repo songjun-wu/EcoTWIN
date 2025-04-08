@@ -43,11 +43,12 @@ class Param {
   vector<double> Ksat;
   vector<double> BClambda;
   vector<double> percExp;
+  vector<double> wRecharge;
   vector<double> pOvf_toChn;
   vector<double> interfExp;
   vector<double> winterf;
   vector<double> GWfExp;
-  vector<double> pActiveGW;
+  vector<double> wGWf;
   vector<double> Manningn;
   svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
@@ -71,11 +72,12 @@ class Param {
   svector *_Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   svector *_BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
   svector *_percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
+  svector *_wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
   svector *_pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
   svector *_interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
   svector *_winterf;  // The weight parameter in kinematic wave solution  [-]
   svector *_GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
-  svector *_pActiveGW;  // The active proportion of GW storage that contributes to channel recharge  [-]
+  svector *_wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   svector *_Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   /* end of Parameters */
 

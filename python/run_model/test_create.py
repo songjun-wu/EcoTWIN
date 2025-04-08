@@ -19,8 +19,8 @@ climate_path = path + 'climate/'
 nodata = -9999.0
 
 unit_mask = np.full((row,col), 1.0)
-nodata_mask = np.full((row,col), -9999.0)
-chan_mask = np.full((row,col), -9999.0)
+nodata_mask = np.full((row,col), np.nan)
+chan_mask = np.full((row,col), np.nan)
 chan_mask[:,col//2] = 1
 
 tmp = np.repeat([6,5,4,0,5,7,9], row).reshape(row, col).T.astype(np.float64)
@@ -35,12 +35,14 @@ GEM_tools.save_to_ascii(data=GEM_tools.add_edge(tmp), path=spatial_path+'slope.a
 
 Gauge_to_Report = np.copy(nodata_mask)
 Gauge_to_Report[[[0,1,2,3,4,5,6], [0,1,2,3,4,5,6]]] = 1
+Gauge_to_Report[np.isnan(Gauge_to_Report)] = nodata
 GEM_tools.save_to_ascii(data=GEM_tools.add_edge(Gauge_to_Report), path=spatial_path+'Gauge_to_Report.asc', ref_path=spatial_path+'ref.asc')
 
 
 chnwidth = chan_mask * 10
 chnlength = chan_mask * 100
 chndepth = chan_mask * 2
+
 
 climate_zones = unit_mask
 
@@ -73,7 +75,7 @@ organic3 = unit_mask * 0.04
 bulkdensity1 = unit_mask * 1.2
 bulkdensity2 = unit_mask * 1.4
 bulkdensity3 = unit_mask * 1.6
-Q = chan_mask * 10
+Q = chan_mask * 0
 
 
 
@@ -83,6 +85,7 @@ fnames = ['climate_zones', 'chnwidth', 'chndepth', 'chnlength', 'depth1', 'depth
 for i in range(len(fnames)):
     fname = fnames[i]
     data = GEM_tools.add_edge(locals()[fname], ext=1, no_data=nodata)
+    data[np.isnan(data)] = nodata
     GEM_tools.save_to_ascii(data=data, path=spatial_path+fname+'.asc', ref_path=spatial_path+'ref.asc')
 
 p_cat_list = [1, 0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.06, 0.04]
@@ -91,6 +94,7 @@ for i in range(len(p_cat_list)):
     for j in range(5):
         data = GEM_tools.add_edge(np.full((row, col), p_cat_list[i]), ext=1, no_data=nodata)
         _data = np.append(_data, data.flatten())
+        data[np.isnan(data)] = nodata
         _data.tofile(spatial_path+'category_'+str(i)+'.bin')
 
 
@@ -98,7 +102,7 @@ for i in range(len(p_cat_list)):
 
 
 # Climate inputs
-df = pd.read_excel('/home/wusongj/dmc/forHydrology/Climate/climate_daily_AM.xlsx')
+df = pd.read_excel('/home/wusongj/dmc/forHydrology/Climate/climate_daily_AM_since2020.xlsx')
 df1 = pd.read_csv('/home/wusongj/dmc/forHydrology/Climate/climate_interpolated.csv')
 (np.repeat(df['Rain_corr_mm_Tot'], 1).to_numpy() / 1000).tofile(climate_path+'P.bin')
 np.repeat(df['AirT_C_Avg'], 1).to_numpy().tofile(climate_path+'Ta.bin')

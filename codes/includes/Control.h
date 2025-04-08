@@ -42,6 +42,8 @@ struct Control{
   // 0: disabled
   // 1: enabled
   int opt_tracking_isotope;
+  // Reinfiltration during overland flow routing
+  int opt_reinfil;
   // Canopy interception
   // 1 :maximum canopy storage unmodified
   // 2 :storage corrected (Landarf et al., 2024)
@@ -67,14 +69,20 @@ struct Control{
   // 1: Green-Ampt model
   // 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)
   int opt_infil;
+  // Canopy evaporation function
+  // 1: based on PET and a exponential function Liang et al. (1994)
+  int opt_canopy_evap;
+  // Evapotranspiration function
+  // 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
+  int opt_evap;
   // Percolation model
   // 1: based on travel time and excess water above FC; SWAT
   // 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)                        
   // 3: based on soil deficit
   int opt_percolation;
-  // Evapotranspiration function
-  // 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
-  int opt_evap;
+  // GW recharge
+  // 1: based on travel time, excess water above FC, and a weighting parameter
+  int opt_recharge;
   // Overland flow routing
   // 1: All ponding water goes to next cell
   int opt_routOvf;
@@ -169,11 +177,12 @@ struct Control{
   string fn__Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   string fn__BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
   string fn__percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
+  string fn__wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
   string fn__pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
   string fn__interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
   string fn__winterf;  // The weight parameter in kinematic wave solution  [-]
   string fn__GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
-  string fn__pActiveGW;  // The active proportion of GW storage that contributes to channel recharge  [-]
+  string fn__wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   string fn__Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   /* end of Parameters */
 
@@ -186,20 +195,23 @@ struct Control{
   int report__theta2;  // report Soil moisture in layer 2 [decimal]
   int report__theta3;  // report Soil moisture in layer 3 [decimal]
   int report__GW;  // report Groundwater storage [m]
-  int report__D;  // report Interception [m]
   int report__Th;  // report Throughfall [m]
   int report__snowmelt;  // report Snow melt [m]
   int report__infilt;  // report Inflitration into soil layer 1 [m]
   int report__Perc1;  // report Percolation into layer 2 [m]
   int report__Perc2;  // report Percolation into layer 3 [m]
   int report__Perc3;  // report Percolation into gw reservior [m]
+  int report__rinfilt;  // report Reinflitration into soil layer 1 [m]
+  int report__rPerc1;  // report Repercolation into layer 2 [m]
+  int report__rPerc2;  // report Repercolation into layer 3 [m]
+  int report__rPerc3;  // report Repercolation into gw reservior [m]
   int report__Ei;  // report Canopy evaporation [m]
   int report__Es;  // report Soil evaporation [m]
   int report__Tr;  // report Total transpiration in three layers [m]
   int report__Tr1;  // report Transpiration in layer 1 [m]
   int report__Tr2;  // report Transpiration in layer 2 [m]
   int report__Tr3;  // report Transpiration in layer 3 [m]
-  int report__froot_soil;  // report froot coefficient for all soil profile
+  int report__froot_layer1;  // report froot coefficient for all soil profile
   int report__froot_layer2;  // report froot coefficient for layer 2
   int report__froot_layer3;  // report froot coefficient for layer 3
   int report__Ks1;  // report Saturated hydraulic conductivity in layer 1
@@ -223,7 +235,9 @@ struct Control{
   int report__interf_in;  // report Interflow from upstream cell(s) [m]
   int report__interf_out;  // report Interflow to downstream cell [m]
   int report__interf_toChn;  // report Interflow to Channel [m]
-  int report__gwf_toChn;  // report Groundwater flow to Channel [m]
+  int report__GWf_in;  // report GW flow from upstream cell(s) [m]
+  int report__GWf_out;  // report GW flow to downstream cell [m]
+  int report__GWf_toChn;  // report Groundwater flow to Channel [m]
   int report__Q;  // report Discharge [m3/s]
   int report__Qupstream;  // report Upstream inflow [m3/s]
   /* end of Report */

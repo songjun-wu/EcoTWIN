@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from def_GEM_test import Path
+from def_GEM import Path
 
 output_path = Path.output_path
 nodata = -9999
@@ -9,27 +9,30 @@ nodata = -9999
 
 fnames = os.listdir(output_path)
 for fname in fnames:
-    print(fname)
     if "_map" in fname and fname.split('.')[-1]=='bin':
         data = np.fromfile(output_path + fname).reshape(-1, 9, 9)
+        print(np.nanmin(data), np.nanmean(data), np.nanmax(data), data[-1,7,4], data[-1,1,1], '\n')
+        data = np.mean(data, axis=0)
         data[data==nodata] = np.nan
         data[data==0] = np.nan
-        data = np.mean(data, axis=0)
         fig, ax = plt.subplots(1,1)
         im = ax.imshow(data, vmin=np.nanmin(data), vmax=np.nanmax(data))
         fig.colorbar(im, ax=ax)
         fig.savefig(output_path + '0_' + fname.split('.')[0] + '.png', dpi=600)
         print('Plot saved at :  ', output_path + fname.split('.')[0] + '.png')
-        print(np.nanmin(data), np.nanmean(data), np.nanmax(data))
-        print(data[:, 9//2])
+        print(np.nanmin(data), np.nanmean(data), np.nanmax(data), '\n')
+        #print(data[:, 9//2])
         #print(data, np.sum(~np.isnan(data)))
 
 
-    elif fname.split('.')[-1]=='bin':
-        data = np.fromfile(output_path + fname).reshape(7,-1)
+    elif fname.split('.')[-1]=='bin' and "_map" not in fname:
+        print(fname)
+        data = np.fromfile(output_path + fname).reshape(-1, 7).T
+        data[data==nodata] = np.nan
         fig, ax = plt.subplots(1,1)
         for kk in range(7):
-            ax.plot(data[kk])
+            ax.plot(data[kk], label=str(kk))
+        fig.legend()
         fig.savefig(output_path + '1_' + fname.split('.')[0] + '.png', dpi=300)
         print('Plot saved at :  ', output_path + fname.split('.')[0] + '.png')
 

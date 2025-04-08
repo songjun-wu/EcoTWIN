@@ -22,8 +22,9 @@ int main(){
   oBasin = new Basin(*oControl);
   oAtmosphere = new Atmosphere(*oControl);
   oParam = new Param(*oControl);
-
-
+  
+  oBasin->Initialisation(*oControl, *oParam);
+  
   auto stop1 = std::chrono::high_resolution_clock::now();
   
   while (oControl->current_ts < oControl->Simul_end){
