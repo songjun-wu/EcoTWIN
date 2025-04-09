@@ -17,14 +17,19 @@ int Basin::Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, 
     double perc2 = 0;
 
     // Percolation from layer 1
-    perc1 = max((theta1 - _thetaFC1->val[j]) * _p_perc1->val[j], 0.0) * depth1;
-    theta1 -= perc1 / depth1;
-    theta2 += perc1 / depth2;
+    if (theta1 > _thetaFC1->val[j]) {
+        perc1 = (theta1 - _thetaFC1->val[j]) * depth1 * _p_perc1->val[j];
+        theta1 -= perc1 / depth1;
+        theta2 += perc1 / depth2;
 
+    }
+    
     // Percolation from layer 2
-    perc2 = max((theta2 - _thetaFC2->val[j]) * _p_perc2->val[j], 0.0) * depth2;
-    theta2 -= perc2 / depth2;
-    theta3 += perc2 / depth3;
+    if (theta2 > _thetaFC2->val[j]){
+        perc2 = (theta2 - _thetaFC2->val[j]) * depth2 * _p_perc2->val[j];
+        theta2 -= perc2 / depth2;
+        theta3 += perc2 / depth3;
+    }
 
     db_theta1 = theta1;
     db_theta2 = theta2;

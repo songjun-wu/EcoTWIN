@@ -1,6 +1,8 @@
  #include "Basin.h"
 
  Basin::Basin(Control &ctrl){
+  
+  roundoffERR = 1e-12;
   _rowNum = ctrl._rowNum;
   _colNum = ctrl._colNum;
   _dx = ctrl._dx;

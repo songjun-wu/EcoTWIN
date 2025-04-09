@@ -3,10 +3,8 @@
 int Basin::Routing_interflow_1(Control &ctrl, Param &par){
 
     int from_j;
-
-    double interflow_to_go; // Available water for interflow
-    double interflow_out;  // Total output of interflow
-    double interflow_toChn;  // Output of interflow to stream
+    double interflow_out;
+    double interflow_toChn;
 
     double dx = ctrl._dx;
     double dx_square = dx * dx;
@@ -22,20 +20,22 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
         double depth3 = par._depth3->val[j];
         double thetaS3 = _thetaS3->val[j];
 
+        double interflow_to_go = 0; // Available water for interflow
         double interflow_in = _interf_in->val[j];
-        double interflow_out = 0;
-        double interflow_toTrestrial = 0;
-        double interflow_toChn = 0;
+        double interflow_out = 0;   // Total output of interflow
+        double interflow_toTrestrial = 0;   // Output of interflow to downstream cell
+        double interflow_toChn = 0;   // Output of interflow to stream
         double excess_ST3 = 0;
     
         from_j = _sortedGrid.to_cell[j];
-
+       
         // Available interflow = interflow from upstream + excess water above field capacity
         // Should interflow_in be included here, or after stream recharge?
+        
         interflow_to_go = interflow_in + (theta3 > _thetaFC3->val[j] ? (theta3 - _thetaFC3->val[j]) * depth3 : 0.0);
         theta3 = theta3 > _thetaFC3->val[j] ? _thetaFC3->val[j] : theta3;
                
-        if (interflow_to_go > 0)  {
+        if (interflow_to_go > roundoffERR)  {
             
             Ks3 = _Ks3->val[j];  // [m/s]
 
@@ -70,15 +70,16 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
                 interflow_out += excess_ST3;
                 theta3 = thetaS3;
             }
-          
-            _theta3->val[j] = theta3;
-            _interf_toChn->val[j] = interflow_toChn;  // Interflow to channel; [m]
-            _interf_out->val[j] = interflow_out;  // Interflow sum (to channel and to downstream territrial cell); [m]
-
+        
+            
             if (_sortedGrid.lat_ok[j] == 1){   // If there is a downstream cell
                 _interf_in->val[from_j] += (interflow_out - interflow_toChn);
             }
-        }               
+        }
+        
+        _theta3->val[j] = theta3;
+        _interf_toChn->val[j] = interflow_toChn;  // Interflow to channel; [m]
+        _interf_out->val[j] = interflow_out;  // Interflow sum (to channel and to downstream territrial cell); [m]
     }
     return EXIT_SUCCESS;
 }

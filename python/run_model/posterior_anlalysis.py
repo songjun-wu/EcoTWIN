@@ -11,7 +11,6 @@ fnames = os.listdir(output_path)
 for fname in fnames:
     if "_map" in fname and fname.split('.')[-1]=='bin':
         data = np.fromfile(output_path + fname).reshape(-1, 9, 9)
-        print(np.nanmin(data), np.nanmean(data), np.nanmax(data), data[-1,7,4], data[-1,1,1], '\n')
         data = np.mean(data, axis=0)
         data[data==nodata] = np.nan
         data[data==0] = np.nan

@@ -18,11 +18,7 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
 
-        double tmppp = _GW->val[j];  // todo
-
         double chnlength = _chnlength->val[j];
-
-
         double GWflow_in = _GWf_in->val[j];
         double GWflow_out = 0;
         double GWflow_toTrestrial = 0;
@@ -35,8 +31,8 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
         GWflow_to_go = GWflow_in + _GW->val[j];
 
                
-        if (GWflow_to_go > 0)  {
-            
+        if (GWflow_to_go > roundoffERR)  {
+           
             Ks3 = _Ks3->val[j];  // [m/s]
             // GWflow to channel
             if (chnlength > 0){  // If there is channel in this grid cell
@@ -47,6 +43,7 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
                 GWflow_to_go -=  GWflow_toChn;    // [m]
                 GWflow_out += GWflow_toChn;  // [m2/s]
             }
+
 
             // GWflow to downstream grid
             // Linear approximation of Kinematic wave approach
@@ -59,16 +56,16 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
             GWflow_out += GWflow_toTrestrial;  // [m]
 
             // Remaining water = GW storage
-            _GW->val[j] = GWflow_to_go;
-
-            _GWf_toChn->val[j] = GWflow_toChn;  // GWflow to channel; [m]
-            _GWf_out->val[j] = GWflow_out;  // GWflow sum (to channel and to downstream territrial cell); [m]
+            _GW->val[j] = GWflow_to_go; // GWflow_to_go = _GW->val[j] + GWflow_in - GWflow_toChn - GWflow_toTrestrial
 
             if (_sortedGrid.lat_ok[j] == 1){   // If there is a downstream cell
-                _GWf_in->val[from_j] += (GWflow_out - GWflow_toChn);
+                _GWf_in->val[from_j] += GWflow_toTrestrial;
             }
+        }
+     
+        _GWf_toChn->val[j] = GWflow_toChn;  // GWflow to channel; [m]
+        _GWf_out->val[j] = GWflow_out;  // GWflow sum (to channel and to downstream territrial cell); [m]
 
-        }               
     }
     return EXIT_SUCCESS;
 }

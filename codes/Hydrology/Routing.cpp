@@ -2,8 +2,10 @@
 
 int Basin::Routing(Control &ctrl, Param &par){
 
+    // Upstream inputs need to be reset to zero
     _ovf_in->reset();
     _interf_in->reset();
+    _GWf_in->reset();
     _Qupstream->reset();
 
     if (ctrl.opt_routOvf==1) {
@@ -22,6 +24,6 @@ int Basin::Routing(Control &ctrl, Param &par){
         Routing_Q_1(ctrl, par);
     }
 
-
+    
     return EXIT_SUCCESS;
 }

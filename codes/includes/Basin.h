@@ -12,6 +12,7 @@ using namespace std;
 
 class Basin {
   /* Properties */
+  double roundoffERR;
   int _rowNum, _colNum;
   double _dx, _nodata;
   sortedGrid _sortedGrid;
