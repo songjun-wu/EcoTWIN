@@ -46,7 +46,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
             theta1 -= perc1 / depth1;
             theta2 += perc1 / depth2;
         }
-        
+
         // Percolation from layer 2
         if (theta2 > _thetaFC2->val[j]){
             perc2 = (theta2 - _thetaFC2->val[j]) * depth2 * _p_perc2->val[j];

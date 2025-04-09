@@ -6,26 +6,50 @@ from datetime import datetime
 import numpy as np
 
 class Path:
-
     model_path = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
-    path_EXEC = 'gEcoHydro'  
+    path_EXEC = 'gEcoHydro'
+    data_path = '/home/wusongj/GEM/test_dmc1/'                   # The path with spatial and climate data
+    config_path = '/home/wusongj/GEM/test_dmc1/'                 # The path with configuration files (.ini)
 
-    work_path = '/home/wusongj/GEM/test/'            # Working directory
-    data_path = work_path                   # The path with spatial and climate data
-    config_path = work_path                 # The path with configuration files (.ini)
+    work_path = '/home/wusongj/GEM/test_dmc1/'            # Working directory
+    
     run_path = work_path + 'run/'           # The path for model runs
     output_path = run_path + 'outputs/'     # The path for output saving
 
-class Info:
-    
-    nodata = -9999.0 # nodata value for param.ini and all spatial maps
+    result_path = work_path + 'results/'    # The path to save all posterior results
 
-    N_soil = 4  # Number of soil types
-    N_landuse = 5 # Number of land use types
-    
+
+
+class Info:
+    nodata = -9999.0 # nodata value for param.ini and all spatial maps
     soil_index = [1,2,3,4]  # Column index in param.ini
-    landuse_index = [5,6,7,8,9]  # Column index in param.ini
+    landuse_index = [5,6,7,8]  # Column index in param.ini
+    N_soil = len(soil_index)  # Number of soil types
+    N_landuse = len(landuse_index) # Number of land use types
+
+    spin_up = 731  # warming days
+
+
+class Cali:
+    # DREAM calibration
+    TASK_name = 'DREAM_cali_DMC'
+    ncores = 10
+    nchains = 10
+
+    niterations = 500  # Number of iterations for each batch
+    nbatchs = 20  # Number of batches
+
+    restart = False   # Whether restart?
+    restart_batch = 5 # restart since which batch?
+
     
+
+
+class Output:
+    N_sites         = 1     # The number of sites for outputs (> 0 in Tsmask.asc)
+    sim_q_idx       = [0]   # Demnitz Mill
+    sim = {}
+    sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'type':'Ts'}
 
     
 
@@ -75,8 +99,8 @@ class Param:
     # Routing
     ref['pOvf_toChn']   = {'type':'soil',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_soil, 'max':[1e3]*Info.N_soil}
     ref['interfExp']   = {'type':'soil',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_soil, 'max':[10]*Info.N_soil}
-    ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e5]*Info.N_soil, 'max':[1e7]*Info.N_soil} # todo
-    #ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_soil, 'max':[1e7]*Info.N_soil}  # Correction factor for linear Kinematic waver approximation of interflow
+    #ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e5]*Info.N_soil, 'max':[1e7]*Info.N_soil} # todo
+    ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_soil, 'max':[1e7]*Info.N_soil}  # Correction factor for linear Kinematic waver approximation of interflow
     ref['GWfExp']   = {'type':'soil',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil}
     ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-8]*Info.N_soil, 'max':[1e-2]*Info.N_soil}  # Proportion of GW storage for routing generation
 

@@ -35,6 +35,7 @@ int Control::ReadConfigFile(string fname){
 
   /* Options */
   readInto(opt_climate_input_format, "opt_climate_input_format", lines);
+  readInto(opt_groundTs_input_format, "opt_groundTs_input_format", lines);
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
   readInto(opt_reinfil, "opt_reinfil", lines);
   readInto(opt_intecept, "opt_intecept", lines);
@@ -79,13 +80,16 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__Gauge_to_Report, "Gauge_mask", lines);
   /* end of GIS */
 
+  /* GroundTs */
+  readInto(fn__LAI, "Leaf_area_index", lines);
+  /* end of GroundTs */
+
   readInto(fn__climzones, "climate_zones", lines);
   /* Climate */
   readInto(fn__P, "Precipitation", lines);
   readInto(fn__Ta, "Air_temperature", lines);
   readInto(fn__RH, "Relative_humidity", lines);
   readInto(fn__PET, "Potential_evapotranspiration", lines);
-  readInto(fn__LAI, "Leaf_area_index", lines);
   /* end of Climate */
 
   /* Storages */ 

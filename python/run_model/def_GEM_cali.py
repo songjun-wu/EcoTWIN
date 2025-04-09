@@ -6,26 +6,50 @@ from datetime import datetime
 import numpy as np
 
 class Path:
-
     model_path = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
-    path_EXEC = 'gEcoHydro'  
+    path_EXEC = 'gEcoHydro'
+    data_path = '/home/wusongj/GEM/test_dmc/'                   # The path with spatial and climate data
+    config_path = '/home/wusongj/GEM/test_dmc/'                 # The path with configuration files (.ini)
 
-    work_path = '/home/wusongj/GEM/test/'            # Working directory
-    data_path = work_path                   # The path with spatial and climate data
-    config_path = work_path                 # The path with configuration files (.ini)
+    work_path = '/data/scratch/wusongj/paper4/'            # Working directory
+    
     run_path = work_path + 'run/'           # The path for model runs
     output_path = run_path + 'outputs/'     # The path for output saving
 
-class Info:
-    
-    nodata = -9999.0 # nodata value for param.ini and all spatial maps
+    result_path = work_path + 'results/'    # The path to save all posterior results
 
-    N_soil = 4  # Number of soil types
-    N_landuse = 5 # Number of land use types
-    
+
+
+class Info:
+    nodata = -9999.0 # nodata value for param.ini and all spatial maps
     soil_index = [1,2,3,4]  # Column index in param.ini
-    landuse_index = [5,6,7,8,9]  # Column index in param.ini
+    landuse_index = [5,6,7,8]  # Column index in param.ini
+    N_soil = len(soil_index)  # Number of soil types
+    N_landuse = len(landuse_index) # Number of land use types
+
+    spin_up = 731  # warming days
+
+
+class Cali:
+    # DREAM calibration
+    TASK_name = 'DREAM_cali_DMC'
+    ncores = 10
+    nchains = 10
+
+    niterations = 500  # Number of iterations for each batch
+    nbatchs = 20  # Number of batches
+
+    restart = False   # Whether restart?
+    restart_batch = 5 # restart since which batch?
+
     
+
+
+class Output:
+    N_sites         = 1     # The number of sites for outputs (> 0 in Tsmask.asc)
+    sim_q_idx       = [0]   # Demnitz Mill
+    sim = {}
+    sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'type':'Ts'}
 
     
 
@@ -35,14 +59,14 @@ class Param:
     ref = {}
     ### parameters to calibrate
     ref['depth3']   =           {'type':'landuse',  'log':0, 'file':'depth3',   'min':[0.6]*Info.N_landuse, 'max':[5]*Info.N_landuse}
-    ref['alpha']   =            {'type':'landuse',  'log':0, 'file':'alpha',   'min':[1e-3]*Info.N_landuse, 'max':[4e-3]*Info.N_landuse}
-    ref['rE']   =               {'type':'landuse',  'log':0, 'file':'rE',   'min':[-0.5]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse}
+    ref['alpha']   =            {'type':'landuse',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse}
+    ref['rE']   =               {'type':'landuse',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse}  # PET to PE and PT
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2]}
     ref['deg_day_min']   =      {'type':'global',   'log':0, 'file':'deg_day_min',   'min':[0], 'max':[2e-3]}
     ref['deg_day_max']   =      {'type':'global',   'log':0, 'file':'deg_day_max',   'min':[2e-3], 'max':[1e-2]}
     ref['deg_day_increase']   = {'type':'global',   'log':0, 'file':'deg_day_increase',   'min':[0.1], 'max':[0.9]}
 
-    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.9999]*Info.N_landuse, 'max':[0.99999]*Info.N_landuse}
+    
     # Pedotransfer function
     ref['ref_thetaS']   = {'type':'landuse',   'log':0, 'file':'ref_thetaS',   'min':[0.5]*Info.N_landuse, 'max':[0.99]*Info.N_landuse}
     ref['PTF_VG_clay']   = {'type':'landuse',   'log':0, 'file':'PTF_VG_clay',   'min':[-5e-3]*Info.N_landuse, 'max':[5e-3]*Info.N_landuse}
@@ -55,7 +79,7 @@ class Param:
 
     ref['SWP']   = {'type':'soil',   'log':0, 'file':'SWP',   'min':[10]*Info.N_soil, 'max':[33]*Info.N_soil}
 
-    ref['KvKh']   = {'type':'soil',   'log':0, 'file':'KvKh',   'min':[1e-2]*Info.N_soil, 'max':[0.5]*Info.N_soil}
+    ref['KvKh']   = {'type':'soil',   'log':0, 'file':'KvKh',   'min':[1e-2]*Info.N_soil, 'max':[0.5]*Info.N_soil}  # Vertical to horizontal ksat anisotropy ratio
     ref['psiAE']   = {'type':'soil',   'log':0, 'file':'psiAE',   'min':[1e-2]*Info.N_soil, 'max':[1.3]*Info.N_soil}
 
     # Infiltration
@@ -66,14 +90,21 @@ class Param:
     # Percolation
     ref['percExp']   = {'type':'soil',   'log':0, 'file':'percExp',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil}
 
+    # Evapotranspiration
+    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.999]*Info.N_landuse} # The higher the more deeper roots
 
-    ref['pOvf_toChn']   = {'type':'global',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3], 'max':[1e3]}
-    ref['interfExp']   = {'type':'global',   'log':1, 'file':'interfExp',   'min':[1e-5], 'max':[1]}
-    ref['winterf']   = {'type':'global',   'log':1, 'file':'winterf',   'min':[1e-2], 'max':[1e7]}
-    ref['GWfExp']   = {'type':'global',   'log':1, 'file':'GWfExp',   'min':[1e-5], 'max':[1]}
-    ref['pActiveGW']   = {'type':'global',   'log':1, 'file':'pActiveGW',   'min':[1e-8], 'max':[1e-2]}
+    # GW recharge
+    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil} # Correction factor for GW recharge
 
-    ref['Manningn']   = {'type':'global',   'log':1, 'file':'Manningn',   'min':[0.01], 'max':[0.1]}
+    # Routing
+    ref['pOvf_toChn']   = {'type':'soil',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_soil, 'max':[1e3]*Info.N_soil}
+    ref['interfExp']   = {'type':'soil',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_soil, 'max':[10]*Info.N_soil}
+    #ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e5]*Info.N_soil, 'max':[1e7]*Info.N_soil} # todo
+    ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_soil, 'max':[1e7]*Info.N_soil}  # Correction factor for linear Kinematic waver approximation of interflow
+    ref['GWfExp']   = {'type':'soil',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil}
+    ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-8]*Info.N_soil, 'max':[1e-2]*Info.N_soil}  # Proportion of GW storage for routing generation
+
+    ref['Manningn']   = {'type':'soil',   'log':1, 'file':'Manningn',   'min':[0.01]*Info.N_soil, 'max':[0.1]*Info.N_soil}
     
 
 

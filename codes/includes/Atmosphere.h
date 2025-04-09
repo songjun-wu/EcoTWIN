@@ -29,8 +29,6 @@ class Atmosphere {
   ifstream if__Ta;  // Air temperature [degree C]
   svector *_RH;  // Relative humidity [decimal]
   ifstream if__RH;  // Relative humidity [decimal]
-  svector *_LAI;  // Leaf area index [decimal]
-  ifstream if__LAI;  // Leaf area index [decimal]
   svector *_PET;  // Potential evapotranspiration [m]
   ifstream if__PET;  // Potential evapotranspiration [m]
   /* end of Climate */
@@ -42,6 +40,7 @@ class Atmosphere {
   ~Atmosphere();  // destrcuctor of Basin
   int dtor(Control &ctrl);
 
+  // Climate inputs
   int open_climate(Control &ctrl);
   int read_climate(Control &ctrl);
   int open_climate_maps(string fname, ifstream &ifHandle);

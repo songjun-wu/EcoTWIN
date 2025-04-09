@@ -38,6 +38,10 @@ struct Control{
   // 1: raster
   // 2: aggregated binary file (climate_zone file should be specified)
   int opt_climate_input_format;
+  // How is Ground time series inputs orgainsed?
+  // 1: raster
+  // 2: aggregated binary file (Time series should be prepared for each of the category; input.bin.shape = (N of timestep, num_category))
+  int opt_groundTs_input_format;
   // Enable isotopic tracking?
   // 0: disabled
   // 1: enabled
@@ -132,12 +136,15 @@ struct Control{
   grid *_fdir;  // flow direction [d8 method]
   svector *_Gauge_to_Report;  // Gauges that require outputs
 
+  /* GroundTs */
+  string fn__LAI;  // Leaf area index [decimal]
+  /* end of GroundTs */
+
   /* Climate */
   string fn__P;  // Precipitation [m]
   string fn__Ta;  // Air temperature [degree C]
   string fn__RH;  // Relative humidity [decimal]
   string fn__PET;  // Potential evapotranspiration [m]
-  string fn__LAI;  // Leaf area index [decimal]
   /* end of Climate */
 
   /* Storages */

@@ -32,6 +32,11 @@ int Basin::dtor(Control &ctrl){
   }
   /* end of GIS */
 
+  /* GroundTs */
+  if (if__LAI.is_open())  if__LAI.close();
+  if(_LAI) delete _LAI;
+  /* end of GroundTs */
+
   /* Storages */
   if(_I) delete _I;
   if(_snow) delete _snow;

@@ -13,7 +13,6 @@
   _P = new svector(_sortedGrid.size);
   _Ta = new svector(_sortedGrid.size);
   _RH = new svector(_sortedGrid.size);
-  _LAI = new svector(_sortedGrid.size);
   if (ctrl.opt_evap == 1){
     _PET = new svector(_sortedGrid.size);
   }

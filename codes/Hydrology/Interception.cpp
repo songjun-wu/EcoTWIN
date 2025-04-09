@@ -21,7 +21,7 @@ int Basin::Interception_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
         // Stages and fluxes
         double precip = atm._P->val[j];
-        double LAI = atm._LAI->val[j];
+        double LAI = _LAI->val[j];
         double C = _I->val[j]; // Canopy storage
        
         double max_canopy_storage = alpha * LAI; // Maximum canopy storage
@@ -52,7 +52,7 @@ int Basin::Interception_2(Control &ctrl, Param &par, Atmosphere &atm) {
 
         // Stages and fluxes
         double precip = atm._P->val[j];
-        double LAI = atm._LAI->val[j];
+        double LAI = _LAI->val[j];
         double C = _I->val[j]; // Canopy storage
         double SCF = 1 - exp(rE * LAI); // surface cover fraction, rExtinct = -0.463 Rutter (1972), now included for calibration
 

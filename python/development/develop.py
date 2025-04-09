@@ -21,7 +21,11 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             #['_Tmax', [Opt.cond['none']], 'Maximum air temperature [degree C]', 'grid', 'spatial_TS', 'Maximum_air_temperature'],
             ['_RH', [Opt.cond['none']], 'Relative humidity [decimal]', 'grid', 'spatial_TS', 'Relative_humidity'],
             ['_PET', [Opt.cond['evap_1']], 'Potential evapotranspiration [m]', 'grid', 'spatial_TS', 'Potential_evapotranspiration'],
-            ['_LAI', [Opt.cond['none']], 'Leaf area index [decimal]', 'grid', 'spatial_TS', 'Leaf_area_index']
+            
+        ]
+
+GroundTs = [
+            ['_LAI', [Opt.cond['none']], 'Leaf area index [decimal]', 'grid', 'spatial_TS', 'Leaf_area_index'],
         ]
         
 GIS = [ #['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial', 'Ground_elevation'],
@@ -191,14 +195,17 @@ archive_path = '/home/wusongj/GEM/archive_codes/'
 signs_atmos = ['Climate']
 datas_atmos = [Climate]
 
+signs_groundTs = ['GroundTs']
+datas_groundTs = [GroundTs]
+
 signs_basin = ['GIS', 'Storages', 'Fluxes']
 datas_basin = [GIS, Storages, Fluxes]
 
 signs_param = ['Parameters']
 datas_param = [Parameters]
 
-signs_control = signs_atmos + signs_basin + signs_param
-datas_control = datas_atmos + datas_basin + datas_param
+signs_control = signs_atmos + signs_groundTs + signs_basin + signs_param
+datas_control = datas_atmos + datas_groundTs + datas_basin + datas_param
 
 
 
@@ -212,11 +219,10 @@ define_variables.constructor(fname=path + 'Constructors/AtmosphereConstruct.cpp'
 define_variables.atmos_read_climate_maps(fname=path + 'Atmosphere/read_climate_maps.cpp', signs=signs_atmos, datas=datas_atmos)
 
 
-define_variables.includes(fname=path + 'includes/Basin.h', signs=signs_basin, datas=datas_basin, max_category=setting.max_category)
-
-define_variables.constructor(fname=path + 'Constructors/BasinConstruct.cpp', signs=signs_basin, datas=datas_basin)
-
-define_variables.destructor(fname=path + 'Destructors/BasinDestruct.cpp', signs=signs_basin, datas=datas_basin)
+define_variables.includes(fname=path + 'includes/Basin.h', signs=signs_groundTs+signs_basin, datas=datas_groundTs+datas_basin, max_category=setting.max_category)
+define_variables.constructor(fname=path + 'Constructors/BasinConstruct.cpp', signs=signs_groundTs+signs_basin, datas=datas_groundTs+datas_basin)
+define_variables.destructor(fname=path + 'Destructors/BasinDestruct.cpp', signs=signs_groundTs+signs_basin, datas=datas_groundTs+datas_basin)
+define_variables.basin_read_groundTs_maps(fname=path + 'Atmosphere/read_groundTs_maps.cpp', signs=signs_groundTs, datas=datas_groundTs)
 
 define_variables.control_includes(fname=path + 'includes/Control.h', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports)
 config_build.read_configs(fname=path+'IO/readConfigFile.cpp', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports)

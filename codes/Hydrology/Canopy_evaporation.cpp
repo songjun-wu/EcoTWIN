@@ -20,7 +20,7 @@ int Basin::Canopy_evaporation_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
         // Stages and fluxes
         double precip = atm._P->val[j];
-        double LAI = atm._LAI->val[j];
+        double LAI = _LAI->val[j];
         double canopy_storage = _I->val[j]; // Canopy storage
 
 

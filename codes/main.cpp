@@ -19,9 +19,9 @@ int main(){
   
   
   oControl = new Control;
-  oBasin = new Basin(*oControl);
-  oAtmosphere = new Atmosphere(*oControl);
   oParam = new Param(*oControl);
+  oBasin = new Basin(*oControl, *oParam);
+  oAtmosphere = new Atmosphere(*oControl);
   
   oBasin->Initialisation(*oControl, *oParam);
   
@@ -43,9 +43,15 @@ int main(){
     // Update climate inputs
     if (advance_climate >= oControl->Clim_input_tstep) {
       if (oControl->opt_climate_input_format == 1){
-      oAtmosphere->read_climate(*oControl);
+      oAtmosphere->read_climate(*oControl);   
     } else if  (oControl->opt_climate_input_format == 2) {
       oAtmosphere->update_climate(*oControl);
+    }
+    
+    if (oControl->opt_groundTs_input_format == 1){
+      oBasin->read_groundTs(*oControl);
+    } else if  (oControl->opt_groundTs_input_format == 2) {
+      oBasin->update_groundTs(*oControl, *oParam);
     }
       advance_climate = 0;
     }

@@ -102,7 +102,75 @@ def atmos_read_climate_maps(fname, signs, datas):
             with open(fname, 'w') as f:
                 f.writelines(content)
 
+def basin_read_groundTs_maps(fname, signs, datas):
 
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Basin::open_groundTs(Control &ctrl)', 'int Basin::read_groundTs(Control &ctrl)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  open_groundTs_maps(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] + ', if_' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+                content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+    
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Basin::read_groundTs(Control &ctrl)', 'int Basin::open_groundTs_maps(string fname, ifstream &ifHandle)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  read_groundTs_maps(if_' + grouped_data[key][i][0] + ', *' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+                content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+    
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Basin::init_groundTs(Control &ctrl)', 'int Basin::update_groundTs(Control &ctrl, Param &par)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  init_groundTs_maps(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] + ', if_' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+                content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Basin::update_groundTs(Control &ctrl, Param &par)', 'int Basin::init_groundTs_maps(string fname, ifstream &ifHandle)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  update_groundTs_maps(if_' + grouped_data[key][i][0] + ', par, *' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+                content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
 
 def basin_includes(fname, signs, datas):
     for j in range(len(signs)):
@@ -142,7 +210,7 @@ def destructor(fname, signs, datas):
                 text = []
                 for i in range(len(grouped_data[key])):                  
                     if grouped_data[key][i][4] == 'spatial_TS':
-                        text.append('  if (+if_'+grouped_data[key][i][0]+'.is_open())  if_'+grouped_data[key][i][0]+'.close();\n')  
+                        text.append('  if (if_'+grouped_data[key][i][0]+'.is_open())  if_'+grouped_data[key][i][0]+'.close();\n')  
                     if grouped_data[key][i][3] == 'grid' or grouped_data[key][i][3] == 'grid_param':
                         text.append('  if('+grouped_data[key][i][0]+') delete '+grouped_data[key][i][0]+';\n')
 

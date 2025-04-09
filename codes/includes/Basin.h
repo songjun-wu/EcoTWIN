@@ -43,6 +43,10 @@ class Basin {
   svector *_silt1;  // Silt content of layer 1 [decimal], only needed when opt_pedotransf = 1 or 2
   /* end of GIS */
 
+  /* GroundTs */
+  svector *_LAI;  // Leaf area index [decimal]
+  ifstream if__LAI;  // Leaf area index [decimal]
+  /* end of GroundTs */
 
   /* Storages */ 
   svector *_I;  // Canopy storage [m]
@@ -106,7 +110,7 @@ class Basin {
 
  
   
-  Basin(Control &ctrl);  // constrcuctor of Basin
+  Basin(Control &ctrl, Param &par);  // constrcuctor of Basin
   //dtor
   ~Basin();  // destrcuctor of Basin
   int dtor(Control &ctrl);
@@ -116,6 +120,16 @@ class Basin {
 
   // Init
   int Initialisation(Control &ctrl, Param &par);
+
+  // Open and read ground inputs such as LAI
+  int open_groundTs(Control &ctrl);
+  int read_groundTs(Control &ctrl);
+  int open_groundTs_maps(string fname, ifstream &ifHandle);
+  int read_groundTs_maps(ifstream &ifHandle, svector &GroundTsMap);
+  int init_groundTs(Control &ctrl);
+  int update_groundTs(Control &ctrl, Param &par);
+  int init_groundTs_maps(string fname, ifstream &ifHandle);
+  int update_groundTs_maps(ifstream &ifHandle, Param &par, svector &GroundTsMap);
 
   /* Canopy interception */
   int Solve_canopy(Control &ctrl, Param &par, Atmosphere &atm);

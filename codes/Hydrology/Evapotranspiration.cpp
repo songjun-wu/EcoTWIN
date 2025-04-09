@@ -68,8 +68,8 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
         double FC3 = _thetaFC3->val[j];
 
         // Surface cover fraction of vegetation, rExtinct = -0.463 Rutter (1972); Here included for calibration
-        double SCF_veg = 1 - exp(par._rE->val[j] * atm._LAI->val[j]);       
-
+        double SCF_veg = 1 - exp(par._rE->val[j] * _LAI->val[j]);  
+        
         // For layer 1
         froot_coeff_corrcted = _froot_layer1->val[j] * (theta1 - WP1) / (FC1 - WP1);  
         froot_coeff_corrcted = min(froot_coeff_corrcted, 1.0);

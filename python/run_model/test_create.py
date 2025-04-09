@@ -44,9 +44,6 @@ chnlength = chan_mask * 100
 chndepth = chan_mask * 2
 
 
-climate_zones = unit_mask
-
-
 climate_zones = unit_mask * 0
 
 depth1 = unit_mask * 0.2
@@ -110,10 +107,16 @@ np.repeat(df['AirT_C_Avg'], 1).to_numpy().tofile(climate_path+'Ta.bin')
 
 (np.repeat(df['RelHumid'], 1).to_numpy() / 100).tofile(climate_path+'RH.bin')
 
-np.repeat(df1['lai_2'], 1).to_numpy().tofile(climate_path+'LAI.bin')
+
 (np.repeat(df['pet'], 1).to_numpy()/1000).tofile(climate_path+'PET.bin')
 np.repeat(df1['d2H_14dMV_3015'], 1).to_numpy().tofile(climate_path+'d2h_P.bin')
 
+lai = np.full((len(df1['lai_2']), 10), -9999.0)
+for i in [1,2,3,4]:
+    lai[:,i] = df1['lai_2']
+lai.flatten().tofile(climate_path+'LAI.bin')
+print(df1['lai_2'])
+print(lai)
 
 
 

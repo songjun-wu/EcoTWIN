@@ -1,6 +1,6 @@
  #include "Basin.h"
 
- Basin::Basin(Control &ctrl){
+ Basin::Basin(Control &ctrl, Param &par){
   
   roundoffERR = 1e-12;
   _rowNum = ctrl._rowNum;
@@ -37,6 +37,10 @@
     _silt1 = new svector(ctrl.path_BasinFolder + ctrl.fn__silt1, _rowNum, _colNum, _sortedGrid);
   }
   /* end of GIS */
+
+  /* GroundTs */
+  _LAI = new svector(_sortedGrid.size);
+  /* end of GroundTs */
 
   /* Storages */
   _I = new svector(ctrl.path_BasinFolder + ctrl.fn__I, _rowNum, _colNum, _sortedGrid);
@@ -104,5 +108,13 @@
   /* end of Fluxes */
 
   _slope->higherthan(0.01);
+
+  if (ctrl.opt_groundTs_input_format == 1){
+    open_groundTs(ctrl);
+    read_groundTs(ctrl);
+  } else if  (ctrl.opt_groundTs_input_format == 2) {
+    init_groundTs(ctrl); // create maps for Ground inputs
+    update_groundTs(ctrl, par); // update maps for Ground inputs
+  }
  
  }

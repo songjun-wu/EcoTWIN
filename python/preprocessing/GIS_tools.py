@@ -20,16 +20,7 @@ def d8_flow_direction(dem, nodata):
 
 
 
-def pcraster_ldd_to_d8(fdir):
-    fdir[fdir==9] = 128
-    fdir[fdir==8] = 64
-    fdir[fdir==7] = 32
-    fdir[fdir==4] = 16
-    fdir[fdir==1] = 8
-    fdir[fdir==2] = 4
-    fdir[fdir==3] = 2
-    fdir[fdir==6] = 1
-    return fdir
+
 
 
 
