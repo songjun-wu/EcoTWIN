@@ -6,11 +6,11 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
     
 
     double dt = ctrl.Simul_tstep;  // Seconds in each timestep
-    double eff_Ks1; // Effective hydrological conductivity
-    double dtheta; // Available room for infiltration
-    double F; // Cumulative infiltration amounts (if there's multiple land use types in one grid cell)
-    double f; // Infiltration rates at specific time
-    double deltaF; // Cumulative infiltration within the timestep
+    double eff_Ks1 = 0; // Effective hydrological conductivity
+    double dtheta = 0; // Available room for infiltration
+    double F = 0; // Cumulative infiltration amounts (if there's multiple land use types in one grid cell)
+    double f = 0; // Infiltration rates at specific time
+    double deltaF = 0; // Cumulative infiltration within the timestep
 
     
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -32,12 +32,14 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         
         // Else infiltration starts
         double input = _pond->val[j];
-        double input_dt = input / dt;  // m/s        
+        double input_dt = input / dt;  // m/s
 
         // If all excess water can be infiltrated
         if (input_dt <= eff_Ks1){
             deltaF = input;
         }
+
+        
 
         // Else estimate infiltration using Green-Ampt method
         else if (input_dt > eff_Ks1){
@@ -71,9 +73,10 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
             }
         }
 
+        deltaF = deltaF > input ? input : deltaF;
         _infilt->val[j] = deltaF;
         _theta1->val[j] += deltaF / depth1;
-        _pond->val[j] -= deltaF;
+        _pond->val[j] -= deltaF;        
 
     }
     return EXIT_SUCCESS;

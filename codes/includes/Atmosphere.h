@@ -31,6 +31,8 @@ class Atmosphere {
   ifstream if__RH;  // Relative humidity [decimal]
   svector *_PET;  // Potential evapotranspiration [m]
   ifstream if__PET;  // Potential evapotranspiration [m]
+  svector *_d18o_P;  // d18O in precipitation [‰]
+  ifstream if__d18o_P;  // d18O in precipitation [‰]
   /* end of Climate */
 
 

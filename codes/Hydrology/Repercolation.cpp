@@ -43,9 +43,6 @@ int Basin::Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, 
 int Basin::Repercolation_2(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2) {
 
     double dt = ctrl.Simul_tstep;
-    double travel_time_ratio;
-
-    double p_perc1, p_perc2;
 
     double theta1 = _theta1->val[j];
     double theta2 = _theta2->val[j];
@@ -124,9 +121,6 @@ int Basin::Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, 
     double perc1 = 0;
     double perc2 = 0;
     double perc_in = 0;
-    double delta_theta;
-
-
 
     // Percolation from layer 1
     // if saturation is not met then fill the deficit, otherwise all water pass to next layer

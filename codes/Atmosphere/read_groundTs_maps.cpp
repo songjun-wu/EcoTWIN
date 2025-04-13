@@ -54,7 +54,6 @@ int Basin::init_groundTs_maps(string fname, ifstream &ifHandle){
 
 int Basin::update_groundTs_maps(ifstream &ifHandle, Param &par, svector &groundTsMap){
   double *data=NULL;
-  int zoneID;
   int nzones = par.param_category->n_category;
   data = new double[nzones];
   ifHandle.read((char *)data, sizeof(double)*nzones);  

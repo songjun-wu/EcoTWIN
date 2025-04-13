@@ -9,7 +9,6 @@ int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){
     }
 
     
-    
 
     if (ctrl.opt_infil == 1){
         Infiltration_1(ctrl, par);
@@ -32,9 +31,12 @@ int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){
     if (ctrl.opt_evap==1){
         Evapotranspiration_1(ctrl, par, atm);
     }
-        
+    
 
-
-
+    // Tracking
+    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
+        Mixing_soil_profile(ctrl, atm, par);  // d18o change due to canopy mixing and evaporation
+    }
+   
     return EXIT_SUCCESS;
 }

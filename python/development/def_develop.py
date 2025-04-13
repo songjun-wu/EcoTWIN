@@ -18,6 +18,9 @@ class Opt:
     cond['tracking_isotope_1'] = {'key':'opt_tracking_isotope', 'value':1,
                                   'general_description':'Enable isotopic tracking?\n# 0: disabled\n# 1: enabled',
                                   'description':'Isotopic tracking'}
+    cond['tracking_age_1'] = {'key':'opt_tracking_age', 'value':1,
+                                  'general_description':'Enable water age tracking?\n# 0: disabled\n# 1: enabled',
+                                  'description':'Water age tracking'}
     cond['reinfil_1']   = {'key':'opt_reinfil', 'value':1, 
                         'general_description':'Reinfiltration during overland flow routing',
                         'description':'Reinfiltration during overland flow routing'}

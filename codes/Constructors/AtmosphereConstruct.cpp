@@ -16,6 +16,9 @@
   if (ctrl.opt_evap == 1){
     _PET = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_tracking_isotope == 1){
+    _d18o_P = new svector(_sortedGrid.size);
+  }
   /* end of Climate */
 
 

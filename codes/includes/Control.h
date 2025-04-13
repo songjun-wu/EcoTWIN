@@ -46,6 +46,10 @@ struct Control{
   // 0: disabled
   // 1: enabled
   int opt_tracking_isotope;
+  // Enable water age tracking?
+  // 0: disabled
+  // 1: enabled
+  int opt_tracking_age;
   // Reinfiltration during overland flow routing
   int opt_reinfil;
   // Canopy interception
@@ -145,6 +149,7 @@ struct Control{
   string fn__Ta;  // Air temperature [degree C]
   string fn__RH;  // Relative humidity [decimal]
   string fn__PET;  // Potential evapotranspiration [m]
+  string fn__d18o_P;  // d18O in precipitation [‰]
   /* end of Climate */
 
   /* Storages */
@@ -160,6 +165,19 @@ struct Control{
   /* Fluxes */
   string fn__Q;  // Discharge [m3/s]
   /* end of Fluxes */
+
+  /* Tracking */
+  string fn__d18o_I;  // d18o in Canopy storage [m]
+  string fn__d18o_snow;  // d18o in Snow depth in [m]
+  string fn__d18o_pond;  // d18o in Ponding water in [m]
+  string fn__d18o_layer1;  // d18o in Soil moisture in layer 1 [decimal]
+  string fn__d18o_layer2;  // d18o in Soil moisture in layer 2 [decimal]
+  string fn__d18o_layer3;  // d18o in Soil moisture in layer 3 [decimal]
+  string fn__d18o_GW;  // d18o in Groundwater storage [m]
+  /* end of Tracking */
+
+  /* Nitrogen */
+  /* end of Nitrogen */
 
   /* Parameters */
   string fn__depth3;  // Depth of soil layer 3 [m]
@@ -247,6 +265,9 @@ struct Control{
   int report__GWf_toChn;  // report Groundwater flow to Channel [m]
   int report__Q;  // report Discharge [m3/s]
   int report__Qupstream;  // report Upstream inflow [m3/s]
+  int report__PE;  // report Potential evaporation [m]
+  int report__PT;  // report Potential transpiration [m]
+  int report__tmp;  // report Temporal variable for testing [-]
   /* end of Report */
 
   public:

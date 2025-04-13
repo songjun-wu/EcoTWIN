@@ -21,6 +21,7 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             #['_Tmax', [Opt.cond['none']], 'Maximum air temperature [degree C]', 'grid', 'spatial_TS', 'Maximum_air_temperature'],
             ['_RH', [Opt.cond['none']], 'Relative humidity [decimal]', 'grid', 'spatial_TS', 'Relative_humidity'],
             ['_PET', [Opt.cond['evap_1']], 'Potential evapotranspiration [m]', 'grid', 'spatial_TS', 'Potential_evapotranspiration'],
+            ['_d18o_P', [Opt.cond['tracking_isotope_1']], 'd18O in precipitation [‰]', 'grid', 'spatial_TS', 'd18O_Precipitation'],
             
         ]
 
@@ -62,7 +63,27 @@ Storages = [['_I',       [Opt.cond['none']], 'Canopy storage [m]', 'grid', 'spat
             ['_theta2',  [Opt.cond['none']], 'Soil moisture in layer 2 [decimal]', 'grid', 'spatial', 'SMC_layer2'],
             ['_theta3',  [Opt.cond['none']], 'Soil moisture in layer 3 [decimal]', 'grid', 'spatial', 'SMC_layer3'], 
             ['_GW',  [Opt.cond['none']], 'Groundwater storage [m]', 'grid', 'spatial', 'groundwater_storage'],
-            ['_chanS',  [Opt.cond['none']], 'Channel storage [m3]', 'grid', 'new', None],                       
+            ['_chanS',  [Opt.cond['none']], 'Channel storage [m3]', 'grid', 'new', None],
+
+            ['_I_old',       [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Canopy storage [m]', 'grid', 'new', None], 
+            ['_snow_old',    [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Snow depth in [m]', 'grid', 'new', None],
+            #['_pond_old',    [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Ponding water in [m]', 'grid', 'new', None],
+            ['_theta1_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Soil moisture in layer 1 [decimal]', 'grid', 'new', None],
+            ['_theta2_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Soil moisture in layer 2 [decimal]', 'grid', 'new', None],
+            ['_theta3_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Soil moisture in layer 3 [decimal]', 'grid', 'new', None], 
+            ['_GW_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Groundwater storage [m]', 'grid', 'new', None],
+            ['_chanS_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Channel storage [m3]', 'grid', 'new', None],                      
+            ]
+
+Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy storage [m]', 'grid', 'spatial', 'd18o_canopy_storage'],
+            ['_d18o_snow',    [Opt.cond['tracking_isotope_1']], 'd18o in Snow depth in [m]', 'grid', 'spatial', 'd18o_snow_depth'],
+            ['_d18o_pond',    [Opt.cond['tracking_isotope_1']], 'd18o in Ponding water in [m]', 'grid', 'spatial', 'd18o_pond'],
+            ['_d18o_layer1',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 1 [decimal]', 'grid', 'spatial', 'd18o_SMC_layer1'],
+            ['_d18o_layer2',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 2 [decimal]', 'grid', 'spatial', 'd18o_SMC_layer2'],
+            ['_d18o_layer3',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 3 [decimal]', 'grid', 'spatial', 'd18o_SMC_layer3'], 
+            ['_d18o_GW',  [Opt.cond['tracking_isotope_1']], 'd18o in Groundwater storage [m]', 'grid', 'spatial', 'd18o_groundwater_storage'],
+            ['_d18o_chanS',  [Opt.cond['tracking_isotope_1']], 'd18o in Channel storage [m3]', 'grid', 'new', 'd18o_chanS'],
+
             ]
 
 Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'interception'],
@@ -117,16 +138,18 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_interf_in', [Opt.cond['none']], 'Interflow from upstream cell(s) [m]', 'grid', 'new', 'interflow_input'],
             ['_interf_out', [Opt.cond['none']], 'Interflow to downstream cell [m]', 'grid', 'new', 'interflow_output'],
             ['_interf_toChn', [Opt.cond['none']], 'Interflow to Channel [m]', 'grid', 'new', 'interflow_toChn'],
-            ['_GWf_in', [Opt.cond['none']], 'GW flow from upstream cell(s) [m]', 'grid', 'new', 'GWrflow_input'],
+            ['_GWf_in', [Opt.cond['none']], 'GW flow from upstream cell(s) [m]', 'grid', 'new', 'GWflow_input'],
             ['_GWf_out', [Opt.cond['none']], 'GW flow to downstream cell [m]', 'grid', 'new', 'GWflow_output'],
-            ['_GWf_toChn', [Opt.cond['none']], 'Groundwater flow to Channel [m]', 'grid', 'new', 'groundwater_flow_toChn'],
+            ['_GWf_toChn', [Opt.cond['none']], 'Groundwater flow to Channel [m]', 'grid', 'new', 'GWflow_toChn'],
 
             ['_Q', [Opt.cond['none']], 'Discharge [m3/s]', 'grid', 'spatial', 'discharge'],
             ['_Qupstream', [Opt.cond['none']], 'Upstream inflow [m3/s]', 'grid', 'new', None],
 
 
             # internal variables
-            #['_tmp', [Opt.cond['none']], 'Temporal variable for testing [m3/s]', 'grid', 'new', None],
+            ['_PE', [Opt.cond['evap_1']], 'Potential evaporation [m]', 'grid', 'new', None],
+            ['_PT', [Opt.cond['evap_1']], 'Potential transpiration [m]', 'grid', 'new', None],
+            ['_tmp', [Opt.cond['none']], 'Temporal variable for testing [-]', 'grid', 'new', None],
             
 
             ]
@@ -143,14 +166,14 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               
               ['_froot_coeff', [Opt.cond['evap_1']], 'Root fraction coefficient [-]', 'grid', 'spatial_param', 'froot_coeff'],
               # Pedotransfer function
-              ['_ref_thetaS', [Opt.cond['pedotransf_1']], 'Reference saturated soil moisture [-]', 'grid', 'spatial_param', 'ref_thetaS'],
-              ['_PTF_VG_clay', [Opt.cond['pedotransf_1']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_clay'],
-              ['_PTF_VG_Db', [Opt.cond['pedotransf_1']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_Db'],
+              ['_ref_thetaS', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Reference saturated soil moisture [-]', 'grid', 'spatial_param', 'ref_thetaS'],
+              ['_PTF_VG_clay', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_clay'],
+              ['_PTF_VG_Db', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_Db'],
               
-              ['_PTF_Ks_const', [Opt.cond['pedotransf_1']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Db'],
-              ['_PTF_Ks_sand', [Opt.cond['pedotransf_1']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_sand'],
-              ['_PTF_Ks_clay', [Opt.cond['pedotransf_1']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_clay'],
-              ['_PTF_Ks_slope', [Opt.cond['pedotransf_1']], 'Slope correction for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Ks_slope'],
+              ['_PTF_Ks_const', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Db'],
+              ['_PTF_Ks_sand', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_sand'],
+              ['_PTF_Ks_clay', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_clay'],
+              ['_PTF_Ks_slope', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Slope correction for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Ks_slope'],
 
               ['_SWP', [Opt.cond['fc_1']], 'Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1', 'grid', 'spatial_param', 'SWP'],
               # Infiltration
@@ -198,8 +221,8 @@ datas_atmos = [Climate]
 signs_groundTs = ['GroundTs']
 datas_groundTs = [GroundTs]
 
-signs_basin = ['GIS', 'Storages', 'Fluxes']
-datas_basin = [GIS, Storages, Fluxes]
+signs_basin = ['GIS', 'Storages', 'Fluxes', 'Tracking']
+datas_basin = [GIS, Storages, Fluxes, Tracking]
 
 signs_param = ['Parameters']
 datas_param = [Parameters]
@@ -235,7 +258,6 @@ define_variables.constructor(fname=path + 'Constructors/ParamConstruct.cpp', sig
 config_build.read_param(fname=path+'IO/readParamFile.cpp', parameters=Parameters)
 define_variables.destructor(fname=path + 'Destructors/ParamDestruct.cpp', signs=signs_param, datas=datas_param)
 parameterisation_build.parameterisation_build(fname=path + 'Spatial/parameterisation.cpp', parameters=Parameters)
-
 
 
 

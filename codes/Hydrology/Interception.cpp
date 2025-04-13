@@ -9,13 +9,12 @@ Interception_2: Maximum canopy stoages are additionally corrected by rE (Landarf
 
 int Basin::Interception_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
-    double Th; // Throughfall
+    double Th = 0; // Throughfall
 
 
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
-        
         // Parameters
         double alpha = par._alpha->val[j];
 
@@ -29,12 +28,9 @@ int Basin::Interception_1(Control &ctrl, Param &par, Atmosphere &atm) {
         Th = (C + precip) <= max_canopy_storage ? 0.0 : (C + precip - max_canopy_storage);
         Th = min<double>(Th, C + precip);
 
-        double tmppp = _I->val[j];
-
         // Update canopy storage
         _I->val[j] += (precip - Th);
         _Th->val[j] = Th;   
-
     }
 
     
@@ -43,7 +39,7 @@ int Basin::Interception_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
 int Basin::Interception_2(Control &ctrl, Param &par, Atmosphere &atm) {
 
-    double Th; // Throughfall
+    double Th = 0; // Throughfall
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         // Parameters

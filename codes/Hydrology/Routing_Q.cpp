@@ -56,10 +56,8 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
                         break;
                 }
                     count++;
-                }while(fabs(fQj1i1)>0.00001 && count < 500);
-                if(count >=500){
-                //cout << "Kinematic wave solution did not converge" << endl;
-            }
+                }while(fabs(fQj1i1)>0.00001 && count < 50);
+                
 
                 _chanS->val[j] = std::max(0.0,(Qupstream+Qall*_dx  - Qk1)*dt) / dx_square;
                 _Q->val[j] = Qk1; // Discharge [m3/s]
@@ -72,9 +70,6 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
             }
         }
 
-        if (j==0){
-           //cout << _Q->val[j] << endl;
-        }
         
     }
 

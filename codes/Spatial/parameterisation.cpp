@@ -77,7 +77,7 @@ int Param::Parameterisation(Control &ctrl){
 
   }
 
-  if (ctrl.opt_pedotransf == 1){
+  if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2 or ctrl.opt_pedotransf == 3){
   
   _ref_thetaS->reset();
     for (int k=0; k<param_category->n_category; k++){

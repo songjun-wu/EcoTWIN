@@ -6,7 +6,7 @@ from datetime import datetime
 import numpy as np
 
 class Path:
-    model_path = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
+    model_path = '/home/wusongj/GEM/stable_release/' # The path for model executable file
     path_EXEC = 'gEcoHydro'
     data_path = '/home/wusongj/GEM/test_dmc/'                   # The path with spatial and climate data
     config_path = '/home/wusongj/GEM/test_dmc/'                 # The path with configuration files (.ini)
@@ -33,14 +33,14 @@ class Info:
 class Cali:
     # DREAM calibration
     TASK_name = 'DREAM_cali_DMC'
-    ncores = 10
-    nchains = 10
+    ncores = 20
+    nchains = 20
 
     niterations = 500  # Number of iterations for each batch
     nbatchs = 20  # Number of batches
 
     restart = False   # Whether restart?
-    restart_batch = 5 # restart since which batch?
+    restart_niteration = 0 # restart since which iteration?
 
     
 
@@ -58,7 +58,7 @@ class Output:
 class Param:
     ref = {}
     ### parameters to calibrate
-    ref['depth3']   =           {'type':'landuse',  'log':0, 'file':'depth3',   'min':[0.6]*Info.N_landuse, 'max':[5]*Info.N_landuse}
+    ref['depth3']   =           {'type':'soil',  'log':0, 'file':'depth3',   'min':[0.6]*Info.N_soil, 'max':[5]*Info.N_soil}
     ref['alpha']   =            {'type':'landuse',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse}
     ref['rE']   =               {'type':'landuse',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse}  # PET to PE and PT
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2]}
@@ -68,9 +68,9 @@ class Param:
 
     
     # Pedotransfer function
-    ref['ref_thetaS']   = {'type':'landuse',   'log':0, 'file':'ref_thetaS',   'min':[0.5]*Info.N_landuse, 'max':[0.99]*Info.N_landuse}
-    ref['PTF_VG_clay']   = {'type':'landuse',   'log':0, 'file':'PTF_VG_clay',   'min':[-5e-3]*Info.N_landuse, 'max':[5e-3]*Info.N_landuse}
-    ref['PTF_VG_Db']   = {'type':'landuse',   'log':0, 'file':'PTF_VG_Db',   'min':[5e-2]*Info.N_landuse, 'max':[0.6]*Info.N_landuse}
+    ref['ref_thetaS']   = {'type':'soil',   'log':0, 'file':'ref_thetaS',   'min':[0.5]*Info.N_soil, 'max':[0.99]*Info.N_soil}
+    ref['PTF_VG_clay']   = {'type':'soil',   'log':1, 'file':'PTF_VG_clay',   'min':[5e-8]*Info.N_soil, 'max':[5e-3]*Info.N_soil}
+    ref['PTF_VG_Db']   = {'type':'soil',   'log':1, 'file':'PTF_VG_Db',   'min':[5e-4]*Info.N_soil, 'max':[5e-1]*Info.N_soil}
 
     ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-1.2]*Info.N_soil, 'max':[-0.2]*Info.N_soil}
     ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[1e-4]*Info.N_soil, 'max':[0.026]*Info.N_soil}
@@ -94,16 +94,14 @@ class Param:
     ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.999]*Info.N_landuse} # The higher the more deeper roots
 
     # GW recharge
-    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil} # Correction factor for GW recharge
+    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-10]*Info.N_soil, 'max':[1]*Info.N_soil} # Correction factor for GW recharge
 
     # Routing
     ref['pOvf_toChn']   = {'type':'soil',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_soil, 'max':[1e3]*Info.N_soil}
     ref['interfExp']   = {'type':'soil',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_soil, 'max':[10]*Info.N_soil}
-    #ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e5]*Info.N_soil, 'max':[1e7]*Info.N_soil} # todo
     ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_soil, 'max':[1e7]*Info.N_soil}  # Correction factor for linear Kinematic waver approximation of interflow
     ref['GWfExp']   = {'type':'soil',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil}
-    ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-8]*Info.N_soil, 'max':[1e-2]*Info.N_soil}  # Proportion of GW storage for routing generation
-
+    ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-15]*Info.N_soil, 'max':[1e-2]*Info.N_soil}  # Proportion of GW storage for routing generation
     ref['Manningn']   = {'type':'soil',   'log':1, 'file':'Manningn',   'min':[0.01]*Info.N_soil, 'max':[0.1]*Info.N_soil}
     
 

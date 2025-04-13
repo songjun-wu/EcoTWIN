@@ -27,7 +27,7 @@ int Basin::Snow_acc_melt(Param &par, Atmosphere &atm, int j){
     double pond = _pond->val[j];  // Ponding water
     double Ta = atm._Ta->val[j]; // Mean air temperature
     double snow_pack = _snow->val[j]; // Snow pack
-    double snow_melt;
+    double snow_melt = 0;
 
     
 

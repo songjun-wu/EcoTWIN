@@ -46,6 +46,15 @@ int Basin::dtor(Control &ctrl){
   if(_theta3) delete _theta3;
   if(_GW) delete _GW;
   if(_chanS) delete _chanS;
+  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1){
+    if(_I_old) delete _I_old;
+    if(_snow_old) delete _snow_old;
+    if(_theta1_old) delete _theta1_old;
+    if(_theta2_old) delete _theta2_old;
+    if(_theta3_old) delete _theta3_old;
+    if(_GW_old) delete _GW_old;
+    if(_chanS_old) delete _chanS_old;
+  }
   /* end of Storages */
 
   /* Fluxes */
@@ -84,6 +93,7 @@ int Basin::dtor(Control &ctrl){
   if(_GWf_toChn) delete _GWf_toChn;
   if(_Q) delete _Q;
   if(_Qupstream) delete _Qupstream;
+  if(_tmp) delete _tmp;
   if (ctrl.opt_reinfil == 1){
     if(_rinfilt) delete _rinfilt;
     if(_rPerc1) delete _rPerc1;
@@ -94,6 +104,8 @@ int Basin::dtor(Control &ctrl){
     if(_froot_layer1) delete _froot_layer1;
     if(_froot_layer2) delete _froot_layer2;
     if(_froot_layer3) delete _froot_layer3;
+    if(_PE) delete _PE;
+    if(_PT) delete _PT;
   }
   if (ctrl.opt_percolation == 1){
     if(_p_perc1) delete _p_perc1;
@@ -101,6 +113,22 @@ int Basin::dtor(Control &ctrl){
     if(_p_perc3) delete _p_perc3;
   }
   /* end of Fluxes */
+
+  /* Tracking */
+  if (ctrl.opt_tracking_isotope == 1){
+    if(_d18o_I) delete _d18o_I;
+    if(_d18o_snow) delete _d18o_snow;
+    if(_d18o_pond) delete _d18o_pond;
+    if(_d18o_layer1) delete _d18o_layer1;
+    if(_d18o_layer2) delete _d18o_layer2;
+    if(_d18o_layer3) delete _d18o_layer3;
+    if(_d18o_GW) delete _d18o_GW;
+    if(_d18o_chanS) delete _d18o_chanS;
+  }
+  /* end of Tracking */
+
+  /* Nitrogen */
+  /* end of Nitrogen */
 
   return EXIT_SUCCESS;
 }

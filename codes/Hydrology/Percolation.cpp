@@ -5,9 +5,11 @@
 int Basin::Percolation_1(Control &ctrl, Param &par) {
 
     double dt = ctrl.Simul_tstep;
-    double travel_time_ratio;
+    double travel_time_ratio = 0;
 
-    double p_perc1, p_perc2, p_perc3;
+    double p_perc1 = 0;
+    double p_perc2 = 0;
+    double p_perc3 = 0;
     
     if (par.param_category->sort_perc_travel_time_OK == 0){
 
@@ -52,9 +54,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
             perc2 = (theta2 - _thetaFC2->val[j]) * depth2 * _p_perc2->val[j];
             theta2 -= perc2 / depth2;
             theta3 += perc2 / depth3;
-        }
-
-
+        }        
 
         _theta1->val[j] = theta1;
         _theta2->val[j] = theta2;
@@ -69,7 +69,6 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
 
     double dt = ctrl.Simul_tstep;
     double travel_time_ratio;
-    double p_perc1, p_perc2, p_perc3;
     
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
@@ -137,7 +136,6 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
 int Basin::Percolation_3(Control &ctrl, Param &par) {
 
     double dt = ctrl.Simul_tstep;
-    double p_perc1, p_perc2, p_perc3;
     
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 

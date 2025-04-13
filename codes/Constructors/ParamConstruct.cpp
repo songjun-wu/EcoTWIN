@@ -24,7 +24,7 @@ Param::Param(Control &ctrl){
   if (ctrl.opt_evap == 1){
     _froot_coeff = new svector(_sortedGrid.size);
   }
-  if (ctrl.opt_pedotransf == 1){
+  if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2 or ctrl.opt_pedotransf == 3){
     _ref_thetaS = new svector(_sortedGrid.size);
     _PTF_VG_clay = new svector(_sortedGrid.size);
     _PTF_VG_Db = new svector(_sortedGrid.size);

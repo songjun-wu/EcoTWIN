@@ -23,6 +23,8 @@ CPP_SRCS += \
 ../codes/Hydrology/Canopy_evaporation.cpp \
 ../codes/Hydrology/Routing_GWflow.cpp \
 ../codes/Hydrology/GWrecharge.cpp \
+../codes/Hydrology/Store_states.cpp \
+../codes/Hydrology/Seperate_PET.cpp \
 
 
 OBJS += \
@@ -45,6 +47,8 @@ OBJS += \
 ./Hydrology/Canopy_evaporation.o \
 ./Hydrology/Routing_GWflow.o \
 ./Hydrology/GWrecharge.o \
+./Hydrology/Store_states.o \
+./Hydrology/Seperate_PET.o \
 
 
 CPP_DEPS += \
@@ -67,6 +71,8 @@ CPP_DEPS += \
 ./Hydrology/Canopy_evaporation.d \
 ./Hydrology/Routing_GWflow.d \
 ./Hydrology/GWrecharge.d \
+./Hydrology/Store_states.d \
+./Hydrology/Seperate_PET.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

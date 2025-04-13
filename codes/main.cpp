@@ -22,9 +22,11 @@ int main(){
   oParam = new Param(*oControl);
   oBasin = new Basin(*oControl, *oParam);
   oAtmosphere = new Atmosphere(*oControl);
-  
+  oReport = new Report(*oControl);
+
   oBasin->Initialisation(*oControl, *oParam);
-  
+  oReport->Report_Initialisation(*oControl);
+
   auto stop1 = std::chrono::high_resolution_clock::now();
   
   while (oControl->current_ts < oControl->Simul_end){
@@ -39,7 +41,7 @@ int main(){
     oControl->current_ts += oControl->Simul_tstep;
     advance_climate += oControl->Simul_tstep;
     advance_landuse += oControl->Simul_tstep;
-
+    
     // Update climate inputs
     if (advance_climate >= oControl->Clim_input_tstep) {
       if (oControl->opt_climate_input_format == 1){

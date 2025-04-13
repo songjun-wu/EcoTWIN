@@ -4,15 +4,15 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
 
     int from_j;
 
-    double GWflow_to_go; // Available water for GWflow
-    double GWflow;  // Total output of GWflow
-    double GWflow_toChn;  // Output of GWflow to stream
+    double GWflow_to_go = 0; // Available water for GWflow
+    double GWflow = 0;  // Total output of GWflow
+    double GWflow_toChn = 0;  // Output of GWflow to stream
 
     double dx = ctrl._dx;
     double dx_square = dx * dx;
     double dtdx = ctrl.Simul_tstep / dx;
-    double alpha;
-    double Ks3;
+    double alpha = 0;
+    double Ks3 = 0;
 
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -30,25 +30,26 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
         // Should GWflow_in be included here, or after stream recharge?
         GWflow_to_go = GWflow_in + _GW->val[j];
 
-               
+              
         if (GWflow_to_go > roundoffERR)  {
-           
+
             Ks3 = _Ks3->val[j];  // [m/s]
             // GWflow to channel
             if (chnlength > 0){  // If there is channel in this grid cell
-                GWflow_toChn = GWflow_to_go * Ks3 * (1 - exp(-1 * par._GWfExp->val[j] * GWflow_to_go)) * par._wGWf->val[j];  // [m2/s]
+                // Here Ks3 is not used because GW routing should be independent from soil proporties
+                GWflow_toChn = GWflow_to_go * 1e-5 * (1 - exp(-1 * par._GWfExp->val[j] * GWflow_to_go)) * par._wGWf->val[j];  // [m2/s]
                 GWflow_toChn *= dtdx; // Store GWflow to channel in [m]
                 GWflow_toChn *= (chnlength/dx); // Adjusted with channel length; [m]
                 GWflow_toChn = min(GWflow_toChn, GWflow_to_go);  // Cannot exceed water to go
                 GWflow_to_go -=  GWflow_toChn;    // [m]
-                GWflow_out += GWflow_toChn;  // [m2/s]
             }
-
 
             // GWflow to downstream grid
             // Linear approximation of Kinematic wave approach
             // Assumption: Q = head * alpha
-            alpha = Ks3 * sin(atan(_slope->val[j])) * par._wGWf->val[j];  // [m/s]
+            // Here Ks3 is not used because GW routing should be independent from soil proporties
+            alpha = 1e-5 * par._wGWf->val[j];  // [m/s]
+            //alpha = Ks3 * sin(atan(_slope->val[j])) * par._wGWf->val[j];  // [m/s]
             GWflow_toTrestrial = GWflow_to_go / (1 + alpha * dtdx) * alpha; // qx+1 = hx+1[m] * alpha; [m2/s]
             GWflow_toTrestrial *= dtdx; // Store qx+1 in m
             GWflow_toTrestrial = min(GWflow_toTrestrial, GWflow_to_go);  // Cannot exceed water to go

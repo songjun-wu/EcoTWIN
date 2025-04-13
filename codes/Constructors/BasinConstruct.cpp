@@ -51,6 +51,15 @@
   _theta3 = new svector(ctrl.path_BasinFolder + ctrl.fn__theta3, _rowNum, _colNum, _sortedGrid);
   _GW = new svector(ctrl.path_BasinFolder + ctrl.fn__GW, _rowNum, _colNum, _sortedGrid);
   _chanS = new svector(_sortedGrid.size);
+  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1){
+    _I_old = new svector(_sortedGrid.size);
+    _snow_old = new svector(_sortedGrid.size);
+    _theta1_old = new svector(_sortedGrid.size);
+    _theta2_old = new svector(_sortedGrid.size);
+    _theta3_old = new svector(_sortedGrid.size);
+    _GW_old = new svector(_sortedGrid.size);
+    _chanS_old = new svector(_sortedGrid.size);
+  }
   /* end of Storages */
 
   /* Fluxes */
@@ -89,6 +98,7 @@
   _GWf_toChn = new svector(_sortedGrid.size);
   _Q = new svector(ctrl.path_BasinFolder + ctrl.fn__Q, _rowNum, _colNum, _sortedGrid);
   _Qupstream = new svector(_sortedGrid.size);
+  _tmp = new svector(_sortedGrid.size);
   if (ctrl.opt_reinfil == 1){
     _rinfilt = new svector(_sortedGrid.size);
     _rPerc1 = new svector(_sortedGrid.size);
@@ -99,6 +109,8 @@
     _froot_layer1 = new svector(_sortedGrid.size);
     _froot_layer2 = new svector(_sortedGrid.size);
     _froot_layer3 = new svector(_sortedGrid.size);
+    _PE = new svector(_sortedGrid.size);
+    _PT = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_percolation == 1){
     _p_perc1 = new svector(_sortedGrid.size);
@@ -106,6 +118,22 @@
     _p_perc3 = new svector(_sortedGrid.size);
   }
   /* end of Fluxes */
+
+  /* Tracking */
+  if (ctrl.opt_tracking_isotope == 1){
+    _d18o_I = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_I, _rowNum, _colNum, _sortedGrid);
+    _d18o_snow = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_snow, _rowNum, _colNum, _sortedGrid);
+    _d18o_pond = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_pond, _rowNum, _colNum, _sortedGrid);
+    _d18o_layer1 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer1, _rowNum, _colNum, _sortedGrid);
+    _d18o_layer2 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer2, _rowNum, _colNum, _sortedGrid);
+    _d18o_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer3, _rowNum, _colNum, _sortedGrid);
+    _d18o_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_GW, _rowNum, _colNum, _sortedGrid);
+    _d18o_chanS = new svector(_sortedGrid.size);
+  }
+  /* end of Tracking */
+
+  /* Nitrogen */
+  /* end of Nitrogen */
 
   _slope->higherthan(0.01);
 

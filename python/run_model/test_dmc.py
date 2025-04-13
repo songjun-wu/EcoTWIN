@@ -57,15 +57,15 @@ prep_tools.saveToASCII(unit_soil*0.3, 'theta3', home_dir+'spatial/', 'float64', 
 prep_tools.saveToASCII(unit_soil*20.0, 'GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.0, 'Q', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
-prep_tools.saveToASCII(unit_soil*0.3, 'sand1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*0.25, 'sand2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*0.2, 'sand3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0.65, 'sand1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0.63, 'sand2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0.61, 'sand3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.1, 'clay1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*0.15, 'clay2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*0.2, 'clay3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*0.5, 'silt1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*0.55, 'silt2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*0.6, 'silt3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0.12, 'clay2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0.14, 'clay3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0.2, 'silt1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0.18, 'silt2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0.16, 'silt3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.08, 'organic1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.06, 'organic2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*0.04, 'organic3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
@@ -73,18 +73,26 @@ prep_tools.saveToASCII(unit_soil*1.2, 'bulkdensity1', home_dir+'spatial/', 'floa
 prep_tools.saveToASCII(unit_soil*1.4, 'bulkdensity2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*1.6, 'bulkdensity3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
-tmp = np.tile((unit_soil*1.0).flatten(), 5)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_snow', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_pond', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_theta1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_theta2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_theta3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
+tmp = np.tile((unit_soil*1.0).flatten(), 50)
 tmp.tofile(home_dir+'spatial/'+'category_0.bin')
 
 fnames = ['unit.soil_BE', 'unit.soil_GL', 'unit.soil_PE', 'unit.soil_PZ', 'p_0', 'p_1', 'p_2', 'p_3' ]
-
 for i in range(len(fnames)):
     tmp = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/'+fnames[i]+'.map'), np.nan).astype(np.float64)
     tmp[~mask] = nan_value
-    tmp = np.tile(tmp.flatten(), 5)
+    tmp = np.tile(tmp.flatten(), 50)
     tmp.tofile(home_dir+'spatial/'+'category_'+str(i+1)+'.bin')
 
-    data = tmp.reshape(5, 30, 22)[0,:,:]
+    data = tmp.reshape(50, 30, 22)[0,:,:]
     fig, ax = plt.subplots(1,1)
     data[data==nan_value] = np.nan
     im = ax.imshow(data)
@@ -116,7 +124,7 @@ lai[:,8] = df['lai_3']
 lai.flatten().tofile(home_dir+'climate/LAI.bin')
 
 
-
+"""
 os.chdir('/home/wusongj/GEM/test_dmc/spatial/')
 fnames = os.listdir()
 for fname in fnames:
@@ -128,7 +136,7 @@ for fname in fnames:
         im = ax.imshow(data)
         fig.colorbar(im, ax=ax)
         fig.savefig('/home/wusongj/GEM/test_dmc/spatial/2_'+fname+'.png')
-
+"""
 
 
 

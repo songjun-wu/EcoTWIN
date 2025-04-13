@@ -19,7 +19,7 @@ int Param::dtor(Control &ctrl){
   if (ctrl.opt_evap == 1){
     if(_froot_coeff) delete _froot_coeff;
   }
-  if (ctrl.opt_pedotransf == 1){
+  if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2 or ctrl.opt_pedotransf == 3){
     if(_ref_thetaS) delete _ref_thetaS;
     if(_PTF_VG_clay) delete _PTF_VG_clay;
     if(_PTF_VG_Db) delete _PTF_VG_Db;

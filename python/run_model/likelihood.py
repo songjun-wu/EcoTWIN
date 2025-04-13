@@ -3,7 +3,7 @@ import GEM_tools
 import shutil
 import subprocess
 import numpy as np
-from def_GEM import *
+from def_GEM_cali import *
 
 
 def likelihood(param, chainID):
@@ -13,10 +13,11 @@ def likelihood(param, chainID):
     GEM_tools.gen_param(runpath, Info, Param, param)
 
     os.chdir(runpath)
+
     if os.path.exists('outputs'):
         shutil.rmtree('outputs')
     os.mkdir('outputs')
-
+    #os.system('./gEcoHydro')
     subprocess.run('./gEcoHydro', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
     """"""
@@ -25,6 +26,9 @@ def likelihood(param, chainID):
         dict = Output.sim.get(key)
         _sim = np.fromfile(runpath + 'outputs/' + dict['sim_file']).reshape(-1, Output.N_sites).T[:, Info.spin_up:]
         _obs = np.fromfile(Path.data_path + dict['obs_file']).reshape(len(dict['sim_idx']), -1)
+        if key == 'q':
+            _sim += 1e-3
+            _obs += 1e-3
         for i in range(_obs.shape[0]):
             sim = _sim[dict['sim_idx'][i], :]
             obs = _obs[i,:]
@@ -35,5 +39,6 @@ def likelihood(param, chainID):
         loglikeli = -np.inf
     
     os.chdir(local_path)
-
     return loglikeli
+
+#likelihood(np.full(104, 0.5), 1)

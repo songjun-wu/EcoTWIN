@@ -1,17 +1,15 @@
 #include "Basin.h"
 
 /*
-Canopy intercpetion modules
-Interception_1: Maximum canopy stoages are directly specified by LAI * alpha
-Interception_2: Maximum canopy stoages are additionally corrected by rE (Landarf et al., 2024)
+Canopy evaporation modules
 */
 
 
 int Basin::Canopy_evaporation_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
-    double max_canopy_storage;
-    double canopy_storage;
-    double Ei;
+    double max_canopy_storage = 0;
+    double canopy_storage = 0;
+    double Ei = 0;
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
@@ -26,7 +24,7 @@ int Basin::Canopy_evaporation_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
         if (canopy_storage > 0) {
             max_canopy_storage = LAI * alpha;
-            Ei = atm._PET->val[j] * pow(canopy_storage / max_canopy_storage, 2/3);
+            Ei = _PE->val[j] * pow(canopy_storage / max_canopy_storage, 2/3);
             Ei = min(Ei, canopy_storage);
             canopy_storage -= Ei;
         } else{
@@ -35,7 +33,7 @@ int Basin::Canopy_evaporation_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
         _Ei->val[j] = Ei;
         _I->val[j] = canopy_storage;
-        atm._PET->val[j] -= Ei;
+        _PE->val[j] -= Ei;
 
     }
 

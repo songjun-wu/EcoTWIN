@@ -84,7 +84,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('Output_Folder = ./outputs/\n\n')
     text.append('# Model configuration\n')
     text.append('Simul_start = 0 # always 0\n')
-    text.append('Simul_end = 31536000 # in second\n')
+    text.append('Simul_end = 946857600 # in second\n')
     text.append('Simul_tstep = 86400 # seconds (daily)\n')
     text.append('Clim_input_tstep = 86400 # seconds (daily)\n')
     text.append('Report_interval = 86400 # seconds (daily)\n')
@@ -112,13 +112,13 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                 if counter == 0:
                     text.append('\n### '+signs[i]+'\n')
                     if signs[i] == 'Parameters':
-                        text.append('num_category = 10 # The number of categories for parameterisation ...\n' + \
+                        text.append('num_category = 9 # The number of categories for parameterisation ...\n' + \
                                     '#The categories should include the land use types, soil types, or any other types for parameterisation ...\n' + \
                                     '#The distribution of each category (in decimal proportion) should be specified in cat_id.asc ...\n' + \
                                     '#The first category (column) represents global parameter (i.e., cat_0.asc should be 1)\n' )
                         text.append('parameter_file = param.ini # The file contains all parameter name, values, and descriptio. Each column =  a category\n')
                     elif signs[i] == 'Climate':
-                        text.append('num_cliamte_zones = 10 # The number of climate zones for parameterisation.\n' )
+                        text.append('num_cliamte_zones = 1 # The number of climate zones for parameterisation.\n' )
                         text.append('climate_zones = climate_zones.asc # Needed if opt_climate_input_format = 2; Zone ID should start from 0!\n')
                     elif signs[i] == 'GIS':
                         text.append('flow_direction  =  fdir.asc   # Flow direction [int; d8 method]\n')
@@ -156,6 +156,23 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
 
 
 def report_build(fname, reports):
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+        
+        start, end = locate_text(lines, '/* Init Report */', '/* end of Init Report */')
+
+        content = []     
+        content.append('  // Create files for report\n')  
+        for i in range(len(reports)):
+            data = reports[i]
+            if data[5] is not None:
+                content.append('  if (ctrl.report_'+data[0]+'>0)  report_create("'+data[5]+'", ctrl.path_ResultsFolder, ctrl.report_'+data[0]+');\n')
+        content = lines[:start] + content + lines[end:]
+    
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+            f.writelines(content)
+
     with open(fname, 'r') as f:
         lines = f.readlines()
         

@@ -119,9 +119,30 @@ svector_2d::~svector_2d(){
 }
 
 int svector::reset(){
-
   for (int j=0; j<size; j++){
     val[j] = 0;
+  }
+  return EXIT_SUCCESS;
+}
+
+int svector::equals(svector &sv){
+  for (int j=0; j<size; j++){
+      val[j] = sv.val[j];     
+  }
+  return EXIT_SUCCESS;
+}
+
+int svector::plus(svector &sv){
+  for (int j=0; j<size; j++){
+      val[j] += sv.val[j];     
+  }
+  return EXIT_SUCCESS;
+}
+
+int svector::multiply(svector &sv){
+
+  for (int j=0; j<size; j++){
+      val[j] *= sv.val[j];     
   }
   return EXIT_SUCCESS;
 }

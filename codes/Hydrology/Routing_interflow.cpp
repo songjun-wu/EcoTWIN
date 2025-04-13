@@ -3,14 +3,17 @@
 int Basin::Routing_interflow_1(Control &ctrl, Param &par){
 
     int from_j;
-    double interflow_out;
-    double interflow_toChn;
+    double interflow_to_go = 0;
+    double interflow_out = 0;
+    double interflow_toChn = 0;
+    double interflow_toTrestrial;
+    double excess_ST3 = 0;
 
     double dx = ctrl._dx;
     double dx_square = dx * dx;
     double dtdx = ctrl.Simul_tstep / dx;
-    double alpha;
-    double Ks3;
+    double alpha = 0;
+    double Ks3 = 0;
 
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -20,12 +23,13 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
         double depth3 = par._depth3->val[j];
         double thetaS3 = _thetaS3->val[j];
 
-        double interflow_to_go = 0; // Available water for interflow
+        
         double interflow_in = _interf_in->val[j];
-        double interflow_out = 0;   // Total output of interflow
-        double interflow_toTrestrial = 0;   // Output of interflow to downstream cell
-        double interflow_toChn = 0;   // Output of interflow to stream
-        double excess_ST3 = 0;
+        interflow_to_go = 0; // Available water for interflow
+        interflow_out = 0;   // Total output of interflow
+        interflow_toTrestrial = 0;   // Output of interflow to downstream cell
+        interflow_toChn = 0;   // Output of interflow to stream
+        excess_ST3 = 0;
     
         from_j = _sortedGrid.to_cell[j];
        
@@ -46,7 +50,6 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
                 interflow_toChn *= (chnlength/dx); // Adjusted with channel length; [m]
                 interflow_toChn = min(interflow_toChn, interflow_to_go);  // Cannot exceed water to go
                 interflow_to_go -=  interflow_toChn;    // [m]
-                interflow_out += interflow_toChn;  // [m2/s]
             }
 
             // Interflow to downstream grid
@@ -55,7 +58,7 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
             alpha = Ks3 * sin(atan(_slope->val[j])) * par._winterf->val[j];  // [m/s]
             interflow_toTrestrial = interflow_to_go / (1 + alpha * dtdx) * alpha; // qx+1 = hx+1[m] * alpha; [m2/s]
             interflow_toTrestrial *= dtdx; // Store qx+1 in m
-            interflow_toTrestrial = min(interflow_toTrestrial, interflow_to_go);  // Cannot exceed water to go
+            interflow_toTrestrial = min(interflow_toTrestrial, interflow_to_go);  // Cannot exceed water to go [m]
             interflow_to_go -= interflow_toTrestrial; // [m]
             interflow_out += interflow_toTrestrial;  // [m]
 
@@ -73,13 +76,13 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
         
             
             if (_sortedGrid.lat_ok[j] == 1){   // If there is a downstream cell
-                _interf_in->val[from_j] += (interflow_out - interflow_toChn);
+                _interf_in->val[from_j] += interflow_out;
             }
         }
         
         _theta3->val[j] = theta3;
         _interf_toChn->val[j] = interflow_toChn;  // Interflow to channel; [m]
-        _interf_out->val[j] = interflow_out;  // Interflow sum (to channel and to downstream territrial cell); [m]
+        _interf_out->val[j] = interflow_out;  // Interflow to downstream territrial cell [m]
     }
     return EXIT_SUCCESS;
 }

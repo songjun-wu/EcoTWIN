@@ -7,6 +7,9 @@ int Atmosphere::open_climate(Control &ctrl){
   if (ctrl.opt_evap == 1){
     open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__PET, if__PET);
   }
+  if (ctrl.opt_tracking_isotope == 1){
+    open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__d18o_P, if__d18o_P);
+  }
   return EXIT_SUCCESS;
 }
 
@@ -16,6 +19,9 @@ int Atmosphere::read_climate(Control &ctrl){
   read_climate_maps(if__RH, *_RH);
   if (ctrl.opt_evap == 1){
     read_climate_maps(if__PET, *_PET);
+  }
+  if (ctrl.opt_tracking_isotope == 1){
+    read_climate_maps(if__d18o_P, *_d18o_P);
   }
   return EXIT_SUCCESS;
 }
@@ -53,6 +59,9 @@ int Atmosphere::init_climate(Control &ctrl){
   if (ctrl.opt_evap == 1){
     init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__PET, if__PET);
   }
+  if (ctrl.opt_tracking_isotope == 1){
+    init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__d18o_P, if__d18o_P);
+  }
   return EXIT_SUCCESS;
 }
 
@@ -62,6 +71,9 @@ int Atmosphere::update_climate(Control &ctrl){
   update_climate_maps(if__RH, *_RH);
   if (ctrl.opt_evap == 1){
     update_climate_maps(if__PET, *_PET);
+  }
+  if (ctrl.opt_tracking_isotope == 1){
+    update_climate_maps(if__d18o_P, *_d18o_P);
   }
   return EXIT_SUCCESS;
 }

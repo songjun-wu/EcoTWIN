@@ -6,4 +6,5 @@ Report::Report(Control &ctrl){
     _colNum = ctrl._colNum;
     _dx = ctrl._dx;
     _nodata = ctrl._nodata;
+    
 }

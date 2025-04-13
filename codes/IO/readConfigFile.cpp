@@ -37,6 +37,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_climate_input_format, "opt_climate_input_format", lines);
   readInto(opt_groundTs_input_format, "opt_groundTs_input_format", lines);
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
+  readInto(opt_tracking_age, "opt_tracking_age", lines);
   readInto(opt_reinfil, "opt_reinfil", lines);
   readInto(opt_intecept, "opt_intecept", lines);
   readInto(opt_snow, "opt_snow", lines);
@@ -90,6 +91,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__Ta, "Air_temperature", lines);
   readInto(fn__RH, "Relative_humidity", lines);
   readInto(fn__PET, "Potential_evapotranspiration", lines);
+  readInto(fn__d18o_P, "d18O_Precipitation", lines);
   /* end of Climate */
 
   /* Storages */ 
@@ -105,6 +107,19 @@ int Control::ReadConfigFile(string fname){
   /* Fluxes */
   readInto(fn__Q, "discharge", lines);
   /* end of Fluxes */
+
+  /* Tracking */
+  readInto(fn__d18o_I, "d18o_canopy_storage", lines);
+  readInto(fn__d18o_snow, "d18o_snow_depth", lines);
+  readInto(fn__d18o_pond, "d18o_pond", lines);
+  readInto(fn__d18o_layer1, "d18o_SMC_layer1", lines);
+  readInto(fn__d18o_layer2, "d18o_SMC_layer2", lines);
+  readInto(fn__d18o_layer3, "d18o_SMC_layer3", lines);
+  readInto(fn__d18o_GW, "d18o_groundwater_storage", lines);
+  /* end of Tracking */
+
+  /* Nitrogen */
+  /* end of Nitrogen */
 
 
   /* Parameters */
@@ -170,9 +185,9 @@ int Control::ReadConfigFile(string fname){
   readInto(report__interf_in, "report_interflow_input", lines);
   readInto(report__interf_out, "report_interflow_output", lines);
   readInto(report__interf_toChn, "report_interflow_toChn", lines);
-  readInto(report__GWf_in, "report_GWrflow_input", lines);
+  readInto(report__GWf_in, "report_GWflow_input", lines);
   readInto(report__GWf_out, "report_GWflow_output", lines);
-  readInto(report__GWf_toChn, "report_groundwater_flow_toChn", lines);
+  readInto(report__GWf_toChn, "report_GWflow_toChn", lines);
   readInto(report__Q, "report_discharge", lines);
   /* end of Report */
 

@@ -6,11 +6,11 @@ int Basin::Reinfiltration_1(Control &ctrl, Param &par, int j, double &db_rinfilt
     
 
     double dt = ctrl.Simul_tstep;  // Seconds in each timestep
-    double eff_Ks1; // Effective hydrological conductivity
-    double dtheta; // Available room for infiltration
-    double F; // Cumulative infiltration amounts (if there's multiple land use types in one grid cell)
-    double f; // Infiltration rates at specific time
-    double deltaF; // Cumulative infiltration within the timestep
+    double eff_Ks1 = 0; // Effective hydrological conductivity
+    double dtheta = 0; // Available room for infiltration
+    double F = 0; // Cumulative infiltration amounts (if there's multiple land use types in one grid cell)
+    double f = 0; // Infiltration rates at specific time
+    double deltaF = 0; // Cumulative infiltration within the timestep
 
 
 
