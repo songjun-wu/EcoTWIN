@@ -260,6 +260,8 @@ define_variables.destructor(fname=path + 'Destructors/ParamDestruct.cpp', signs=
 parameterisation_build.parameterisation_build(fname=path + 'Spatial/parameterisation.cpp', parameters=Parameters)
 
 
+define_variables.report_includes(fname=path + 'includes/Report.h', reports=Reports)
+define_variables.report_destructor(fname=path + 'Destructors/ReportDestruct.cpp', reports=Reports)
 
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)

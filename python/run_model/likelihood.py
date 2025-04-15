@@ -20,7 +20,7 @@ def likelihood(param, chainID):
     #os.system('./gEcoHydro')
     subprocess.run('./gEcoHydro', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
-    """"""
+
     err = 0
     for key in Output.sim.keys():
         dict = Output.sim.get(key)
@@ -32,7 +32,7 @@ def likelihood(param, chainID):
         for i in range(_obs.shape[0]):
             sim = _sim[dict['sim_idx'][i], :]
             obs = _obs[i,:]
-            err += GEM_tools.nselnnse(sim, obs, weight_nse=0.9, weight_lnnse=0.1)
+            err += GEM_tools.nselnnse(sim, obs, weight_nse=0.9, weight_lnnse=0.1) * dict['weights'][i]
 
     loglikeli = np.log(err) * (-1*500)
     if np.isnan(loglikeli):

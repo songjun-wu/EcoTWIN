@@ -222,11 +222,11 @@ def gen_param(run_path, Info, Param, param_arr):
         maxs = np.array(dict['max'])
         if dict['type'] == 'global':  # The first column is for global parameters
             if dict['log'] == 0:
-                param_values[0] = mins + (maxs - mins) * param_arr[counter]
+                param_values[0] = mins[0] + (maxs[0] - mins[0]) * param_arr[counter]
             else:
-                log_mins = np.log(mins)
-                log_maxs = np.log(maxs)
-                param_values[0] = np.exp( log_mins + param_arr[counter] * (log_maxs - log_mins))
+                log_mins = np.log(mins[0])
+                log_maxs = np.log(maxs[0])
+                param_values[0] = np.exp(log_mins + param_arr[counter] * (log_maxs - log_mins))
             counter += 1
         elif dict['type'] == 'landuse':
             if dict['log'] == 0:

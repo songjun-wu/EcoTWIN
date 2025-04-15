@@ -45,7 +45,12 @@ prep_tools.saveToASCII(unit_soil*0.2, 'depth2', home_dir+'spatial/', 'float64', 
 prep_tools.saveToASCII(unit_soil*0.6, 'depth3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
 GaugetoReport = np.full(unit_soil.shape, -9999.0)
-GaugetoReport[21, 5] = 1
+GaugetoReport[10, 10] = 1   # 24
+GaugetoReport[13, 10] = 1   # 25
+GaugetoReport[15, 6] = 1    # 32
+GaugetoReport[21, 5] = 1    # 26
+GaugetoReport[23, 3] = 1    # 26x
+GaugetoReport[26, 4] = 1    # 29a
 prep_tools.saveToASCII(GaugetoReport, 'Gauge_to_Report', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
 prep_tools.saveToASCII(unit_soil*0.0, 'I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
@@ -113,6 +118,7 @@ np.repeat(df['RH_3015']/100, 1).to_numpy().tofile(home_dir+'climate/RH.bin')
 np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['d2H_14dMV_3015'], 1).to_numpy().tofile(home_dir+'climate/d2h_P.bin')
+np.full(len(df['d2H_14dMV_3015']), -8.0).tofile(home_dir+'climate/d18o_P.bin')
 np.repeat(df['PET']/1000, 1).to_numpy().tofile(home_dir+'climate/PET.bin')
 
 
@@ -122,6 +128,10 @@ lai[:,6] = df['lai_1']
 lai[:,7] = df['lai_2']
 lai[:,8] = df['lai_3']
 lai.flatten().tofile(home_dir+'climate/LAI.bin')
+
+
+obs_q = np.fromfile('/home/wusongj/paper3_scripts/configs/discharge_obs.bin').reshape(4, -1)
+print(obs_q.shape)
 
 
 """

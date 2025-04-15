@@ -39,7 +39,7 @@ class Atmosphere {
   
   Atmosphere(Control &ctrl);  // constrcuctor of Basin
   //dtor
-  ~Atmosphere();  // destrcuctor of Basin
+  ~Atmosphere();  // destrcuctor of Atmos
   int dtor(Control &ctrl);
 
   // Climate inputs

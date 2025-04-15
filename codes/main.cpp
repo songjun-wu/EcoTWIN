@@ -71,6 +71,7 @@ int main(){
   //oBasin->dtor(*oControl);
   //oParam->dtor(*oControl);
   //oControl->dtor();
+  //oReport->dtor();
 
   
   auto stop2  = std::chrono::high_resolution_clock::now();

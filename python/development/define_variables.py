@@ -221,6 +221,23 @@ def destructor(fname, signs, datas):
                 f.writelines(content)
 
 
+def report_destructor(fname, reports):
+        sign = 'Report'
+        data = reports 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')
+            content = []
+            for i in range(len(data)):
+                if data[i][5]!=None:
+                    content.append('  if (of_'+data[i][0]+'.is_open())  of_'+data[i][0]+'.close();\n')
+          
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+
+
 def constructor(fname, signs, datas):
     for j in range(len(signs)):
         sign = signs[j]
@@ -247,7 +264,20 @@ def constructor(fname, signs, datas):
             with open(fname, 'w') as f:
                 f.writelines(content)  
 
+def report_includes(fname, reports):
+    with open(fname, 'r') as f:
+    
+        lines = f.readlines()
+        start, end = locate_text(lines, '/* Report */', '/* end of Report */')
+        content = []
+        for i in range(len(reports)):
+            if reports[i][5]!=None:
+                content.append('    ofstream of_' + reports[i][0] + ';  // ' + reports[i][2] + '\n')
+        content = lines[:start] + content + lines[end:]
 
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+                f.writelines(content)
 
 def control_includes(fname, options, signs, datas, reports):
     with open(fname, 'r') as f:

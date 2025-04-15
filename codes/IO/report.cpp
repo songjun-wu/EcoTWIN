@@ -3,39 +3,105 @@
 int Report::Report_Initialisation(Control &ctrl){
   /* Init Report */
   // Create files for report
-  if (ctrl.report__I>0)  report_create("canopy_storage", ctrl.path_ResultsFolder, ctrl.report__I);
-  if (ctrl.report__snow>0)  report_create("snow_depth", ctrl.path_ResultsFolder, ctrl.report__snow);
-  if (ctrl.report__pond>0)  report_create("pond", ctrl.path_ResultsFolder, ctrl.report__pond);
-  if (ctrl.report__theta1>0)  report_create("SMC_layer1", ctrl.path_ResultsFolder, ctrl.report__theta1);
-  if (ctrl.report__theta2>0)  report_create("SMC_layer2", ctrl.path_ResultsFolder, ctrl.report__theta2);
-  if (ctrl.report__theta3>0)  report_create("SMC_layer3", ctrl.path_ResultsFolder, ctrl.report__theta3);
-  if (ctrl.report__GW>0)  report_create("groundwater_storage", ctrl.path_ResultsFolder, ctrl.report__GW);
-  if (ctrl.report__Th>0)  report_create("throufall", ctrl.path_ResultsFolder, ctrl.report__Th);
-  if (ctrl.report__snowmelt>0)  report_create("snowmelt", ctrl.path_ResultsFolder, ctrl.report__snowmelt);
-  if (ctrl.report__infilt>0)  report_create("infiltration", ctrl.path_ResultsFolder, ctrl.report__infilt);
-  if (ctrl.report__Perc1>0)  report_create("perc_layer1", ctrl.path_ResultsFolder, ctrl.report__Perc1);
-  if (ctrl.report__Perc2>0)  report_create("perc_layer2", ctrl.path_ResultsFolder, ctrl.report__Perc2);
-  if (ctrl.report__Perc3>0)  report_create("perc_layer3", ctrl.path_ResultsFolder, ctrl.report__Perc3);
-  if (ctrl.report__rinfilt>0)  report_create("rinfiltration", ctrl.path_ResultsFolder, ctrl.report__rinfilt);
-  if (ctrl.report__rPerc1>0)  report_create("rperc_layer1", ctrl.path_ResultsFolder, ctrl.report__rPerc1);
-  if (ctrl.report__rPerc2>0)  report_create("rperc_layer2", ctrl.path_ResultsFolder, ctrl.report__rPerc2);
-  if (ctrl.report__rPerc3>0)  report_create("rperc_layer3", ctrl.path_ResultsFolder, ctrl.report__rPerc3);
-  if (ctrl.report__Ei>0)  report_create("canopy_evap", ctrl.path_ResultsFolder, ctrl.report__Ei);
-  if (ctrl.report__Es>0)  report_create("soil_evap", ctrl.path_ResultsFolder, ctrl.report__Es);
-  if (ctrl.report__Tr>0)  report_create("transp", ctrl.path_ResultsFolder, ctrl.report__Tr);
-  if (ctrl.report__Tr1>0)  report_create("transp_layer1", ctrl.path_ResultsFolder, ctrl.report__Tr1);
-  if (ctrl.report__Tr2>0)  report_create("transp_layer2", ctrl.path_ResultsFolder, ctrl.report__Tr2);
-  if (ctrl.report__Tr3>0)  report_create("transp_layer3", ctrl.path_ResultsFolder, ctrl.report__Tr3);
-  if (ctrl.report__ovf_in>0)  report_create("overland_flow_input", ctrl.path_ResultsFolder, ctrl.report__ovf_in);
-  if (ctrl.report__ovf_out>0)  report_create("overland_flow_output", ctrl.path_ResultsFolder, ctrl.report__ovf_out);
-  if (ctrl.report__ovf_toChn>0)  report_create("overland_flow_toChn", ctrl.path_ResultsFolder, ctrl.report__ovf_toChn);
-  if (ctrl.report__interf_in>0)  report_create("interflow_input", ctrl.path_ResultsFolder, ctrl.report__interf_in);
-  if (ctrl.report__interf_out>0)  report_create("interflow_output", ctrl.path_ResultsFolder, ctrl.report__interf_out);
-  if (ctrl.report__interf_toChn>0)  report_create("interflow_toChn", ctrl.path_ResultsFolder, ctrl.report__interf_toChn);
-  if (ctrl.report__GWf_in>0)  report_create("GWflow_input", ctrl.path_ResultsFolder, ctrl.report__GWf_in);
-  if (ctrl.report__GWf_out>0)  report_create("GWflow_output", ctrl.path_ResultsFolder, ctrl.report__GWf_out);
-  if (ctrl.report__GWf_toChn>0)  report_create("GWflow_toChn", ctrl.path_ResultsFolder, ctrl.report__GWf_toChn);
-  if (ctrl.report__Q>0)  report_create("discharge", ctrl.path_ResultsFolder, ctrl.report__Q);
+  if (ctrl.report__I==1)  report_create(ctrl.path_ResultsFolder+"canopy_storage_TS.bin", of__I);
+  else if (ctrl.report__I==2)  report_create(ctrl.path_ResultsFolder+"canopy_storage_map.bin", of__I);
+
+  if (ctrl.report__snow==1)  report_create(ctrl.path_ResultsFolder+"snow_depth_TS.bin", of__snow);
+  else if (ctrl.report__snow==2)  report_create(ctrl.path_ResultsFolder+"snow_depth_map.bin", of__snow);
+
+  if (ctrl.report__pond==1)  report_create(ctrl.path_ResultsFolder+"pond_TS.bin", of__pond);
+  else if (ctrl.report__pond==2)  report_create(ctrl.path_ResultsFolder+"pond_map.bin", of__pond);
+
+  if (ctrl.report__theta1==1)  report_create(ctrl.path_ResultsFolder+"SMC_layer1_TS.bin", of__theta1);
+  else if (ctrl.report__theta1==2)  report_create(ctrl.path_ResultsFolder+"SMC_layer1_map.bin", of__theta1);
+
+  if (ctrl.report__theta2==1)  report_create(ctrl.path_ResultsFolder+"SMC_layer2_TS.bin", of__theta2);
+  else if (ctrl.report__theta2==2)  report_create(ctrl.path_ResultsFolder+"SMC_layer2_map.bin", of__theta2);
+
+  if (ctrl.report__theta3==1)  report_create(ctrl.path_ResultsFolder+"SMC_layer3_TS.bin", of__theta3);
+  else if (ctrl.report__theta3==2)  report_create(ctrl.path_ResultsFolder+"SMC_layer3_map.bin", of__theta3);
+
+  if (ctrl.report__GW==1)  report_create(ctrl.path_ResultsFolder+"groundwater_storage_TS.bin", of__GW);
+  else if (ctrl.report__GW==2)  report_create(ctrl.path_ResultsFolder+"groundwater_storage_map.bin", of__GW);
+
+  if (ctrl.report__Th==1)  report_create(ctrl.path_ResultsFolder+"throufall_TS.bin", of__Th);
+  else if (ctrl.report__Th==2)  report_create(ctrl.path_ResultsFolder+"throufall_map.bin", of__Th);
+
+  if (ctrl.report__snowmelt==1)  report_create(ctrl.path_ResultsFolder+"snowmelt_TS.bin", of__snowmelt);
+  else if (ctrl.report__snowmelt==2)  report_create(ctrl.path_ResultsFolder+"snowmelt_map.bin", of__snowmelt);
+
+  if (ctrl.report__infilt==1)  report_create(ctrl.path_ResultsFolder+"infiltration_TS.bin", of__infilt);
+  else if (ctrl.report__infilt==2)  report_create(ctrl.path_ResultsFolder+"infiltration_map.bin", of__infilt);
+
+  if (ctrl.report__Perc1==1)  report_create(ctrl.path_ResultsFolder+"perc_layer1_TS.bin", of__Perc1);
+  else if (ctrl.report__Perc1==2)  report_create(ctrl.path_ResultsFolder+"perc_layer1_map.bin", of__Perc1);
+
+  if (ctrl.report__Perc2==1)  report_create(ctrl.path_ResultsFolder+"perc_layer2_TS.bin", of__Perc2);
+  else if (ctrl.report__Perc2==2)  report_create(ctrl.path_ResultsFolder+"perc_layer2_map.bin", of__Perc2);
+
+  if (ctrl.report__Perc3==1)  report_create(ctrl.path_ResultsFolder+"perc_layer3_TS.bin", of__Perc3);
+  else if (ctrl.report__Perc3==2)  report_create(ctrl.path_ResultsFolder+"perc_layer3_map.bin", of__Perc3);
+
+  if (ctrl.report__rinfilt==1)  report_create(ctrl.path_ResultsFolder+"rinfiltration_TS.bin", of__rinfilt);
+  else if (ctrl.report__rinfilt==2)  report_create(ctrl.path_ResultsFolder+"rinfiltration_map.bin", of__rinfilt);
+
+  if (ctrl.report__rPerc1==1)  report_create(ctrl.path_ResultsFolder+"rperc_layer1_TS.bin", of__rPerc1);
+  else if (ctrl.report__rPerc1==2)  report_create(ctrl.path_ResultsFolder+"rperc_layer1_map.bin", of__rPerc1);
+
+  if (ctrl.report__rPerc2==1)  report_create(ctrl.path_ResultsFolder+"rperc_layer2_TS.bin", of__rPerc2);
+  else if (ctrl.report__rPerc2==2)  report_create(ctrl.path_ResultsFolder+"rperc_layer2_map.bin", of__rPerc2);
+
+  if (ctrl.report__rPerc3==1)  report_create(ctrl.path_ResultsFolder+"rperc_layer3_TS.bin", of__rPerc3);
+  else if (ctrl.report__rPerc3==2)  report_create(ctrl.path_ResultsFolder+"rperc_layer3_map.bin", of__rPerc3);
+
+  if (ctrl.report__Ei==1)  report_create(ctrl.path_ResultsFolder+"canopy_evap_TS.bin", of__Ei);
+  else if (ctrl.report__Ei==2)  report_create(ctrl.path_ResultsFolder+"canopy_evap_map.bin", of__Ei);
+
+  if (ctrl.report__Es==1)  report_create(ctrl.path_ResultsFolder+"soil_evap_TS.bin", of__Es);
+  else if (ctrl.report__Es==2)  report_create(ctrl.path_ResultsFolder+"soil_evap_map.bin", of__Es);
+
+  if (ctrl.report__Tr==1)  report_create(ctrl.path_ResultsFolder+"transp_TS.bin", of__Tr);
+  else if (ctrl.report__Tr==2)  report_create(ctrl.path_ResultsFolder+"transp_map.bin", of__Tr);
+
+  if (ctrl.report__Tr1==1)  report_create(ctrl.path_ResultsFolder+"transp_layer1_TS.bin", of__Tr1);
+  else if (ctrl.report__Tr1==2)  report_create(ctrl.path_ResultsFolder+"transp_layer1_map.bin", of__Tr1);
+
+  if (ctrl.report__Tr2==1)  report_create(ctrl.path_ResultsFolder+"transp_layer2_TS.bin", of__Tr2);
+  else if (ctrl.report__Tr2==2)  report_create(ctrl.path_ResultsFolder+"transp_layer2_map.bin", of__Tr2);
+
+  if (ctrl.report__Tr3==1)  report_create(ctrl.path_ResultsFolder+"transp_layer3_TS.bin", of__Tr3);
+  else if (ctrl.report__Tr3==2)  report_create(ctrl.path_ResultsFolder+"transp_layer3_map.bin", of__Tr3);
+
+  if (ctrl.report__ovf_in==1)  report_create(ctrl.path_ResultsFolder+"overland_flow_input_TS.bin", of__ovf_in);
+  else if (ctrl.report__ovf_in==2)  report_create(ctrl.path_ResultsFolder+"overland_flow_input_map.bin", of__ovf_in);
+
+  if (ctrl.report__ovf_out==1)  report_create(ctrl.path_ResultsFolder+"overland_flow_output_TS.bin", of__ovf_out);
+  else if (ctrl.report__ovf_out==2)  report_create(ctrl.path_ResultsFolder+"overland_flow_output_map.bin", of__ovf_out);
+
+  if (ctrl.report__ovf_toChn==1)  report_create(ctrl.path_ResultsFolder+"overland_flow_toChn_TS.bin", of__ovf_toChn);
+  else if (ctrl.report__ovf_toChn==2)  report_create(ctrl.path_ResultsFolder+"overland_flow_toChn_map.bin", of__ovf_toChn);
+
+  if (ctrl.report__interf_in==1)  report_create(ctrl.path_ResultsFolder+"interflow_input_TS.bin", of__interf_in);
+  else if (ctrl.report__interf_in==2)  report_create(ctrl.path_ResultsFolder+"interflow_input_map.bin", of__interf_in);
+
+  if (ctrl.report__interf_out==1)  report_create(ctrl.path_ResultsFolder+"interflow_output_TS.bin", of__interf_out);
+  else if (ctrl.report__interf_out==2)  report_create(ctrl.path_ResultsFolder+"interflow_output_map.bin", of__interf_out);
+
+  if (ctrl.report__interf_toChn==1)  report_create(ctrl.path_ResultsFolder+"interflow_toChn_TS.bin", of__interf_toChn);
+  else if (ctrl.report__interf_toChn==2)  report_create(ctrl.path_ResultsFolder+"interflow_toChn_map.bin", of__interf_toChn);
+
+  if (ctrl.report__GWf_in==1)  report_create(ctrl.path_ResultsFolder+"GWflow_input_TS.bin", of__GWf_in);
+  else if (ctrl.report__GWf_in==2)  report_create(ctrl.path_ResultsFolder+"GWflow_input_map.bin", of__GWf_in);
+
+  if (ctrl.report__GWf_out==1)  report_create(ctrl.path_ResultsFolder+"GWflow_output_TS.bin", of__GWf_out);
+  else if (ctrl.report__GWf_out==2)  report_create(ctrl.path_ResultsFolder+"GWflow_output_map.bin", of__GWf_out);
+
+  if (ctrl.report__GWf_toChn==1)  report_create(ctrl.path_ResultsFolder+"GWflow_toChn_TS.bin", of__GWf_toChn);
+  else if (ctrl.report__GWf_toChn==2)  report_create(ctrl.path_ResultsFolder+"GWflow_toChn_map.bin", of__GWf_toChn);
+
+  if (ctrl.report__Q==1)  report_create(ctrl.path_ResultsFolder+"discharge_TS.bin", of__Q);
+  else if (ctrl.report__Q==2)  report_create(ctrl.path_ResultsFolder+"discharge_map.bin", of__Q);
+
   /* end of Init Report */
   return EXIT_SUCCESS;
 }
@@ -43,130 +109,128 @@ int Report::Report_Initialisation(Control &ctrl){
 int Report::report(Control &ctrl, Basin &Bsn){
   /* Report */
   // 1: report time series at gauging stations; 2: report maps
-  if (ctrl.report__I==1) {reportTS(ctrl, Bsn._I, "canopy_storage", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__I==2) {reportMap(ctrl, Bsn._I, ctrl._sortedGrid, "canopy_storage", ctrl.path_ResultsFolder);}
+  if (ctrl.report__I==1) {reportTS(ctrl, Bsn._I, of__I);}
+  else if (ctrl.report__I==2) {reportMap(ctrl, Bsn._I, ctrl._sortedGrid, of__I);}
 
-  if (ctrl.report__snow==1) {reportTS(ctrl, Bsn._snow, "snow_depth", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__snow==2) {reportMap(ctrl, Bsn._snow, ctrl._sortedGrid, "snow_depth", ctrl.path_ResultsFolder);}
+  if (ctrl.report__snow==1) {reportTS(ctrl, Bsn._snow, of__snow);}
+  else if (ctrl.report__snow==2) {reportMap(ctrl, Bsn._snow, ctrl._sortedGrid, of__snow);}
 
-  if (ctrl.report__pond==1) {reportTS(ctrl, Bsn._pond, "pond", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__pond==2) {reportMap(ctrl, Bsn._pond, ctrl._sortedGrid, "pond", ctrl.path_ResultsFolder);}
+  if (ctrl.report__pond==1) {reportTS(ctrl, Bsn._pond, of__pond);}
+  else if (ctrl.report__pond==2) {reportMap(ctrl, Bsn._pond, ctrl._sortedGrid, of__pond);}
 
-  if (ctrl.report__theta1==1) {reportTS(ctrl, Bsn._theta1, "SMC_layer1", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__theta1==2) {reportMap(ctrl, Bsn._theta1, ctrl._sortedGrid, "SMC_layer1", ctrl.path_ResultsFolder);}
+  if (ctrl.report__theta1==1) {reportTS(ctrl, Bsn._theta1, of__theta1);}
+  else if (ctrl.report__theta1==2) {reportMap(ctrl, Bsn._theta1, ctrl._sortedGrid, of__theta1);}
 
-  if (ctrl.report__theta2==1) {reportTS(ctrl, Bsn._theta2, "SMC_layer2", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__theta2==2) {reportMap(ctrl, Bsn._theta2, ctrl._sortedGrid, "SMC_layer2", ctrl.path_ResultsFolder);}
+  if (ctrl.report__theta2==1) {reportTS(ctrl, Bsn._theta2, of__theta2);}
+  else if (ctrl.report__theta2==2) {reportMap(ctrl, Bsn._theta2, ctrl._sortedGrid, of__theta2);}
 
-  if (ctrl.report__theta3==1) {reportTS(ctrl, Bsn._theta3, "SMC_layer3", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__theta3==2) {reportMap(ctrl, Bsn._theta3, ctrl._sortedGrid, "SMC_layer3", ctrl.path_ResultsFolder);}
+  if (ctrl.report__theta3==1) {reportTS(ctrl, Bsn._theta3, of__theta3);}
+  else if (ctrl.report__theta3==2) {reportMap(ctrl, Bsn._theta3, ctrl._sortedGrid, of__theta3);}
 
-  if (ctrl.report__GW==1) {reportTS(ctrl, Bsn._GW, "groundwater_storage", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__GW==2) {reportMap(ctrl, Bsn._GW, ctrl._sortedGrid, "groundwater_storage", ctrl.path_ResultsFolder);}
+  if (ctrl.report__GW==1) {reportTS(ctrl, Bsn._GW, of__GW);}
+  else if (ctrl.report__GW==2) {reportMap(ctrl, Bsn._GW, ctrl._sortedGrid, of__GW);}
 
-  if (ctrl.report__Th==1) {reportTS(ctrl, Bsn._Th, "throufall", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Th==2) {reportMap(ctrl, Bsn._Th, ctrl._sortedGrid, "throufall", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Th==1) {reportTS(ctrl, Bsn._Th, of__Th);}
+  else if (ctrl.report__Th==2) {reportMap(ctrl, Bsn._Th, ctrl._sortedGrid, of__Th);}
 
-  if (ctrl.report__snowmelt==1) {reportTS(ctrl, Bsn._snowmelt, "snowmelt", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__snowmelt==2) {reportMap(ctrl, Bsn._snowmelt, ctrl._sortedGrid, "snowmelt", ctrl.path_ResultsFolder);}
+  if (ctrl.report__snowmelt==1) {reportTS(ctrl, Bsn._snowmelt, of__snowmelt);}
+  else if (ctrl.report__snowmelt==2) {reportMap(ctrl, Bsn._snowmelt, ctrl._sortedGrid, of__snowmelt);}
 
-  if (ctrl.report__infilt==1) {reportTS(ctrl, Bsn._infilt, "infiltration", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__infilt==2) {reportMap(ctrl, Bsn._infilt, ctrl._sortedGrid, "infiltration", ctrl.path_ResultsFolder);}
+  if (ctrl.report__infilt==1) {reportTS(ctrl, Bsn._infilt, of__infilt);}
+  else if (ctrl.report__infilt==2) {reportMap(ctrl, Bsn._infilt, ctrl._sortedGrid, of__infilt);}
 
-  if (ctrl.report__Perc1==1) {reportTS(ctrl, Bsn._Perc1, "perc_layer1", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Perc1==2) {reportMap(ctrl, Bsn._Perc1, ctrl._sortedGrid, "perc_layer1", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Perc1==1) {reportTS(ctrl, Bsn._Perc1, of__Perc1);}
+  else if (ctrl.report__Perc1==2) {reportMap(ctrl, Bsn._Perc1, ctrl._sortedGrid, of__Perc1);}
 
-  if (ctrl.report__Perc2==1) {reportTS(ctrl, Bsn._Perc2, "perc_layer2", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Perc2==2) {reportMap(ctrl, Bsn._Perc2, ctrl._sortedGrid, "perc_layer2", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Perc2==1) {reportTS(ctrl, Bsn._Perc2, of__Perc2);}
+  else if (ctrl.report__Perc2==2) {reportMap(ctrl, Bsn._Perc2, ctrl._sortedGrid, of__Perc2);}
 
-  if (ctrl.report__Perc3==1) {reportTS(ctrl, Bsn._Perc3, "perc_layer3", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Perc3==2) {reportMap(ctrl, Bsn._Perc3, ctrl._sortedGrid, "perc_layer3", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Perc3==1) {reportTS(ctrl, Bsn._Perc3, of__Perc3);}
+  else if (ctrl.report__Perc3==2) {reportMap(ctrl, Bsn._Perc3, ctrl._sortedGrid, of__Perc3);}
 
-  if (ctrl.report__rinfilt==1) {reportTS(ctrl, Bsn._rinfilt, "rinfiltration", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__rinfilt==2) {reportMap(ctrl, Bsn._rinfilt, ctrl._sortedGrid, "rinfiltration", ctrl.path_ResultsFolder);}
+  if (ctrl.report__rinfilt==1) {reportTS(ctrl, Bsn._rinfilt, of__rinfilt);}
+  else if (ctrl.report__rinfilt==2) {reportMap(ctrl, Bsn._rinfilt, ctrl._sortedGrid, of__rinfilt);}
 
-  if (ctrl.report__rPerc1==1) {reportTS(ctrl, Bsn._rPerc1, "rperc_layer1", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__rPerc1==2) {reportMap(ctrl, Bsn._rPerc1, ctrl._sortedGrid, "rperc_layer1", ctrl.path_ResultsFolder);}
+  if (ctrl.report__rPerc1==1) {reportTS(ctrl, Bsn._rPerc1, of__rPerc1);}
+  else if (ctrl.report__rPerc1==2) {reportMap(ctrl, Bsn._rPerc1, ctrl._sortedGrid, of__rPerc1);}
 
-  if (ctrl.report__rPerc2==1) {reportTS(ctrl, Bsn._rPerc2, "rperc_layer2", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__rPerc2==2) {reportMap(ctrl, Bsn._rPerc2, ctrl._sortedGrid, "rperc_layer2", ctrl.path_ResultsFolder);}
+  if (ctrl.report__rPerc2==1) {reportTS(ctrl, Bsn._rPerc2, of__rPerc2);}
+  else if (ctrl.report__rPerc2==2) {reportMap(ctrl, Bsn._rPerc2, ctrl._sortedGrid, of__rPerc2);}
 
-  if (ctrl.report__rPerc3==1) {reportTS(ctrl, Bsn._rPerc3, "rperc_layer3", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__rPerc3==2) {reportMap(ctrl, Bsn._rPerc3, ctrl._sortedGrid, "rperc_layer3", ctrl.path_ResultsFolder);}
+  if (ctrl.report__rPerc3==1) {reportTS(ctrl, Bsn._rPerc3, of__rPerc3);}
+  else if (ctrl.report__rPerc3==2) {reportMap(ctrl, Bsn._rPerc3, ctrl._sortedGrid, of__rPerc3);}
 
-  if (ctrl.report__Ei==1) {reportTS(ctrl, Bsn._Ei, "canopy_evap", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Ei==2) {reportMap(ctrl, Bsn._Ei, ctrl._sortedGrid, "canopy_evap", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Ei==1) {reportTS(ctrl, Bsn._Ei, of__Ei);}
+  else if (ctrl.report__Ei==2) {reportMap(ctrl, Bsn._Ei, ctrl._sortedGrid, of__Ei);}
 
-  if (ctrl.report__Es==1) {reportTS(ctrl, Bsn._Es, "soil_evap", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Es==2) {reportMap(ctrl, Bsn._Es, ctrl._sortedGrid, "soil_evap", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Es==1) {reportTS(ctrl, Bsn._Es, of__Es);}
+  else if (ctrl.report__Es==2) {reportMap(ctrl, Bsn._Es, ctrl._sortedGrid, of__Es);}
 
-  if (ctrl.report__Tr==1) {reportTS(ctrl, Bsn._Tr, "transp", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Tr==2) {reportMap(ctrl, Bsn._Tr, ctrl._sortedGrid, "transp", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Tr==1) {reportTS(ctrl, Bsn._Tr, of__Tr);}
+  else if (ctrl.report__Tr==2) {reportMap(ctrl, Bsn._Tr, ctrl._sortedGrid, of__Tr);}
 
-  if (ctrl.report__Tr1==1) {reportTS(ctrl, Bsn._Tr1, "transp_layer1", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Tr1==2) {reportMap(ctrl, Bsn._Tr1, ctrl._sortedGrid, "transp_layer1", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Tr1==1) {reportTS(ctrl, Bsn._Tr1, of__Tr1);}
+  else if (ctrl.report__Tr1==2) {reportMap(ctrl, Bsn._Tr1, ctrl._sortedGrid, of__Tr1);}
 
-  if (ctrl.report__Tr2==1) {reportTS(ctrl, Bsn._Tr2, "transp_layer2", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Tr2==2) {reportMap(ctrl, Bsn._Tr2, ctrl._sortedGrid, "transp_layer2", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Tr2==1) {reportTS(ctrl, Bsn._Tr2, of__Tr2);}
+  else if (ctrl.report__Tr2==2) {reportMap(ctrl, Bsn._Tr2, ctrl._sortedGrid, of__Tr2);}
 
-  if (ctrl.report__Tr3==1) {reportTS(ctrl, Bsn._Tr3, "transp_layer3", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Tr3==2) {reportMap(ctrl, Bsn._Tr3, ctrl._sortedGrid, "transp_layer3", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Tr3==1) {reportTS(ctrl, Bsn._Tr3, of__Tr3);}
+  else if (ctrl.report__Tr3==2) {reportMap(ctrl, Bsn._Tr3, ctrl._sortedGrid, of__Tr3);}
 
-  if (ctrl.report__ovf_in==1) {reportTS(ctrl, Bsn._ovf_in, "overland_flow_input", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__ovf_in==2) {reportMap(ctrl, Bsn._ovf_in, ctrl._sortedGrid, "overland_flow_input", ctrl.path_ResultsFolder);}
+  if (ctrl.report__ovf_in==1) {reportTS(ctrl, Bsn._ovf_in, of__ovf_in);}
+  else if (ctrl.report__ovf_in==2) {reportMap(ctrl, Bsn._ovf_in, ctrl._sortedGrid, of__ovf_in);}
 
-  if (ctrl.report__ovf_out==1) {reportTS(ctrl, Bsn._ovf_out, "overland_flow_output", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__ovf_out==2) {reportMap(ctrl, Bsn._ovf_out, ctrl._sortedGrid, "overland_flow_output", ctrl.path_ResultsFolder);}
+  if (ctrl.report__ovf_out==1) {reportTS(ctrl, Bsn._ovf_out, of__ovf_out);}
+  else if (ctrl.report__ovf_out==2) {reportMap(ctrl, Bsn._ovf_out, ctrl._sortedGrid, of__ovf_out);}
 
-  if (ctrl.report__ovf_toChn==1) {reportTS(ctrl, Bsn._ovf_toChn, "overland_flow_toChn", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__ovf_toChn==2) {reportMap(ctrl, Bsn._ovf_toChn, ctrl._sortedGrid, "overland_flow_toChn", ctrl.path_ResultsFolder);}
+  if (ctrl.report__ovf_toChn==1) {reportTS(ctrl, Bsn._ovf_toChn, of__ovf_toChn);}
+  else if (ctrl.report__ovf_toChn==2) {reportMap(ctrl, Bsn._ovf_toChn, ctrl._sortedGrid, of__ovf_toChn);}
 
-  if (ctrl.report__interf_in==1) {reportTS(ctrl, Bsn._interf_in, "interflow_input", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__interf_in==2) {reportMap(ctrl, Bsn._interf_in, ctrl._sortedGrid, "interflow_input", ctrl.path_ResultsFolder);}
+  if (ctrl.report__interf_in==1) {reportTS(ctrl, Bsn._interf_in, of__interf_in);}
+  else if (ctrl.report__interf_in==2) {reportMap(ctrl, Bsn._interf_in, ctrl._sortedGrid, of__interf_in);}
 
-  if (ctrl.report__interf_out==1) {reportTS(ctrl, Bsn._interf_out, "interflow_output", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__interf_out==2) {reportMap(ctrl, Bsn._interf_out, ctrl._sortedGrid, "interflow_output", ctrl.path_ResultsFolder);}
+  if (ctrl.report__interf_out==1) {reportTS(ctrl, Bsn._interf_out, of__interf_out);}
+  else if (ctrl.report__interf_out==2) {reportMap(ctrl, Bsn._interf_out, ctrl._sortedGrid, of__interf_out);}
 
-  if (ctrl.report__interf_toChn==1) {reportTS(ctrl, Bsn._interf_toChn, "interflow_toChn", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__interf_toChn==2) {reportMap(ctrl, Bsn._interf_toChn, ctrl._sortedGrid, "interflow_toChn", ctrl.path_ResultsFolder);}
+  if (ctrl.report__interf_toChn==1) {reportTS(ctrl, Bsn._interf_toChn, of__interf_toChn);}
+  else if (ctrl.report__interf_toChn==2) {reportMap(ctrl, Bsn._interf_toChn, ctrl._sortedGrid, of__interf_toChn);}
 
-  if (ctrl.report__GWf_in==1) {reportTS(ctrl, Bsn._GWf_in, "GWflow_input", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__GWf_in==2) {reportMap(ctrl, Bsn._GWf_in, ctrl._sortedGrid, "GWflow_input", ctrl.path_ResultsFolder);}
+  if (ctrl.report__GWf_in==1) {reportTS(ctrl, Bsn._GWf_in, of__GWf_in);}
+  else if (ctrl.report__GWf_in==2) {reportMap(ctrl, Bsn._GWf_in, ctrl._sortedGrid, of__GWf_in);}
 
-  if (ctrl.report__GWf_out==1) {reportTS(ctrl, Bsn._GWf_out, "GWflow_output", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__GWf_out==2) {reportMap(ctrl, Bsn._GWf_out, ctrl._sortedGrid, "GWflow_output", ctrl.path_ResultsFolder);}
+  if (ctrl.report__GWf_out==1) {reportTS(ctrl, Bsn._GWf_out, of__GWf_out);}
+  else if (ctrl.report__GWf_out==2) {reportMap(ctrl, Bsn._GWf_out, ctrl._sortedGrid, of__GWf_out);}
 
-  if (ctrl.report__GWf_toChn==1) {reportTS(ctrl, Bsn._GWf_toChn, "GWflow_toChn", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__GWf_toChn==2) {reportMap(ctrl, Bsn._GWf_toChn, ctrl._sortedGrid, "GWflow_toChn", ctrl.path_ResultsFolder);}
+  if (ctrl.report__GWf_toChn==1) {reportTS(ctrl, Bsn._GWf_toChn, of__GWf_toChn);}
+  else if (ctrl.report__GWf_toChn==2) {reportMap(ctrl, Bsn._GWf_toChn, ctrl._sortedGrid, of__GWf_toChn);}
 
-  if (ctrl.report__Q==1) {reportTS(ctrl, Bsn._Q, "discharge", ctrl.path_ResultsFolder);}
-  else if (ctrl.report__Q==2) {reportMap(ctrl, Bsn._Q, ctrl._sortedGrid, "discharge", ctrl.path_ResultsFolder);}
+  if (ctrl.report__Q==1) {reportTS(ctrl, Bsn._Q, of__Q);}
+  else if (ctrl.report__Q==2) {reportMap(ctrl, Bsn._Q, ctrl._sortedGrid, of__Q);}
 
   /* end of Report */
-
   return 0;
   }
 
-  int Report::report_create(string varname, string filepath, int Ts_or_map){
-    string filename;
 
-    if (Ts_or_map == 1){
-      filename =  filepath + varname.c_str() + "_TS.bin";
-    } else if (Ts_or_map == 2){
-      filename =  filepath + varname.c_str() + "_map.bin";
-    }
-    
-    ifstream file(filename);
-    if (file.good()) {
-      file.close();
-      remove(filename.c_str());
-    }
-    return 0;
+int Report::report_create(string fname, ofstream &ofHandle){
+      // Delete the report files from last iteration
+      ifstream file(fname);
+        if (file.good()) {
+          file.close();
+          remove(fname.c_str());
+        }
+      
+      // Open report file
+      ofHandle.open(fname, ios::binary);
+      if (!ofHandle.good()){
+        throw runtime_error("file not found    :" + fname);
+      }
+      return EXIT_SUCCESS;
     }
 
 
-int Report::reportTS(Control &ctrl, const svector *input, string varname, string filepath){
-  fstream ofOutput;
+int Report::reportTS(Control &ctrl, const svector *input, ofstream &ofHandle){
   int length = ctrl._Tsmask.cell.size();
   double outdata[length];
   string filename;
@@ -174,23 +238,19 @@ int Report::reportTS(Control &ctrl, const svector *input, string varname, string
       outdata[i] = input->val[ctrl._Tsmask.cell[i]];
   }
   
-  filename =  filepath + varname.c_str() + "_TS.bin";
-  ofOutput.open(filename.c_str(), ios::binary|ios::app);
-  ofOutput.write((char*)&outdata, sizeof(double)*length);
-  ofOutput.close();
-  return 0;
+  ofHandle.write((char*)&outdata, sizeof(double)*length);
+
+  return EXIT_SUCCESS;
   }
 
 
-int Report::reportMap(Control &ctrl, const svector *input, sortedGrid _sortedGrid, string varname, string filepath){
+int Report::reportMap(Control &ctrl, const svector *input, sortedGrid _sortedGrid, ofstream &ofHandle){
 
   int r, c;
 
   int _rowNum = ctrl._rowNum;
   int _colNum = ctrl._colNum;
 
-
-  fstream ofOutput;
   double outdata[_rowNum*_colNum];
   string filename;
 
@@ -206,9 +266,8 @@ int Report::reportMap(Control &ctrl, const svector *input, sortedGrid _sortedGri
   }
 
   
-  filename =  filepath + varname.c_str() + "_map.bin";
-  ofOutput.open(filename.c_str(), ios::binary|ios::app);
-  ofOutput.write((char*)&outdata, sizeof(double)*_rowNum*_colNum);
-  ofOutput.close();
-  return 0;
+
+  ofHandle.write((char*)&outdata, sizeof(double)*_rowNum*_colNum);
+
+  return EXIT_SUCCESS;
   }

@@ -3,6 +3,8 @@
 sortedGrid Control::SortGridLDD(){
   int value, value1, value2, value3, value4, value6, value7, value8, value9 = 0;
   int r, c, rr ,cc, lat_ok;
+  int outlet_r = -9999;
+  int outlet_c = -9999;
   int counter=0;
   grid *temp, *to_row, *to_col;
   sortedGrid map2array;
@@ -17,9 +19,8 @@ sortedGrid Control::SortGridLDD(){
   for (r=1; r<_rowNum; r++){
     for (c=1; c<_colNum; c++){
       value = temp->matrix[r][c];
-      if (value>0 && value <130 && value!=5){
+      if (value>0 && value <130){
         counter++;
-        
       }     
     }
   }
@@ -40,7 +41,6 @@ sortedGrid Control::SortGridLDD(){
 	      value1 = temp->matrix[r+1][c-1];
 	      value2 = temp->matrix[r+1][c];
 	      value3 = temp->matrix[r+1][c+1];
-
         
         if (value7 != 2 &&
 	          value8 != 4 &&
@@ -54,6 +54,9 @@ sortedGrid Control::SortGridLDD(){
               
               switch (value) 
               {
+              case 5:  // outlet
+                  rr = -9999;
+                  cc = -9999;
               case 8:
                   rr = r+1;
                   cc = c-1;
@@ -69,8 +72,6 @@ sortedGrid Control::SortGridLDD(){
               case 16:
                   rr = r;
                   cc = c-1;
-                  break;
-              case 0: //if it is an outlet
                   break;
               case 1:
                   rr = r;
@@ -93,11 +94,11 @@ sortedGrid Control::SortGridLDD(){
                   cout<< " Invalid flow direction " << value << " was found in grid " << r << " "<< c << endl;
                   exit(EXIT_FAILURE);
                   }
-
+                
               map2array.row.push_back(r);
               map2array.col.push_back(c);
               map2array.lat_ok.push_back(0);
-              map2array.to_cell.push_back(0);
+              map2array.to_cell.push_back(-9999);
               to_row->matrix[r][c] = rr;
               to_col->matrix[r][c] = cc;
         }
@@ -111,7 +112,7 @@ sortedGrid Control::SortGridLDD(){
     }
   }while(map2array.row.size()<counter);
 
-  for (i=0; i<map2array.row.size(); i++){
+  for (i=0; i<(map2array.row.size() - 1); i++){
   //for (i=0; i<1; i++){
     r = map2array.row[i];
     c = map2array.col[i];
@@ -127,6 +128,8 @@ sortedGrid Control::SortGridLDD(){
       }
     }
   }
+
+
 
   map2array.size = int(map2array.row.size());
 

@@ -15,7 +15,6 @@ int Basin::Solve_canopy(Control &ctrl, Param &par, Atmosphere &atm) {
     }
 
     if (ctrl.opt_canopy_evap == 1){
-        Seperate_PET(par, atm);
         Canopy_evaporation_1(ctrl, par, atm);
     }
 
@@ -23,7 +22,6 @@ int Basin::Solve_canopy(Control &ctrl, Param &par, Atmosphere &atm) {
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
         Mixing_canopy(ctrl, atm);  // d18o change due to canopy mixing and evaporation
     }
-    
     
     return EXIT_SUCCESS;
 }

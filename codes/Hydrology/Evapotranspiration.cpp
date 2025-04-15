@@ -80,8 +80,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
             ST1 -= Tr1;
             PT -= Tr1;
         }
-        
-        
+
 
         // For layer 2
         if (theta2 > WP2){

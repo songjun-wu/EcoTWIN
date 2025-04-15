@@ -166,7 +166,8 @@ def report_build(fname, reports):
         for i in range(len(reports)):
             data = reports[i]
             if data[5] is not None:
-                content.append('  if (ctrl.report_'+data[0]+'>0)  report_create("'+data[5]+'", ctrl.path_ResultsFolder, ctrl.report_'+data[0]+');\n')
+                content.append('  if (ctrl.report_'+data[0]+'==1)  report_create(ctrl.path_ResultsFolder+"'+data[5]+'_TS.bin", of_'+data[0]+');\n')
+                content.append('  else if (ctrl.report_'+data[0]+'==2)  report_create(ctrl.path_ResultsFolder+"'+data[5]+'_map.bin", of_'+data[0]+');\n\n')
         content = lines[:start] + content + lines[end:]
     
     if(('').join(content) != ('').join(lines)):
@@ -183,8 +184,8 @@ def report_build(fname, reports):
         for i in range(len(reports)):
             data = reports[i]
             if data[5] is not None:
-                content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS(ctrl, Bsn.'+data[0]+', "'+data[5]+'", ctrl.path_ResultsFolder);}\n')
-                content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, Bsn.'+data[0]+', ctrl._sortedGrid, "'+data[5]+'", ctrl.path_ResultsFolder);}\n\n')
+                content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS(ctrl, Bsn.'+data[0]+', of_'+data[0]+');}\n')
+                content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, Bsn.'+data[0]+', ctrl._sortedGrid, of_'+data[0]+');}\n\n')
 
         content = lines[:start] + content + lines[end:]
     

@@ -46,21 +46,31 @@ class Cali:
 
 
 class Output:
-    N_sites         = 1     # The number of sites for outputs (> 0 in Tsmask.asc)
-    sim_q_idx       = [0]   # Demnitz Mill
+    N_sites         = 6     # The number of sites for outputs (> 0 in Tsmask.asc)
+
+    # sites: 24, 25, 32, 26, 26x, 29a
+
+    sim_q_idx       = [2, 3, 4, 5]   # Demnitz Mill
+    sim_q_weights   = [0.05, 0.4, 0.4, 0.05]
     sim = {}
-    sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'type':'Ts'}
+    sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'weights':sim_q_weights, 'type':'Ts'}
 
     
 
 
 
 class Param:
-    ref = {}
     ### parameters to calibrate
-    ref['depth3']   =           {'type':'soil',  'log':0, 'file':'depth3',   'min':[0.6]*Info.N_soil, 'max':[5]*Info.N_soil}
-    ref['alpha']   =            {'type':'landuse',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse}
-    ref['rE']   =               {'type':'landuse',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse}  # PET to PE and PT
+    ref = {}
+    
+
+    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.6]*Info.N_soil, 'max':[5]*Info.N_soil}
+
+    # PET seperation and Max canopy storage
+    ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse}  # Maximum canopy storage
+    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse}  # PET to PE and PT
+
+    # Snow
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2]}
     ref['deg_day_min']   =      {'type':'global',   'log':0, 'file':'deg_day_min',   'min':[0], 'max':[2e-3]}
     ref['deg_day_max']   =      {'type':'global',   'log':0, 'file':'deg_day_max',   'min':[2e-3], 'max':[1e-2]}

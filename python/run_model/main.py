@@ -106,6 +106,7 @@ elif mode == 'forward':
                     GEM_tools.gen_param(runpath, Info, Param, param[i,:])
                     os.system('./gEcoHydro')
                     _sim = np.append(_sim, np.fromfile(runpath + '/outputs/discharge_TS.bin'))
+                    print(_sim.shape)
                 _sim.tofile(Path.work_path + '/forward/outputs/discharge_TS.bin')
                 flag = False
             except:
@@ -127,7 +128,7 @@ elif mode == 'test':
     GEM_tools.set_config(mode, Path, Cali)
 
     #for i in range(Cali.nchains):
-    for i in [10]:
+    for i in [0]:
         # Which parameter set to use?
         param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1)[i,:]
         #param = np.full(104, 0.5)
@@ -139,16 +140,21 @@ elif mode == 'test':
 
         os.chdir(current_path)
         os.system('python3 posterior_anlalysis.py')
+
         try:
-            os.remove('999_All_in_Ts_'+str(i)+'.png')
-            os.remove('999_All_in_map_'+str(i)+'.png')
-        except:
+            shutil.copyfile(Path.output_path + '999_All_in_Ts.png', 'plots/999_All_in_Ts.png')
+            if os.path.exists('plots/999_All_in_Ts_'+str(i)+'.png'):
+                os.remove('plots/999_All_in_Ts_'+str(i)+'.png')
+            os.rename('plots/999_All_in_Ts.png', 'plots/999_All_in_Ts_'+str(i)+'.png')
+        except Exception as e:
+            print(e)
             pass
+        
         try:
-            shutil.copyfile(Path.output_path + '999_All_in_Ts.png', '999_All_in_Ts.png')
-            os.rename('999_All_in_Ts.png', '999_All_in_Ts_'+str(i)+'.png')
-            shutil.copyfile(Path.output_path + '999_All_in_map.png', '999_All_in_map.png')
-            os.rename('999_All_in_map.png', '999_All_in_map_'+str(i)+'.png')
+            shutil.copyfile(Path.output_path + '999_All_in_map.png', 'plots/999_All_in_map.png')
+            if os.path.exists('plots/999_All_in_map_'+str(i)+'.png'):
+                os.remove('plots/999_All_in_map_'+str(i)+'.png')
+            os.rename('plots/999_All_in_map.png', 'plots/999_All_in_map_'+str(i)+'.png')
         except Exception as e:
             print(e)
             pass
@@ -183,24 +189,43 @@ elif mode == 'check':
 elif mode == 'aaa':
     from datetime import datetime, timedelta
     import matplotlib.pyplot as plt
-    sim = np.fromfile(Path.work_path + '/forward/outputs/discharge_TS.bin').reshape(Cali.nchains, -1)[:, 731:]
-    obs = np.fromfile(Path.data_path + 'discharge_obs.bin')
+    sim = np.fromfile(Path.work_path + '/forward/outputs/discharge_TS.bin').reshape(Cali.nchains, -1, Output.N_sites)
+    print(sim.shape)
+    sim = np.transpose(sim, axes=[0,2,1])
+    print(sim.shape)
+    sim = sim[:, :, Info.spin_up:]
+    print(sim.shape)
+    
+    obs = np.fromfile(Path.data_path + 'discharge_obs.bin').reshape(len(Output.sim['q']['sim_idx']), -1)
 
-    fig, ax = plt.subplots(1,1, figsize=(4,2), dpi=300)
+    print(sim.shape)
+
+    validIdx = []
+    likelihoods = []
+    for i in range(Cali.nchains):
+        for j in range(len(Output.sim['q']['sim_idx'])):
+            X = sim[i, Output.sim['q']['sim_idx'][j],:] + 1e-3
+            Y = obs[j] + 1e-3
+            likelihoods.append(GEM_tools.nse(X, Y))
+            print(np.round(GEM_tools.nse(X, Y),2), np.round(GEM_tools.kge(X, Y),2), end=" ")
+            if (i==0 and j==0):
+                print(X)
+        print('')
+        if np.mean(likelihoods) > -5:
+            validIdx.append(i)
+    
+    sim = sim[validIdx, :, :]
+
+    fig, ax = plt.subplots(4,1, figsize=(4,6), dpi=300, sharey=True)
     X = np.arange(datetime(1994,1,1), datetime(2022,1,2), timedelta(days=1)).astype(datetime)
-    ax.fill_between(X, np.percentile(sim[:,:], 5, axis=0), np.percentile(sim[:,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
-    ax.plot(X, np.mean(sim[:,:], axis=0), linewidth=1, c='skyblue', zorder=3)
-    ax.scatter(X, obs, c='salmon', s=0.3, alpha=0.2, zorder=1)
+    for i in range(obs.shape[0]):
+        ax[i].fill_between(X, np.percentile(sim[:,i,:], 5, axis=0), np.percentile(sim[:,i,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
+        ax[i].plot(X, np.mean(sim[:,i,:], axis=0), linewidth=1, c='skyblue', zorder=3)
+        ax[i].scatter(X, obs[i,:], c='salmon', s=0.3, alpha=0.2, zorder=1)
     fig.savefig('tmp.png')
 
-    for i in range(Cali.nchains):
-        X = sim[i,:] + 1e-3
-        Y = obs + 1e-3
-        print(GEM_tools.nse(X, Y), GEM_tools.lnnse(X, Y))
-    X = np.mean(sim,axis=0) + 1e-3
-    print(GEM_tools.nse(X, Y), GEM_tools.lnnse(X, Y))
-
-    _nse = 0.2055
-    _lnnse =  0.0331
-    err = np.power(1*(1 - _nse)**6 + 0*(1 - _lnnse)**6, 1/6)
-    print(np.log(err))
+    for i in range(obs.shape[0]):
+        X = np.mean(sim[:, i, :],axis=0) + 1e-3
+        Y = obs[i] + 1e-3
+        print('\n', GEM_tools.nse(X, Y), GEM_tools.kge(X, Y))
+    

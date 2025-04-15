@@ -29,6 +29,7 @@ int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){
 
 
     if (ctrl.opt_evap==1){
+        Seperate_PET(par, atm);
         Evapotranspiration_1(ctrl, par, atm);
     }
     

@@ -5,9 +5,11 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
     double Ta, Ts, ha, hs, ha_p, ea_s, es_s, alpha_p, eps, eps_p, eps_k, m, n, f;
     double di_atm, di_s, di_new, di_evap, di_old; // Isotopic signitures
     double V_new, V_old, evap;
-    di_atm = di_s = di_new = di_evap = di_old = 0;
+    di_atm = di_s = di_new = di_evap = 0;
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+
+        di_old = sv_di_old.val[j];
 
         V_new = sv_V_new.val[j];  // Water storage after evaporation
         // If there is not water, then reset d18O
@@ -25,8 +27,8 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
 
             if (issoil == 1){
                 // Saturated vapor pressure in atmosphere or soil [Pa]
-                ea_s = 611 * expl((17.3 * Ta)/(Ta + 237.3));
-                es_s = 611 * expl((17.3 * Ts)/(Ts + 237.3));
+                ea_s = 611 * exp((17.3 * Ta)/(Ta + 237.3));
+                es_s = 611 * exp((17.3 * Ts)/(Ts + 237.3));
             }
             
             ha_p = (issoil == 1) ? min(ha * ea_s / es_s, 1.0) : (ha + 1) / 2;  // Corrected relative humidity at the surface; should not exceed 1.0
@@ -87,6 +89,8 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
 
             sv_di_new.val[j]  = di_new;
             sv_di_evap.val[j] = di_evap;
+
+            
         }   
     }
     return EXIT_SUCCESS;
