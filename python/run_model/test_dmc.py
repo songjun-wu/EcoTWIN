@@ -81,9 +81,9 @@ prep_tools.saveToASCII(unit_soil*1.6, 'bulkdensity3', home_dir+'spatial/', 'floa
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_snow', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_pond', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*-8, 'd18o_theta1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*-8, 'd18o_theta2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*-8, 'd18o_theta3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_layer1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_layer2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*-8, 'd18o_layer3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 

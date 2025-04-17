@@ -36,7 +36,7 @@ int Basin::Routing_ovf_1(Control &ctrl, Param &par){
                 ReGWrecharge_1(ctrl, par, j, _theta3->val[j], _GW->val[j], _rPerc3->val[j]);
             } 
         }
-       
+
 
         if (chnwidth > 0){  // If there is channel in this grid cell
             proportion_ovf_toChn = min(par._pOvf_toChn->val[j] * (chnwidth * chnlength) / (dx_square) , 1.0);  // The proportion of overland flow that routes into river              
@@ -50,8 +50,6 @@ int Basin::Routing_ovf_1(Control &ctrl, Param &par){
             _ovf_in->val[from_j] += ovf_to_go; // [m]
         }
         _pond->val[j] = 0;  // All ponding water has routed to downstream cell
-
-        
               
         }        
     

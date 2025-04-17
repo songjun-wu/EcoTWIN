@@ -51,9 +51,10 @@
   _theta3 = new svector(ctrl.path_BasinFolder + ctrl.fn__theta3, _rowNum, _colNum, _sortedGrid);
   _GW = new svector(ctrl.path_BasinFolder + ctrl.fn__GW, _rowNum, _colNum, _sortedGrid);
   _chanS = new svector(_sortedGrid.size);
-  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1){
+  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
     _I_old = new svector(_sortedGrid.size);
     _snow_old = new svector(_sortedGrid.size);
+    _pond_old = new svector(_sortedGrid.size);
     _theta1_old = new svector(_sortedGrid.size);
     _theta2_old = new svector(_sortedGrid.size);
     _theta3_old = new svector(_sortedGrid.size);
@@ -129,6 +130,10 @@
     _d18o_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer3, _rowNum, _colNum, _sortedGrid);
     _d18o_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_GW, _rowNum, _colNum, _sortedGrid);
     _d18o_chanS = new svector(_sortedGrid.size);
+    _d18o_ovf_in_acc = new svector(_sortedGrid.size);
+    _d18o_interf_in_acc = new svector(_sortedGrid.size);
+    _d18o_GWf_in_acc = new svector(_sortedGrid.size);
+    _d18o_Qupstream_acc = new svector(_sortedGrid.size);
   }
   /* end of Tracking */
 

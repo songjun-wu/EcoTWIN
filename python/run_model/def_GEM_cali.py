@@ -39,8 +39,8 @@ class Cali:
     niterations = 500  # Number of iterations for each batch
     nbatchs = 20  # Number of batches
 
-    restart = False   # Whether restart?
-    restart_niteration = 0 # restart since which iteration?
+    restart = True   # Whether restart?
+    restart_niteration = 9500 # restart since which iteration?
 
     
 
@@ -113,6 +113,9 @@ class Param:
     ref['GWfExp']   = {'type':'soil',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil}
     ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-15]*Info.N_soil, 'max':[1e-2]*Info.N_soil}  # Proportion of GW storage for routing generation
     ref['Manningn']   = {'type':'soil',   'log':1, 'file':'Manningn',   'min':[0.01]*Info.N_soil, 'max':[0.1]*Info.N_soil}
+
+    # Nitrogen simulation
+    
     
 
 

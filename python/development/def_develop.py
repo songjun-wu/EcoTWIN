@@ -21,9 +21,13 @@ class Opt:
     cond['tracking_age_1'] = {'key':'opt_tracking_age', 'value':1,
                                   'general_description':'Enable water age tracking?\n# 0: disabled\n# 1: enabled',
                                   'description':'Water age tracking'}
+    cond['nitrogen_sim_1'] = {'key':'opt_nitrogen_sim', 'value':1,
+                                  'general_description':'Enable nitrogen simulation?\n# 0: disabled\n# 1: enabled',
+                                  'description':'Nitrogen simulation'}
     cond['reinfil_1']   = {'key':'opt_reinfil', 'value':1, 
                         'general_description':'Reinfiltration during overland flow routing',
                         'description':'Reinfiltration during overland flow routing'}
+    
 
     
     cond['intecept_1']   = {'key':'opt_intecept', 'value':1, 

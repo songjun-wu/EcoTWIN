@@ -83,7 +83,7 @@ elif mode == 'forward':
     GEM_tools.set_config(mode, Path, Cali)
 
     flag = True
-    for niteration in np.arange(0, 1e4, Cali.niterations)[::-1]:
+    for niteration in np.arange(0, 1e5, Cali.niterations)[::-1]:
         if flag:
             try:
                 # Get param
@@ -127,8 +127,8 @@ elif mode == 'test':
     GEM_tools.set_env(mode, Path, Cali)
     GEM_tools.set_config(mode, Path, Cali)
 
-    #for i in range(Cali.nchains):
-    for i in [0]:
+    for i in range(Cali.nchains):
+    #for i in [5]:
         # Which parameter set to use?
         param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1)[i,:]
         #param = np.full(104, 0.5)
@@ -147,7 +147,6 @@ elif mode == 'test':
                 os.remove('plots/999_All_in_Ts_'+str(i)+'.png')
             os.rename('plots/999_All_in_Ts.png', 'plots/999_All_in_Ts_'+str(i)+'.png')
         except Exception as e:
-            print(e)
             pass
         
         try:
@@ -156,7 +155,22 @@ elif mode == 'test':
                 os.remove('plots/999_All_in_map_'+str(i)+'.png')
             os.rename('plots/999_All_in_map.png', 'plots/999_All_in_map_'+str(i)+'.png')
         except Exception as e:
-            print(e)
+            pass
+
+        try:
+            shutil.copyfile(Path.output_path + '999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_tracking.png')
+            if os.path.exists('plots/999_All_in_Ts_'+str(i)+'_tracking.png'):
+                os.remove('plots/999_All_in_Ts_'+str(i)+'_tracking.png')
+            os.rename('plots/999_All_in_Ts._tracking.png', 'plots/999_All_in_Ts_'+str(i)+'_tracking.png')
+        except Exception as e:
+            pass
+        
+        try:
+            shutil.copyfile(Path.output_path + '999_All_in_map_tracking.png', 'plots/999_All_in_map_tracking.png')
+            if os.path.exists('plots/999_All_in_map_'+str(i)+'_tracking.png'):
+                os.remove('plots/999_All_in_map_'+str(i)+'_tracking.png')
+            os.rename('plots/999_All_in_map_tracking.png', 'plots/999_All_in_map_'+str(i)+'_tracking.png')
+        except Exception as e:
             pass
         
 
@@ -168,7 +182,7 @@ elif mode == 'check':
 
     for i in range(Cali.nchains):
         flag = True
-        for niteration in np.arange(0, 1e4, Cali.niterations)[::-1]:
+        for niteration in np.arange(0, 1e5, Cali.niterations)[::-1]:
             if flag:
                 try:
                     loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
@@ -201,31 +215,43 @@ elif mode == 'aaa':
     print(sim.shape)
 
     validIdx = []
-    likelihoods = []
+    
     for i in range(Cali.nchains):
+        likelihoods = []
         for j in range(len(Output.sim['q']['sim_idx'])):
             X = sim[i, Output.sim['q']['sim_idx'][j],:] + 1e-3
             Y = obs[j] + 1e-3
             likelihoods.append(GEM_tools.nse(X, Y))
-            print(np.round(GEM_tools.nse(X, Y),2), np.round(GEM_tools.kge(X, Y),2), end=" ")
+            print(np.round(GEM_tools.nse(X, Y),2), end=" ")
             if (i==0 and j==0):
                 print(X)
         print('')
-        if np.mean(likelihoods) > -5:
+        if np.mean(likelihoods) > 0.5:
             validIdx.append(i)
+        print(len(validIdx))
     
-    sim = sim[validIdx, :, :]
+    sim = sim[validIdx, :, :][:,Output.sim['q']['sim_idx'],:]
 
     fig, ax = plt.subplots(4,1, figsize=(4,6), dpi=300, sharey=True)
+    plt.subplots_adjust(left=0.1, bottom=0.05, right=0.99, top=0.99, wspace=0.1, hspace=0.1)
     X = np.arange(datetime(1994,1,1), datetime(2022,1,2), timedelta(days=1)).astype(datetime)
     for i in range(obs.shape[0]):
         ax[i].fill_between(X, np.percentile(sim[:,i,:], 5, axis=0), np.percentile(sim[:,i,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
         ax[i].plot(X, np.mean(sim[:,i,:], axis=0), linewidth=1, c='skyblue', zorder=3)
         ax[i].scatter(X, obs[i,:], c='salmon', s=0.3, alpha=0.2, zorder=1)
-    fig.savefig('tmp.png')
 
+        if i!=(obs.shape[0]-1):
+            ax[i].set_xticklabels([])
+    
+    sites = ['Bruch Mill', 'Demnitz Mill', 'Demnitz', "Berkenbrueck"]
     for i in range(obs.shape[0]):
         X = np.mean(sim[:, i, :],axis=0) + 1e-3
         Y = obs[i] + 1e-3
+        title_hgt = 0.9
+        hgt_gradient = 0.11
+        ax[i].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i].transAxes)
+        ax[i].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i].transAxes)
+        ax[i].text(0.05, title_hgt - hgt_gradient * 1, 'Q at '+sites[i]+' (m3/s)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i].transAxes)        
         print('\n', GEM_tools.nse(X, Y), GEM_tools.kge(X, Y))
     
+    fig.savefig('tmp.png')

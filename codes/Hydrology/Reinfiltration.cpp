@@ -73,6 +73,7 @@ int Basin::Reinfiltration_1(Control &ctrl, Param &par, int j, double &db_rinfilt
 
     }
     
+    deltaF = deltaF > input ? input : deltaF;
     db_rinfilt = deltaF;
     db_theta1 += deltaF / depth1;
     db_pond -= deltaF;

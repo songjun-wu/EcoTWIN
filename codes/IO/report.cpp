@@ -102,6 +102,30 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__Q==1)  report_create(ctrl.path_ResultsFolder+"discharge_TS.bin", of__Q);
   else if (ctrl.report__Q==2)  report_create(ctrl.path_ResultsFolder+"discharge_map.bin", of__Q);
 
+  if (ctrl.report__d18o_I==1)  report_create(ctrl.path_ResultsFolder+"d18o_canopy_storage_TS.bin", of__d18o_I);
+  else if (ctrl.report__d18o_I==2)  report_create(ctrl.path_ResultsFolder+"d18o_canopy_storage_map.bin", of__d18o_I);
+
+  if (ctrl.report__d18o_snow==1)  report_create(ctrl.path_ResultsFolder+"d18o_snow_depth_TS.bin", of__d18o_snow);
+  else if (ctrl.report__d18o_snow==2)  report_create(ctrl.path_ResultsFolder+"d18o_snow_depth_map.bin", of__d18o_snow);
+
+  if (ctrl.report__d18o_pond==1)  report_create(ctrl.path_ResultsFolder+"d18o_pond_TS.bin", of__d18o_pond);
+  else if (ctrl.report__d18o_pond==2)  report_create(ctrl.path_ResultsFolder+"d18o_pond_map.bin", of__d18o_pond);
+
+  if (ctrl.report__d18o_layer1==1)  report_create(ctrl.path_ResultsFolder+"d18o_SMC_layer1_TS.bin", of__d18o_layer1);
+  else if (ctrl.report__d18o_layer1==2)  report_create(ctrl.path_ResultsFolder+"d18o_SMC_layer1_map.bin", of__d18o_layer1);
+
+  if (ctrl.report__d18o_layer2==1)  report_create(ctrl.path_ResultsFolder+"d18o_SMC_layer2_TS.bin", of__d18o_layer2);
+  else if (ctrl.report__d18o_layer2==2)  report_create(ctrl.path_ResultsFolder+"d18o_SMC_layer2_map.bin", of__d18o_layer2);
+
+  if (ctrl.report__d18o_layer3==1)  report_create(ctrl.path_ResultsFolder+"d18o_SMC_layer3_TS.bin", of__d18o_layer3);
+  else if (ctrl.report__d18o_layer3==2)  report_create(ctrl.path_ResultsFolder+"d18o_SMC_layer3_map.bin", of__d18o_layer3);
+
+  if (ctrl.report__d18o_GW==1)  report_create(ctrl.path_ResultsFolder+"d18o_groundwater_storage_TS.bin", of__d18o_GW);
+  else if (ctrl.report__d18o_GW==2)  report_create(ctrl.path_ResultsFolder+"d18o_groundwater_storage_map.bin", of__d18o_GW);
+
+  if (ctrl.report__d18o_chanS==1)  report_create(ctrl.path_ResultsFolder+"d18o_chanS_TS.bin", of__d18o_chanS);
+  else if (ctrl.report__d18o_chanS==2)  report_create(ctrl.path_ResultsFolder+"d18o_chanS_map.bin", of__d18o_chanS);
+
   /* end of Init Report */
   return EXIT_SUCCESS;
 }
@@ -208,6 +232,30 @@ int Report::report(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Q==1) {reportTS(ctrl, Bsn._Q, of__Q);}
   else if (ctrl.report__Q==2) {reportMap(ctrl, Bsn._Q, ctrl._sortedGrid, of__Q);}
 
+  if (ctrl.report__d18o_I==1) {reportTS(ctrl, Bsn._d18o_I, of__d18o_I);}
+  else if (ctrl.report__d18o_I==2) {reportMap(ctrl, Bsn._d18o_I, ctrl._sortedGrid, of__d18o_I);}
+
+  if (ctrl.report__d18o_snow==1) {reportTS(ctrl, Bsn._d18o_snow, of__d18o_snow);}
+  else if (ctrl.report__d18o_snow==2) {reportMap(ctrl, Bsn._d18o_snow, ctrl._sortedGrid, of__d18o_snow);}
+
+  if (ctrl.report__d18o_pond==1) {reportTS(ctrl, Bsn._d18o_pond, of__d18o_pond);}
+  else if (ctrl.report__d18o_pond==2) {reportMap(ctrl, Bsn._d18o_pond, ctrl._sortedGrid, of__d18o_pond);}
+
+  if (ctrl.report__d18o_layer1==1) {reportTS(ctrl, Bsn._d18o_layer1, of__d18o_layer1);}
+  else if (ctrl.report__d18o_layer1==2) {reportMap(ctrl, Bsn._d18o_layer1, ctrl._sortedGrid, of__d18o_layer1);}
+
+  if (ctrl.report__d18o_layer2==1) {reportTS(ctrl, Bsn._d18o_layer2, of__d18o_layer2);}
+  else if (ctrl.report__d18o_layer2==2) {reportMap(ctrl, Bsn._d18o_layer2, ctrl._sortedGrid, of__d18o_layer2);}
+
+  if (ctrl.report__d18o_layer3==1) {reportTS(ctrl, Bsn._d18o_layer3, of__d18o_layer3);}
+  else if (ctrl.report__d18o_layer3==2) {reportMap(ctrl, Bsn._d18o_layer3, ctrl._sortedGrid, of__d18o_layer3);}
+
+  if (ctrl.report__d18o_GW==1) {reportTS(ctrl, Bsn._d18o_GW, of__d18o_GW);}
+  else if (ctrl.report__d18o_GW==2) {reportMap(ctrl, Bsn._d18o_GW, ctrl._sortedGrid, of__d18o_GW);}
+
+  if (ctrl.report__d18o_chanS==1) {reportTS(ctrl, Bsn._d18o_chanS, of__d18o_chanS);}
+  else if (ctrl.report__d18o_chanS==2) {reportMap(ctrl, Bsn._d18o_chanS, ctrl._sortedGrid, of__d18o_chanS);}
+
   /* end of Report */
   return 0;
   }
@@ -222,7 +270,7 @@ int Report::report_create(string fname, ofstream &ofHandle){
         }
       
       // Open report file
-      ofHandle.open(fname, ios::binary);
+      ofHandle.open(fname, ios::binary|ios::app);
       if (!ofHandle.good()){
         throw runtime_error("file not found    :" + fname);
       }

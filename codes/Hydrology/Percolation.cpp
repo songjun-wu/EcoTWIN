@@ -88,9 +88,7 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
         double perc2 = 0;
         double perc3 = 0;
         double perc_in = 0;
-        double delta_theta;
-
-
+        double delta_theta = 0;
 
         // Percolation from layer 1
         // Only happens when saturation is met, because infiltration has been added to layer 1
@@ -155,9 +153,6 @@ int Basin::Percolation_3(Control &ctrl, Param &par) {
         double perc2 = 0;
         double perc3 = 0;
         double perc_in = 0;
-        double delta_theta;
-
-
 
         // Percolation from layer 1
         // if saturation is not met then fill the deficit, otherwise all water pass to next layer

@@ -39,8 +39,8 @@ class Cali:
     niterations = 500  # Number of iterations for each batch
     nbatchs = 20  # Number of batches
 
-    restart = False   # Whether restart?
-    restart_niteration = 8500 # restart since which batch?
+    restart = True   # Whether restart?
+    restart_niteration = 9500 # restart since which batch?
 
     
 
@@ -115,8 +115,19 @@ class Param:
     ref['Manningn']   = {'type':'soil',   'log':1, 'file':'Manningn',   'min':[0.01]*Info.N_soil, 'max':[0.1]*Info.N_soil}
     
 
+    # Nitrogen simulation
+    ref['denitrification_aquatic']   = {'type':'landuse',   'log':1, 'file':'denitrification_aquatic',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse}
+    ref['autotrophic_update_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_update_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse}
+    ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse}
 
-    
+    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4]*Info.N_landuse, 'max':[1.1]*Info.N_landuse}
+    ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-3]*Info.N_landuse, 'max':[1e3]*Info.N_landuse}
+    ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-4]*Info.N_landuse, 'max':[0.4]*Info.N_landuse}
+    ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse}
+
+
+
+ 
 
 
 """

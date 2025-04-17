@@ -1,6 +1,6 @@
 #include "Basin.h"
 
-int Basin::Mixing_soil_profile(Control &ctrl, Atmosphere &atm, Param &par){
+int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &par){
 
     if (ctrl.opt_tracking_isotope==1) {
 
@@ -9,8 +9,9 @@ int Basin::Mixing_soil_profile(Control &ctrl, Atmosphere &atm, Param &par){
             Mixing_full(_theta1_old->val[j] * _depth1->val[j], _d18o_layer1->val[j], _infilt->val[j], _d18o_pond->val[j]);
         }
 
-        _tmp->equals(*_theta1);
+        _tmp->equals(*_theta1_old);
         _tmp->multiply(*_depth1);
+        _tmp->plus(*_infilt);
         // Fractionation due to soil evaporation (only for layer 1)
         Fractionation(atm, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 1);  // issoil = 1
         

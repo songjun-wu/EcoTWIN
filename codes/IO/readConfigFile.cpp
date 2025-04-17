@@ -38,6 +38,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_groundTs_input_format, "opt_groundTs_input_format", lines);
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
   readInto(opt_tracking_age, "opt_tracking_age", lines);
+  readInto(opt_nitrogen_sim, "opt_nitrogen_sim", lines);
   readInto(opt_reinfil, "opt_reinfil", lines);
   readInto(opt_intecept, "opt_intecept", lines);
   readInto(opt_snow, "opt_snow", lines);
@@ -189,6 +190,14 @@ int Control::ReadConfigFile(string fname){
   readInto(report__GWf_out, "report_GWflow_output", lines);
   readInto(report__GWf_toChn, "report_GWflow_toChn", lines);
   readInto(report__Q, "report_discharge", lines);
+  readInto(report__d18o_I, "report_d18o_canopy_storage", lines);
+  readInto(report__d18o_snow, "report_d18o_snow_depth", lines);
+  readInto(report__d18o_pond, "report_d18o_pond", lines);
+  readInto(report__d18o_layer1, "report_d18o_SMC_layer1", lines);
+  readInto(report__d18o_layer2, "report_d18o_SMC_layer2", lines);
+  readInto(report__d18o_layer3, "report_d18o_SMC_layer3", lines);
+  readInto(report__d18o_GW, "report_d18o_groundwater_storage", lines);
+  readInto(report__d18o_chanS, "report_d18o_chanS", lines);
   /* end of Report */
 
   return EXIT_SUCCESS;

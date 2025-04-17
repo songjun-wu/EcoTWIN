@@ -20,7 +20,7 @@ int Basin::Solve_canopy(Control &ctrl, Param &par, Atmosphere &atm) {
 
     // Tracking
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
-        Mixing_canopy(ctrl, atm);  // d18o change due to canopy mixing and evaporation
+        Mixing_canopy_tracking(ctrl, atm);  // d18o change due to canopy mixing and evaporation
     }
     
     return EXIT_SUCCESS;

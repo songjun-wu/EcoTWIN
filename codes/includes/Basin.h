@@ -59,6 +59,7 @@ class Basin {
   svector *_chanS;  // Channel storage [m3]
   svector *_I_old;  // Canopy storage [m]
   svector *_snow_old;  // Snow depth in [m]
+  svector *_pond_old;  // Ponding water in [m]
   svector *_theta1_old;  // Soil moisture in layer 1 [decimal]
   svector *_theta2_old;  // Soil moisture in layer 2 [decimal]
   svector *_theta3_old;  // Soil moisture in layer 3 [decimal]
@@ -120,14 +121,18 @@ class Basin {
 
 
   /* Tracking */
-  svector *_d18o_I;  // d18o in Canopy storage [m]
-  svector *_d18o_snow;  // d18o in Snow depth in [m]
-  svector *_d18o_pond;  // d18o in Ponding water in [m]
-  svector *_d18o_layer1;  // d18o in Soil moisture in layer 1 [decimal]
-  svector *_d18o_layer2;  // d18o in Soil moisture in layer 2 [decimal]
-  svector *_d18o_layer3;  // d18o in Soil moisture in layer 3 [decimal]
-  svector *_d18o_GW;  // d18o in Groundwater storage [m]
-  svector *_d18o_chanS;  // d18o in Channel storage [m3]
+  svector *_d18o_I;  // d18o in Canopy storage [‰]
+  svector *_d18o_snow;  // d18o in Snow depth in [‰]
+  svector *_d18o_pond;  // d18o in Ponding water in [‰]
+  svector *_d18o_layer1;  // d18o in Soil moisture in layer 1 [‰]
+  svector *_d18o_layer2;  // d18o in Soil moisture in layer 2 [‰]
+  svector *_d18o_layer3;  // d18o in Soil moisture in layer 3 [‰]
+  svector *_d18o_GW;  // d18o in Groundwater storage [‰]
+  svector *_d18o_chanS;  // d18o in Channel storage [‰]
+  svector *_d18o_ovf_in_acc;  // Total amount of 18o in overland inflow [‰ * m]
+  svector *_d18o_interf_in_acc;  // Total amount of 18o in inter-inflow [‰ * m]
+  svector *_d18o_GWf_in_acc;  // Total amount of 18o in GW inflow [‰ * m]
+  svector *_d18o_Qupstream_acc;  // Total amount of 18o in upstream inflow to channel storage [‰ * m]
   /* end of Tracking */
 
   /* Nitrogen */
@@ -207,12 +212,13 @@ class Basin {
   int Get_soil_temperature(double &Ta, double &Ts, double &LAI);
 
   // Tracking
-  int Mixing_full(double storage, double &cstorage, double input, double cinput);
-  int Mixing_canopy(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing and fractionaton
-  int Mixing_snow(Control &ctrl, Atmosphere &atm, Param &par);  // Canopy snowpack and throughfall
-  int Mixing_soil_profile(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and fractionaton
-
-  int Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, svector &sv_di_old, svector &sv_di_new, svector &sv_di_evap, int issoil);
+  int Mixing_full(double storage, double &cstorage, double input, double cinput);  // Full mixing within the timestep
+  int Mixing_canopy_tracking(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing and fractionaton
+  int Mixing_snow_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Canopy snowpack and throughfall
+  int Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and fractionaton
+  int Mixing_GW_tracking(Control &ctrl, Atmosphere &atm);  // GW storage mixing
+  int Mixing_routing_tracking(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
+  int Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, svector &sv_di_old, svector &sv_di_new, svector &sv_di_evap, int issoil);  // Fractionation due to canopy or soil evaporation
 };
 
 #endif /* BASIN_H_ */

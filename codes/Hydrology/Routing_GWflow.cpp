@@ -20,9 +20,10 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
 
         double chnlength = _chnlength->val[j];
         double GWflow_in = _GWf_in->val[j];
+        double GWflow_toChn = 0;
         double GWflow_out = 0;
         double GWflow_toTrestrial = 0;
-        double GWflow_toChn = 0;
+        
     
         from_j = _sortedGrid.to_cell[j];
 
@@ -65,7 +66,7 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
         }
      
         _GWf_toChn->val[j] = GWflow_toChn;  // GWflow to channel; [m]
-        _GWf_out->val[j] = GWflow_out;  // GWflow sum (to channel and to downstream territrial cell); [m]
+        _GWf_out->val[j] = GWflow_toTrestrial;  // GWflow sum (to channel and to downstream territrial cell); [m]
 
     }
     return EXIT_SUCCESS;

@@ -50,6 +50,10 @@ struct Control{
   // 0: disabled
   // 1: enabled
   int opt_tracking_age;
+  // Enable nitrogen simulation?
+  // 0: disabled
+  // 1: enabled
+  int opt_nitrogen_sim;
   // Reinfiltration during overland flow routing
   int opt_reinfil;
   // Canopy interception
@@ -167,13 +171,13 @@ struct Control{
   /* end of Fluxes */
 
   /* Tracking */
-  string fn__d18o_I;  // d18o in Canopy storage [m]
-  string fn__d18o_snow;  // d18o in Snow depth in [m]
-  string fn__d18o_pond;  // d18o in Ponding water in [m]
-  string fn__d18o_layer1;  // d18o in Soil moisture in layer 1 [decimal]
-  string fn__d18o_layer2;  // d18o in Soil moisture in layer 2 [decimal]
-  string fn__d18o_layer3;  // d18o in Soil moisture in layer 3 [decimal]
-  string fn__d18o_GW;  // d18o in Groundwater storage [m]
+  string fn__d18o_I;  // d18o in Canopy storage [‰]
+  string fn__d18o_snow;  // d18o in Snow depth in [‰]
+  string fn__d18o_pond;  // d18o in Ponding water in [‰]
+  string fn__d18o_layer1;  // d18o in Soil moisture in layer 1 [‰]
+  string fn__d18o_layer2;  // d18o in Soil moisture in layer 2 [‰]
+  string fn__d18o_layer3;  // d18o in Soil moisture in layer 3 [‰]
+  string fn__d18o_GW;  // d18o in Groundwater storage [‰]
   /* end of Tracking */
 
   /* Nitrogen */
@@ -268,6 +272,18 @@ struct Control{
   int report__PE;  // report Potential evaporation [m]
   int report__PT;  // report Potential transpiration [m]
   int report__tmp;  // report Temporal variable for testing [-]
+  int report__d18o_I;  // report d18o in Canopy storage [‰]
+  int report__d18o_snow;  // report d18o in Snow depth in [‰]
+  int report__d18o_pond;  // report d18o in Ponding water in [‰]
+  int report__d18o_layer1;  // report d18o in Soil moisture in layer 1 [‰]
+  int report__d18o_layer2;  // report d18o in Soil moisture in layer 2 [‰]
+  int report__d18o_layer3;  // report d18o in Soil moisture in layer 3 [‰]
+  int report__d18o_GW;  // report d18o in Groundwater storage [‰]
+  int report__d18o_chanS;  // report d18o in Channel storage [‰]
+  int report__d18o_ovf_in_acc;  // report Total amount of 18o in overland inflow [‰ * m]
+  int report__d18o_interf_in_acc;  // report Total amount of 18o in inter-inflow [‰ * m]
+  int report__d18o_GWf_in_acc;  // report Total amount of 18o in GW inflow [‰ * m]
+  int report__d18o_Qupstream_acc;  // report Total amount of 18o in upstream inflow to channel storage [‰ * m]
   /* end of Report */
 
   public:

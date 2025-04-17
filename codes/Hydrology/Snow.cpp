@@ -7,6 +7,10 @@ int Basin::Solve_snowpack(Control &ctrl, Param &par, Atmosphere &atm){
         if (ctrl.opt_snow == 1){
             Snow_acc_melt(par, atm, j);
         }
+    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
+        Mixing_snow_tracking(ctrl, atm, par);
+    }
+        
     }
 
     return EXIT_SUCCESS;

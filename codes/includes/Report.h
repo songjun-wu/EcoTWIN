@@ -48,6 +48,14 @@ class Report {
     ofstream of__GWf_out;  // GW flow to downstream cell [m]
     ofstream of__GWf_toChn;  // Groundwater flow to Channel [m]
     ofstream of__Q;  // Discharge [m3/s]
+    ofstream of__d18o_I;  // d18o in Canopy storage [‰]
+    ofstream of__d18o_snow;  // d18o in Snow depth in [‰]
+    ofstream of__d18o_pond;  // d18o in Ponding water in [‰]
+    ofstream of__d18o_layer1;  // d18o in Soil moisture in layer 1 [‰]
+    ofstream of__d18o_layer2;  // d18o in Soil moisture in layer 2 [‰]
+    ofstream of__d18o_layer3;  // d18o in Soil moisture in layer 3 [‰]
+    ofstream of__d18o_GW;  // d18o in Groundwater storage [‰]
+    ofstream of__d18o_chanS;  // d18o in Channel storage [‰]
     /* end of Report */
 
     //ctor

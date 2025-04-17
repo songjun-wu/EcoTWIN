@@ -65,25 +65,44 @@ Storages = [['_I',       [Opt.cond['none']], 'Canopy storage [m]', 'grid', 'spat
             ['_GW',  [Opt.cond['none']], 'Groundwater storage [m]', 'grid', 'spatial', 'groundwater_storage'],
             ['_chanS',  [Opt.cond['none']], 'Channel storage [m3]', 'grid', 'new', None],
 
-            ['_I_old',       [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Canopy storage [m]', 'grid', 'new', None], 
-            ['_snow_old',    [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Snow depth in [m]', 'grid', 'new', None],
-            #['_pond_old',    [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Ponding water in [m]', 'grid', 'new', None],
-            ['_theta1_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Soil moisture in layer 1 [decimal]', 'grid', 'new', None],
-            ['_theta2_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Soil moisture in layer 2 [decimal]', 'grid', 'new', None],
-            ['_theta3_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Soil moisture in layer 3 [decimal]', 'grid', 'new', None], 
-            ['_GW_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Groundwater storage [m]', 'grid', 'new', None],
-            ['_chanS_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1']], 'Channel storage [m3]', 'grid', 'new', None],                      
+            ['_I_old',       [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Canopy storage [m]', 'grid', 'new', None], 
+            ['_snow_old',    [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Snow depth in [m]', 'grid', 'new', None],
+            ['_pond_old',    [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Ponding water in [m]', 'grid', 'new', None],
+            ['_theta1_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Soil moisture in layer 1 [decimal]', 'grid', 'new', None],
+            ['_theta2_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Soil moisture in layer 2 [decimal]', 'grid', 'new', None],
+            ['_theta3_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Soil moisture in layer 3 [decimal]', 'grid', 'new', None], 
+            ['_GW_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Groundwater storage [m]', 'grid', 'new', None],
+            ['_chanS_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Channel storage [m3]', 'grid', 'new', None],                      
             ]
 
-Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy storage [m]', 'grid', 'spatial', 'd18o_canopy_storage'],
-            ['_d18o_snow',    [Opt.cond['tracking_isotope_1']], 'd18o in Snow depth in [m]', 'grid', 'spatial', 'd18o_snow_depth'],
-            ['_d18o_pond',    [Opt.cond['tracking_isotope_1']], 'd18o in Ponding water in [m]', 'grid', 'spatial', 'd18o_pond'],
-            ['_d18o_layer1',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 1 [decimal]', 'grid', 'spatial', 'd18o_SMC_layer1'],
-            ['_d18o_layer2',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 2 [decimal]', 'grid', 'spatial', 'd18o_SMC_layer2'],
-            ['_d18o_layer3',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 3 [decimal]', 'grid', 'spatial', 'd18o_SMC_layer3'], 
-            ['_d18o_GW',  [Opt.cond['tracking_isotope_1']], 'd18o in Groundwater storage [m]', 'grid', 'spatial', 'd18o_groundwater_storage'],
-            ['_d18o_chanS',  [Opt.cond['tracking_isotope_1']], 'd18o in Channel storage [m3]', 'grid', 'new', 'd18o_chanS'],
+Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy storage [‰]', 'grid', 'spatial', 'd18o_canopy_storage'],
+            ['_d18o_snow',    [Opt.cond['tracking_isotope_1']], 'd18o in Snow depth in [‰]', 'grid', 'spatial', 'd18o_snow_depth'],
+            ['_d18o_pond',    [Opt.cond['tracking_isotope_1']], 'd18o in Ponding water in [‰]', 'grid', 'spatial', 'd18o_pond'],
+            ['_d18o_layer1',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 1 [‰]', 'grid', 'spatial', 'd18o_SMC_layer1'],
+            ['_d18o_layer2',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 2 [‰]', 'grid', 'spatial', 'd18o_SMC_layer2'],
+            ['_d18o_layer3',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 3 [‰]', 'grid', 'spatial', 'd18o_SMC_layer3'], 
+            ['_d18o_GW',  [Opt.cond['tracking_isotope_1']], 'd18o in Groundwater storage [‰]', 'grid', 'spatial', 'd18o_groundwater_storage'],
+            ['_d18o_chanS',  [Opt.cond['tracking_isotope_1']], 'd18o in Channel storage [‰]', 'grid', 'new', 'd18o_chanS'],
 
+            ['_d18o_ovf_in_acc',  [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in overland inflow [‰ * m]', 'grid', 'new', None],
+            ['_d18o_interf_in_acc',  [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in inter-inflow [‰ * m]', 'grid', 'new', None],
+            ['_d18o_GWf_in_acc',  [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in GW inflow [‰ * m]', 'grid', 'new', None],
+            ['_d18o_Qupstream_acc', [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in upstream inflow to channel storage [‰ * m]', 'grid', 'new', None]
+            ]
+
+Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mg/L]', 'grid', 'spatial', 'no3_canopy_storage'],
+            ['_no3_snow',    [Opt.cond['nitrogen_sim_1']], 'no3 in Snow depth in [mg/L]', 'grid', 'spatial', 'no3_snow_depth'],
+            ['_no3_pond',    [Opt.cond['nitrogen_sim_1']], 'no3 in Ponding water in [mg/L]', 'grid', 'spatial', 'no3_pond'],
+            ['_no3_layer1',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 1 [mg/L‰]', 'grid', 'spatial', 'no3_SMC_layer1'],
+            ['_no3_layer2',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 2 [mg/L]', 'grid', 'spatial', 'no3_SMC_layer2'],
+            ['_no3_layer3',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 3 [mg/L]', 'grid', 'spatial', 'no3_SMC_layer3'], 
+            ['_no3_GW',  [Opt.cond['nitrogen_sim_1']], 'no3 in Groundwater storage [mg/L]', 'grid', 'spatial', 'no3_groundwater_storage'],
+            ['_no3_chanS',  [Opt.cond['nitrogen_sim_1']], 'no3 in Channel storage [mg/L]', 'grid', 'new', 'no3_chanS'],
+
+            ['_no3_ovf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in overland inflow [mg/L * m]', 'grid', 'new', None],
+            ['_no3_interf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in inter-inflow [mg/L * m]', 'grid', 'new', None],
+            ['_no3_GWf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in GW inflow [mg/L * m]', 'grid', 'new', None],
+            ['_no3_Qupstream_acc', [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in upstream inflow to channel storage [mg/L * m]', 'grid', 'new', None]
             ]
 
 Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'interception'],
@@ -206,7 +225,8 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
 
 
 Reports = [Storages[j] for j in (np.squeeze(np.argwhere([i[4]=='spatial' for i in Storages])))]
-Reports.extend(Fluxes) 
+Reports.extend(Fluxes)
+Reports.extend(Tracking) 
 
 
 homepath = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/'

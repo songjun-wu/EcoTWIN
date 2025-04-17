@@ -39,6 +39,14 @@ int Report::dtor(Control &ctrl){
   if (of__GWf_out.is_open())  of__GWf_out.close();
   if (of__GWf_toChn.is_open())  of__GWf_toChn.close();
   if (of__Q.is_open())  of__Q.close();
+  if (of__d18o_I.is_open())  of__d18o_I.close();
+  if (of__d18o_snow.is_open())  of__d18o_snow.close();
+  if (of__d18o_pond.is_open())  of__d18o_pond.close();
+  if (of__d18o_layer1.is_open())  of__d18o_layer1.close();
+  if (of__d18o_layer2.is_open())  of__d18o_layer2.close();
+  if (of__d18o_layer3.is_open())  of__d18o_layer3.close();
+  if (of__d18o_GW.is_open())  of__d18o_GW.close();
+  if (of__d18o_chanS.is_open())  of__d18o_chanS.close();
   /* end of Report */
 
   return EXIT_SUCCESS;

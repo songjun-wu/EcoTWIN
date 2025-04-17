@@ -6,25 +6,31 @@
 CPP_SRCS += \
 ../codes/Tracking/Fractionation.cpp \
 ../codes/Tracking/Mixing.cpp \
-../codes/Tracking/Mixing_canopy.cpp \
-../codes/Tracking/Mixing_snow.cpp \
-../codes/Tracking/Mixing_soil_profile.cpp \
+../codes/Tracking/Mixing_canopy_tracking.cpp \
+../codes/Tracking/Mixing_snow_tracking.cpp \
+../codes/Tracking/Mixing_soil_profile_tracking.cpp \
+../codes/Tracking/Mixing_GW_tracking.cpp \
+../codes/Tracking/Mixing_routing_tracking.cpp \
 
 
 OBJS += \
 ./Tracking/Fractionation.o \
 ./Tracking/Mixing.o \
-./Tracking/Mixing_canopy.o \
-./Tracking/Mixing_snow.o \
-./Tracking/Mixing_soil_profile.o \
+./Tracking/Mixing_canopy_tracking.o \
+./Tracking/Mixing_snow_tracking.o \
+./Tracking/Mixing_soil_profile_tracking.o \
+./Tracking/Mixing_GW_tracking.o \
+./Tracking/Mixing_routing_tracking.o \
 
 
 CPP_DEPS += \
 ./Tracking/Fractionation.d \
 ./Tracking/Mixing.d \
-./Tracking/Mixing_canopy.d \
-./Tracking/Mixing_snow.d \
-./Tracking/Mixing_soil_profile.d \
+./Tracking/Mixing_canopy_tracking.d \
+./Tracking/Mixing_snow_tracking.d \
+./Tracking/Mixing_soil_profile_tracking.d \
+./Tracking/Mixing_GW_tracking.d \
+./Tracking/Mixing_routing_tracking.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

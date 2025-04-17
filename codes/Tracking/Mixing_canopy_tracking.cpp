@@ -1,6 +1,6 @@
 #include "Basin.h"
 
-int Basin::Mixing_canopy(Control &ctrl, Atmosphere &atm){
+int Basin::Mixing_canopy_tracking(Control &ctrl, Atmosphere &atm){
     
     if (ctrl.opt_tracking_isotope==1) {
 

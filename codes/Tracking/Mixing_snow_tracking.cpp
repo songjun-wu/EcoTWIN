@@ -1,6 +1,6 @@
 #include "Basin.h"
 
-int Basin::Mixing_snow(Control &ctrl, Atmosphere &atm, Param &par){
+int Basin::Mixing_snow_tracking(Control &ctrl, Atmosphere &atm, Param &par){
 
     if (ctrl.opt_tracking_isotope==1) {
         

@@ -36,8 +36,14 @@ int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){
 
     // Tracking
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
-        Mixing_soil_profile(ctrl, atm, par);  // d18o change due to canopy mixing and evaporation
+        Mixing_soil_profile_tracking(ctrl, atm, par);  // d18o change due to canopy mixing and evaporation
+        Mixing_GW_tracking(ctrl, atm);  // // GW storage mixing
     }
+
+    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1 or ctrl.opt_nitrogen_sim==1){
+        Store_states();  // Store all water storages for mixing
+    }
+    
    
     return EXIT_SUCCESS;
 }
