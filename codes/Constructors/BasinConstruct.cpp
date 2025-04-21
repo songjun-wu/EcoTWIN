@@ -70,6 +70,7 @@
   _Perc1 = new svector(_sortedGrid.size);
   _Perc2 = new svector(_sortedGrid.size);
   _Perc3 = new svector(_sortedGrid.size);
+  _rrPerc3 = new svector(_sortedGrid.size);
   _Ei = new svector(_sortedGrid.size);
   _Es = new svector(_sortedGrid.size);
   _Tr = new svector(_sortedGrid.size);
@@ -100,6 +101,7 @@
   _Q = new svector(ctrl.path_BasinFolder + ctrl.fn__Q, _rowNum, _colNum, _sortedGrid);
   _Qupstream = new svector(_sortedGrid.size);
   _tmp = new svector(_sortedGrid.size);
+  _snowacc = new svector(_sortedGrid.size);
   if (ctrl.opt_reinfil == 1){
     _rinfilt = new svector(_sortedGrid.size);
     _rPerc1 = new svector(_sortedGrid.size);
@@ -118,6 +120,10 @@
     _p_perc2 = new svector(_sortedGrid.size);
     _p_perc3 = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_nitrogen_sim == 1){
+    _deni_soil = new svector(_sortedGrid.size);
+    _minerl_soil = new svector(_sortedGrid.size);
+  }
   /* end of Fluxes */
 
   /* Tracking */
@@ -129,7 +135,7 @@
     _d18o_layer2 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer2, _rowNum, _colNum, _sortedGrid);
     _d18o_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer3, _rowNum, _colNum, _sortedGrid);
     _d18o_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_GW, _rowNum, _colNum, _sortedGrid);
-    _d18o_chanS = new svector(_sortedGrid.size);
+    _d18o_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_chanS, _rowNum, _colNum, _sortedGrid);
     _d18o_ovf_in_acc = new svector(_sortedGrid.size);
     _d18o_interf_in_acc = new svector(_sortedGrid.size);
     _d18o_GWf_in_acc = new svector(_sortedGrid.size);
@@ -138,6 +144,26 @@
   /* end of Tracking */
 
   /* Nitrogen */
+  if (ctrl.opt_nitrogen_sim == 1){
+    _no3_I = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_I, _rowNum, _colNum, _sortedGrid);
+    _no3_snow = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_snow, _rowNum, _colNum, _sortedGrid);
+    _no3_pond = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_pond, _rowNum, _colNum, _sortedGrid);
+    _no3_layer1 = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_layer1, _rowNum, _colNum, _sortedGrid);
+    _no3_layer2 = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_layer2, _rowNum, _colNum, _sortedGrid);
+    _no3_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_layer3, _rowNum, _colNum, _sortedGrid);
+    _no3_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_GW, _rowNum, _colNum, _sortedGrid);
+    _no3_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_chanS, _rowNum, _colNum, _sortedGrid);
+    _humusN1 = new svector(_sortedGrid.size);
+    _humusN2 = new svector(_sortedGrid.size);
+    _humusN3 = new svector(_sortedGrid.size);
+    _fastN1 = new svector(_sortedGrid.size);
+    _fastN2 = new svector(_sortedGrid.size);
+    _fastN3 = new svector(_sortedGrid.size);
+    _no3_ovf_in_acc = new svector(_sortedGrid.size);
+    _no3_interf_in_acc = new svector(_sortedGrid.size);
+    _no3_GWf_in_acc = new svector(_sortedGrid.size);
+    _no3_Qupstream_acc = new svector(_sortedGrid.size);
+  }
   /* end of Nitrogen */
 
   _slope->higherthan(0.01);

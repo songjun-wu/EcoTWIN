@@ -39,6 +39,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(Ksat, "Ksat", lines);
   readIntoParam(BClambda, "BClambda", lines);
   readIntoParam(percExp, "percExp", lines);
+  readIntoParam(init_GW, "init_GW", lines);
   readIntoParam(wRecharge, "wRecharge", lines);
   readIntoParam(pOvf_toChn, "pOvf_toChn", lines);
   readIntoParam(interfExp, "interfExp", lines);
@@ -46,6 +47,16 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(GWfExp, "GWfExp", lines);
   readIntoParam(wGWf, "wGWf", lines);
   readIntoParam(Manningn, "Manningn", lines);
+  readIntoParam(nearsurface_mixing, "nearsurface_mixing", lines);
+  readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
+  readIntoParam(d18o_init_GW, "d18o_init_GW", lines);
+  readIntoParam(denitrification_aquatic, "denitrification_aquatic", lines);
+  readIntoParam(autotrophic_uptake_aquatic, "autotrophic_uptake_aquatic", lines);
+  readIntoParam(primary_production_aquatic, "primary_production_aquatic", lines);
+  readIntoParam(denitrification_soil, "denitrification_soil", lines);
+  readIntoParam(degradation_soil, "degradation_soil", lines);
+  readIntoParam(mineralisation_soil, "mineralisation_soil", lines);
+  readIntoParam(dissolution_soil, "dissolution_soil", lines);
   /* end of Parameters */
 
   input.close();

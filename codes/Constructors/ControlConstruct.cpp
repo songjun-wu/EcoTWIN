@@ -1,6 +1,11 @@
 #include "Control.h"
 
 Control::Control(){
+
+  current_ts = 0;
+
+  basetime = Set_reference_timestep();
+
   string confilename = "config.ini";
 
   ReadConfigFile(confilename);

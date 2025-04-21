@@ -25,6 +25,7 @@ int Basin::Reinfiltration_1(Control &ctrl, Param &par, int j, double &db_rinfilt
 
     // If soil is too saturated for further infiltration
     if (dtheta < 0){
+        db_rinfilt = 0.0;
         return EXIT_SUCCESS;
     }
 

@@ -59,7 +59,7 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
                 }while(fabs(fQj1i1)>0.00001 && count < 50);
                 
 
-                _chanS->val[j] = std::max(0.0,(Qupstream+Qall*_dx  - Qk1)*dt) / dx_square;
+                _chanS->val[j] = std::max(0.0,(Qupstream+Qall*_dx  - Qk1)*dt) / dx_square;  // Channel storage [m]
                 _Q->val[j] = Qk1; // Discharge [m3/s]
                 
                 if (_sortedGrid.lat_ok[j] == 1){

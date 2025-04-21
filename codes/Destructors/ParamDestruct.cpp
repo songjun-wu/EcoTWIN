@@ -7,6 +7,9 @@ int Param::dtor(Control &ctrl){
   /* Parameters */
   if(_depth3) delete _depth3;
   if(_alpha) delete _alpha;
+  if(_wRecharge) delete _wRecharge;
+  if(_nearsurface_mixing) delete _nearsurface_mixing;
+  if(_ratio_to_interf) delete _ratio_to_interf;
   if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){
     if(_rE) delete _rE;
   }
@@ -43,8 +46,8 @@ int Param::dtor(Control &ctrl){
   if (ctrl.opt_percolation == 2){
     if(_percExp) delete _percExp;
   }
-  if (ctrl.opt_recharge == 1){
-    if(_wRecharge) delete _wRecharge;
+  if (ctrl.opt_init_GW == 1){
+    if(_init_GW) delete _init_GW;
   }
   if (ctrl.opt_routinterf == 1){
     if(_pOvf_toChn) delete _pOvf_toChn;
@@ -57,6 +60,18 @@ int Param::dtor(Control &ctrl){
   }
   if (ctrl.opt_routQ == 1){
     if(_Manningn) delete _Manningn;
+  }
+  if (ctrl.opt_tracking_isotope == 1){
+    if(_d18o_init_GW) delete _d18o_init_GW;
+  }
+  if (ctrl.opt_nitrogen_sim == 1){
+    if(_denitrification_aquatic) delete _denitrification_aquatic;
+    if(_autotrophic_uptake_aquatic) delete _autotrophic_uptake_aquatic;
+    if(_primary_production_aquatic) delete _primary_production_aquatic;
+    if(_denitrification_soil) delete _denitrification_soil;
+    if(_degradation_soil) delete _degradation_soil;
+    if(_mineralisation_soil) delete _mineralisation_soil;
+    if(_dissolution_soil) delete _dissolution_soil;
   }
   /* end of Parameters */
 

@@ -16,8 +16,9 @@ int main(){
 
   float advance_climate = 0; // resets to zero when Clim_input is updated
   float advance_landuse = 0; // resets to zero when land use inputs is updated
+  int Report_map_flag; // Whether to report maps
   
-  
+
   oControl = new Control;
   oParam = new Param(*oControl);
   oBasin = new Basin(*oControl, *oParam);
@@ -31,17 +32,21 @@ int main(){
   
   while (oControl->current_ts < oControl->Simul_end){
 
-
+    oControl->Get_year_month_day();
+    
     oBasin->Solve_timesteps(*oControl, *oParam, *oAtmosphere);
 
     // report outputs
-    oReport->report(*oControl, *oBasin); 
+    oReport->Report_all(*oControl, *oBasin); 
+    
 
-    // Update climate and land use status
+    // Update counter
     oControl->current_ts += oControl->Simul_tstep;
     advance_climate += oControl->Simul_tstep;
     advance_landuse += oControl->Simul_tstep;
-    
+
+
+
     // Update climate inputs
     if (advance_climate >= oControl->Clim_input_tstep) {
       if (oControl->opt_climate_input_format == 1){

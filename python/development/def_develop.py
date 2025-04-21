@@ -24,9 +24,12 @@ class Opt:
     cond['nitrogen_sim_1'] = {'key':'opt_nitrogen_sim', 'value':1,
                                   'general_description':'Enable nitrogen simulation?\n# 0: disabled\n# 1: enabled',
                                   'description':'Nitrogen simulation'}
+    cond['reinfil_0']   = {'key':'opt_reinfil', 'value':0, 
+                        'general_description':'Reinfiltration during overland flow routing\n# 0: Disabled\n# 1: Enabled',
+                        'description':'Reinfiltration Disaled'}
     cond['reinfil_1']   = {'key':'opt_reinfil', 'value':1, 
                         'general_description':'Reinfiltration during overland flow routing',
-                        'description':'Reinfiltration during overland flow routing'}
+                        'description':'Reinfiltration Enabled'}
     
 
     
@@ -84,36 +87,40 @@ class Opt:
                         'general_description':'Iniltration model\n# 1: Green-Ampt model\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)',
                         'description':'Method of iniltration and percolation based on Green-Ampt model'}
     
-    
+    cond['canopy_evap_0']   = {'key':'opt_canopy_evap', 'value':0, 
+                        'general_description':'Canopy evaporation function\n# 0: Disabled\n#1: based on PET and a exponential function Liang et al. (1994)',
+                        'description':'Canopy evaporation disabled'}
     cond['canopy_evap_1']   = {'key':'opt_canopy_evap', 'value':1, 
-                        'general_description':'Canopy evaporation function\n# 1: based on PET and a exponential function Liang et al. (1994)',
+                        'general_description':'Canopy evaporation function\n# 0: Disabled\n#1: based on PET and a exponential function Liang et al. (1994)',
                         'description':'Canopy evaporation based on PET and a exponential function Liang et al. (1994)'}
     
     cond['evap_1']   = {'key':'opt_evap', 'value':1, 
                         'general_description':'Evapotranspiration function\n# 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)',
                         'description':'Evapotranspiration calculation based on Feddes et al., (1976)'}
-
-
-
+    
 
     cond['perc_1']   = {'key':'opt_percolation', 'value':1, 
                         'general_description':'Percolation model\n# 1: based on travel time and excess water above FC; SWAT\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)\
                         \n# 3: based on soil deficit',
                         'description':'Percolation based on based on travel time and excess water above FC'}
-    
+
     cond['perc_2']   = {'key':'opt_percolation', 'value':2, 
                        'general_description':'Percolation model\n# 1: based on travel time and excess water above FC; SWAT\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)\
                         \n# 3: based on soil deficit',
                         'description':'Percolation based on soil deficit and a exponential parameter; Feddes et al., (1976)'}
-
-    cond['perc_3']   = {'key':'opt_percolation', 'value':2, 
+    
+    cond['perc_3']   = {'key':'opt_percolation', 'value':3, 
                        'general_description':'Percolation model\n# 1: based on travel time and excess water above FC; SWAT\n# 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)\
                         \n# 3: based on soil deficit',
                         'description':'Percolation based on soil deficit. Percolation exists after soil saturation'}          
     
-    cond['recharge_1']   = {'key':'opt_recharge', 'value':1, 
-                        'general_description':'GW recharge\n# 1: based on travel time, excess water above FC, and a weighting parameter',
-                        'description':'GW recharge based on travel time, excess water above FC, and a weighting parameter'}
+
+    cond['init_GW_1']   = {'key':'opt_init_GW', 'value':1, 
+                        'general_description':'Include initial GW storage into calibration \n# 0: Read from asc inputs\n# 1: Included for calibration',
+                        'description':'Include initial GW storage into calibration'}
+    #cond['recharge_1']   = {'key':'opt_recharge', 'value':1, 
+    #                    'general_description':'GW recharge\n# 1: based on travel time, excess water above FC, and a weighting parameter',
+    #                    'description':'GW recharge based on travel time, excess water above FC, and a weighting parameter'}
     
     
     cond['routOvf_1']   = {'key':'opt_routOvf', 'value':1, 
@@ -131,6 +138,7 @@ class Opt:
     cond['routQ_1']   = {'key':'opt_routQ', 'value':1, 
                         'general_description':'Stream routing\n# 1: Kinematic Wave',
                         'description':'Stream routing: Kinematic Wave'}
+    
     
     
 

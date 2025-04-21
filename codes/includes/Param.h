@@ -43,6 +43,7 @@ class Param {
   vector<double> Ksat;
   vector<double> BClambda;
   vector<double> percExp;
+  vector<double> init_GW;
   vector<double> wRecharge;
   vector<double> pOvf_toChn;
   vector<double> interfExp;
@@ -50,8 +51,21 @@ class Param {
   vector<double> GWfExp;
   vector<double> wGWf;
   vector<double> Manningn;
+  vector<double> nearsurface_mixing;
+  vector<double> ratio_to_interf;
+  vector<double> d18o_init_GW;
+  vector<double> denitrification_aquatic;
+  vector<double> autotrophic_uptake_aquatic;
+  vector<double> primary_production_aquatic;
+  vector<double> denitrification_soil;
+  vector<double> degradation_soil;
+  vector<double> mineralisation_soil;
+  vector<double> dissolution_soil;
   svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
+  svector *_wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
+  svector *_nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
+  svector *_ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   svector *_rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
   svector *_snow_rain_thre;  // The temperature for snow melt  [m]
   svector *_deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
@@ -72,13 +86,21 @@ class Param {
   svector *_Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   svector *_BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
   svector *_percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
-  svector *_wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
+  svector *_init_GW;  // The initial GW storage [m], only needed when opt_init_GW = 1
   svector *_pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
   svector *_interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
   svector *_winterf;  // The weight parameter in kinematic wave solution  [-]
   svector *_GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
   svector *_wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   svector *_Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
+  svector *_d18o_init_GW;  // Initial d18O of GW storage [‰]
+  svector *_denitrification_aquatic;  // Reference rates of aquatic denitrification [-]
+  svector *_autotrophic_uptake_aquatic;  // Reference rates of aquatic autotrophic uptake [-]
+  svector *_primary_production_aquatic;  // Reference rates of aquatic primary production [-]
+  svector *_denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
+  svector *_degradation_soil;  // Reference rates of soil degradation [kg/ha]
+  svector *_mineralisation_soil;  // Reference rates of soil mineralisation [kg/ha]
+  svector *_dissolution_soil;  // Reference rates of soil dissolution [kg/ha]
   /* end of Parameters */
 
   svector_2d *param_category;

@@ -12,6 +12,9 @@ Param::Param(Control &ctrl){
   /* Parameters */
   _depth3 = new svector(_sortedGrid.size);
   _alpha = new svector(_sortedGrid.size);
+  _wRecharge = new svector(_sortedGrid.size);
+  _nearsurface_mixing = new svector(_sortedGrid.size);
+  _ratio_to_interf = new svector(_sortedGrid.size);
   if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){
     _rE = new svector(_sortedGrid.size);
   }
@@ -48,8 +51,8 @@ Param::Param(Control &ctrl){
   if (ctrl.opt_percolation == 2){
     _percExp = new svector(_sortedGrid.size);
   }
-  if (ctrl.opt_recharge == 1){
-    _wRecharge = new svector(_sortedGrid.size);
+  if (ctrl.opt_init_GW == 1){
+    _init_GW = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_routinterf == 1){
     _pOvf_toChn = new svector(_sortedGrid.size);
@@ -62,6 +65,18 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_routQ == 1){
     _Manningn = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_tracking_isotope == 1){
+    _d18o_init_GW = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_nitrogen_sim == 1){
+    _denitrification_aquatic = new svector(_sortedGrid.size);
+    _autotrophic_uptake_aquatic = new svector(_sortedGrid.size);
+    _primary_production_aquatic = new svector(_sortedGrid.size);
+    _denitrification_soil = new svector(_sortedGrid.size);
+    _degradation_soil = new svector(_sortedGrid.size);
+    _mineralisation_soil = new svector(_sortedGrid.size);
+    _dissolution_soil = new svector(_sortedGrid.size);
   }
   /* end of Parameters */
 

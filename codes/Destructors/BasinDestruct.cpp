@@ -65,6 +65,7 @@ int Basin::dtor(Control &ctrl){
   if(_Perc1) delete _Perc1;
   if(_Perc2) delete _Perc2;
   if(_Perc3) delete _Perc3;
+  if(_rrPerc3) delete _rrPerc3;
   if(_Ei) delete _Ei;
   if(_Es) delete _Es;
   if(_Tr) delete _Tr;
@@ -95,6 +96,7 @@ int Basin::dtor(Control &ctrl){
   if(_Q) delete _Q;
   if(_Qupstream) delete _Qupstream;
   if(_tmp) delete _tmp;
+  if(_snowacc) delete _snowacc;
   if (ctrl.opt_reinfil == 1){
     if(_rinfilt) delete _rinfilt;
     if(_rPerc1) delete _rPerc1;
@@ -112,6 +114,10 @@ int Basin::dtor(Control &ctrl){
     if(_p_perc1) delete _p_perc1;
     if(_p_perc2) delete _p_perc2;
     if(_p_perc3) delete _p_perc3;
+  }
+  if (ctrl.opt_nitrogen_sim == 1){
+    if(_deni_soil) delete _deni_soil;
+    if(_minerl_soil) delete _minerl_soil;
   }
   /* end of Fluxes */
 
@@ -133,6 +139,26 @@ int Basin::dtor(Control &ctrl){
   /* end of Tracking */
 
   /* Nitrogen */
+  if (ctrl.opt_nitrogen_sim == 1){
+    if(_no3_I) delete _no3_I;
+    if(_no3_snow) delete _no3_snow;
+    if(_no3_pond) delete _no3_pond;
+    if(_no3_layer1) delete _no3_layer1;
+    if(_no3_layer2) delete _no3_layer2;
+    if(_no3_layer3) delete _no3_layer3;
+    if(_no3_GW) delete _no3_GW;
+    if(_no3_chanS) delete _no3_chanS;
+    if(_humusN1) delete _humusN1;
+    if(_humusN2) delete _humusN2;
+    if(_humusN3) delete _humusN3;
+    if(_fastN1) delete _fastN1;
+    if(_fastN2) delete _fastN2;
+    if(_fastN3) delete _fastN3;
+    if(_no3_ovf_in_acc) delete _no3_ovf_in_acc;
+    if(_no3_interf_in_acc) delete _no3_interf_in_acc;
+    if(_no3_GWf_in_acc) delete _no3_GWf_in_acc;
+    if(_no3_Qupstream_acc) delete _no3_Qupstream_acc;
+  }
   /* end of Nitrogen */
 
   return EXIT_SUCCESS;

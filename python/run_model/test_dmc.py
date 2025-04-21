@@ -4,6 +4,7 @@ import pcraster
 import prep_tools
 import os
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 home_dir = '/home/wusongj/GEM/test_dmc/'
 nan_value = -9999
@@ -78,6 +79,7 @@ prep_tools.saveToASCII(unit_soil*1.2, 'bulkdensity1', home_dir+'spatial/', 'floa
 prep_tools.saveToASCII(unit_soil*1.4, 'bulkdensity2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*1.6, 'bulkdensity3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
+### Tracking
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_snow', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_pond', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
@@ -87,10 +89,22 @@ prep_tools.saveToASCII(unit_soil*-8, 'd18o_layer3', home_dir+'spatial/', 'float6
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
+
+### Nitrogen
+prep_tools.saveToASCII(unit_soil*2, 'no3_I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*2, 'no3_snow', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*2, 'no3_pond', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*2, 'no3_layer1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*2, 'no3_layer2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*2, 'no3_layer3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*2, 'no3_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*2, 'no3_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
 tmp = np.tile((unit_soil*1.0).flatten(), 50)
 tmp.tofile(home_dir+'spatial/'+'category_0.bin')
 
 fnames = ['unit.soil_BE', 'unit.soil_GL', 'unit.soil_PE', 'unit.soil_PZ', 'p_0', 'p_1', 'p_2', 'p_3' ]
+#fnames = ['p_0', 'p_1', 'p_2', 'p_3', 'p_0', 'p_1', 'p_2', 'p_3' ]
 for i in range(len(fnames)):
     tmp = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/'+fnames[i]+'.map'), np.nan).astype(np.float64)
     tmp[~mask] = nan_value
@@ -118,7 +132,8 @@ np.repeat(df['RH_3015']/100, 1).to_numpy().tofile(home_dir+'climate/RH.bin')
 np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['d2H_14dMV_3015'], 1).to_numpy().tofile(home_dir+'climate/d2h_P.bin')
-np.full(len(df['d2H_14dMV_3015']), -8.0).tofile(home_dir+'climate/d18o_P.bin')
+np.repeat(df['d18O_14dMV_3015'], 1).to_numpy().tofile(home_dir+'climate/d18o_P.bin')
+
 np.repeat(df['PET']/1000, 1).to_numpy().tofile(home_dir+'climate/PET.bin')
 
 
@@ -132,6 +147,13 @@ lai.flatten().tofile(home_dir+'climate/LAI.bin')
 
 obs_q = np.fromfile('/home/wusongj/paper3_scripts/configs/discharge_obs.bin').reshape(4, -1)
 print(obs_q.shape)
+
+df = pd.read_csv('/home/wusongj/paper3_scripts/configs/obs_all.csv', index_col='time')
+df.index = pd.to_datetime(df.index)
+print(df.columns)
+df = df.loc[datetime(1994,1,1):datetime(2022,1,1), :].loc[:, ['d18o_stream_25', 'd18o_stream_32', 'd18o_stream_26', 'd18o_stream_29a']]
+arr = df.to_numpy().T
+arr.tofile(home_dir + 'd18o_stream_obs.bin')
 
 
 """

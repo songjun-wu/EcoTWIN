@@ -7,10 +7,6 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
     double dt = ctrl.Simul_tstep;
     double travel_time_ratio = 0;
 
-    double p_perc1 = 0;
-    double p_perc2 = 0;
-    double p_perc3 = 0;
-    
     if (par.param_category->sort_perc_travel_time_OK == 0){
 
         par.param_category->sort_perc_travel_time_OK = 1;
@@ -71,7 +67,6 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
     double travel_time_ratio;
     
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-
         double theta1 = _theta1->val[j];
         double theta2 = _theta2->val[j];
         double theta3 = _theta3->val[j];
@@ -86,38 +81,35 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
 
         double perc1 = 0;
         double perc2 = 0;
-        double perc3 = 0;
         double perc_in = 0;
         double delta_theta = 0;
-
+        
         // Percolation from layer 1
         // Only happens when saturation is met, because infiltration has been added to layer 1
         if (theta1 > thetaS1){
+
             perc1 = (theta1 - thetaS1) * depth1;  // Percolation to layer 2
             theta1 = thetaS1;
-        } else{
-            exit(EXIT_SUCCESS);
-        }
         
-        // Percolation from layer 2
-        // if saturation is not met then fill the deficit, otherwise all water pass to next layer
-        perc_in = perc1;
-        if (theta2 < thetaS2){ 
-            delta_theta = perc_in * (1 - exp(par._percExp->val[j] * log(theta2/thetaS2))) / depth2;
-            if ((theta2 + delta_theta) > thetaS2){
-                theta2 = thetaS2;
-                perc_in -= (thetaS2 - theta2) * depth2;
-            } else{
-                theta2 += delta_theta;
-                perc_in -= (delta_theta * depth2);
+            // Percolation from layer 2
+            // if saturation is not met then fill the deficit, otherwise all water pass to next layer
+            perc_in = perc1;
+            if (theta2 < thetaS2){ 
+                delta_theta = perc_in * min((1 - exp(par._percExp->val[j] * log(theta2/thetaS2))), 1.0) / depth2;
+                if ((theta2 + delta_theta) > thetaS2){
+                    theta2 = thetaS2;
+                    perc_in -= (thetaS2 - theta2) * depth2;
+                } else{
+                    theta2 += delta_theta;
+                    perc_in -= (delta_theta * depth2);
+                }
             }
-        }
-        perc2 = perc_in;  // Percolation to next layer
+            perc2 = perc_in;  // Percolation to next layer
 
-        // Update soil storage in layer 3
-        // Percolation for layer 3 (groundwater recharge is calculated independently)
-        theta3 += perc_in / depth3;
-
+            // Update soil storage in layer 3
+            // Percolation for layer 3 (groundwater recharge is calculated independently)
+            theta3 += perc_in / depth3;
+        } 
         // Local to global
         _theta1->val[j] = theta1;
         _theta2->val[j] = theta2;
@@ -151,8 +143,6 @@ int Basin::Percolation_3(Control &ctrl, Param &par) {
 
         double perc1 = 0;
         double perc2 = 0;
-        double perc3 = 0;
-        double perc_in = 0;
 
         // Percolation from layer 1
         // if saturation is not met then fill the deficit, otherwise all water pass to next layer

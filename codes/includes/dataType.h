@@ -46,6 +46,7 @@ struct svector{
     int reset();
     int equals(svector &sv);
     int plus(svector &sv);
+    int minus(svector &sv);
     int multiply(svector &sv);
     int higherthan(double max);
 };

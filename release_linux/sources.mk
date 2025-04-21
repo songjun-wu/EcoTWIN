@@ -30,6 +30,8 @@ Atmosphere \
 Constructors \
 Hydrology \
 IO \
+Nitrogen \
 Energy \
 Tracking \
+Functions \
 . \

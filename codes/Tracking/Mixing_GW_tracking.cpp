@@ -1,6 +1,17 @@
 #include "Basin.h"
 
 int Basin::Mixing_GW_tracking(Control &ctrl, Atmosphere &atm){
+    /*
+    ### GW:
+        (_GW_old)
+        + percolation3      (need to mix)
+        (_GW)
+        + repercolation3    
+        + GWf_in
+        - GWf_out
+        - GWf_toChn         
+                            
+    */
 
     if (ctrl.opt_tracking_isotope==1) {
 

@@ -75,6 +75,7 @@ class Basin {
   svector *_Perc1;  // Percolation into layer 2 [m]
   svector *_Perc2;  // Percolation into layer 3 [m]
   svector *_Perc3;  // Percolation into gw reservior [m]
+  svector *_rrPerc3;  // Repercolation into gw reservior due to interflow routing [m]
   svector *_Ei;  // Canopy evaporation [m]
   svector *_Es;  // Soil evaporation [m]
   svector *_Tr;  // Total transpiration in three layers [m]
@@ -105,10 +106,11 @@ class Basin {
   svector *_Q;  // Discharge [m3/s]
   svector *_Qupstream;  // Upstream inflow [m3/s]
   svector *_tmp;  // Temporal variable for testing [-]
+  svector *_snowacc;  // Snow accumulation for testing [m]
   svector *_rinfilt;  // Reinflitration into soil layer 1 [m]
-  svector *_rPerc1;  // Repercolation into layer 2 [m]
-  svector *_rPerc2;  // Repercolation into layer 3 [m]
-  svector *_rPerc3;  // Repercolation into gw reservior [m]
+  svector *_rPerc1;  // Repercolation into layer 2 due to overland flow routing [m]
+  svector *_rPerc2;  // Repercolation into layer 3 due to overland flow routing [m]
+  svector *_rPerc3;  // Repercolation into gw reservior due to overland flow routing [m]
   svector *_froot_layer1;  // froot coefficient for all soil profile
   svector *_froot_layer2;  // froot coefficient for layer 2
   svector *_froot_layer3;  // froot coefficient for layer 3
@@ -117,6 +119,8 @@ class Basin {
   svector *_p_perc1;  // Percolation proportion in layer 1
   svector *_p_perc2;  // Percolation proportion in layer 2
   svector *_p_perc3;  // Percolation proportion in layer 3
+  svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
+  svector *_minerl_soil;  // Soil mineralisation [mgN/L*m = gN/m2]
   /* end of Fluxes */
 
 
@@ -136,6 +140,24 @@ class Basin {
   /* end of Tracking */
 
   /* Nitrogen */
+  svector *_no3_I;  // no3 in Canopy storage [mgN/L]
+  svector *_no3_snow;  // no3 in Snow depth in [mgN/L]
+  svector *_no3_pond;  // no3 in Ponding water in [mgN/L]
+  svector *_no3_layer1;  // no3 in Soil moisture in layer 1 [mgN/L]
+  svector *_no3_layer2;  // no3 in Soil moisture in layer 2 [mgN/L]
+  svector *_no3_layer3;  // no3 in Soil moisture in layer 3 [mgN/L]
+  svector *_no3_GW;  // no3 in Groundwater storage [mgN/L]
+  svector *_no3_chanS;  // no3 in Channel storage [mgN/L]
+  svector *_humusN1;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+  svector *_humusN2;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+  svector *_humusN3;  // Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
+  svector *_fastN1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+  svector *_fastN2;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+  svector *_fastN3;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
+  svector *_no3_ovf_in_acc;  // Total amount of 18o in overland inflow [mgN/L*m = gN/m2]
+  svector *_no3_interf_in_acc;  // Total amount of 18o in inter-inflow [mgN/L*m = gN/m2]
+  svector *_no3_GWf_in_acc;  // Total amount of 18o in GW inflow [mgN/L*m = gN/m2]
+  svector *_no3_Qupstream_acc;  // Total amount of 18o in upstream inflow to channel storage [mgN/L*m = gN/m2]
   /* end of Nitrogen */
  
   
@@ -146,6 +168,9 @@ class Basin {
 
 
   int Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm);
+
+  // Model test
+  int Check_mass_balance(Control &ctrl, Param &par, Atmosphere &atm);
 
   // Init
   int Initialisation(Control &ctrl, Param &par);
@@ -167,7 +192,7 @@ class Basin {
   int Interception_2(Control &ctrl, Param &par, Atmosphere &atm);
 
   /* Snow accumulation and melt */
-  int Solve_snowpack(Control &ctrl, Param &par, Atmosphere &atm);
+  int Solve_surface(Control &ctrl, Param &par, Atmosphere &atm);
   int Snow_acc_melt(Param &par, Atmosphere &atm, int j);
 
   /* Soil profiles */
@@ -198,27 +223,42 @@ class Basin {
   int Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2);
 
   int GWrecharge_1(Control &ctrl, Param &par);
+  int GWrecharge_2(Control &ctrl, Param &par);
   int ReGWrecharge_1(Control &ctrl, Param &par, int j, double &db_theta3, double &db_GW, double &db_rPerc3);
+  int ReGWrecharge_2(Control &ctrl, Param &par, int j, double &db_theta3, double &db_GW, double &db_rPerc3);
 
 
-  // routing
+  /* Soil profiles */
   int Routing(Control &ctrl, Param &par);
   int Routing_ovf_1(Control &ctrl, Param &par); // overland flow routing; All ponding water goes to next cell
   int Routing_interflow_1(Control &ctrl, Param &par); // Interflow routing based on linear approximation of Kinematic Wave
   int Routing_Q_1(Control &ctrl, Param &par); // Stream routing based on Kinematic Wave
   int Routing_GWflow_1(Control &ctrl, Param &par); // GW flow routing based on linear approximation of Kinematic Wave
 
-  // Energy balance
+  /* Soil profiles */
   int Get_soil_temperature(double &Ta, double &Ts, double &LAI);
 
-  // Tracking
+  /* Soil profiles */
   int Mixing_full(double storage, double &cstorage, double input, double cinput);  // Full mixing within the timestep
   int Mixing_canopy_tracking(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing and fractionaton
-  int Mixing_snow_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Canopy snowpack and throughfall
+  int Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Canopy snowpack and throughfall
   int Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and fractionaton
   int Mixing_GW_tracking(Control &ctrl, Atmosphere &atm);  // GW storage mixing
   int Mixing_routing_tracking(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
   int Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, svector &sv_di_old, svector &sv_di_new, svector &sv_di_evap, int issoil);  // Fractionation due to canopy or soil evaporation
+
+  /* Soil profiles */
+  int Solve_canopy_nitrogen(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing with precipitation and erichment due to evaporation
+  int Solve_surface_nitrogen(Control &ctrl, Atmosphere &atm, Param &par);  // Ponding water mixing with snow melt
+  int Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and transformation
+  int Solve_GW_nitrogen(Control &ctrl, Atmosphere &atm);  // GW storage mixing
+  int Solve_routing_nitrogen(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
+
+  int Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par);
+  int Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par);
+
+  double Temp_factor(const double db_Ts);  // Temperature factor of nitrogen transformation
+  double Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaS, const double db_depth); // Moisture factor of nitrogen transformation
 };
 
 #endif /* BASIN_H_ */

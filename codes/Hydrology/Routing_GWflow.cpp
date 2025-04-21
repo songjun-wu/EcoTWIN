@@ -3,26 +3,28 @@
 int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
 
     int from_j;
-
-    double GWflow_to_go = 0; // Available water for GWflow
-    double GWflow = 0;  // Total output of GWflow
-    double GWflow_toChn = 0;  // Output of GWflow to stream
+    double GWflow_in; // GW inputs from upstream cell
+    double GWflow_to_go; // Available water for GWflow
+    double GWflow_out;  // Output of GWflow to downstream cell (terrestrial only)
+    double GWflow_toChn;  // Output of GWflow to stream
+    double GWflow_toTrestrial; // Output of GWflow to downstream cell (terrestrial only)
 
     double dx = ctrl._dx;
     double dx_square = dx * dx;
     double dtdx = ctrl.Simul_tstep / dx;
     double alpha = 0;
     double Ks3 = 0;
+    double chnlength;
+
 
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
-
-        double chnlength = _chnlength->val[j];
-        double GWflow_in = _GWf_in->val[j];
-        double GWflow_toChn = 0;
-        double GWflow_out = 0;
-        double GWflow_toTrestrial = 0;
+        chnlength = _chnlength->val[j];
+        GWflow_in = _GWf_in->val[j];
+        GWflow_toChn = 0;
+        GWflow_out = 0;
+        GWflow_toTrestrial = 0;
         
     
         from_j = _sortedGrid.to_cell[j];

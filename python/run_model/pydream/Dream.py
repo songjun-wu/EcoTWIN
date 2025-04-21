@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import os
 import numpy as np
 import random
 from . import Dream_shared_vars
 from datetime import datetime
 import traceback
-import multiprocessing as mp
-from multiprocessing import pool
 import time
-import os
+from mpi4py import MPI
 
-class Dream():
+class Dream:
     """An implementation of the MT-DREAM\ :sub:`(ZS)`\  algorithm introduced in:
         Laloy, E. & Vrugt, J. A. High-dimensional posterior exploration of hydrologic models using multiple-try DREAM\ :sub:`(ZS)`\  and high-performance computing. Water Resources Research 48, W01526 (2012).
     
@@ -65,10 +64,11 @@ class Dream():
                  crossover_burnin=None, DEpairs=1, lamb=.05, zeta=1e-12, history_thin=10, snooker=.10,
                  p_gamma_unity=.20, gamma_levels=1, start_random=True, save_history=True, history_file=False,
                  crossover_file=False, gamma_file=False, multitry=False, parallel=False, verbose=False,
-                 model_name=False, hardboundaries=True, mp_context=None, **kwargs):
+                 model_name=False, hardboundaries=True, **kwargs):
+        self.comm = MPI.COMM_WORLD
+        self.rank = self.comm.Get_rank()
+        self.size = self.comm.Get_size()
 
-        # Set Dream multiprocessing context
-        self.mp_context = mp_context
         # Set model and variable attributes (if no variables passed, set to all parameters)
         self.model = model
         self.model_name = model_name
@@ -104,7 +104,7 @@ class Dream():
                 n += var.dsize
             self.mins = np.array(self.mins)
             self.maxs = np.array(self.maxs)
-
+        
         self.nseedchains = nseedchains
         self.nCR = nCR
 
@@ -180,7 +180,13 @@ class Dream():
         self.gamma_arr = gamma_array
         self.gamma = None
 
-        self.iter = 0  
+        self.iter = 0
+        self.local_burn_in = 0
+
+        self.local_count = 0
+        self.global_count = 0
+        
+
         self.chain_n = None
         self.nchains = None
         self.len_history = 0
@@ -194,47 +200,34 @@ class Dream():
     def astep(self, q0, chainID, total_iterations, T=1., last_loglike=None, last_logprior=None):
 
         # On first iteration, check that shared variables have been initialized (which only occurs if multiple chains have been started).
-        if self.iter == 0:   
- 
+        if self.iter == 0:
             try:
-                with Dream_shared_vars.nchains.get_lock():
-                    self.chain_n = Dream_shared_vars.nchains.value-1
-                    Dream_shared_vars.nchains.value -= 1
+               
+                self.chainID =chainID
+                self.chain_n = chainID
+                self.nchains = self.size
 
-                # Assuming the shared variables exist, seed the history with nseedchain draws from the prior
-                with Dream_shared_vars.history_seeded.get_lock() and Dream_shared_vars.history.get_lock():
-                    if not self.history_file:
-                        if self.verbose:
-                            print('History file not loaded.')
-                        if Dream_shared_vars.history_seeded.value == b'F':
-                            if self.verbose:
-                                print('Seeding history with ',self.nseedchains,' draws from prior.')
-                            for i in range(self.nseedchains):
-                                start_loc = i*self.total_var_dimension
-                                end_loc = start_loc+self.total_var_dimension
-                                Dream_shared_vars.history[start_loc:end_loc] = self.draw_from_prior(self.variables)
-                            Dream_shared_vars.history_seeded.value = b'T'
-                    else:
-                        if self.verbose:
-                            print('History file loaded.')
+                if self.rank == 0 and not self.history_file and Dream_shared_vars.history_seeded == b'F':
                     if self.verbose:
-                        print('Setting crossover probability starting values.')
-                        print('Set probability of different crossover values to: ',self.CR_probabilities)
-                    if self.start_random:
-                        if self.verbose:
-                            print('Setting start to random draw from prior.')
+                        print('Seeding history with ', self.nseedchains, ' draws from prior.')
+                    for i in range(self.nseedchains):
+                        start_loc = i * self.total_var_dimension
+                        end_loc = start_loc + self.total_var_dimension
+                        Dream_shared_vars.history[start_loc:end_loc] = self.draw_from_prior(self.variables)
+                    Dream_shared_vars.history_seeded = b'T'
 
-                        q0 = self.draw_from_prior(self.variables, random_seed=True)
+                Dream_shared_vars.history_seeded = self.comm.bcast(Dream_shared_vars.history_seeded, root=0)
+                Dream_shared_vars.history = self.comm.bcast(Dream_shared_vars.history, root=0)
 
-
-                    if self.verbose:
-                        print('Start: ',q0)
+                if self.start_random:
+                    q0 = self.draw_from_prior(self.variables, random_seed=True)
 
                 # Also get length of history array so we know when to save it at end of run.
                 if self.save_history:
-                    with Dream_shared_vars.history.get_lock():
-                        self.len_history = len(np.frombuffer(Dream_shared_vars.history.get_obj()))
-            
+                    self.len_history = len(np.frombuffer(Dream_shared_vars.history))
+
+                self.crossover_burnin = self.comm.bcast(self.crossover_burnin, root=0)
+
             except AttributeError:
                 raise Exception('Dream should be run with multiple chains in parallel.  Set nchains > 1.')          
         
@@ -258,13 +251,12 @@ class Dream():
             #Select gamma size level
             gamma_level = self.set_gamma_level(self.gamma_probabilities, self.gamma_level_values)
         
-            with Dream_shared_vars.history.get_lock() and Dream_shared_vars.count.get_lock():
-                #Generate proposal points
-                if not run_snooker:
-                    proposed_pts = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=False)
-                    
-                else:
-                    proposed_pts, snooker_logp_prop, z = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=True)                 
+
+            #Generate proposal points
+            if not run_snooker:
+                proposed_pts = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=False)                
+            else:
+                proposed_pts, snooker_logp_prop, z = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=True)                 
 
             if self.last_logp == None:
                 self.last_prior, self.last_like = self.logp(q0, chainID, total_iterations)
@@ -272,13 +264,11 @@ class Dream():
             
             #Evaluate logp(s)
             if self.multitry == 1:
-
                 q_prior, q_loglike_noT = self.logp(np.squeeze(proposed_pts), chainID, total_iterations)
-
                 q_logp_noT = q_prior + q_loglike_noT
                 q_logp = T*q_loglike_noT + q_prior
                 q = np.squeeze(proposed_pts)
-            else:                
+            else:
                 log_priors, log_likes = self.mt_evaluate_logps(self.parallel, self.multitry, proposed_pts, self.logp, ref=False)
                 log_ps = T*log_likes + log_priors
                     
@@ -295,16 +285,15 @@ class Dream():
                 q_proposal, q_logp, q_logp_noT, q_loglike_noT, q_prior = self.mt_choose_proposal_pt(log_priors, log_likes, proposed_pts, T)
                             
                 #Draw reference points around the randomly selected proposal point
-                with Dream_shared_vars.history.get_lock() and Dream_shared_vars.count.get_lock():
-                    if run_snooker:
-                        reference_pts, snooker_logp_ref, z_ref = self.generate_proposal_points(self.multitry-1, q_proposal, CR, DEpair_choice, gamma_level, snooker=run_snooker)
-                    else:
-                        reference_pts = self.generate_proposal_points(self.multitry-1, q_proposal, CR, DEpair_choice, gamma_level, snooker=run_snooker)
-                    
+                if run_snooker:
+                    reference_pts, snooker_logp_ref, z_ref = self.generate_proposal_points(self.multitry - 1, q_proposal, CR, DEpair_choice, gamma_level, snooker=run_snooker)
+                else:
+                    reference_pts = self.generate_proposal_points(self.multitry - 1, q_proposal, CR, DEpair_choice, gamma_level, snooker=run_snooker)
+                
                 #Compute posterior density at reference points.
                 ref_log_priors, ref_log_likes = self.mt_evaluate_logps(self.parallel, self.multitry, reference_pts, self.logp, ref=True)
-                ref_log_ps = T*ref_log_likes + ref_log_priors
-        
+                ref_log_ps = T * ref_log_likes + ref_log_priors
+
             if self.multitry > 1:
                 if run_snooker:
                     total_proposal_logp = log_ps + snooker_logp_prop
@@ -316,6 +305,7 @@ class Dream():
                     total_reference_logp = ref_log_ps + snooker_logp_ref + snooker_logp_prop
                 
                 else:
+
                     total_proposal_logp = log_ps
                     total_reference_logp = ref_log_ps
                 
@@ -323,36 +313,36 @@ class Dream():
                 max_logp = np.amax(np.concatenate((total_proposal_logp, total_reference_logp)))
                 weight_proposed = np.exp(total_proposal_logp - max_logp)
                 weight_reference = np.exp(total_reference_logp - max_logp)
-                q_new = metrop_select(np.nan_to_num(np.log(np.sum(weight_proposed)/np.sum(weight_reference))), q_proposal, q0)
+                q_new = metrop_select(np.nan_to_num(np.log(np.sum(weight_proposed) / np.sum(weight_reference))), q_proposal, q0)
                 
-            else:  
+            else:
                 if run_snooker:
                     total_proposed_logp = q_logp + snooker_logp_prop
-                    norm = np.linalg.norm(q0-z)
-                    snooker_current_logp = np.log(norm, where=norm != 0)*(self.total_var_dimension-1)
+                    norm = np.linalg.norm(q0 - z)
+                    snooker_current_logp = np.log(norm, where=norm != 0) * (self.total_var_dimension - 1)
                     total_old_logp = self.last_logp + snooker_current_logp
                     
                     q_new = metrop_select(np.nan_to_num(total_proposed_logp - total_old_logp), q, q0)
                 else:
+                    
                     q_new = metrop_select(np.nan_to_num(q_logp) - np.nan_to_num(self.last_logp), q, q0)
-
                 
 
             if not np.array_equal(q0, q_new):
-                if self.multitry==1:
+                if self.multitry == 1:
                     if self.verbose:
-                        print('Accepted point.  New logp: ',q_logp,' old logp: ',self.last_logp, ' at temperature: ',T)
+                        print('Accepted point.  New logp: ', q_logp, ' old logp: ', self.last_logp, ' at temperature: ', T)
                     
                 else:
                     if self.verbose:
-                        print('Accepted point.  New logp: ',q_logp,' old logp: ',self.last_logp,' weight proposed: ',log_ps,' weight ref: ',ref_log_ps,' ratio: ',np.sum(weight_proposed)/np.sum(weight_reference),' at temperature: ',T)
+                        print('Accepted point.  New logp: ', q_logp, ' old logp: ', self.last_logp, ' weight proposed: ', log_ps, ' weight ref: ', ref_log_ps, ' ratio: ', np.sum(weight_proposed) / np.sum(weight_reference), ' at temperature: ', T)
                     
                 self.last_logp = q_logp_noT
                 self.last_prior = q_prior
                 self.last_like = q_loglike_noT
                 
             else:
-                if self.multitry==1:
+                if self.multitry == 1:
                     if self.verbose:
                         print('Did not accept point.  Kept old logp: ',self.last_logp,' Tested logp: ',q_logp,' at temperature: ',T)
                 
@@ -361,69 +351,60 @@ class Dream():
                         print('Did not accept point.  Kept old logp: ',self.last_logp,' Tested logp: ',q_logp,' weight proposed: ',log_ps,' weight ref: ',ref_log_ps,' ratio: ',np.sum(weight_proposed)/np.sum(weight_reference),' at temperature: ',T)
                 
             
-
+            
             #Place new point in history given history thinning rate
             if self.iter % self.history_thin == 0:
-                with Dream_shared_vars.history.get_lock() and Dream_shared_vars.count.get_lock():
-                    self.record_history(self.nseedchains, self.total_var_dimension, q_new, self.len_history)
-            
+                self.global_count = self.record_history(self.nseedchains, self.total_var_dimension, q_new, self.len_history)  
             if self.iter < self.crossover_burnin+1:
-                with Dream_shared_vars.current_positions.get_lock():
-                    self.set_current_position_arr(self.total_var_dimension, q_new)
-                    
+                self.set_current_position_arr(self.total_var_dimension, q_new)
+
             #If adapting crossover values, estimate ideal crossover probabilities for each dimension during burn-in.
             #Don't do this for the first 10 iterations to give all chains a chance to fill in the shared current position array
             #Don't count iterations where gamma was set to 1 in crossover adaptation calculations
-            if self.adapt_crossover and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma)==1.0):
-                with Dream_shared_vars.cross_probs.get_lock() and Dream_shared_vars.count.get_lock() and Dream_shared_vars.ncr_updates.get_lock() and Dream_shared_vars.current_positions.get_lock() and Dream_shared_vars.delta_m.get_lock():
+            if self.adapt_crossover and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma) == 1.0):
+                #If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
+                if not run_snooker:
+                    self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR)
+                else:
+                    self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR=1)
+
+            
+            if self.adapt_gamma and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma) == 1.0) and not run_snooker:
+                self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
+
+            if self.iter == self.crossover_burnin:
+                self.comm.Barrier()
+                self.local_burn_in = 1
+                total_burn_in = self.comm.allreduce(self.local_burn_in, op=MPI.SUM)
+
+                #if self.rank == 0:
+                #    Dream_shared_vars.nchains = total_burn_in
+                #total_burn_in = self.comm.bcast(total_burn_in, root=0)
+                
+                if self.adapt_gamma:
+                    self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
+                
+                if self.adapt_crossover:
                     #If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
                     if not run_snooker:
                         self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR)
-
                     else:
                         self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR=1)
-
-
-            if self.adapt_gamma and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma)==1.0) and not run_snooker:
-               with Dream_shared_vars.gamma_level_probs.get_lock() and Dream_shared_vars.count.get_lock() and Dream_shared_vars.ngamma_updates.get_lock() and Dream_shared_vars.current_positions.get_lock() and Dream_shared_vars.delta_m_gamma.get_lock():
-                   self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
             
-            if self.iter == self.crossover_burnin:
-                #To ensure all chains use the same fitted shared probability values, wait for all parallel chains to reach end of burnin period before grabbing shared probabilities
-                with Dream_shared_vars.nchains.get_lock():
-                    Dream_shared_vars.nchains.value += 1 
-                    nchains_finished_burnin = Dream_shared_vars.nchains.value
-                
-                if self.adapt_gamma:
-                    with Dream_shared_vars.gamma_level_probs.get_lock() and Dream_shared_vars.count.get_lock() and Dream_shared_vars.ngamma_updates.get_lock() and Dream_shared_vars.current_positions.get_lock() and Dream_shared_vars.delta_m_gamma.get_lock():
-                        self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
-                
-                if self.adapt_crossover:
-                    with Dream_shared_vars.cross_probs.get_lock() and Dream_shared_vars.count.get_lock() and Dream_shared_vars.ncr_updates.get_lock() and Dream_shared_vars.current_positions.get_lock() and Dream_shared_vars.delta_m.get_lock():
-                        #If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
-                        if not run_snooker:
-                            self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR) 
-                        else:
-                            self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR=1)
-                
-                while nchains_finished_burnin != self.nchains:
-                    time.sleep(30)
-                    with Dream_shared_vars.nchains.get_lock():
-                        nchains_finished_burnin = Dream_shared_vars.nchains.value    
-                time.sleep(10)
+                while total_burn_in != self.nchains:
+                    time.sleep(3)
+                    total_burn_in = self.comm.allreduce(self.local_burn_in, op=MPI.SUM)  
+                time.sleep(5)
 
                 if self.adapt_gamma:
-                    with Dream_shared_vars.gamma_level_probs.get_lock():
-                        self.gamma_probabilities = Dream_shared_vars.gamma_level_probs[0:self.ngamma]
-                
+                    self.gamma_probabilities = self.comm.bcast(self.gamma_probabilities, root=0)
+                    
                 if self.adapt_crossover:
-                    with Dream_shared_vars.cross_probs.get_lock():
-                        self.CR_probabilities = Dream_shared_vars.cross_probs[0:self.nCR]
+                    self.CR_probabilities = self.comm.bcast(self.CR_probabilities, root=0)
             
             self.iter += 1
         except Exception as e:
             traceback.print_exc()
-            print()
             raise e
         return q_new, self.last_prior, self.last_like
         
@@ -440,18 +421,17 @@ class Dream():
         """
         
         if self.nchains == None:
-            current_positions = np.frombuffer(Dream_shared_vars.current_positions.get_obj())
+            current_positions = Dream_shared_vars.current_positions
             self.nchains = len(current_positions)//ndimensions
         
         if self.chain_n == None:
-            with Dream_shared_vars.nchains.get_lock():
-                self.chain_n = Dream_shared_vars.nchains.value-1
-                Dream_shared_vars.nchains.value -= 1
+            self.chain_n = Dream_shared_vars.nchains-1
+            Dream_shared_vars.nchains -= 1
         
         #We only need to have the current position of all chains for estimating the crossover probabilities during burn-in so don't bother updating after that
         if self.iter < self.crossover_burnin+1:
             start_cp = int(self.chain_n*ndimensions)
-            end_cp = int(start_cp+ndimensions)
+            end_cp = int(start_cp + ndimensions)
             Dream_shared_vars.current_positions[start_cp:end_cp] = np.array(q_new).flatten()        
         
     def estimate_crossover_probabilities(self, ndim, q0, q_new, CR):
@@ -475,28 +455,26 @@ class Dream():
 
         Dream_shared_vars.ncr_updates[m_loc] += 1
         
-        current_positions = np.frombuffer(Dream_shared_vars.current_positions.get_obj())
-
-        current_positions = current_positions.reshape((self.nchains, ndim))
+        current_positions = Dream_shared_vars.current_positions.reshape((self.nchains, ndim))
         
         sd_by_dim = np.std(current_positions, axis=0)
 
         #Replace any zeros in sd array with a very small number to avoid division by zero errors
-        sd_by_dim[sd_by_dim==0] = 1e-12
+        sd_by_dim[sd_by_dim == 0] = 1e-12
         
-        change = np.nan_to_num(np.sum(((q_new - q0)/sd_by_dim)**2))
+        change = np.nan_to_num(np.sum(((q_new - q0)/sd_by_dim) ** 2))
         
         Dream_shared_vars.delta_m[m_loc] = Dream_shared_vars.delta_m[m_loc] + change
         
         #Update probabilities of tested crossover value        
         #Leave probabilities unchanged until all possible crossover values have had at least one successful move so that a given value's probability isn't prematurely set to 0, preventing further testing.
-        delta_ms = np.array(Dream_shared_vars.delta_m[0:self.nCR])
-        ncr_updates = np.array(Dream_shared_vars.ncr_updates[0:self.nCR])
+        delta_ms = Dream_shared_vars.delta_m[0:self.nCR]
+        ncr_updates = Dream_shared_vars.ncr_updates[0:self.nCR]
         
         if np.all(delta_ms != 0) == True:
             for m in range(self.nCR):
-                cross_probs[m] = (Dream_shared_vars.delta_m[m]/Dream_shared_vars.ncr_updates[m])*self.nchains
-            cross_probs = cross_probs/np.sum(cross_probs)
+                cross_probs[m] = (Dream_shared_vars.delta_m[m] / Dream_shared_vars.ncr_updates[m])*self.nchains
+            cross_probs = cross_probs / np.sum(cross_probs)
         
         Dream_shared_vars.cross_probs[0:self.nCR] = cross_probs
         
@@ -518,7 +496,7 @@ class Dream():
         gamma_level : int
             gamma level selected for this step"""
 
-        current_positions = np.frombuffer(Dream_shared_vars.current_positions.get_obj())
+        current_positions = Dream_shared_vars.current_positions
 
         current_positions = current_positions.reshape((self.nchains, ndim))
 
@@ -532,23 +510,19 @@ class Dream():
             
         Dream_shared_vars.delta_m_gamma[gamma_loc] = Dream_shared_vars.delta_m_gamma[gamma_loc] + np.nan_to_num(np.sum(((q_new - q0)/sd_by_dim)**2))
     
-        delta_ms_gamma = np.array(Dream_shared_vars.delta_m_gamma[0:self.ngamma])
+        delta_ms_gamma = Dream_shared_vars.delta_m_gamma[0:self.ngamma]
             
         if np.all(delta_ms_gamma != 0) == True:
-                
             for m in range(self.ngamma):
-                gamma_level_probs[m] = (Dream_shared_vars.delta_m_gamma[m]/Dream_shared_vars.ngamma_updates[m])*self.nchains
-                
-            gamma_level_probs = gamma_level_probs/np.sum(gamma_level_probs)
-            
-        Dream_shared_vars.gamma_level_probs[0:self.ngamma] = gamma_level_probs 
-        
+                gamma_level_probs[m] = (Dream_shared_vars.delta_m_gamma[m] / Dream_shared_vars.ngamma_updates[m]) * self.nchains
+            gamma_level_probs = gamma_level_probs / np.sum(gamma_level_probs)
+        Dream_shared_vars.gamma_level_probs[0:self.ngamma] = gamma_level_probs
         return gamma_level_probs
     
     def set_snooker(self):
         """Choose to run a snooker update on a given iteration or not."""
         if self.snooker != 0:
-            snooker_choice = np.where(np.random.multinomial(1, [self.snooker, 1-self.snooker])==1)  # throw the dice only once, return = [chances of getting the first option, ... of the second option]
+            snooker_choice = np.where(np.random.multinomial(1, [self.snooker, 1 - self.snooker]) == 1)  # throw the dice only once, return = [chances of getting the first option, ... of the second option]
                 
             if snooker_choice[0] == 0:
                 run_snooker = True
@@ -568,7 +542,7 @@ class Dream():
             current probabilities of selecting given crossover values
         CR_values : numpy array
             possible crossover values"""
-        CR_loc = np.where(np.random.multinomial(1, CR_probs)==1)
+        CR_loc = np.where(np.random.multinomial(1, CR_probs) == 1)
 
         CR = CR_vals[CR_loc]
         
@@ -582,8 +556,8 @@ class Dream():
         DEpairs : numpy array
             possible values for the number of chain pairs to be used for proposing the next point"""
 
-        if len(DEpairs)>1:
-            DEpair_choice = np.squeeze(np.random.randint(1, len(DEpairs)+1, size=1))
+        if len(DEpairs) > 1:
+            DEpair_choice = np.squeeze(np.random.randint(1, len(DEpairs) + 1, size=1))
         else:
             DEpair_choice = 1
         return DEpair_choice
@@ -598,7 +572,7 @@ class Dream():
         gamma_level_vals : numpy array
             possible values of gamma level"""
 
-        gamma_loc = np.where(np.random.multinomial(1, gamma_level_probs)==1)
+        gamma_loc = np.where(np.random.multinomial(1, gamma_level_probs) == 1)
         
         gamma_level = np.squeeze(gamma_level_vals[gamma_loc])
         
@@ -618,7 +592,7 @@ class Dream():
         d_prime : int
             number of parameter dimensions to be updated on this step."""
         
-        gamma_unity_choice = np.where(np.random.multinomial(1, [self.p_gamma_unity, 1-self.p_gamma_unity])==1)
+        gamma_unity_choice = np.where(np.random.multinomial(1, [self.p_gamma_unity, 1 - self.p_gamma_unity]) == 1)
         
         if snooker_choice:
             gamma = np.random.uniform(1.2, 2.2)
@@ -627,7 +601,7 @@ class Dream():
             gamma = 1.0
         
         else:
-            gamma = self.gamma_arr[gamma_level_choice-1][DEpairs-1][d_prime-1]
+            gamma = self.gamma_arr[gamma_level_choice - 1][DEpairs - 1][d_prime - 1]
             
         return gamma
 
@@ -664,13 +638,21 @@ class Dream():
             whether to use a snooker update at this iteration. Default = False
         """
 
-        if not snooker:
-            chain_num = random.sample(range(int(Dream_shared_vars.count.value+nseedchains)), DEpairs*2)
-        else:
-            chain_num = random.sample(range(int(Dream_shared_vars.count.value+nseedchains)), 1)
-        start_locs = [int(i*ndimensions) for i in chain_num]
-        end_locs = [int(i+ndimensions) for i in start_locs]
+        # To avoid sample unwritten history
+        nanflag = True
+        while nanflag:
+            if not snooker:
+                chain_num = random.sample(range(int(self.global_count + nseedchains)), DEpairs * 2)
+            else:
+                chain_num = random.sample(range(int(self.global_count + nseedchains)), 1)
+            start_locs = [int(i * ndimensions) for i in chain_num]
+            tmp_samples = [Dream_shared_vars.history[start_loc] for start_loc in start_locs]
+            if not np.any(np.isnan(tmp_samples)):
+                nanflag = False
+                
+        end_locs = [int(i + ndimensions) for i in start_locs]
         sampled_chains = [Dream_shared_vars.history[start_loc:end_loc] for start_loc, end_loc in zip(start_locs, end_locs)]
+
         return sampled_chains
         
     def generate_proposal_points(self, n_proposed_pts, q0, CR, DEpairs, gamma_level, snooker):
@@ -934,19 +916,49 @@ class Dream():
             Accepted point
         len_history : int
             The total dimension of the history when completely filled"""
-        nhistoryrecs = Dream_shared_vars.count.value+nseedchains
-        start_loc = int(nhistoryrecs*ndimensions)
-        end_loc = int(start_loc+ndimensions)
+        """
+        one = np.array([1], dtype='i')
+        recv_buf = np.zeros(1, dtype='i')       
+        self.counter_win.Lock(0)
+        self.counter_win.Fetch_and_op(
+            [one, 1, MPI.INT],    
+            [recv_buf, 1, MPI.INT],
+            target_rank=0,        
+            op=MPI.SUM       
+        )
+        self.counter_win.Unlock(0)
+
+        local_index = recv_buf[0]
+        nhistoryrecs = local_index + nseedchains
+        start_loc = int(nhistoryrecs * ndimensions)
+        end_loc = int(start_loc + ndimensions)
+        
+
+        Dream_shared_vars.history[start_loc:end_loc] = np.array(q_new).flatten()
+        self.local_count += 1
+        """
+        
+
+        
+
+        self.global_count = self.local_count * self.nchains + self.chainID
+        nhistoryrecs = self.global_count + nseedchains
+        start_loc = int(nhistoryrecs * ndimensions)
+        end_loc = int(start_loc + ndimensions)
+
         Dream_shared_vars.history[start_loc:end_loc] = np.array(q_new).flatten()
 
-        Dream_shared_vars.count.value += 1
+        self.local_count += 1
+
         if self.save_history and len_history == (nhistoryrecs+1)*ndimensions:
             if not self.model_name:
                 prefix = datetime.now().strftime('%Y_%m_%d_%H:%M:%S')+'_'
             else:
                 prefix = self.model_name+'_'
-
-            self.save_history_to_disc(np.frombuffer(Dream_shared_vars.history.get_obj()), prefix)
+            
+            self.save_history_to_disc(Dream_shared_vars.history, prefix)
+        
+        return self.global_count
             
     def save_history_to_disc(self, history, prefix):
         """Save history and crossover probabilities to files at end of run.
@@ -959,7 +971,8 @@ class Dream():
             Prefix to add to history filename when saving"""
         
         filename = prefix+'DREAM_chain_history.npy'
-        print('Saving history to file: ',os.getcwd() + filename)
+        
+        print('Saving history to file: ', os.getcwd() + filename)
         np.save(filename, history)
         
         #Also save crossover probabilities if adapted
@@ -1000,77 +1013,3 @@ def metrop_select(mr, q, q0):
     else:
         # Reject proposed value
         return q0
-
-# The following part uses source code from the file legacymultiproc.py from https://github.com/nipy/nipype
-# copyright NIPY developers, licensed under the Apache 2.0 license.
-
-# Pythons 3.4-3.7.0, and 3.7.1 have three different implementations of
-# pool.Pool().Process(), and the type of the result varies based on the default
-# multiprocessing context, so we need to dynamically patch the daemon property
-
-
-class NonDaemonMixin(object):
-    @property
-    def daemon(self):
-        return False
-
-    @daemon.setter
-    def daemon(self, val):
-        pass
-
-
-from multiprocessing import context
-
-
-# Exists on all platforms
-class NonDaemonSpawnProcess(NonDaemonMixin, context.SpawnProcess):
-    pass
-
-
-class NonDaemonSpawnContext(context.SpawnContext):
-    Process = NonDaemonSpawnProcess
-
-
-_nondaemon_context_mapper = {
-    'spawn': NonDaemonSpawnContext()
-}
-
-# POSIX only
-try:
-    class NonDaemonForkProcess(NonDaemonMixin, context.ForkProcess):
-        pass
-
-
-    class NonDaemonForkContext(context.ForkContext):
-        Process = NonDaemonForkProcess
-
-
-    _nondaemon_context_mapper['fork'] = NonDaemonForkContext()
-except AttributeError:
-    pass
-# POSIX only
-try:
-    class NonDaemonForkServerProcess(NonDaemonMixin, context.ForkServerProcess):
-        pass
-
-
-    class NonDaemonForkServerContext(context.ForkServerContext):
-        Process = NonDaemonForkServerProcess
-
-
-    _nondaemon_context_mapper['forkserver'] = NonDaemonForkServerContext()
-except AttributeError:
-    pass
-
-
-class DreamPool(pool.Pool):
-    def __init__(self, processes=None, initializer=None, initargs=(),
-                 maxtasksperchild=None, context=None):
-        if context is None:
-            context = mp.get_context()
-        context = _nondaemon_context_mapper[context._name]
-        super(DreamPool, self).__init__(processes=processes,
-                                        initializer=initializer,
-                                        initargs=initargs,
-                                        maxtasksperchild=maxtasksperchild,
-                                        context=context)

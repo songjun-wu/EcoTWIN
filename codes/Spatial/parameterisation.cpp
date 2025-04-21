@@ -23,6 +23,27 @@ int Param::Parameterisation(Control &ctrl){
       _alpha->val[j] += param_category->val[k][j] * alpha[k];
    }}}
 
+  _wRecharge->reset();
+  for (int k=0; k<param_category->n_category; k++){
+    if (wRecharge[k]!=nodata) {
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _wRecharge->val[j] += param_category->val[k][j] * wRecharge[k];
+   }}}
+
+  _nearsurface_mixing->reset();
+  for (int k=0; k<param_category->n_category; k++){
+    if (nearsurface_mixing[k]!=nodata) {
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _nearsurface_mixing->val[j] += param_category->val[k][j] * nearsurface_mixing[k];
+   }}}
+
+  _ratio_to_interf->reset();
+  for (int k=0; k<param_category->n_category; k++){
+    if (ratio_to_interf[k]!=nodata) {
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _ratio_to_interf->val[j] += param_category->val[k][j] * ratio_to_interf[k];
+   }}}
+
   if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){
   
   _rE->reset();
@@ -195,13 +216,13 @@ int Param::Parameterisation(Control &ctrl){
 
   }
 
-  if (ctrl.opt_recharge == 1){
+  if (ctrl.opt_init_GW == 1){
   
-  _wRecharge->reset();
+  _init_GW->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (wRecharge[k]!=nodata) {
+      if (init_GW[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _wRecharge->val[j] += param_category->val[k][j] * wRecharge[k];
+        _init_GW->val[j] += param_category->val[k][j] * init_GW[k];
      }}}
 
   }
@@ -256,6 +277,70 @@ int Param::Parameterisation(Control &ctrl){
       if (Manningn[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _Manningn->val[j] += param_category->val[k][j] * Manningn[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_tracking_isotope == 1){
+  
+  _d18o_init_GW->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (d18o_init_GW[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _d18o_init_GW->val[j] += param_category->val[k][j] * d18o_init_GW[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_nitrogen_sim == 1){
+  
+  _denitrification_aquatic->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (denitrification_aquatic[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _denitrification_aquatic->val[j] += param_category->val[k][j] * denitrification_aquatic[k];
+     }}}
+  
+  _autotrophic_uptake_aquatic->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (autotrophic_uptake_aquatic[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _autotrophic_uptake_aquatic->val[j] += param_category->val[k][j] * autotrophic_uptake_aquatic[k];
+     }}}
+  
+  _primary_production_aquatic->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (primary_production_aquatic[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _primary_production_aquatic->val[j] += param_category->val[k][j] * primary_production_aquatic[k];
+     }}}
+  
+  _denitrification_soil->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (denitrification_soil[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _denitrification_soil->val[j] += param_category->val[k][j] * denitrification_soil[k];
+     }}}
+  
+  _degradation_soil->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (degradation_soil[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _degradation_soil->val[j] += param_category->val[k][j] * degradation_soil[k];
+     }}}
+  
+  _mineralisation_soil->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (mineralisation_soil[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _mineralisation_soil->val[j] += param_category->val[k][j] * mineralisation_soil[k];
+     }}}
+  
+  _dissolution_soil->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (dissolution_soil[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _dissolution_soil->val[j] += param_category->val[k][j] * dissolution_soil[k];
      }}}
 
   }

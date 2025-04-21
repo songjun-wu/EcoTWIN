@@ -23,7 +23,7 @@ def release_linux(path, release_path):
         if os.path.isdir(path + fname_0):  # for each folder
             
             fnames_1 = np.array(os.listdir(path + fname_0))
-            cppfiles = fnames_1[['.cpp' in kk for kk in fnames_1]]
+            cppfiles = fnames_1[[kk.split('.')[-1]=='cpp' for kk in fnames_1]]
             if len(cppfiles) > 0:
                 folders.append(fname_0)
                 if not os.path.exists(release_path + fname_0):

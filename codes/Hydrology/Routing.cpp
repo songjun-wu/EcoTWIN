@@ -14,7 +14,7 @@ int Basin::Routing(Control &ctrl, Param &par){
         _rPerc2->reset();
         _rPerc3->reset();
     }
-
+    
     if (ctrl.opt_routOvf==1) {
         Routing_ovf_1(ctrl, par);
     }
@@ -34,7 +34,11 @@ int Basin::Routing(Control &ctrl, Param &par){
 
     // Tracking
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
-        Mixing_routing_tracking(ctrl, par);  // Mixing for overland flow, for reinfiltration and repercolation, for interflow, and for GW flow 
+        Mixing_routing_tracking(ctrl, par);  // Mixing for overland flow, for reinfiltration and repercolation, for interflow, and for GW flow
+    }
+
+    if (ctrl.opt_nitrogen_sim==1){
+        Solve_routing_nitrogen(ctrl, par);  // Mixing for overland flow, for reinfiltration and repercolation, for interflow, and for GW flow
     }
 
     

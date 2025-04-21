@@ -8,7 +8,7 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
     di_atm = di_s = di_new = di_evap = 0;
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-
+        
         di_old = sv_di_old.val[j];
 
         V_new = sv_V_new.val[j];  // Water storage after evaporation
@@ -18,11 +18,11 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
         }
         // Only preceed if there is evaporation
         evap = sv_evap.val[j];
-        if (evap > roundoffERR){        
+        if (evap > roundoffERR){
+
             Ta = atm._Ta->val[j];  // Atmospheric temperature [Degree C]
             Ts = Get_soil_temperature(Ta, Ts, _LAI->val[j]);  // Soil temperature [Degree C]
             ha = atm._RH->val[j];  // Atmospheric relative humidity [decimal]         
-            
             V_old = V_new + evap;  // Water storage before evaporation
 
             if (issoil == 1){
@@ -41,14 +41,14 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
                 0.35041*1e9/pow(Ta+273.15,3))/1000);
             
             // Equilibrium enrichment (Skrzypek et al., 2015)
-            eps_p = (alpha_p - 1) * 1000;
+            eps_p = (alpha_p - 1) * 1000;  // [per mille]
             di_atm = (atm._d18o_P->val[j] - eps_p)/ alpha_p;  // Atmospheric Isotopic signiture
 
             //Water transport mode: from diffusive (=1, dry soil) to turbulent (=0.5, water body)
             n = (issoil==1) ? 1 : 0.5;
 
             // Kinetic fractionation factor epsilon_k; Merlivat (1978)
-            eps_k = (1 - ha_p) * (1 - 0.9859) * 1000 * n;
+            eps_k = (1 - ha_p) * (1 - 0.9859) * 1000 * n;  // [per mille]
 
             eps = eps_p + eps_k;   // Gibson and Reid (2010)
             di_s = (ha_p * di_atm + eps) / (ha_p - eps/1000);
@@ -59,30 +59,29 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
                 f = V_new/V_old;	// Evaporative loss fraction
 
                 // Isotopic signature of remaining water
-                di_new = di_s - (di_s - di_old) * (powl(f,m) > 1 ? 1 : powl(f,m));  
+                di_new = di_s - (di_s - di_old) * (pow(f,m) > 1 ? 1 : pow(f,m));  
 
                 // Isotopic signature of evaporated water
                 di_evap = (1 - ha_p + eps_k/1000) < roundoffERR ? di_new : (di_new - ha_p*di_atm - eps)/ (1 - ha_p + eps_k/1000);
-            
+
                 // Closure of mass balance?
-                /*
                 //evap = (V_old - V_new);
-                //Vavg = (V_old + V_new)/2;
-                //Vdiff = (V_new - V_old);
-                //corr = 0;   // Correction factor (mass-balance closure)
-                if(abs(di_evap - di_new) > RNDOFFERR){
+                double Vavg = (V_old + V_new)/2;
+                double Vdiff = (V_new - V_old);
+                double corr = 0;   // Correction factor (mass-balance closure)
+                if(abs(di_evap - di_new) > roundoffERR){
                 corr = -((Vdiff*di_old/2 - Vavg*di_old - evap*(ha_p*di_atm+eps)/(1-ha_p+eps_k/1000)) + 
                     di_new*(Vavg +Vdiff/2 + evap/(1-ha_p+eps_k/1000)))/
                         (Vavg + Vdiff/2 + evap/(1-ha_p+eps_k/1000));
                 di_new = di_new + corr;
-                di_evap = (1 - ha_p + eps_k/1000) < RNDOFFERR ? di_new :(di_new - ha_p*di_atm - eps)/ (1 - ha_p + eps_k/1000);
-            
+                di_evap = (1 - ha_p + eps_k/1000) < roundoffERR ? di_new :(di_new - ha_p*di_atm - eps)/ (1 - ha_p + eps_k/1000);
+
                 if(di_evap > di_new){      // Check here if di_evap > di_new (not possible)
                     di_new = di_old;
                     di_evap = di_old;
                 }
                 }
-                */
+                
                 di_new  = max(-1000.0, di_new);
                 di_evap = max(-1000.0, di_evap);
             }

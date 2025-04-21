@@ -1,6 +1,19 @@
 #include "Basin.h"
 
 int Basin::Initialisation(Control &ctrl, Param &par){
+
+    // Initialisation of GW storage
+    if (ctrl.opt_init_GW == 1){
+      _GW->equals(*par._init_GW);
+    }
+
+    // Initilisation of old storages
+    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
+      Store_states();  // Store all water storages for mixing
+      _d18o_GW->equals(*par._d18o_init_GW); // Asign isotopic composition to GW
+    }
+
+    // Initilisation of channel storage
     double sqrtS, Manningn, a, Q, chnwidth;
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {

@@ -7,67 +7,72 @@ int Basin::Mixing_routing_tracking(Control &ctrl, Param &par){
 
         /* Update the storages for routing flux mixing
         ### Ponding water:
-        + Th
+        + Th                (mixed)
+        + snowmelt          (mixed)            
         - Infiltration      
-                            (Updated _pond_old in Solve_soil_profile)
+        (_pond_old)
+        + ovf_in            (need to mix)  
         - Reinfiltration
-        + ovf_in
         - ovf_out
         - ovf_toChn           
-                            (Updated _pond_old by the end of timestep)
+        (_pond = 0)
 
         ### Soil layer 1:
-        + infiltration
+        + infiltration      (mixed)
         - percolation1
         - Esoil
         - Transp1           
-                            (Updated _theta1_old in Solve_soil_profile)
-        + reinfiltration
+        (_theta1_old)
+        + reinfiltration    (need to mix)
         - repercolation1    
-                            (Updated _theta1_old by the end of timestep)
+        (_thata1)
 
         ### Soil layer 2:
-        + percolation1
+        + percolation1      (mixed)
         - percolation2
         - Transp2           
-                            (Updated _theta2_old in Solve_soil_profile)
-        + repercolation1
+        (_theta2_old)
+        + repercolation1    (need to mix)
         - repercolation2    
-                            (Updated _theta2_old by the end of timestep)
+        (_theta2)
 
         ### Soil layer 3:
-        + percolation2
+        + percolation2      (mixed)
         - percolation3
-        - Transp3           
-                            (Updated _theta3_old in Solve_soil_profile)
-        + repercolation2
+        - Transp3     
+        (_thata3_old)      
+        + repercolation2    (need to mix)
         - repercolation3
-        + interflow_in
+        + interflow_in      (need to mix)   
         - interflow_out
         - interflow_toChn   
-                            (Updated _theta3_old by the end of timestep)
+        (_theta3)
 
         ### GW:
-        + percolation3      
-                            (Updated _GW_old in Solve_soil_profile)
-        + repercolation3    
-        + GWf_in
+        + percolation3      (mixed)
+        (_GW_old)
+        + repercolation3    (need to mix)
+        + rerepercolation3  (need to mix)
+        + GWf_in            (need to mix)
         - GWf_out
         - GWf_toChn         
-                            (Updated _GW_old by the end of timestep)
+        (_GW)
 
         ### chanS:
-                            (Updated _chanS_old in Solve_soil_profile)
-        + _Qupstream
-        + _ovf_toChn
-        +  _interf_toChn
-        + _GWf_toChn
+        (_chanS_old)
+        + _Qupstream        (need to mix)
+        + _ovf_toChn        (need to mix)
+        +  _interf_toChn    (need to mix)
+        + _GWf_toChn        (need to mix)
         - _Q
-                            (Updated _chanS_old by the end of timestep)
+        (_chanS)
         */
 
         int from_j;
         int lat_ok;
+        double d18o_in_all_acc, q_in_all;
+        double m3s_to_m = ctrl.Simul_tstep/(ctrl._dx*ctrl._dx);
+        double rPerc2, rPerc3;
 
         _d18o_ovf_in_acc->reset();
         _d18o_interf_in_acc->reset();
@@ -80,38 +85,44 @@ int Basin::Mixing_routing_tracking(Control &ctrl, Param &par){
             from_j = _sortedGrid.to_cell[j];
             lat_ok = _sortedGrid.lat_ok[j];
 
-            // Ponding water mixing with overland flow
-            if (_ovf_in->val[j] > 0){  // Mixing ponding water with overland inflow
-                Mixing_full(_pond->val[j] - _ovf_in->val[j] + _ovf_out->val[j] + _ovf_toChn->val[j], _d18o_pond->val[j], _ovf_in->val[j], _d18o_ovf_in_acc->val[j] / _ovf_in->val[j]);
+            if (ctrl.opt_reinfil == 1){
+                rPerc2 = _rPerc2->val[j];
+                rPerc3 = _rPerc3->val[j];
+            } else {
+                rPerc2 = rPerc3 = 0;
             }
+
+
+            // Ponding water mixing with overland flow
+            Mixing_full(_pond_old->val[j], _d18o_pond->val[j], _ovf_in->val[j], _d18o_ovf_in_acc->val[j] / _ovf_in->val[j]);
+
             if (lat_ok == 1){  // Add 18O in overland outflow to the overland inflow of downstream cell
                 _d18o_ovf_in_acc->val[from_j] += _d18o_pond->val[j] * _ovf_out->val[j];
             }
 
+
             // Re-infiltration and re-percolation
-            if (ctrl.opt_infil > 0){ 
+            if (ctrl.opt_reinfil == 1){ 
                 // Re-infiltration mixing with layer 1
                 Mixing_full(_theta1_old->val[j] * _depth1->val[j], _d18o_layer1->val[j], _rinfilt->val[j], _d18o_pond->val[j]);
                 // Re-percolation mixing with layer 2
                 Mixing_full(_theta2_old->val[j] * _depth2->val[j], _d18o_layer2->val[j], _rPerc1->val[j], _d18o_layer1->val[j]);
                 // Re-percolation mixing with layer 3
-                Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _d18o_layer3->val[j], _rPerc2->val[j], _d18o_layer2->val[j]);
+                Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _d18o_layer3->val[j], rPerc2, _d18o_layer2->val[j]);
                 // GW mixing with repercolation from layer 3
-                Mixing_full(_GW_old->val[j], _d18o_GW->val[j], _rPerc3->val[j], _d18o_layer3->val[j]);
+                Mixing_full(_GW_old->val[j], _d18o_GW->val[j], rPerc3, _d18o_layer3->val[j]);
             }
 
-            // Interflow mixing
-            if (_interf_in->val[j] > 0){  // Mixing layer 3 storage with interflow inflow
-                Mixing_full(_theta3->val[j] * par._depth3->val[j] - _interf_in->val[j] + _interf_out->val[j] + _interf_toChn->val[j], _d18o_layer3->val[j], _interf_in->val[j], _d18o_interf_in_acc->val[j] / _interf_in->val[j]);
-            }
+            
+            // Interflow mixing with lateral inflow
+            Mixing_full(_theta3_old->val[j] * par._depth3->val[j] + rPerc2 - rPerc3, _d18o_layer3->val[j], _interf_in->val[j], _d18o_interf_in_acc->val[j] / _interf_in->val[j]);
+            Mixing_full(_GW_old->val[j] + rPerc3, _d18o_GW->val[j], _rrPerc3->val[j], _d18o_layer3->val[j]); // GW mixed with repercolation due to excess interflow
             if (lat_ok == 1){  // Add 18O in interflow outflow to the inferflow inflow of downstream cell
                 _d18o_interf_in_acc->val[from_j] += _d18o_layer3->val[j] * _interf_out->val[j];
             }
 
-            // GW flow mixing
-            if (_interf_in->val[j] > 0){  // Mixing GW storage with GW inflow
-                Mixing_full(_GW->val[j] - _GWf_in->val[j] + _GWf_out->val[j] + _GWf_toChn->val[j], _d18o_GW->val[j], _GWf_in->val[j], _d18o_GWf_in_acc->val[j] / _GWf_in->val[j]);
-            }
+            // GW flow mixing with lateral inflow
+            Mixing_full(_GW_old->val[j] + rPerc3 + _rrPerc3->val[j], _d18o_GW->val[j], _GWf_in->val[j], _d18o_GWf_in_acc->val[j] / _GWf_in->val[j]);
 
             if (lat_ok == 1){  // Add 18O in GW outflow to the GW inflow of downstream cell
                 _d18o_GWf_in_acc->val[from_j] += _d18o_GW->val[j] * _GWf_out->val[j];
@@ -120,17 +131,15 @@ int Basin::Mixing_routing_tracking(Control &ctrl, Param &par){
 
             // Channel storage mixing (with upstream inflow)
             if (_chnwidth->val[j] > roundoffERR){
-                double d18o_in_all_acc, q_in_all;
+                
                                 // Upstream inflow              Overland flow to channel                  Interflow to channel                           GW flow to channel
                 d18o_in_all_acc = _d18o_Qupstream_acc->val[j] + _d18o_pond->val[j] * _ovf_toChn->val[j] + _d18o_layer3->val[j] * _interf_toChn->val[j] + _d18o_GW->val[j] * _GWf_toChn->val[j]; 
-                q_in_all = _Qupstream->val[j] + _ovf_toChn->val[j] + _interf_toChn->val[j] + _GWf_toChn->val[j];
+                q_in_all = _Qupstream->val[j] * m3s_to_m + _ovf_toChn->val[j] + _interf_toChn->val[j] + _GWf_toChn->val[j];
 
-                if (q_in_all > roundoffERR){
-                    Mixing_full(_chanS_old->val[j], _d18o_chanS->val[j], q_in_all, d18o_in_all_acc / q_in_all);
-                }
+                Mixing_full(_chanS_old->val[j], _d18o_chanS->val[j], q_in_all, d18o_in_all_acc / q_in_all);
 
                 if (lat_ok == 1){  // Add 18O in discharge to inflow of the downstream channel storage
-                    _d18o_Qupstream_acc->val[from_j] += _d18o_chanS->val[j] * _Q->val[j];
+                    _d18o_Qupstream_acc->val[from_j] += _d18o_chanS->val[j] * _Q->val[j] * m3s_to_m;
                 }
 
             }

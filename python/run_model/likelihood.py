@@ -41,4 +41,4 @@ def likelihood(param, chainID):
     os.chdir(local_path)
     return loglikeli
 
-likelihood(np.full(104, 0.5), 1)
+#likelihood(np.full(150, 0.5), 1)

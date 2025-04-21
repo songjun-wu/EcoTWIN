@@ -8,6 +8,7 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
+#include <ctime>
 using namespace std;
 
 
@@ -23,7 +24,7 @@ struct Control{
   /* end of Folders */
 
   /* Settings */ 
-  int Simul_start;
+  long Simul_start;
   int Simul_end;
   int Simul_tstep;
   int Clim_input_tstep;
@@ -32,6 +33,14 @@ struct Control{
   int num_category;  // Number of categories for parameterisation
   int num_cliamte_zones;  // Number of climate zones
   /* end of Settings */
+
+  /* Year month day */
+  time_t basetime;
+  tm* current_time;
+  int year;
+  int month;
+  int day;
+  int day_of_year;
 
   /* Options */
   // How is climate inputs orgainsed?
@@ -55,6 +64,8 @@ struct Control{
   // 1: enabled
   int opt_nitrogen_sim;
   // Reinfiltration during overland flow routing
+  // 0: Disabled
+  // 1: Enabled
   int opt_reinfil;
   // Canopy interception
   // 1 :maximum canopy storage unmodified
@@ -82,7 +93,8 @@ struct Control{
   // 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)
   int opt_infil;
   // Canopy evaporation function
-  // 1: based on PET and a exponential function Liang et al. (1994)
+  // 0: Disabled
+  //1: based on PET and a exponential function Liang et al. (1994)
   int opt_canopy_evap;
   // Evapotranspiration function
   // 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
@@ -92,9 +104,10 @@ struct Control{
   // 2: based on soil deficit and a exponential parameter; Feddes et al., (1976)                        
   // 3: based on soil deficit
   int opt_percolation;
-  // GW recharge
-  // 1: based on travel time, excess water above FC, and a weighting parameter
-  int opt_recharge;
+  // Include initial GW storage into calibration 
+  // 0: Read from asc inputs
+  // 1: Included for calibration
+  int opt_init_GW;
   // Overland flow routing
   // 1: All ponding water goes to next cell
   int opt_routOvf;
@@ -178,9 +191,18 @@ struct Control{
   string fn__d18o_layer2;  // d18o in Soil moisture in layer 2 [‰]
   string fn__d18o_layer3;  // d18o in Soil moisture in layer 3 [‰]
   string fn__d18o_GW;  // d18o in Groundwater storage [‰]
+  string fn__d18o_chanS;  // d18o in Channel storage [‰]
   /* end of Tracking */
 
   /* Nitrogen */
+  string fn__no3_I;  // no3 in Canopy storage [mgN/L]
+  string fn__no3_snow;  // no3 in Snow depth in [mgN/L]
+  string fn__no3_pond;  // no3 in Ponding water in [mgN/L]
+  string fn__no3_layer1;  // no3 in Soil moisture in layer 1 [mgN/L]
+  string fn__no3_layer2;  // no3 in Soil moisture in layer 2 [mgN/L]
+  string fn__no3_layer3;  // no3 in Soil moisture in layer 3 [mgN/L]
+  string fn__no3_GW;  // no3 in Groundwater storage [mgN/L]
+  string fn__no3_chanS;  // no3 in Channel storage [mgN/L]
   /* end of Nitrogen */
 
   /* Parameters */
@@ -206,6 +228,7 @@ struct Control{
   string fn__Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   string fn__BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
   string fn__percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
+  string fn__init_GW;  // The initial GW storage [m], only needed when opt_init_GW = 1
   string fn__wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
   string fn__pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
   string fn__interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
@@ -213,6 +236,16 @@ struct Control{
   string fn__GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
   string fn__wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   string fn__Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
+  string fn__nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
+  string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
+  string fn__d18o_init_GW;  // Initial d18O of GW storage [‰]
+  string fn__denitrification_aquatic;  // Reference rates of aquatic denitrification [-]
+  string fn__autotrophic_uptake_aquatic;  // Reference rates of aquatic autotrophic uptake [-]
+  string fn__primary_production_aquatic;  // Reference rates of aquatic primary production [-]
+  string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
+  string fn__degradation_soil;  // Reference rates of soil degradation [kg/ha]
+  string fn__mineralisation_soil;  // Reference rates of soil mineralisation [kg/ha]
+  string fn__dissolution_soil;  // Reference rates of soil dissolution [kg/ha]
   /* end of Parameters */
 
   /* Report */
@@ -231,9 +264,10 @@ struct Control{
   int report__Perc2;  // report Percolation into layer 3 [m]
   int report__Perc3;  // report Percolation into gw reservior [m]
   int report__rinfilt;  // report Reinflitration into soil layer 1 [m]
-  int report__rPerc1;  // report Repercolation into layer 2 [m]
-  int report__rPerc2;  // report Repercolation into layer 3 [m]
-  int report__rPerc3;  // report Repercolation into gw reservior [m]
+  int report__rPerc1;  // report Repercolation into layer 2 due to overland flow routing [m]
+  int report__rPerc2;  // report Repercolation into layer 3 due to overland flow routing [m]
+  int report__rPerc3;  // report Repercolation into gw reservior due to overland flow routing [m]
+  int report__rrPerc3;  // report Repercolation into gw reservior due to interflow routing [m]
   int report__Ei;  // report Canopy evaporation [m]
   int report__Es;  // report Soil evaporation [m]
   int report__Tr;  // report Total transpiration in three layers [m]
@@ -269,9 +303,12 @@ struct Control{
   int report__GWf_toChn;  // report Groundwater flow to Channel [m]
   int report__Q;  // report Discharge [m3/s]
   int report__Qupstream;  // report Upstream inflow [m3/s]
+  int report__deni_soil;  // report Soil denitrification [mgN/L*m = gN/m2]
+  int report__minerl_soil;  // report Soil mineralisation [mgN/L*m = gN/m2]
   int report__PE;  // report Potential evaporation [m]
   int report__PT;  // report Potential transpiration [m]
   int report__tmp;  // report Temporal variable for testing [-]
+  int report__snowacc;  // report Snow accumulation for testing [m]
   int report__d18o_I;  // report d18o in Canopy storage [‰]
   int report__d18o_snow;  // report d18o in Snow depth in [‰]
   int report__d18o_pond;  // report d18o in Ponding water in [‰]
@@ -284,6 +321,24 @@ struct Control{
   int report__d18o_interf_in_acc;  // report Total amount of 18o in inter-inflow [‰ * m]
   int report__d18o_GWf_in_acc;  // report Total amount of 18o in GW inflow [‰ * m]
   int report__d18o_Qupstream_acc;  // report Total amount of 18o in upstream inflow to channel storage [‰ * m]
+  int report__no3_I;  // report no3 in Canopy storage [mgN/L]
+  int report__no3_snow;  // report no3 in Snow depth in [mgN/L]
+  int report__no3_pond;  // report no3 in Ponding water in [mgN/L]
+  int report__no3_layer1;  // report no3 in Soil moisture in layer 1 [mgN/L]
+  int report__no3_layer2;  // report no3 in Soil moisture in layer 2 [mgN/L]
+  int report__no3_layer3;  // report no3 in Soil moisture in layer 3 [mgN/L]
+  int report__no3_GW;  // report no3 in Groundwater storage [mgN/L]
+  int report__no3_chanS;  // report no3 in Channel storage [mgN/L]
+  int report__humusN1;  // report Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+  int report__humusN2;  // report Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+  int report__humusN3;  // report Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
+  int report__fastN1;  // report Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+  int report__fastN2;  // report Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+  int report__fastN3;  // report Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
+  int report__no3_ovf_in_acc;  // report Total amount of 18o in overland inflow [mgN/L*m = gN/m2]
+  int report__no3_interf_in_acc;  // report Total amount of 18o in inter-inflow [mgN/L*m = gN/m2]
+  int report__no3_GWf_in_acc;  // report Total amount of 18o in GW inflow [mgN/L*m = gN/m2]
+  int report__no3_Qupstream_acc;  // report Total amount of 18o in upstream inflow to channel storage [mgN/L*m = gN/m2]
   /* end of Report */
 
   public:
@@ -304,6 +359,13 @@ struct Control{
   sortedGrid SortGridLDD();
   sortedTSmask sortTSmask();
   /* end of Grids sorting*/
+
+  /* Time sorting */
+  time_t Set_reference_timestep();
+  int Get_year_month_day();
+  bool is_next_month();
+  bool is_next_year();
+  /* end of Time sorting */
 
   template<class T> static T string_as_T( const string& s);
   template<class T> void readInto(T &value, string key, vector<string> lines);

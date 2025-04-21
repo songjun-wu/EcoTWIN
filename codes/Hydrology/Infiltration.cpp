@@ -10,9 +10,9 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
     double dtheta = 0; // Available room for infiltration
     double F = 0; // Cumulative infiltration amounts (if there's multiple land use types in one grid cell)
     double f = 0; // Infiltration rates at specific time
-    double deltaF = 0; // Cumulative infiltration within the timestep
+    double deltaF; // Cumulative infiltration within the timestep
 
-    
+
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         deltaF = 0; // Initialisation
@@ -23,10 +23,10 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         eff_Ks1 = _Ks1->val[j] * par._KvKh->val[j]; // Effective hydrological conductivity
         dtheta =  _thetaS1->val[j] * (1 - max((theta1 - _thetaWP1->val[j]) / (_thetaS1->val[j] - _thetaWP1->val[j]), 0.0));
         
-
         // If soil is too saturated for further infiltration
         if (dtheta < 0){
-            return EXIT_SUCCESS;
+            _infilt->val[j] = 0.0;
+            continue;
         }
 
         

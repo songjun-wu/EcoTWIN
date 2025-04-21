@@ -231,6 +231,10 @@ def report_destructor(fname, reports):
             for i in range(len(data)):
                 if data[i][5]!=None:
                     content.append('  if (of_'+data[i][0]+'.is_open())  of_'+data[i][0]+'.close();\n')
+            for i in range(len(data)):
+                if data[i][5]!=None:
+                    content.append('  if (ctrl.report_'+data[i][0]+'==2) delete '+data[i][0]+'_acc;\n')
+                    
           
             content = lines[:start] + content + lines[end:]
         if(('').join(content) != ('').join(lines)):
@@ -273,6 +277,10 @@ def report_includes(fname, reports):
         for i in range(len(reports)):
             if reports[i][5]!=None:
                 content.append('    ofstream of_' + reports[i][0] + ';  // ' + reports[i][2] + '\n')
+        content.append('\n')
+        for i in range(len(reports)):
+            if reports[i][5]!=None:
+                content.append('    svector *' + reports[i][0] + '_acc;  // ' + reports[i][2] + '\n')
         content = lines[:start] + content + lines[end:]
 
     if(('').join(content) != ('').join(lines)):

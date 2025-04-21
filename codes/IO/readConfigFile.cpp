@@ -49,7 +49,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_canopy_evap, "opt_canopy_evap", lines);
   readInto(opt_evap, "opt_evap", lines);
   readInto(opt_percolation, "opt_percolation", lines);
-  readInto(opt_recharge, "opt_recharge", lines);
+  readInto(opt_init_GW, "opt_init_GW", lines);
   readInto(opt_routOvf, "opt_routOvf", lines);
   readInto(opt_routinterf, "opt_routinterf", lines);
   readInto(opt_routGWf, "opt_routGWf", lines);
@@ -117,9 +117,18 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__d18o_layer2, "d18o_SMC_layer2", lines);
   readInto(fn__d18o_layer3, "d18o_SMC_layer3", lines);
   readInto(fn__d18o_GW, "d18o_groundwater_storage", lines);
+  readInto(fn__d18o_chanS, "d18o_chanS", lines);
   /* end of Tracking */
 
   /* Nitrogen */
+  readInto(fn__no3_I, "no3_canopy_storage", lines);
+  readInto(fn__no3_snow, "no3_snow_depth", lines);
+  readInto(fn__no3_pond, "no3_pond", lines);
+  readInto(fn__no3_layer1, "no3_SMC_layer1", lines);
+  readInto(fn__no3_layer2, "no3_SMC_layer2", lines);
+  readInto(fn__no3_layer3, "no3_SMC_layer3", lines);
+  readInto(fn__no3_GW, "no3_groundwater_storage", lines);
+  readInto(fn__no3_chanS, "no3_chanS", lines);
   /* end of Nitrogen */
 
 
@@ -146,6 +155,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__Ksat, "Kporos", lines);
   readInto(fn__BClambda, "BClambda", lines);
   readInto(fn__percExp, "percExp", lines);
+  readInto(fn__init_GW, "init_GW", lines);
   readInto(fn__wRecharge, "wRecharge", lines);
   readInto(fn__pOvf_toChn, "pOvf_toChn", lines);
   readInto(fn__interfExp, "interfExp", lines);
@@ -153,6 +163,16 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__GWfExp, "GWfExp", lines);
   readInto(fn__wGWf, "wGWf", lines);
   readInto(fn__Manningn, "Manningn", lines);
+  readInto(fn__nearsurface_mixing, "nearsurface_mixing", lines);
+  readInto(fn__ratio_to_interf, "ratio_to_interf", lines);
+  readInto(fn__d18o_init_GW, "d18o_init_GW", lines);
+  readInto(fn__denitrification_aquatic, "denitrification_aquatic", lines);
+  readInto(fn__autotrophic_uptake_aquatic, "autotrophic_uptake_aquatic", lines);
+  readInto(fn__primary_production_aquatic, "primary_production_aquatic", lines);
+  readInto(fn__denitrification_soil, "denitrification_soil", lines);
+  readInto(fn__degradation_soil, "degradation_soil", lines);
+  readInto(fn__mineralisation_soil, "mineralisation_soil", lines);
+  readInto(fn__dissolution_soil, "dissolution_soil", lines);
   /* end of Parameters */
 
   /* Report */
@@ -174,6 +194,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__rPerc1, "report_rperc_layer1", lines);
   readInto(report__rPerc2, "report_rperc_layer2", lines);
   readInto(report__rPerc3, "report_rperc_layer3", lines);
+  readInto(report__rrPerc3, "report_rrperc_layer3", lines);
   readInto(report__Ei, "report_canopy_evap", lines);
   readInto(report__Es, "report_soil_evap", lines);
   readInto(report__Tr, "report_transp", lines);
@@ -190,6 +211,8 @@ int Control::ReadConfigFile(string fname){
   readInto(report__GWf_out, "report_GWflow_output", lines);
   readInto(report__GWf_toChn, "report_GWflow_toChn", lines);
   readInto(report__Q, "report_discharge", lines);
+  readInto(report__deni_soil, "report_deni_soil", lines);
+  readInto(report__minerl_soil, "report_minerl_soil", lines);
   readInto(report__d18o_I, "report_d18o_canopy_storage", lines);
   readInto(report__d18o_snow, "report_d18o_snow_depth", lines);
   readInto(report__d18o_pond, "report_d18o_pond", lines);
@@ -198,6 +221,14 @@ int Control::ReadConfigFile(string fname){
   readInto(report__d18o_layer3, "report_d18o_SMC_layer3", lines);
   readInto(report__d18o_GW, "report_d18o_groundwater_storage", lines);
   readInto(report__d18o_chanS, "report_d18o_chanS", lines);
+  readInto(report__no3_I, "report_no3_canopy_storage", lines);
+  readInto(report__no3_snow, "report_no3_snow_depth", lines);
+  readInto(report__no3_pond, "report_no3_pond", lines);
+  readInto(report__no3_layer1, "report_no3_SMC_layer1", lines);
+  readInto(report__no3_layer2, "report_no3_SMC_layer2", lines);
+  readInto(report__no3_layer3, "report_no3_SMC_layer3", lines);
+  readInto(report__no3_GW, "report_no3_groundwater_storage", lines);
+  readInto(report__no3_chanS, "report_no3_chanS", lines);
   /* end of Report */
 
   return EXIT_SUCCESS;
@@ -212,7 +243,7 @@ void Control::readInto(T &value, string key, vector<string> lines){
   position = find(lines.begin(), lines.end(), key)-lines.begin();
 
   if (position >= lines.size()){
-    throw runtime_error(string("File or Folder not found: ") + key);
+    throw runtime_error(string("Config not found: ") + key);
   } else {
     value = string_as_T<T>(lines[position+2]);
   }

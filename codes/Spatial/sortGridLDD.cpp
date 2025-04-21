@@ -2,9 +2,7 @@
 
 sortedGrid Control::SortGridLDD(){
   int value, value1, value2, value3, value4, value6, value7, value8, value9 = 0;
-  int r, c, rr ,cc, lat_ok;
-  int outlet_r = -9999;
-  int outlet_c = -9999;
+  int r, c, rr ,cc;
   int counter=0;
   grid *temp, *to_row, *to_col;
   sortedGrid map2array;

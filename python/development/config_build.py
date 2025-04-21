@@ -83,12 +83,12 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('Clim_Maps_Folder = ./climate/\n')
     text.append('Output_Folder = ./outputs/\n\n')
     text.append('# Model configuration\n')
-    text.append('Simul_start = 0 # always 0\n')
+    text.append('Simul_start = 2903299200 # Seconds since 1990-1-1 00:00:00\n')
     text.append('Simul_end = 946857600 # in second\n')
     text.append('Simul_tstep = 86400 # seconds (daily)\n')
     text.append('Clim_input_tstep = 86400 # seconds (daily)\n')
-    text.append('Report_interval = 86400 # seconds (daily)\n')
-    text.append('Update_interval = 43200000 # seconds (every 100 days); the interval for land use / soil type update \n\n')
+    text.append('Report_interval = -3 # The interval of map reports in seconds; or daily (-1), monthly (-2), or annually (-3) \n')
+    text.append('Update_interval = 946857600 # seconds (every 100 days); the interval for land use / soil type update \n\n')
 
     text.append('# Options \n')
     opt_list = []
@@ -156,9 +156,10 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
 
 
 def report_build(fname, reports):
+
+    # Report create
     with open(fname, 'r') as f:
         lines = f.readlines()
-        
         start, end = locate_text(lines, '/* Init Report */', '/* end of Init Report */')
 
         content = []     
@@ -169,15 +170,15 @@ def report_build(fname, reports):
                 content.append('  if (ctrl.report_'+data[0]+'==1)  report_create(ctrl.path_ResultsFolder+"'+data[5]+'_TS.bin", of_'+data[0]+');\n')
                 content.append('  else if (ctrl.report_'+data[0]+'==2)  report_create(ctrl.path_ResultsFolder+"'+data[5]+'_map.bin", of_'+data[0]+');\n\n')
         content = lines[:start] + content + lines[end:]
-    
     if(('').join(content) != ('').join(lines)):
         with open(fname, 'w') as f:
             f.writelines(content)
 
+    # Report_to_Ts
     with open(fname, 'r') as f:
         lines = f.readlines()
         
-        start, end = locate_text(lines, '/* Report */', '/* end of Report */')
+        start, end = locate_text(lines, '/* Report to time series */', '/* end of Report to time series */')
 
         content = []     
         content.append('  // 1: report time series at gauging stations; 2: report maps\n')  
@@ -185,8 +186,59 @@ def report_build(fname, reports):
             data = reports[i]
             if data[5] is not None:
                 content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS(ctrl, Bsn.'+data[0]+', of_'+data[0]+');}\n')
-                content.append('  else if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, Bsn.'+data[0]+', ctrl._sortedGrid, of_'+data[0]+');}\n\n')
+        content = lines[:start] + content + lines[end:]
+    
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+            f.writelines(content)
+    
+    # Report_to_maps
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+        
+        start, end = locate_text(lines, '/* Report to maps */', '/* end of Report to maps */')
 
+        content = []     
+        content.append('  // 1: report time series at gauging stations; 2: report maps\n')  
+        for i in range(len(reports)):
+            data = reports[i]
+            if data[5] is not None:
+                content.append('  if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, '+data[0]+'_acc, ctrl._sortedGrid, of_'+data[0]+');}\n')
+        content = lines[:start] + content + lines[end:]
+    
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+            f.writelines(content)
+
+
+    # Report_create_maps
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+        
+        start, end = locate_text(lines, '/* Create maps */', '/* end of Create maps */')
+
+        content = []     
+        for i in range(len(reports)):
+            data = reports[i]
+            if data[5] is not None:
+                content.append('  if (ctrl.report_'+data[0]+'==2) '+data[0]+'_acc = new svector(ctrl._sortedGrid.size);\n')
+        content = lines[:start] + content + lines[end:]
+    
+    if(('').join(content) != ('').join(lines)):
+        with open(fname, 'w') as f:
+            f.writelines(content)
+
+    # Report_update_maps
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+        
+        start, end = locate_text(lines, '/* Update maps */', '/* end of Update maps */')
+
+        content = []     
+        for i in range(len(reports)):
+            data = reports[i]
+            if data[5] is not None:
+                content.append('  if (ctrl.report_'+data[0]+'==2) '+data[0]+'_acc->plus(*Bsn.'+data[0]+');\n')
         content = lines[:start] + content + lines[end:]
     
     if(('').join(content) != ('').join(lines)):

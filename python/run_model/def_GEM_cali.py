@@ -33,14 +33,13 @@ class Info:
 class Cali:
     # DREAM calibration
     TASK_name = 'DREAM_cali_DMC'
-    ncores = 20
-    nchains = 20
+    nchains = 100
 
     niterations = 500  # Number of iterations for each batch
     nbatchs = 20  # Number of batches
 
-    restart = True   # Whether restart?
-    restart_niteration = 9500 # restart since which iteration?
+    restart = False   # Whether restart?
+    restart_niteration = 500 # restart since which iteration?
 
     
 
@@ -50,10 +49,13 @@ class Output:
 
     # sites: 24, 25, 32, 26, 26x, 29a
 
-    sim_q_idx       = [2, 3, 4, 5]   # Demnitz Mill
-    sim_q_weights   = [0.05, 0.4, 0.4, 0.05]
+    sim_q_idx       = [2, 3, 4, 5]   # 32, 26, 26x, 29a
+    sim_iso_idx     = [1, 2, 3, 5]   # 25, 32, 26,  29a
+    sim_q_weights   = np.array([0.05, 0.45, 0.45, 0.05]) * 0.7
+    sim_iso_weights = np.array([0.4, 0.25, 0.25, 0.1]) * 0.3
     sim = {}
     sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'weights':sim_q_weights, 'type':'Ts'}
+    sim['iso_stream']       = {'sim_file':'d18o_chanS_TS.bin' , 'obs_file':'d18o_stream_obs.bin', 'sim_idx':sim_iso_idx, 'weights':sim_iso_weights, 'type':'Ts'}
 
     
 
@@ -64,11 +66,11 @@ class Param:
     ref = {}
     
 
-    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.6], 'max':[5]}
+    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.6]*Info.N_soil, 'max':[5]*Info.N_soil}
 
     # PET seperation and Max canopy storage
-    ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5], 'max':[5e-2]}  # Maximum canopy storage
-    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3], 'max':[-0.1]}  # PET to PE and PT
+    ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse}  # Maximum canopy storage
+    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse}  # PET to PE and PT
 
     # Snow
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2]}
@@ -105,16 +107,31 @@ class Param:
 
     # GW recharge
     ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-10]*Info.N_soil, 'max':[1]*Info.N_soil} # Correction factor for GW recharge
+    ref['init_GW'] = {'type':'soil',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_soil, 'max':[20]*Info.N_soil} # Initial GW storage in m
 
     # Routing
-    ref['pOvf_toChn']   = {'type':'soil',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_soil, 'max':[1e3]*Info.N_soil}
+    ref['pOvf_toChn']   = {'type':'soil',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_soil, 'max':[1]*Info.N_soil}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)
     ref['interfExp']   = {'type':'soil',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_soil, 'max':[10]*Info.N_soil}
     ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_soil, 'max':[1e7]*Info.N_soil}  # Correction factor for linear Kinematic waver approximation of interflow
     ref['GWfExp']   = {'type':'soil',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil}
     ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-15]*Info.N_soil, 'max':[1e-2]*Info.N_soil}  # Proportion of GW storage for routing generation
     ref['Manningn']   = {'type':'soil',   'log':1, 'file':'Manningn',   'min':[0.01]*Info.N_soil, 'max':[0.1]*Info.N_soil}
 
+    # Mixing
+    ref['nearsurface_mixing']   = {'type':'soil',   'log':0, 'file':'nearsurface_mixing',   'min':[0]*Info.N_soil, 'max':[1]*Info.N_soil}
+    ref['ratio_to_interf'] = {'type':'soil',   'log':0, 'file':'ratio_to_interf',   'min':[0]*Info.N_soil, 'max':[1]*Info.N_soil}
+    
+    # Tracking
+    ref['d18o_init_GW'] = {'type':'global',   'log':0, 'file':'d18o_init_GW',   'min':[-9]*Info.N_soil, 'max':[-7.5]*Info.N_soil}
+
     # Nitrogen simulation
+    ref['denitrification_aquatic']   = {'type':'landuse',   'log':1, 'file':'denitrification_aquatic',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse}
+    ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse}
+    ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse}
+    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4]*Info.N_landuse, 'max':[1.1]*Info.N_landuse}
+    ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-3]*Info.N_landuse, 'max':[1e3]*Info.N_landuse}
+    ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-4]*Info.N_landuse, 'max':[0.4]*Info.N_landuse}
+    ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse}
     
     
 

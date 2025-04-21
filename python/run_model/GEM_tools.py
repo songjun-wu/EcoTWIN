@@ -116,9 +116,9 @@ def sort_directory(mode, Path, Cali):
         
  
 
-def set_env(mode, Path, Cali):
+def set_env(mode, Path, nchains):
     if mode == 'DREAM_cali':
-        for i in range(Cali.nchains):
+        for i in range(nchains):
             dir_for_each_chain = Path.work_path + '/chain_' +str(i)    # Working directory for each chain
             run_path =  dir_for_each_chain + '/run/'        # The path for model runs
 

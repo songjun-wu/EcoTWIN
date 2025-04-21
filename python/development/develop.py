@@ -82,7 +82,7 @@ Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy stor
             ['_d18o_layer2',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 2 [‰]', 'grid', 'spatial', 'd18o_SMC_layer2'],
             ['_d18o_layer3',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 3 [‰]', 'grid', 'spatial', 'd18o_SMC_layer3'], 
             ['_d18o_GW',  [Opt.cond['tracking_isotope_1']], 'd18o in Groundwater storage [‰]', 'grid', 'spatial', 'd18o_groundwater_storage'],
-            ['_d18o_chanS',  [Opt.cond['tracking_isotope_1']], 'd18o in Channel storage [‰]', 'grid', 'new', 'd18o_chanS'],
+            ['_d18o_chanS',  [Opt.cond['tracking_isotope_1']], 'd18o in Channel storage [‰]', 'grid', 'spatial', 'd18o_chanS'],
 
             ['_d18o_ovf_in_acc',  [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in overland inflow [‰ * m]', 'grid', 'new', None],
             ['_d18o_interf_in_acc',  [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in inter-inflow [‰ * m]', 'grid', 'new', None],
@@ -90,19 +90,34 @@ Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy stor
             ['_d18o_Qupstream_acc', [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in upstream inflow to channel storage [‰ * m]', 'grid', 'new', None]
             ]
 
-Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mg/L]', 'grid', 'spatial', 'no3_canopy_storage'],
-            ['_no3_snow',    [Opt.cond['nitrogen_sim_1']], 'no3 in Snow depth in [mg/L]', 'grid', 'spatial', 'no3_snow_depth'],
-            ['_no3_pond',    [Opt.cond['nitrogen_sim_1']], 'no3 in Ponding water in [mg/L]', 'grid', 'spatial', 'no3_pond'],
-            ['_no3_layer1',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 1 [mg/L‰]', 'grid', 'spatial', 'no3_SMC_layer1'],
-            ['_no3_layer2',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 2 [mg/L]', 'grid', 'spatial', 'no3_SMC_layer2'],
-            ['_no3_layer3',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 3 [mg/L]', 'grid', 'spatial', 'no3_SMC_layer3'], 
-            ['_no3_GW',  [Opt.cond['nitrogen_sim_1']], 'no3 in Groundwater storage [mg/L]', 'grid', 'spatial', 'no3_groundwater_storage'],
-            ['_no3_chanS',  [Opt.cond['nitrogen_sim_1']], 'no3 in Channel storage [mg/L]', 'grid', 'new', 'no3_chanS'],
+Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mgN/L]', 'grid', 'spatial', 'no3_canopy_storage'],
+            ['_no3_snow',    [Opt.cond['nitrogen_sim_1']], 'no3 in Snow depth in [mgN/L]', 'grid', 'spatial', 'no3_snow_depth'],
+            ['_no3_pond',    [Opt.cond['nitrogen_sim_1']], 'no3 in Ponding water in [mgN/L]', 'grid', 'spatial', 'no3_pond'],
+            ['_no3_layer1',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 1 [mgN/L]', 'grid', 'spatial', 'no3_SMC_layer1'],
+            ['_no3_layer2',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 2 [mgN/L]', 'grid', 'spatial', 'no3_SMC_layer2'],
+            ['_no3_layer3',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 3 [mgN/L]', 'grid', 'spatial', 'no3_SMC_layer3'], 
+            ['_no3_GW',  [Opt.cond['nitrogen_sim_1']], 'no3 in Groundwater storage [mgN/L]', 'grid', 'spatial', 'no3_groundwater_storage'],
+            ['_no3_chanS',  [Opt.cond['nitrogen_sim_1']], 'no3 in Channel storage [mgN/L]', 'grid', 'spatial', 'no3_chanS'],
 
-            ['_no3_ovf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in overland inflow [mg/L * m]', 'grid', 'new', None],
-            ['_no3_interf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in inter-inflow [mg/L * m]', 'grid', 'new', None],
-            ['_no3_GWf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in GW inflow [mg/L * m]', 'grid', 'new', None],
-            ['_no3_Qupstream_acc', [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in upstream inflow to channel storage [mg/L * m]', 'grid', 'new', None]
+            #['_diss_IN1',  [Opt.cond['nitrogen_sim_1']], 'Dissolved inorganic nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            #['_diss_IN2',  [Opt.cond['nitrogen_sim_1']], 'Dissolved inorganic nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            #['_diss_IN3',  [Opt.cond['nitrogen_sim_1']], 'Dissolved inorganic nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+
+            ['_humusN1',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            ['_humusN2',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            ['_humusN3',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+
+            ['_fastN1',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            ['_fastN2',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            ['_fastN3',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+
+
+            ['_no3_ovf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in overland inflow [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            ['_no3_interf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in inter-inflow [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            ['_no3_GWf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in GW inflow [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            ['_no3_Qupstream_acc', [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in upstream inflow to channel storage [mgN/L*m = gN/m2]', 'grid', 'new', None]
+
+
             ]
 
 Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'interception'],
@@ -114,9 +129,10 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_Perc3', [Opt.cond['none']], 'Percolation into gw reservior [m]', 'grid', 'new', 'perc_layer3'],
 
             ['_rinfilt', [Opt.cond['reinfil_1']], 'Reinflitration into soil layer 1 [m]', 'grid', 'new', 'rinfiltration'],
-            ['_rPerc1', [Opt.cond['reinfil_1']], 'Repercolation into layer 2 [m]', 'grid', 'new', 'rperc_layer1'],
-            ['_rPerc2', [Opt.cond['reinfil_1']], 'Repercolation into layer 3 [m]', 'grid', 'new', 'rperc_layer2'],
-            ['_rPerc3', [Opt.cond['reinfil_1']], 'Repercolation into gw reservior [m]', 'grid', 'new', 'rperc_layer3'],
+            ['_rPerc1', [Opt.cond['reinfil_1']], 'Repercolation into layer 2 due to overland flow routing [m]', 'grid', 'new', 'rperc_layer1'],
+            ['_rPerc2', [Opt.cond['reinfil_1']], 'Repercolation into layer 3 due to overland flow routing [m]', 'grid', 'new', 'rperc_layer2'],
+            ['_rPerc3', [Opt.cond['reinfil_1']], 'Repercolation into gw reservior due to overland flow routing [m]', 'grid', 'new', 'rperc_layer3'],
+            ['_rrPerc3', [Opt.cond['none']], 'Repercolation into gw reservior due to interflow routing [m]', 'grid', 'new', 'rrperc_layer3'],
 
 
             
@@ -165,11 +181,17 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_Qupstream', [Opt.cond['none']], 'Upstream inflow [m3/s]', 'grid', 'new', None],
 
 
+            # Nitrogen
+            ['_deni_soil', [Opt.cond['nitrogen_sim_1']], 'Soil denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_soil'],
+            ['_minerl_soil', [Opt.cond['nitrogen_sim_1']], 'Soil mineralisation [mgN/L*m = gN/m2]', 'grid', 'new', 'minerl_soil'],
+
+
+
             # internal variables
             ['_PE', [Opt.cond['evap_1']], 'Potential evaporation [m]', 'grid', 'new', None],
             ['_PT', [Opt.cond['evap_1']], 'Potential transpiration [m]', 'grid', 'new', None],
             ['_tmp', [Opt.cond['none']], 'Temporal variable for testing [-]', 'grid', 'new', None],
-            
+            ['_snowacc', [Opt.cond['none']], 'Snow accumulation for testing [m]', 'grid', 'new', None],
 
             ]
 
@@ -205,20 +227,38 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               # Percolation
               ['_percExp', [Opt.cond['perc_2']], 'The exponential parameter for percolation [-], only needed when opt_percolation = 2', 'grid', 'spatial_param', 'percExp'],
 
-              # Recharge
-              ['_wRecharge', [Opt.cond['recharge_1']], 'The weighting parameter for GW recharge [-], only needed when opt_recharge = 1', 'grid', 'spatial_param', 'wRecharge'],
+              # GW
+              
+              ['_init_GW', [Opt.cond['init_GW_1']], 'The initial GW storage [m], only needed when opt_init_GW = 1', 'grid', 'spatial_param', 'init_GW'],
+              ['_wRecharge', [Opt.cond['none']], 'The weighting parameter for GW recharge [-], only needed when opt_recharge = 1', 'grid', 'spatial_param', 'wRecharge'],
 
               
-
+              # Routing
               ['_pOvf_toChn', [Opt.cond['routinterf_1']], 'The weighting linear parameter for overland flow routing towards channel  [-]', 'grid', 'spatial_param', 'pOvf_toChn'],
               ['_interfExp', [Opt.cond['routinterf_1']], 'The exponetial weighting parameter for interflow flow routing towards channel  [-]', 'grid', 'spatial_param', 'interfExp'],
               ['_winterf', [Opt.cond['routinterf_1']], 'The weight parameter in kinematic wave solution  [-]', 'grid', 'spatial_param', 'winterf'],
               ['_GWfExp', [Opt.cond['routGWf_1']], 'The exponetial weighting parameter for GW flow routing towards channel  [-]', 'grid', 'spatial_param', 'GWfExp'],
               #['_wGWf', [Opt.cond['routGWf_1']], 'The weight parameter in kinematic wave solution  [-]', 'grid', 'spatial_param', 'wGWf'],
               ['_wGWf', [Opt.cond['routGWf_1']], 'The active proportion of GW storage that contributes to channel recharge  [-]', 'grid', 'spatial_param', 'wGWf'],
-
               ['_Manningn', [Opt.cond['routQ_1']], 'Manning N for stream routing [-], only needed when opt_routQ = 1', 'grid', 'spatial_param', 'Manningn'],
+
+              # Mixing
+              ['_nearsurface_mixing', [Opt.cond['none']], 'The proportion of pond to mix with layer1  [decimal]', 'grid', 'spatial_param', 'nearsurface_mixing'],
+              ['_ratio_to_interf', [Opt.cond['none']], 'The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]', 'grid', 'spatial_param', 'ratio_to_interf'],
+
+              # Tracking
+              ['_d18o_init_GW', [Opt.cond['tracking_isotope_1']], 'Initial d18O of GW storage [‰]', 'grid', 'spatial_param', 'd18o_init_GW'],
+
               
+
+              # Nitrogen
+              ['_denitrification_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic denitrification [-]', 'grid', 'spatial_param', 'denitrification_aquatic'],
+              ['_autotrophic_uptake_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic autotrophic uptake [-]', 'grid', 'spatial_param', 'autotrophic_uptake_aquatic'],
+              ['_primary_production_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic primary production [-]', 'grid', 'spatial_param', 'primary_production_aquatic'],
+              ['_denitrification_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil denitrification [kg/ha]', 'grid', 'spatial_param', 'denitrification_soil'],
+              ['_degradation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil degradation [kg/ha]', 'grid', 'spatial_param', 'degradation_soil'],
+              ['_mineralisation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil mineralisation [kg/ha]', 'grid', 'spatial_param', 'mineralisation_soil'],
+              ['_dissolution_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil dissolution [kg/ha]', 'grid', 'spatial_param', 'dissolution_soil'],
 
             ]
               
@@ -226,7 +266,8 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
 
 Reports = [Storages[j] for j in (np.squeeze(np.argwhere([i[4]=='spatial' for i in Storages])))]
 Reports.extend(Fluxes)
-Reports.extend(Tracking) 
+Reports.extend(Tracking)
+Reports.extend(Nitrogen)
 
 
 homepath = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/'
@@ -241,8 +282,8 @@ datas_atmos = [Climate]
 signs_groundTs = ['GroundTs']
 datas_groundTs = [GroundTs]
 
-signs_basin = ['GIS', 'Storages', 'Fluxes', 'Tracking']
-datas_basin = [GIS, Storages, Fluxes, Tracking]
+signs_basin = ['GIS', 'Storages', 'Fluxes', 'Tracking', 'Nitrogen']
+datas_basin = [GIS, Storages, Fluxes, Tracking, Nitrogen]
 
 signs_param = ['Parameters']
 datas_param = [Parameters]

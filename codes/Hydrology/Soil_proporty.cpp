@@ -47,7 +47,7 @@ int Basin::Pedo_transfer_1(Control &ctrl, Param &par, svector &sv_sand,  svector
 
         // Calculate saturated theta
         thetaS = par._ref_thetaS->val[j] - par._PTF_VG_clay->val[j] * clay - par._PTF_VG_Db->val[j] * bulk_density;
-        thetaS = max(thetaS, roundoffERR);   // To avoid negative saturated moisture content  
+        thetaS = max(thetaS, 0.1);   // To avoid negative saturated moisture content  
 
         // Calculate saturated hydraulic conductivity based on Cosby et al., (1984); https://doi.org/10.1029/WR020i006p00682
         // Additional flexibiltiy was given
@@ -108,7 +108,7 @@ int Basin::Pedo_transfer_2(Control &ctrl, Param &par, svector &sv_sand,  svector
 
         // Calculate saturated theta
         thetaS = par._ref_thetaS->val[j] - par._PTF_VG_clay->val[j] * clay - par._PTF_VG_Db->val[j] * bulk_density;
-        thetaS = max(thetaS, roundoffERR);   // To avoid negative saturated moisture content 
+        thetaS = max(thetaS, 0.1);   // To avoid negative saturated moisture content
 
         // Calculate saturated hydraulic conductivity based on Cosby et al., (1984); https://doi.org/10.1029/WR020i006p00682
         // Additional flexibiltiy was given
@@ -168,7 +168,7 @@ int Basin::Pedo_transfer_3(Control &ctrl, Param &par, svector &sv_sand,  svector
 
        // Calculate saturated theta
         thetaS = par._ref_thetaS->val[j] - par._PTF_VG_clay->val[j] * clay - par._PTF_VG_Db->val[j] * bulk_density;
-        thetaS = max(thetaS, roundoffERR);   // To avoid negative saturated moisture content 
+        thetaS = max(thetaS, 0.1);   // To avoid negative saturated moisture content
 
 
         // Calculate saturated hydraulic conductivity based on Cosby et al., (1984); https://doi.org/10.1029/WR020i006p00682
