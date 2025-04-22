@@ -7,6 +7,7 @@ import numpy as np
 
 class Path:
     model_path = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
+    #model_path = '/home/wusongj/GEM/stable_release/' # The path for model executable file; todo
     path_EXEC = 'gEcoHydro'
     data_path = '/home/wusongj/GEM/test_dmc1/'                   # The path with spatial and climate data
     config_path = '/home/wusongj/GEM/test_dmc1/'                 # The path with configuration files (.ini)
@@ -26,8 +27,35 @@ class Info:
     landuse_index = [5,6,7,8]  # Column index in param.ini
     N_soil = len(soil_index)  # Number of soil types
     N_landuse = len(landuse_index) # Number of land use types
-
     spin_up = 731  # warming days
+
+    ### N additon ###
+    nadd = {}
+    nadd['fert_add'] = {'value':[12, 0, 0, 1]}
+    nadd['fert_day'] = {'value':[87, 87, 87, 87]}
+    nadd['fert_down'] = {'value':[0.4, 0.4, 0.4, 0.4]}
+    nadd['fert_period'] = {'value':[30, 30, 30, 30]}
+    nadd['manure_add'] = {'value':[1.5, 0, 0, 3]}
+    nadd['manure_day'] = {'value':[110, 110, 110, 110]}
+    nadd['manure_down'] = {'value':[0.4, 0.3, 0.3, 0.3]}
+    nadd['manure_period'] = {'value':[30, 30, 30, 30]}
+    nadd['residue_add'] = {'value':[2, 1, 1, 2]}
+    nadd['residue_day'] = {'value':[242, 290, 290, 260]}
+    nadd['residue_down'] = {'value':[0.3, 0.3, 0.3, 0.3]}
+    nadd['residue_period'] = {'value':[30, 30, 30, 30]}
+    nadd['up1'] = {'value':[10, 3, 3, 5]}
+    nadd['up2'] = {'value':[0.5, 1, 1, 0.8]}
+    nadd['up3'] = {'value':[5e-2, 2e-2, 2e-2, 3e-2]}
+
+    nadd['upper_uptake'] = {'value':[0.3, 0.5, 0.5, 0.4]}
+
+    nadd['plant_day'] = {'value':[85, 55, 55, 85]}
+    nadd['harvest_day'] = {'value':[220, 300, 300, 350]}
+
+
+
+
+
 
 
 class Cali:
@@ -52,12 +80,13 @@ class Output:
 
     sim_q_idx       = [2, 3, 4, 5]   # 32, 26, 26x, 29a
     sim_iso_idx     = [1, 2, 3, 5]   # 25, 32, 26,  29a
-    sim_q_weights   = np.array([0.05, 0.45, 0.45, 0.05]) * 0.7
-    sim_iso_weights = np.array([0.4, 0.25, 0.25, 0.1]) * 0.3
+    sim_q_weights   = np.array([0.05, 0.45, 0.45, 0.05]) * 1
+    sim_iso_weights = np.array([0.4, 0.25, 0.25, 0.1]) * 0
     sim = {}
     sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'weights':sim_q_weights, 'type':'Ts'}
     sim['iso_stream']       = {'sim_file':'d18o_chanS_TS.bin' , 'obs_file':'d18o_stream_obs.bin', 'sim_idx':sim_iso_idx, 'weights':sim_iso_weights, 'type':'Ts'}
 
+    
     
 
 
@@ -67,72 +96,76 @@ class Param:
     ref = {}
     
 
-    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.6]*Info.N_soil, 'max':[5]*Info.N_soil}
+    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[5]*Info.N_soil, 'fix_value':None}
 
     # PET seperation and Max canopy storage
-    ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse}  # Maximum canopy storage
-    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse}  # PET to PE and PT
+    ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse, 'fix_value':None}  # Maximum canopy storage = alpha * PET
+    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # PET to PE and PT
 
     # Snow
-    ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2]}
-    ref['deg_day_min']   =      {'type':'global',   'log':0, 'file':'deg_day_min',   'min':[0], 'max':[2e-3]}
-    ref['deg_day_max']   =      {'type':'global',   'log':0, 'file':'deg_day_max',   'min':[2e-3], 'max':[1e-2]}
-    ref['deg_day_increase']   = {'type':'global',   'log':0, 'file':'deg_day_increase',   'min':[0.1], 'max':[0.9]}
+    ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2], 'fix_value':None}
+    ref['deg_day_min']   =      {'type':'global',   'log':0, 'file':'deg_day_min',   'min':[0], 'max':[2e-3], 'fix_value':None}
+    ref['deg_day_max']   =      {'type':'global',   'log':0, 'file':'deg_day_max',   'min':[2e-3], 'max':[1e-2], 'fix_value':None}
+    ref['deg_day_increase']   = {'type':'global',   'log':0, 'file':'deg_day_increase',   'min':[0.1], 'max':[0.9], 'fix_value':None}
 
     
     # Pedotransfer function
-    ref['ref_thetaS']   = {'type':'soil',   'log':0, 'file':'ref_thetaS',   'min':[0.5]*Info.N_soil, 'max':[0.99]*Info.N_soil}
-    ref['PTF_VG_clay']   = {'type':'soil',   'log':1, 'file':'PTF_VG_clay',   'min':[5e-8]*Info.N_soil, 'max':[5e-3]*Info.N_soil}
-    ref['PTF_VG_Db']   = {'type':'soil',   'log':1, 'file':'PTF_VG_Db',   'min':[5e-4]*Info.N_soil, 'max':[5e-1]*Info.N_soil}
+    ref['ref_thetaS']   = {'type':'soil',   'log':0, 'file':'ref_thetaS',   'min':[0.5]*Info.N_soil, 'max':[0.99]*Info.N_soil, 'fix_value':None}
+    ref['PTF_VG_clay']   = {'type':'soil',   'log':1, 'file':'PTF_VG_clay',   'min':[5e-8]*Info.N_soil, 'max':[5e-3]*Info.N_soil, 'fix_value':None}
+    ref['PTF_VG_Db']   = {'type':'soil',   'log':1, 'file':'PTF_VG_Db',   'min':[5e-4]*Info.N_soil, 'max':[5e-1]*Info.N_soil, 'fix_value':None}
 
-    ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-1.2]*Info.N_soil, 'max':[-0.2]*Info.N_soil}
-    ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[1e-4]*Info.N_soil, 'max':[0.026]*Info.N_soil}
-    ref['PTF_Ks_clay']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_clay',   'min':[-1.3e-2]*Info.N_soil, 'max':[-3e-3]*Info.N_soil}
-    ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[15]*Info.N_soil}
+    ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-1.2]*Info.N_soil, 'max':[-0.2]*Info.N_soil, 'fix_value':None}
+    ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[1e-4]*Info.N_soil, 'max':[0.026]*Info.N_soil, 'fix_value':None}
+    ref['PTF_Ks_clay']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_clay',   'min':[-1.3e-2]*Info.N_soil, 'max':[-3e-3]*Info.N_soil, 'fix_value':None}
+    ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[15]*Info.N_soil, 'fix_value':None}
 
-    ref['SWP']   = {'type':'soil',   'log':0, 'file':'SWP',   'min':[10]*Info.N_soil, 'max':[33]*Info.N_soil}
+    ref['SWP']   = {'type':'soil',   'log':0, 'file':'SWP',   'min':[10]*Info.N_soil, 'max':[33]*Info.N_soil, 'fix_value':[33]*Info.N_soil}
 
-    ref['KvKh']   = {'type':'soil',   'log':0, 'file':'KvKh',   'min':[1e-2]*Info.N_soil, 'max':[0.5]*Info.N_soil}  # Vertical to horizontal ksat anisotropy ratio
-    ref['psiAE']   = {'type':'soil',   'log':0, 'file':'psiAE',   'min':[1e-2]*Info.N_soil, 'max':[1.3]*Info.N_soil}
+    ref['KvKh']   = {'type':'soil',   'log':0, 'file':'KvKh',   'min':[1e-2]*Info.N_soil, 'max':[0.5]*Info.N_soil, 'fix_value':None}  # Vertical to horizontal ksat anisotropy ratio
+    ref['psiAE']   = {'type':'soil',   'log':0, 'file':'psiAE',   'min':[1e-2]*Info.N_soil, 'max':[1.3]*Info.N_soil, 'fix_value':None}
 
     # Infiltration
-    ref['KKs']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil}
-    ref['Ksat']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil}
-    ref['BClambda']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[2]*Info.N_soil, 'max':[15]*Info.N_soil}
+    ref['KKs']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil, 'fix_value':None}
+    ref['Ksat']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil, 'fix_value':None}
+    ref['BClambda']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[2]*Info.N_soil, 'max':[15]*Info.N_soil, 'fix_value':None}
 
     # Percolation
-    ref['percExp']   = {'type':'soil',   'log':0, 'file':'percExp',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil}
-
+    ref['percExp']   = {'type':'soil',   'log':0, 'file':'percExp',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil, 'fix_value':None}
+    
     # Evapotranspiration
-    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.999]*Info.N_landuse} # The higher the more deeper roots
+    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.999]*Info.N_landuse, 'fix_value':None} # The higher the more deeper roots
 
     # GW recharge
-    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-10]*Info.N_soil, 'max':[1]*Info.N_soil} # Correction factor for GW recharge
-    ref['init_GW'] = {'type':'soil',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_soil, 'max':[20]*Info.N_soil} # Initial GW storage in m
+    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-10]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
+    ref['init_GW'] = {'type':'soil',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_soil, 'max':[20]*Info.N_soil, 'fix_value':None} # Initial GW storage in m
 
     # Routing
-    ref['pOvf_toChn']   = {'type':'soil',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_soil, 'max':[1]*Info.N_soil}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)
-    ref['interfExp']   = {'type':'soil',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_soil, 'max':[10]*Info.N_soil}
-    ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_soil, 'max':[1e7]*Info.N_soil}  # Correction factor for linear Kinematic waver approximation of interflow
-    ref['GWfExp']   = {'type':'soil',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil}
-    ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-15]*Info.N_soil, 'max':[1e-2]*Info.N_soil}  # Proportion of GW storage for routing generation
-    ref['Manningn']   = {'type':'soil',   'log':1, 'file':'Manningn',   'min':[0.01]*Info.N_soil, 'max':[0.1]*Info.N_soil}
+    ref['pOvf_toChn']   = {'type':'soil',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)
+    ref['interfExp']   = {'type':'soil',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_soil, 'max':[10]*Info.N_soil, 'fix_value':None}
+    ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_soil, 'max':[1e7]*Info.N_soil, 'fix_value':None}  # Correction factor for linear Kinematic waver approximation of interflow
+    ref['GWfExp']   = {'type':'soil',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
+    ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-15]*Info.N_soil, 'max':[1e-2]*Info.N_soil, 'fix_value':None}  # Proportion of GW storage for routing generation
+    ref['Manningn']   = {'type':'soil',   'log':1, 'file':'Manningn',   'min':[0.01]*Info.N_soil, 'max':[0.1]*Info.N_soil, 'fix_value':None}
+    ref['ratio_to_interf'] = {'type':'soil',   'log':0, 'file':'ratio_to_interf',   'min':[0]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
+
+    # Channel
+    ref['Echan_alpha']   = {'type':'soil',   'log':1, 'file':'Echan_alpha',   'min':[0.1]*Info.N_soil, 'max':[10]*Info.N_soil, 'fix_value':None}  # Correction factor in Priestley-Taylor equation
 
     # Mixing
-    ref['nearsurface_mixing']   = {'type':'soil',   'log':0, 'file':'nearsurface_mixing',   'min':[0]*Info.N_soil, 'max':[1]*Info.N_soil}
-    ref['ratio_to_interf'] = {'type':'soil',   'log':0, 'file':'ratio_to_interf',   'min':[0]*Info.N_soil, 'max':[1]*Info.N_soil}
+    ref['nearsurface_mixing']   = {'type':'soil',   'log':0, 'file':'nearsurface_mixing',   'min':[0]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
+    
     
     # Tracking
-    ref['d18o_init_GW'] = {'type':'global',   'log':0, 'file':'d18o_init_GW',   'min':[-9]*Info.N_soil, 'max':[-7.5]*Info.N_soil}
+    ref['d18o_init_GW'] = {'type':'global',   'log':0, 'file':'d18o_init_GW',   'min':[-9]*Info.N_soil, 'max':[-7.5]*Info.N_soil, 'fix_value':None}
 
     # Nitrogen simulation
-    ref['denitrification_aquatic']   = {'type':'landuse',   'log':1, 'file':'denitrification_aquatic',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse}
-    ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse}
-    ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse}
-    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4]*Info.N_landuse, 'max':[1.1]*Info.N_landuse}
-    ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-3]*Info.N_landuse, 'max':[1e3]*Info.N_landuse}
-    ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-4]*Info.N_landuse, 'max':[0.4]*Info.N_landuse}
-    ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse}
+    ref['denitrification_aquatic']   = {'type':'landuse',   'log':1, 'file':'denitrification_aquatic',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
+    ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
+    ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
+    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4]*Info.N_landuse, 'max':[1.1]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
+    ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-3]*Info.N_landuse, 'max':[1e3]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
+    ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-4]*Info.N_landuse, 'max':[0.4]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
+    ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
 
 
 

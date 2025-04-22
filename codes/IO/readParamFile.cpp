@@ -47,6 +47,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(GWfExp, "GWfExp", lines);
   readIntoParam(wGWf, "wGWf", lines);
   readIntoParam(Manningn, "Manningn", lines);
+  readIntoParam(Echan_alpha, "Echan_alpha", lines);
   readIntoParam(nearsurface_mixing, "nearsurface_mixing", lines);
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
   readIntoParam(d18o_init_GW, "d18o_init_GW", lines);
@@ -63,6 +64,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
 
   return EXIT_SUCCESS;
 }
+
 
 void Param::readIntoParam(vector<double>& param_arr, string key, vector<string> lines){
     for (const auto& row : lines) {

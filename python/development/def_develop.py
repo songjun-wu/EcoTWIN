@@ -24,12 +24,13 @@ class Opt:
     cond['nitrogen_sim_1'] = {'key':'opt_nitrogen_sim', 'value':1,
                                   'general_description':'Enable nitrogen simulation?\n# 0: disabled\n# 1: enabled',
                                   'description':'Nitrogen simulation'}
-    cond['reinfil_0']   = {'key':'opt_reinfil', 'value':0, 
-                        'general_description':'Reinfiltration during overland flow routing\n# 0: Disabled\n# 1: Enabled',
-                        'description':'Reinfiltration Disaled'}
     cond['reinfil_1']   = {'key':'opt_reinfil', 'value':1, 
                         'general_description':'Reinfiltration during overland flow routing',
                         'description':'Reinfiltration Enabled'}
+    cond['reinfil_0']   = {'key':'opt_reinfil', 'value':0, 
+                        'general_description':'Reinfiltration during overland flow routing\n# 0: Disabled\n# 1: Enabled',
+                        'description':'Reinfiltration Disaled'}
+    
     
 
     
@@ -143,6 +144,11 @@ class Opt:
     
 
 
-
+    cond['chanE_1']   = {'key':'opt_chanE', 'value':1, 
+                        'general_description':'Channel evaporation\n# 0: Disabled\n# 1: Penman equation\n# 2: Priestley-Taylor equation',
+                        'description':'Channel evaporation based on Penman equation'}
+    cond['chanE_2']   = {'key':'opt_chanE', 'value':2, 
+                        'general_description':'Channel evaporation\n# 0: Disabled\n# 1: Penman equation\n# 2: Priestley-Taylor equation',
+                        'description':'Channel evaporation based on Priestley-Taylor equation'}
 
     

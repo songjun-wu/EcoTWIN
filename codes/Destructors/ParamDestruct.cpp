@@ -61,6 +61,9 @@ int Param::dtor(Control &ctrl){
   if (ctrl.opt_routQ == 1){
     if(_Manningn) delete _Manningn;
   }
+  if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
+    if(_Echan_alpha) delete _Echan_alpha;
+  }
   if (ctrl.opt_tracking_isotope == 1){
     if(_d18o_init_GW) delete _d18o_init_GW;
   }

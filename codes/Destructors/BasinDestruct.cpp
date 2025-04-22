@@ -95,6 +95,7 @@ int Basin::dtor(Control &ctrl){
   if(_GWf_toChn) delete _GWf_toChn;
   if(_Q) delete _Q;
   if(_Qupstream) delete _Qupstream;
+  if(_Echan) delete _Echan;
   if(_tmp) delete _tmp;
   if(_snowacc) delete _snowacc;
   if (ctrl.opt_reinfil == 1){
@@ -114,10 +115,6 @@ int Basin::dtor(Control &ctrl){
     if(_p_perc1) delete _p_perc1;
     if(_p_perc2) delete _p_perc2;
     if(_p_perc3) delete _p_perc3;
-  }
-  if (ctrl.opt_nitrogen_sim == 1){
-    if(_deni_soil) delete _deni_soil;
-    if(_minerl_soil) delete _minerl_soil;
   }
   /* end of Fluxes */
 
@@ -148,6 +145,10 @@ int Basin::dtor(Control &ctrl){
     if(_no3_layer3) delete _no3_layer3;
     if(_no3_GW) delete _no3_GW;
     if(_no3_chanS) delete _no3_chanS;
+    if(_nitrogen_add) delete _nitrogen_add;
+    if(_plant_uptake) delete _plant_uptake;
+    if(_deni_soil) delete _deni_soil;
+    if(_minerl_soil) delete _minerl_soil;
     if(_humusN1) delete _humusN1;
     if(_humusN2) delete _humusN2;
     if(_humusN3) delete _humusN3;

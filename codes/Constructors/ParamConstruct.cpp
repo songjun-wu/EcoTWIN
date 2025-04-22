@@ -5,8 +5,13 @@ Param::Param(Control &ctrl){
   _colNum = ctrl._colNum;
   _dx = ctrl._dx;
   _nodata = ctrl._nodata;
-  
   _sortedGrid = ctrl._sortedGrid;
+
+  // Init flags
+  sort_perc_travel_time_OK = 0;  
+  sort_root_fraction_OK = 0;  
+  sort_plant_uptake_OK = 0;  // The plant uptake only needs to be calculated once (or once within each change)
+  sort_nitrogen_addition_OK = 0;  // The nitrogen addtion only needs to be calculated once (or once within each change)
 
   string fname = "param.ini";
   /* Parameters */
@@ -65,6 +70,9 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_routQ == 1){
     _Manningn = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
+    _Echan_alpha = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_tracking_isotope == 1){
     _d18o_init_GW = new svector(_sortedGrid.size);

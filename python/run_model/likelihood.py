@@ -41,4 +41,7 @@ def likelihood(param, chainID):
     os.chdir(local_path)
     return loglikeli
 
-#likelihood(np.full(150, 0.5), 1)
+
+#param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(100, -1)
+#for i in range(100):
+#    likelihood(param[i,:], 0)

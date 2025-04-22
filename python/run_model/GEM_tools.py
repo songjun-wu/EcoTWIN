@@ -196,12 +196,13 @@ def get_param_N(Info, Param):
     param_N = 0
     for key in Param.ref.keys():
         dict = Param.ref.get(key)
-        if dict['type'] == 'global':
-            param_N += 1
-        elif dict['type'] == 'landuse':
-            param_N += Info.N_landuse
-        elif dict['type'] == 'soil':
-            param_N += Info.N_soil
+        if dict['fix_value'] is None:
+            if dict['type'] == 'global':
+                param_N += 1
+            elif dict['type'] == 'landuse':
+                param_N += Info.N_landuse
+            elif dict['type'] == 'soil':
+                param_N += Info.N_soil
     return param_N
 
 
@@ -220,33 +221,63 @@ def gen_param(run_path, Info, Param, param_arr):
         param_values = np.full(N_total, Info.nodata)
         mins = np.array(dict['min'])
         maxs = np.array(dict['max'])
-        if dict['type'] == 'global':  # The first column is for global parameters
-            if dict['log'] == 0:
-                param_values[0] = mins[0] + (maxs[0] - mins[0]) * param_arr[counter]
-            else:
-                log_mins = np.log(mins[0])
-                log_maxs = np.log(maxs[0])
-                param_values[0] = np.exp(log_mins + param_arr[counter] * (log_maxs - log_mins))
-            counter += 1
-        elif dict['type'] == 'landuse':
-            if dict['log'] == 0:
-                param_values[landuse_index] = mins + (maxs - mins) * param_arr[counter:counter+N_land_use]
-            else:
-                log_mins = np.log(mins)
-                log_maxs = np.log(maxs)
-                param_values[landuse_index] = np.exp( log_mins + param_arr[counter:counter+N_land_use] * (log_maxs - log_mins))
-            counter += N_land_use
-        elif dict['type'] == 'soil':
-            if dict['log'] == 0:
-                param_values[soil_index] = mins + (maxs - mins) * param_arr[counter:counter+N_soil]
-            else:
-                log_mins = np.log(mins)
-                log_maxs = np.log(maxs)
-                param_values[soil_index] = np.exp( log_mins + param_arr[counter:counter+N_soil] * (log_maxs - log_mins))
-            counter += N_soil
+        if dict['fix_value'] is not None:
+            fix_value = dict['fix_value']
+            if dict['type'] == 'global':
+                param_values[0] = fix_value[0]
+            elif dict['type'] == 'landuse':
+                param_values[landuse_index] = fix_value
+            elif dict['type'] == 'soil':
+                param_values[soil_index] = fix_value
+
+        else:
+            if dict['type'] == 'global':  # The first column is for global parameters
+                if dict['log'] == 0:
+                    param_values[0] = mins[0] + (maxs[0] - mins[0]) * param_arr[counter]
+                else:
+                    log_mins = np.log(mins[0])
+                    log_maxs = np.log(maxs[0])
+                    param_values[0] = np.exp(log_mins + param_arr[counter] * (log_maxs - log_mins))
+                counter += 1
+            elif dict['type'] == 'landuse':
+                if dict['log'] == 0:
+                    param_values[landuse_index] = mins + (maxs - mins) * param_arr[counter:counter+N_land_use]
+                else:
+                    log_mins = np.log(mins)
+                    log_maxs = np.log(maxs)
+                    param_values[landuse_index] = np.exp( log_mins + param_arr[counter:counter+N_land_use] * (log_maxs - log_mins))
+                counter += N_land_use
+            elif dict['type'] == 'soil':
+                if dict['log'] == 0:
+                    param_values[soil_index] = mins + (maxs - mins) * param_arr[counter:counter+N_soil]
+                else:
+                    log_mins = np.log(mins)
+                    log_maxs = np.log(maxs)
+                    param_values[soil_index] = np.exp( log_mins + param_arr[counter:counter+N_soil] * (log_maxs - log_mins))
+                counter += N_soil
         text = key + ',' + (',').join(param_values.astype(np.str)) + '\n'
         lines.append(text)
     with open(run_path+'param.ini', 'w') as f:
         f.writelines(lines)
 
+  
+def gen_no3_addtion(run_path, Info):
+    landuse_index = Info.landuse_index
+    soil_index = Info.soil_index
 
+    N_land_use = len(landuse_index)
+    N_soil = len(soil_index)
+    N_total = N_land_use + N_soil + 1
+
+    text_arr = np.full(N_total, Info.nodata)
+
+    lines = []
+    text_arr[landuse_index] = 1
+    lines.append('is_landuse,' + (',').join(text_arr.astype(np.str)) + '\n')
+
+    for key in Info.nadd.keys():
+        text_arr[landuse_index] = Info.nadd[key]['value']
+        lines.append(key + ',' + (',').join(text_arr.astype(np.str)) + '\n')
+    
+    with open(run_path+'N_addition.ini', 'w') as f:
+        f.writelines(lines)

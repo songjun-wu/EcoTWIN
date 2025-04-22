@@ -40,8 +40,7 @@ int Report::dtor(Control &ctrl){
   if (of__GWf_out.is_open())  of__GWf_out.close();
   if (of__GWf_toChn.is_open())  of__GWf_toChn.close();
   if (of__Q.is_open())  of__Q.close();
-  if (of__deni_soil.is_open())  of__deni_soil.close();
-  if (of__minerl_soil.is_open())  of__minerl_soil.close();
+  if (of__Echan.is_open())  of__Echan.close();
   if (of__d18o_I.is_open())  of__d18o_I.close();
   if (of__d18o_snow.is_open())  of__d18o_snow.close();
   if (of__d18o_pond.is_open())  of__d18o_pond.close();
@@ -58,6 +57,10 @@ int Report::dtor(Control &ctrl){
   if (of__no3_layer3.is_open())  of__no3_layer3.close();
   if (of__no3_GW.is_open())  of__no3_GW.close();
   if (of__no3_chanS.is_open())  of__no3_chanS.close();
+  if (of__nitrogen_add.is_open())  of__nitrogen_add.close();
+  if (of__plant_uptake.is_open())  of__plant_uptake.close();
+  if (of__deni_soil.is_open())  of__deni_soil.close();
+  if (of__minerl_soil.is_open())  of__minerl_soil.close();
   if (ctrl.report__I==2) delete _I_acc;
   if (ctrl.report__snow==2) delete _snow_acc;
   if (ctrl.report__pond==2) delete _pond_acc;
@@ -92,8 +95,7 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__GWf_out==2) delete _GWf_out_acc;
   if (ctrl.report__GWf_toChn==2) delete _GWf_toChn_acc;
   if (ctrl.report__Q==2) delete _Q_acc;
-  if (ctrl.report__deni_soil==2) delete _deni_soil_acc;
-  if (ctrl.report__minerl_soil==2) delete _minerl_soil_acc;
+  if (ctrl.report__Echan==2) delete _Echan_acc;
   if (ctrl.report__d18o_I==2) delete _d18o_I_acc;
   if (ctrl.report__d18o_snow==2) delete _d18o_snow_acc;
   if (ctrl.report__d18o_pond==2) delete _d18o_pond_acc;
@@ -110,6 +112,10 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__no3_layer3==2) delete _no3_layer3_acc;
   if (ctrl.report__no3_GW==2) delete _no3_GW_acc;
   if (ctrl.report__no3_chanS==2) delete _no3_chanS_acc;
+  if (ctrl.report__nitrogen_add==2) delete _nitrogen_add_acc;
+  if (ctrl.report__plant_uptake==2) delete _plant_uptake_acc;
+  if (ctrl.report__deni_soil==2) delete _deni_soil_acc;
+  if (ctrl.report__minerl_soil==2) delete _minerl_soil_acc;
   /* end of Report */
 
   return EXIT_SUCCESS;

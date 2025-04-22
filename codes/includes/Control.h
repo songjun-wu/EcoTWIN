@@ -64,8 +64,6 @@ struct Control{
   // 1: enabled
   int opt_nitrogen_sim;
   // Reinfiltration during overland flow routing
-  // 0: Disabled
-  // 1: Enabled
   int opt_reinfil;
   // Canopy interception
   // 1 :maximum canopy storage unmodified
@@ -120,6 +118,11 @@ struct Control{
   // Stream routing
   // 1: Kinematic Wave
   int opt_routQ;
+  // Channel evaporation
+  // 0: Disabled
+  // 1: Penman equation
+  // 2: Priestley-Taylor equation
+  int opt_chanE;
   /* end of Options */
 
 
@@ -166,6 +169,9 @@ struct Control{
   string fn__Ta;  // Air temperature [degree C]
   string fn__RH;  // Relative humidity [decimal]
   string fn__PET;  // Potential evapotranspiration [m]
+  string fn__airpressure;  // Air pressure [Pa]
+  string fn__windspeed;  // Air pressure [m/s]
+  string fn__Rnet;  // Net radiation [W/m2]
   string fn__d18o_P;  // d18O in precipitation [‰]
   /* end of Climate */
 
@@ -236,6 +242,7 @@ struct Control{
   string fn__GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
   string fn__wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   string fn__Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
+  string fn__Echan_alpha;  // orrection factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
   string fn__nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__d18o_init_GW;  // Initial d18O of GW storage [‰]
@@ -303,8 +310,7 @@ struct Control{
   int report__GWf_toChn;  // report Groundwater flow to Channel [m]
   int report__Q;  // report Discharge [m3/s]
   int report__Qupstream;  // report Upstream inflow [m3/s]
-  int report__deni_soil;  // report Soil denitrification [mgN/L*m = gN/m2]
-  int report__minerl_soil;  // report Soil mineralisation [mgN/L*m = gN/m2]
+  int report__Echan;  // report Channel evaporation [m]
   int report__PE;  // report Potential evaporation [m]
   int report__PT;  // report Potential transpiration [m]
   int report__tmp;  // report Temporal variable for testing [-]
@@ -329,6 +335,10 @@ struct Control{
   int report__no3_layer3;  // report no3 in Soil moisture in layer 3 [mgN/L]
   int report__no3_GW;  // report no3 in Groundwater storage [mgN/L]
   int report__no3_chanS;  // report no3 in Channel storage [mgN/L]
+  int report__nitrogen_add;  // report Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
+  int report__plant_uptake;  // report Plant uptake [mgN/L*m = gN/m2]
+  int report__deni_soil;  // report Soil denitrification [mgN/L*m = gN/m2]
+  int report__minerl_soil;  // report Soil mineralisation [mgN/L*m = gN/m2]
   int report__humusN1;  // report Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
   int report__humusN2;  // report Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
   int report__humusN3;  // report Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]

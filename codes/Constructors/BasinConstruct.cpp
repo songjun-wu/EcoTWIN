@@ -100,6 +100,7 @@
   _GWf_toChn = new svector(_sortedGrid.size);
   _Q = new svector(ctrl.path_BasinFolder + ctrl.fn__Q, _rowNum, _colNum, _sortedGrid);
   _Qupstream = new svector(_sortedGrid.size);
+  _Echan = new svector(_sortedGrid.size);
   _tmp = new svector(_sortedGrid.size);
   _snowacc = new svector(_sortedGrid.size);
   if (ctrl.opt_reinfil == 1){
@@ -119,10 +120,6 @@
     _p_perc1 = new svector(_sortedGrid.size);
     _p_perc2 = new svector(_sortedGrid.size);
     _p_perc3 = new svector(_sortedGrid.size);
-  }
-  if (ctrl.opt_nitrogen_sim == 1){
-    _deni_soil = new svector(_sortedGrid.size);
-    _minerl_soil = new svector(_sortedGrid.size);
   }
   /* end of Fluxes */
 
@@ -153,6 +150,10 @@
     _no3_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_layer3, _rowNum, _colNum, _sortedGrid);
     _no3_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_GW, _rowNum, _colNum, _sortedGrid);
     _no3_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_chanS, _rowNum, _colNum, _sortedGrid);
+    _nitrogen_add = new svector(_sortedGrid.size);
+    _plant_uptake = new svector(_sortedGrid.size);
+    _deni_soil = new svector(_sortedGrid.size);
+    _minerl_soil = new svector(_sortedGrid.size);
     _humusN1 = new svector(_sortedGrid.size);
     _humusN2 = new svector(_sortedGrid.size);
     _humusN3 = new svector(_sortedGrid.size);
@@ -175,5 +176,11 @@
     init_groundTs(ctrl); // create maps for Ground inputs
     update_groundTs(ctrl, par); // update maps for Ground inputs
   }
+
+  // Read nitrogen addition information
+  if (ctrl.opt_nitrogen_sim==1){
+    ReadNitrogenFile(ctrl, par, "N_addition.ini");
+  }
+  
  
  }

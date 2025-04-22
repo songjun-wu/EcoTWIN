@@ -15,10 +15,10 @@ RM := rm -rf
 -include Constructors/subdir.mk
 -include Hydrology/subdir.mk
 -include IO/subdir.mk
--include Nitrogen/subdir.mk
 -include Energy/subdir.mk
 -include Tracking/subdir.mk
 -include Functions/subdir.mk
+-include Nitrogen/subdir.mk
 -include subdir.mk
 -include objects.mk
 

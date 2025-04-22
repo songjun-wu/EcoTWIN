@@ -64,8 +64,8 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         _tmp->minus(*_Perc1);
 
         // Fractionation due to soil evaporation (only for layer 1)
-        Fractionation(atm, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 1);  // issoil = 1
-        
+        Fractionation(atm, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 0);  // issoil = 1; todo
+
 
         // Mixing layer 2
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {

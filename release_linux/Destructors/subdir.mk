@@ -6,24 +6,24 @@
 CPP_SRCS += \
 ../codes/Destructors/ControlDestruct.cpp \
 ../codes/Destructors/AtmosphereDestruct.cpp \
-../codes/Destructors/ParamDestruct.cpp \
 ../codes/Destructors/BasinDestruct.cpp \
+../codes/Destructors/ParamDestruct.cpp \
 ../codes/Destructors/ReportDestruct.cpp \
 
 
 OBJS += \
 ./Destructors/ControlDestruct.o \
 ./Destructors/AtmosphereDestruct.o \
-./Destructors/ParamDestruct.o \
 ./Destructors/BasinDestruct.o \
+./Destructors/ParamDestruct.o \
 ./Destructors/ReportDestruct.o \
 
 
 CPP_DEPS += \
 ./Destructors/ControlDestruct.d \
 ./Destructors/AtmosphereDestruct.d \
-./Destructors/ParamDestruct.d \
 ./Destructors/BasinDestruct.d \
+./Destructors/ParamDestruct.d \
 ./Destructors/ReportDestruct.d \
 
 

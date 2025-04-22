@@ -2,6 +2,12 @@
 
 int Param::Parameterisation(Control &ctrl){
 
+  // Init flags
+  sort_perc_travel_time_OK = 0;  
+  sort_root_fraction_OK = 0;  
+  sort_plant_uptake_OK = 0;  // The plant uptake only needs to be calculated once (or once within each change)
+  sort_nitrogen_addition_OK = 0;  // The nitrogen addtion only needs to be calculated once (or once within each change)
+
   // Update the parameterisation due to the changes in land use types
   param_category->update(ctrl.path_BasinFolder+"category_", ctrl.num_category ,_rowNum, _colNum, _sortedGrid);
 
@@ -277,6 +283,17 @@ int Param::Parameterisation(Control &ctrl){
       if (Manningn[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _Manningn->val[j] += param_category->val[k][j] * Manningn[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
+  
+  _Echan_alpha->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (Echan_alpha[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _Echan_alpha->val[j] += param_category->val[k][j] * Echan_alpha[k];
      }}}
 
   }

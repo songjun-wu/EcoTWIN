@@ -59,8 +59,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__GWf_out==2) _GWf_out_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__GWf_toChn==2) _GWf_toChn_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Q==2) _Q_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__deni_soil==2) _deni_soil_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__minerl_soil==2) _minerl_soil_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__Echan==2) _Echan_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_I==2) _d18o_I_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_snow==2) _d18o_snow_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_pond==2) _d18o_pond_acc = new svector(ctrl._sortedGrid.size);
@@ -77,6 +76,10 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__no3_layer3==2) _no3_layer3_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_GW==2) _no3_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_chanS==2) _no3_chanS_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__nitrogen_add==2) _nitrogen_add_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__plant_uptake==2) _plant_uptake_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__deni_soil==2) _deni_soil_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__minerl_soil==2) _minerl_soil_acc = new svector(ctrl._sortedGrid.size);
   /* end of Create maps */
   return EXIT_SUCCESS;
 }
@@ -117,8 +120,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__GWf_out==2) _GWf_out_acc->plus(*Bsn._GWf_out);
   if (ctrl.report__GWf_toChn==2) _GWf_toChn_acc->plus(*Bsn._GWf_toChn);
   if (ctrl.report__Q==2) _Q_acc->plus(*Bsn._Q);
-  if (ctrl.report__deni_soil==2) _deni_soil_acc->plus(*Bsn._deni_soil);
-  if (ctrl.report__minerl_soil==2) _minerl_soil_acc->plus(*Bsn._minerl_soil);
+  if (ctrl.report__Echan==2) _Echan_acc->plus(*Bsn._Echan);
   if (ctrl.report__d18o_I==2) _d18o_I_acc->plus(*Bsn._d18o_I);
   if (ctrl.report__d18o_snow==2) _d18o_snow_acc->plus(*Bsn._d18o_snow);
   if (ctrl.report__d18o_pond==2) _d18o_pond_acc->plus(*Bsn._d18o_pond);
@@ -135,6 +137,10 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__no3_layer3==2) _no3_layer3_acc->plus(*Bsn._no3_layer3);
   if (ctrl.report__no3_GW==2) _no3_GW_acc->plus(*Bsn._no3_GW);
   if (ctrl.report__no3_chanS==2) _no3_chanS_acc->plus(*Bsn._no3_chanS);
+  if (ctrl.report__nitrogen_add==2) _nitrogen_add_acc->plus(*Bsn._nitrogen_add);
+  if (ctrl.report__plant_uptake==2) _plant_uptake_acc->plus(*Bsn._plant_uptake);
+  if (ctrl.report__deni_soil==2) _deni_soil_acc->plus(*Bsn._deni_soil);
+  if (ctrl.report__minerl_soil==2) _minerl_soil_acc->plus(*Bsn._minerl_soil);
   /* end of Update maps */
   return EXIT_SUCCESS;
 }
@@ -244,11 +250,8 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__Q==1)  report_create(ctrl.path_ResultsFolder+"discharge_TS.bin", of__Q);
   else if (ctrl.report__Q==2)  report_create(ctrl.path_ResultsFolder+"discharge_map.bin", of__Q);
 
-  if (ctrl.report__deni_soil==1)  report_create(ctrl.path_ResultsFolder+"deni_soil_TS.bin", of__deni_soil);
-  else if (ctrl.report__deni_soil==2)  report_create(ctrl.path_ResultsFolder+"deni_soil_map.bin", of__deni_soil);
-
-  if (ctrl.report__minerl_soil==1)  report_create(ctrl.path_ResultsFolder+"minerl_soil_TS.bin", of__minerl_soil);
-  else if (ctrl.report__minerl_soil==2)  report_create(ctrl.path_ResultsFolder+"minerl_soil_map.bin", of__minerl_soil);
+  if (ctrl.report__Echan==1)  report_create(ctrl.path_ResultsFolder+"channel_evaporation_TS.bin", of__Echan);
+  else if (ctrl.report__Echan==2)  report_create(ctrl.path_ResultsFolder+"channel_evaporation_map.bin", of__Echan);
 
   if (ctrl.report__d18o_I==1)  report_create(ctrl.path_ResultsFolder+"d18o_canopy_storage_TS.bin", of__d18o_I);
   else if (ctrl.report__d18o_I==2)  report_create(ctrl.path_ResultsFolder+"d18o_canopy_storage_map.bin", of__d18o_I);
@@ -298,6 +301,18 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__no3_chanS==1)  report_create(ctrl.path_ResultsFolder+"no3_chanS_TS.bin", of__no3_chanS);
   else if (ctrl.report__no3_chanS==2)  report_create(ctrl.path_ResultsFolder+"no3_chanS_map.bin", of__no3_chanS);
 
+  if (ctrl.report__nitrogen_add==1)  report_create(ctrl.path_ResultsFolder+"nitrogen_addition_TS.bin", of__nitrogen_add);
+  else if (ctrl.report__nitrogen_add==2)  report_create(ctrl.path_ResultsFolder+"nitrogen_addition_map.bin", of__nitrogen_add);
+
+  if (ctrl.report__plant_uptake==1)  report_create(ctrl.path_ResultsFolder+"plant_uptake_TS.bin", of__plant_uptake);
+  else if (ctrl.report__plant_uptake==2)  report_create(ctrl.path_ResultsFolder+"plant_uptake_map.bin", of__plant_uptake);
+
+  if (ctrl.report__deni_soil==1)  report_create(ctrl.path_ResultsFolder+"deni_soil_TS.bin", of__deni_soil);
+  else if (ctrl.report__deni_soil==2)  report_create(ctrl.path_ResultsFolder+"deni_soil_map.bin", of__deni_soil);
+
+  if (ctrl.report__minerl_soil==1)  report_create(ctrl.path_ResultsFolder+"minerl_soil_TS.bin", of__minerl_soil);
+  else if (ctrl.report__minerl_soil==2)  report_create(ctrl.path_ResultsFolder+"minerl_soil_map.bin", of__minerl_soil);
+
   /* end of Init Report */
   return EXIT_SUCCESS;
 }
@@ -345,8 +360,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__GWf_out==1) {reportTS(ctrl, Bsn._GWf_out, of__GWf_out);}
   if (ctrl.report__GWf_toChn==1) {reportTS(ctrl, Bsn._GWf_toChn, of__GWf_toChn);}
   if (ctrl.report__Q==1) {reportTS(ctrl, Bsn._Q, of__Q);}
-  if (ctrl.report__deni_soil==1) {reportTS(ctrl, Bsn._deni_soil, of__deni_soil);}
-  if (ctrl.report__minerl_soil==1) {reportTS(ctrl, Bsn._minerl_soil, of__minerl_soil);}
+  if (ctrl.report__Echan==1) {reportTS(ctrl, Bsn._Echan, of__Echan);}
   if (ctrl.report__d18o_I==1) {reportTS(ctrl, Bsn._d18o_I, of__d18o_I);}
   if (ctrl.report__d18o_snow==1) {reportTS(ctrl, Bsn._d18o_snow, of__d18o_snow);}
   if (ctrl.report__d18o_pond==1) {reportTS(ctrl, Bsn._d18o_pond, of__d18o_pond);}
@@ -363,6 +377,10 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__no3_layer3==1) {reportTS(ctrl, Bsn._no3_layer3, of__no3_layer3);}
   if (ctrl.report__no3_GW==1) {reportTS(ctrl, Bsn._no3_GW, of__no3_GW);}
   if (ctrl.report__no3_chanS==1) {reportTS(ctrl, Bsn._no3_chanS, of__no3_chanS);}
+  if (ctrl.report__nitrogen_add==1) {reportTS(ctrl, Bsn._nitrogen_add, of__nitrogen_add);}
+  if (ctrl.report__plant_uptake==1) {reportTS(ctrl, Bsn._plant_uptake, of__plant_uptake);}
+  if (ctrl.report__deni_soil==1) {reportTS(ctrl, Bsn._deni_soil, of__deni_soil);}
+  if (ctrl.report__minerl_soil==1) {reportTS(ctrl, Bsn._minerl_soil, of__minerl_soil);}
   /* end of Report to time series */
   return EXIT_SUCCESS;
   }
@@ -405,8 +423,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__GWf_out==2) {reportMap(ctrl, _GWf_out_acc, ctrl._sortedGrid, of__GWf_out);}
   if (ctrl.report__GWf_toChn==2) {reportMap(ctrl, _GWf_toChn_acc, ctrl._sortedGrid, of__GWf_toChn);}
   if (ctrl.report__Q==2) {reportMap(ctrl, _Q_acc, ctrl._sortedGrid, of__Q);}
-  if (ctrl.report__deni_soil==2) {reportMap(ctrl, _deni_soil_acc, ctrl._sortedGrid, of__deni_soil);}
-  if (ctrl.report__minerl_soil==2) {reportMap(ctrl, _minerl_soil_acc, ctrl._sortedGrid, of__minerl_soil);}
+  if (ctrl.report__Echan==2) {reportMap(ctrl, _Echan_acc, ctrl._sortedGrid, of__Echan);}
   if (ctrl.report__d18o_I==2) {reportMap(ctrl, _d18o_I_acc, ctrl._sortedGrid, of__d18o_I);}
   if (ctrl.report__d18o_snow==2) {reportMap(ctrl, _d18o_snow_acc, ctrl._sortedGrid, of__d18o_snow);}
   if (ctrl.report__d18o_pond==2) {reportMap(ctrl, _d18o_pond_acc, ctrl._sortedGrid, of__d18o_pond);}
@@ -423,6 +440,10 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__no3_layer3==2) {reportMap(ctrl, _no3_layer3_acc, ctrl._sortedGrid, of__no3_layer3);}
   if (ctrl.report__no3_GW==2) {reportMap(ctrl, _no3_GW_acc, ctrl._sortedGrid, of__no3_GW);}
   if (ctrl.report__no3_chanS==2) {reportMap(ctrl, _no3_chanS_acc, ctrl._sortedGrid, of__no3_chanS);}
+  if (ctrl.report__nitrogen_add==2) {reportMap(ctrl, _nitrogen_add_acc, ctrl._sortedGrid, of__nitrogen_add);}
+  if (ctrl.report__plant_uptake==2) {reportMap(ctrl, _plant_uptake_acc, ctrl._sortedGrid, of__plant_uptake);}
+  if (ctrl.report__deni_soil==2) {reportMap(ctrl, _deni_soil_acc, ctrl._sortedGrid, of__deni_soil);}
+  if (ctrl.report__minerl_soil==2) {reportMap(ctrl, _minerl_soil_acc, ctrl._sortedGrid, of__minerl_soil);}
   /* end of Report to maps */
   advance_report = 0;
   return EXIT_SUCCESS;

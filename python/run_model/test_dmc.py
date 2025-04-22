@@ -6,6 +6,35 @@ import os
 import matplotlib.pyplot as plt
 from datetime import datetime
 
+def calculate_net_radiation(shortwave_down, longwave_down, air_temperature, 
+                            albedo=0.23, emissivity=0.96):
+    """
+    计算净辐射 R_n [W/m²]
+    
+    参数：
+        shortwave_down: array-like, 短波入射辐射 [W/m²]
+        longwave_down: array-like, 长波入射辐射 [W/m²]
+        air_temperature: array-like, 空气温度 [°C]
+        albedo: 地表反照率 (默认草地 0.23)
+        emissivity: 地表发射率 (默认 0.96)
+        
+    返回：
+        R_n: array-like, 净辐射 [W/m²]
+    """
+    # 常数
+    sigma = 5.67e-8  # 斯特藩-玻尔兹曼常数 [W m-2 K-4]
+    
+    # 温度转为开尔文
+    T_s_K = np.array(air_temperature) + 273.15
+    
+    # 计算各分量
+    R_ns = (1 - albedo) * np.array(shortwave_down)  # 净短波辐射
+    R_l_up = emissivity * sigma * T_s_K**4           # 向上长波
+    R_nl = np.array(longwave_down) - R_l_up          # 净长波辐射
+    
+    R_n = R_ns + R_nl
+    return R_n
+
 home_dir = '/home/wusongj/GEM/test_dmc/'
 nan_value = -9999
 
@@ -131,6 +160,13 @@ np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['RH_3015']/100, 1).to_numpy().tofile(home_dir+'climate/RH.bin')
 np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
+
+np.repeat(df['airPressure_3015'], 1).to_numpy().tofile(home_dir+'climate/airpressure.bin')
+np.repeat(df['windSpeed_3015'], 1).to_numpy().tofile(home_dir+'climate/windspeed.bin')
+
+Rn = calculate_net_radiation(df['sdown'], df['ldown'], df['Tmean_3015'])
+#np.savetxt('/data/scratch/wusongj/paper4/Rn.txt',Rn)
+np.repeat(Rn, 1).tofile(home_dir+'climate/Rnet.bin')
 np.repeat(df['d2H_14dMV_3015'], 1).to_numpy().tofile(home_dir+'climate/d2h_P.bin')
 np.repeat(df['d18O_14dMV_3015'], 1).to_numpy().tofile(home_dir+'climate/d18o_P.bin')
 

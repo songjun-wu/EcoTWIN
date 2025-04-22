@@ -54,6 +54,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_routinterf, "opt_routinterf", lines);
   readInto(opt_routGWf, "opt_routGWf", lines);
   readInto(opt_routQ, "opt_routQ", lines);
+  readInto(opt_chanE, "opt_chanE", lines);
   /* end of Options */
 
   /* GIS */
@@ -92,6 +93,9 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__Ta, "Air_temperature", lines);
   readInto(fn__RH, "Relative_humidity", lines);
   readInto(fn__PET, "Potential_evapotranspiration", lines);
+  readInto(fn__airpressure, "Air_pressure", lines);
+  readInto(fn__windspeed, "Wind_speed", lines);
+  readInto(fn__Rnet, "Net_radiation", lines);
   readInto(fn__d18o_P, "d18O_Precipitation", lines);
   /* end of Climate */
 
@@ -163,6 +167,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__GWfExp, "GWfExp", lines);
   readInto(fn__wGWf, "wGWf", lines);
   readInto(fn__Manningn, "Manningn", lines);
+  readInto(fn__Echan_alpha, "Echan_alpha", lines);
   readInto(fn__nearsurface_mixing, "nearsurface_mixing", lines);
   readInto(fn__ratio_to_interf, "ratio_to_interf", lines);
   readInto(fn__d18o_init_GW, "d18o_init_GW", lines);
@@ -211,8 +216,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__GWf_out, "report_GWflow_output", lines);
   readInto(report__GWf_toChn, "report_GWflow_toChn", lines);
   readInto(report__Q, "report_discharge", lines);
-  readInto(report__deni_soil, "report_deni_soil", lines);
-  readInto(report__minerl_soil, "report_minerl_soil", lines);
+  readInto(report__Echan, "report_channel_evaporation", lines);
   readInto(report__d18o_I, "report_d18o_canopy_storage", lines);
   readInto(report__d18o_snow, "report_d18o_snow_depth", lines);
   readInto(report__d18o_pond, "report_d18o_pond", lines);
@@ -229,6 +233,10 @@ int Control::ReadConfigFile(string fname){
   readInto(report__no3_layer3, "report_no3_SMC_layer3", lines);
   readInto(report__no3_GW, "report_no3_groundwater_storage", lines);
   readInto(report__no3_chanS, "report_no3_chanS", lines);
+  readInto(report__nitrogen_add, "report_nitrogen_addition", lines);
+  readInto(report__plant_uptake, "report_plant_uptake", lines);
+  readInto(report__deni_soil, "report_deni_soil", lines);
+  readInto(report__minerl_soil, "report_minerl_soil", lines);
   /* end of Report */
 
   return EXIT_SUCCESS;

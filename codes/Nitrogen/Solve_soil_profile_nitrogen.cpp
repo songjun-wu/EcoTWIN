@@ -99,8 +99,13 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
         _no3_layer3->val[j] = no3_layer3;
     }
 
-        /* Nitrogen addition */
-        
+        /* Nitrogen processes */
+        // Nitrogen addtion
+        Sort_nitrogen_addition(ctrl, par);
+        Nitrogen_addition(ctrl, par);
+
+        // Plant uptake
+
 
         /* Nitrogen Transformation */
         // Degradation and mineralisation

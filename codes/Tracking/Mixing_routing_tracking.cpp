@@ -65,6 +65,7 @@ int Basin::Mixing_routing_tracking(Control &ctrl, Param &par){
         +  _interf_toChn    (need to mix)
         + _GWf_toChn        (need to mix)
         - _Q
+        - _Echan
         (_chanS)
         */
 
@@ -143,10 +144,7 @@ int Basin::Mixing_routing_tracking(Control &ctrl, Param &par){
                 }
 
             }
-
         }
-
-
 
     }
 

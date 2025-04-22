@@ -125,10 +125,9 @@ elif mode == 'forward':
     
 
 elif mode == 'test':
-    
     # Model structure update
     os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
-    os.system('python3 develop.py')
+    #os.system('python3 develop.py')  # todo
 
     # set the env
     GEM_tools.set_env(mode, Path, Cali)
@@ -145,7 +144,8 @@ elif mode == 'test':
         #param = np.append(param, np.full(50, 0.5))
         #param = np.full(150, 0.5)
         GEM_tools.gen_param(Path.run_path, Info, Param, param)
-
+        GEM_tools.gen_no3_addtion(Path.run_path, Info)
+        """"""
         # Model run
         os.chdir(Path.run_path)
         os.system('./gEcoHydro')
@@ -173,7 +173,7 @@ elif mode == 'test':
             shutil.copyfile(Path.output_path + '999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_tracking.png')
             if os.path.exists('plots/999_All_in_Ts_'+str(idx)+'_tracking.png'):
                 os.remove('plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
-            os.rename('plots/999_All_in_Ts._tracking.png', 'plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
+            os.rename('plots/999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
         except Exception as e:
             pass
         
@@ -213,24 +213,6 @@ elif mode == 'check':
     print('Average :  ' ,np.mean(arr))
     print('Maximum :  ' ,np.max(arr))
 
-elif mode == 'test1':
-    for niteration in np.arange(0, 1e5, Cali.niterations)[::-1]:
-        likelis = []
-        try:
-            # Get param
-            param = np.array([])
-            for i in range(Cali.nchains):
-                likeli = np.fromfile(Path.result_path + 'DREAM_cali_DMC_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
-                tmp = np.fromfile(Path.result_path + 'DREAM_cali_DMC_sampled_params_chain_'+str(i)+'_'+str(int(niteration))+'.bin').reshape(len(likeli), -1)
-                param = np.append(param, tmp[np.argwhere(likeli == np.max(likeli))[-1][-1], :])
-                likelis.append(likeli[np.argwhere(likeli == np.max(likeli))[-1][-1]])
-                if i==1:
-                    param = np.fromfile(Path.result_path + 'DREAM_cali_DMC_sampled_params_chain_'+str(i)+'_'+str(int(niteration))+'.bin').reshape(500, -1)
-                    print(param[np.argwhere(likeli == np.max(likeli))[-1][-1],:5], param[0,:5])
-                    
-            print(niteration, likelis[1])
-        except Exception as e:
-            pass
 
 
 elif mode == 'aaa':
@@ -261,7 +243,7 @@ elif mode == 'aaa':
             print(np.round(GEM_tools.nse(X, Y),2), end=" ")
             
         print('')
-        if np.mean(likelihoods[:]) > 0.0:
+        if np.mean(likelihoods[:3]) > 0.4:
             validIdx.append(i)
     np.savetxt('/data/scratch/wusongj/paper4/param_good.txt', validIdx)
     print(len(validIdx))
@@ -284,12 +266,13 @@ elif mode == 'aaa':
         if i!=(obs_q.shape[0]-1):
             ax[i,0].set_xticklabels([])
             ax[i,1].set_xticklabels([])
-    
+
     sites = [['Bruch Mill', 'Demnitz Mill', 'Demnitz', "Berkenbrueck"],
              ['Peat South', 'Bruch Mill', 'Demnitz Mill', "Berkenbrueck"]]
     for i in range(obs_q.shape[0]):
         X = np.mean(sim_q[:, i, :],axis=0) + 1e-3
         Y = obs_q[i] + 1e-3
+
         title_hgt = 0.9
         hgt_gradient = 0.11
         ax[i,0].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
@@ -302,7 +285,7 @@ elif mode == 'aaa':
         hgt_gradient = 0.11
         ax[i,1].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
         ax[i,1].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
-        ax[i,1].text(0.05, title_hgt - hgt_gradient * 1, 'd18O at '+sites[1][i]+' (m3/s)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,1].transAxes)        
+        ax[i,1].text(0.05, title_hgt - hgt_gradient * 1, 'd18O at '+sites[1][i]+' (per mille)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,1].transAxes)        
         
     
     fig.savefig('tmp.png')

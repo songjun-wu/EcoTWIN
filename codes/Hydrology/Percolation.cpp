@@ -4,27 +4,6 @@
 
 int Basin::Percolation_1(Control &ctrl, Param &par) {
 
-    double dt = ctrl.Simul_tstep;
-    double travel_time_ratio = 0;
-
-    if (par.param_category->sort_perc_travel_time_OK == 0){
-
-        par.param_category->sort_perc_travel_time_OK = 1;
-
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-            // The time for excess water to percolate versus hydraulic conductvity
-            travel_time_ratio = dt / ((_thetaS1->val[j] - _thetaFC1->val[j]) / _Ks1->val[j]);
-            _p_perc1->val[j] = (1 - exp(-1 * travel_time_ratio));
-
-            travel_time_ratio = dt / ((_thetaS2->val[j] - _thetaFC2->val[j]) / _Ks2->val[j]);
-            _p_perc2->val[j] = (1 - exp(-1 * travel_time_ratio));
-
-            travel_time_ratio = dt / ((_thetaS3->val[j] - _thetaFC3->val[j]) / _Ks3->val[j]);
-            _p_perc3->val[j] = (1 - exp(-1 * travel_time_ratio));
-        }
-    }
-    
-
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         double theta1 = _theta1->val[j];
@@ -62,10 +41,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
 }
 
 int Basin::Percolation_2(Control &ctrl, Param &par) {
-
-    double dt = ctrl.Simul_tstep;
-    double travel_time_ratio;
-    
+   
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         double theta1 = _theta1->val[j];
         double theta2 = _theta2->val[j];
@@ -125,9 +101,7 @@ int Basin::Percolation_2(Control &ctrl, Param &par) {
 
 int Basin::Percolation_3(Control &ctrl, Param &par) {
 
-    double dt = ctrl.Simul_tstep;
-    
-    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         double theta1 = _theta1->val[j];
         double theta2 = _theta2->val[j];

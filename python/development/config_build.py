@@ -244,3 +244,15 @@ def report_build(fname, reports):
     if(('').join(content) != ('').join(lines)):
         with open(fname, 'w') as f:
             f.writelines(content)
+
+def read_nitrogen(fname, Nitrogen_inputs):
+    content = []
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+        start, end = locate_text(lines, '/* Nitrogen addition */', '/* end of Nitrogen addition */')
+        for i in range(len(Nitrogen_inputs)):
+            content.append('    par.readIntoParam(' + Nitrogen_inputs[i][0] + ', "' + Nitrogen_inputs[i][0] + '", lines);\n')
+        content = lines[:start] + content + lines[end:]
+    if(('').join(content) != ('').join(lines)):        
+        with open(fname, 'w') as f:
+            f.writelines(content)

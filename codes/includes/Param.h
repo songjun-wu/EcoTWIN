@@ -20,6 +20,13 @@ class Param {
   string line_string;
 
   public:
+
+  /* Flags */
+  int sort_perc_travel_time_OK;  
+  int sort_root_fraction_OK;  
+  int sort_plant_uptake_OK;  // The plant uptake only needs to be calculated once (or once within each change)
+  int sort_nitrogen_addition_OK;  // The nitrogen addtion only needs to be calculated once (or once within each change)
+
   /* Parameters */
   vector<double> depth3;
   vector<double> alpha;
@@ -51,6 +58,7 @@ class Param {
   vector<double> GWfExp;
   vector<double> wGWf;
   vector<double> Manningn;
+  vector<double> Echan_alpha;
   vector<double> nearsurface_mixing;
   vector<double> ratio_to_interf;
   vector<double> d18o_init_GW;
@@ -93,6 +101,7 @@ class Param {
   svector *_GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
   svector *_wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   svector *_Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
+  svector *_Echan_alpha;  // orrection factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
   svector *_d18o_init_GW;  // Initial d18O of GW storage [‰]
   svector *_denitrification_aquatic;  // Reference rates of aquatic denitrification [-]
   svector *_autotrophic_uptake_aquatic;  // Reference rates of aquatic autotrophic uptake [-]

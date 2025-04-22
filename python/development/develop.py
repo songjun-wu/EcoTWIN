@@ -21,6 +21,13 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             #['_Tmax', [Opt.cond['none']], 'Maximum air temperature [degree C]', 'grid', 'spatial_TS', 'Maximum_air_temperature'],
             ['_RH', [Opt.cond['none']], 'Relative humidity [decimal]', 'grid', 'spatial_TS', 'Relative_humidity'],
             ['_PET', [Opt.cond['evap_1']], 'Potential evapotranspiration [m]', 'grid', 'spatial_TS', 'Potential_evapotranspiration'],
+
+            ['_airpressure', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Air pressure [Pa]', 'grid', 'spatial_TS', 'Air_pressure'],
+            ['_windspeed', [Opt.cond['chanE_1']], 'Air pressure [m/s]', 'grid', 'spatial_TS', 'Wind_speed'],
+            ['_Rnet', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Net radiation [W/m2]', 'grid', 'spatial_TS', 'Net_radiation'],
+
+
+
             ['_d18o_P', [Opt.cond['tracking_isotope_1']], 'd18O in precipitation [‰]', 'grid', 'spatial_TS', 'd18O_Precipitation'],
             
         ]
@@ -99,10 +106,13 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
             ['_no3_GW',  [Opt.cond['nitrogen_sim_1']], 'no3 in Groundwater storage [mgN/L]', 'grid', 'spatial', 'no3_groundwater_storage'],
             ['_no3_chanS',  [Opt.cond['nitrogen_sim_1']], 'no3 in Channel storage [mgN/L]', 'grid', 'spatial', 'no3_chanS'],
 
-            #['_diss_IN1',  [Opt.cond['nitrogen_sim_1']], 'Dissolved inorganic nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', None],
-            #['_diss_IN2',  [Opt.cond['nitrogen_sim_1']], 'Dissolved inorganic nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', None],
-            #['_diss_IN3',  [Opt.cond['nitrogen_sim_1']], 'Dissolved inorganic nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', None],
+            # Nitrogen
+            ['_nitrogen_add', [Opt.cond['nitrogen_sim_1']], 'Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]', 'grid', 'new', 'nitrogen_addition'],
+            ['_plant_uptake', [Opt.cond['nitrogen_sim_1']], 'Plant uptake [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_uptake'],
+            ['_deni_soil', [Opt.cond['nitrogen_sim_1']], 'Soil denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_soil'],
+            ['_minerl_soil', [Opt.cond['nitrogen_sim_1']], 'Soil mineralisation [mgN/L*m = gN/m2]', 'grid', 'new', 'minerl_soil'],
 
+            # Internal fluxes
             ['_humusN1',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', None],
             ['_humusN2',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', None],
             ['_humusN3',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', None],
@@ -180,13 +190,10 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_Q', [Opt.cond['none']], 'Discharge [m3/s]', 'grid', 'spatial', 'discharge'],
             ['_Qupstream', [Opt.cond['none']], 'Upstream inflow [m3/s]', 'grid', 'new', None],
 
-
-            # Nitrogen
-            ['_deni_soil', [Opt.cond['nitrogen_sim_1']], 'Soil denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_soil'],
-            ['_minerl_soil', [Opt.cond['nitrogen_sim_1']], 'Soil mineralisation [mgN/L*m = gN/m2]', 'grid', 'new', 'minerl_soil'],
+            ['_Echan', [Opt.cond['none']], 'Channel evaporation [m]', 'grid', 'new', 'channel_evaporation'],
 
 
-
+            
             # internal variables
             ['_PE', [Opt.cond['evap_1']], 'Potential evaporation [m]', 'grid', 'new', None],
             ['_PT', [Opt.cond['evap_1']], 'Potential transpiration [m]', 'grid', 'new', None],
@@ -242,6 +249,9 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_wGWf', [Opt.cond['routGWf_1']], 'The active proportion of GW storage that contributes to channel recharge  [-]', 'grid', 'spatial_param', 'wGWf'],
               ['_Manningn', [Opt.cond['routQ_1']], 'Manning N for stream routing [-], only needed when opt_routQ = 1', 'grid', 'spatial_param', 'Manningn'],
 
+              # Channel 
+              ['_Echan_alpha', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'orrection factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2', 'grid', 'spatial_param', 'Echan_alpha'],
+
               # Mixing
               ['_nearsurface_mixing', [Opt.cond['none']], 'The proportion of pond to mix with layer1  [decimal]', 'grid', 'spatial_param', 'nearsurface_mixing'],
               ['_ratio_to_interf', [Opt.cond['none']], 'The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]', 'grid', 'spatial_param', 'ratio_to_interf'],
@@ -258,10 +268,34 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_denitrification_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil denitrification [kg/ha]', 'grid', 'spatial_param', 'denitrification_soil'],
               ['_degradation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil degradation [kg/ha]', 'grid', 'spatial_param', 'degradation_soil'],
               ['_mineralisation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil mineralisation [kg/ha]', 'grid', 'spatial_param', 'mineralisation_soil'],
-              ['_dissolution_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil dissolution [kg/ha]', 'grid', 'spatial_param', 'dissolution_soil'],
-
+              ['_dissolution_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil dissolution [kg/ha]', 'grid', 'spatial_param', 'dissolution_soil'],              
             ]
               
+Nitrogen_addition = [['fert_add', [Opt.cond['nitrogen_sim_1']], 'Fertilizer addition [mgN/L*m = gN/m2]', 'vector', 'vector', None],
+                     ['fert_day', [Opt.cond['nitrogen_sim_1']], 'Day of year to start fertilization [day]', 'vector', 'vector', None],
+                     ['fert_down', [Opt.cond['nitrogen_sim_1']], 'The proportion of fertilizer reaching deep soil [decimal]', 'vector', 'vector', None],
+                     ['fert_period', [Opt.cond['nitrogen_sim_1']], 'The duration of fertilization [day]', 'vector', 'vector', None],
+
+                     ['manure_add', [Opt.cond['nitrogen_sim_1']], 'Manure addition [mgN/L*m = gN/m2]', 'gvectorrid', 'vector', None],
+                     ['manure_day', [Opt.cond['nitrogen_sim_1']], 'Day of year to start manure addtion [day]', 'vector', 'vector', None],
+                     ['manure_down', [Opt.cond['nitrogen_sim_1']], 'The proportion of manure reaching deep soil [decimal]', 'vector', 'vector', None],
+                     ['manure_period', [Opt.cond['nitrogen_sim_1']], 'The duration of manure addtion [day]', 'vector', 'vector', None],
+
+                     ['residue_add', [Opt.cond['nitrogen_sim_1']], 'Residue addition [mgN/L*m = gN/m2]', 'vector', 'vector', None],
+                     ['residue_day', [Opt.cond['nitrogen_sim_1']], 'Day of year to start residue addtion [day]', 'vector', 'vector', None],
+                     ['residue_down', [Opt.cond['nitrogen_sim_1']], 'The proportion of residue reaching deep soil [decimal]', 'vector', 'vector', None],
+                     ['residue_period', [Opt.cond['nitrogen_sim_1']], 'The duration of residue addtion [day]', 'vector', 'vector', None],
+
+                     ['up1', [Opt.cond['nitrogen_sim_1']], '  ', 'vector', 'vector', None],
+                     ['up2', [Opt.cond['nitrogen_sim_1']], '  ', 'vector', 'vector', None],
+                     ['up3', [Opt.cond['nitrogen_sim_1']], '  ', 'vector', 'vector', None],
+
+                     ['upper_uptake', [Opt.cond['nitrogen_sim_1']], 'Proportion of IN uptook from upper soil [decimal]', 'vector', 'vector', None],
+                     
+
+                     ['plant_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation planting [day]', 'vector', 'vector', None],
+                     ['harvest_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation harvest [day]', 'vector', 'vector', None],
+                    ]
 
 
 Reports = [Storages[j] for j in (np.squeeze(np.argwhere([i[4]=='spatial' for i in Storages])))]
@@ -323,6 +357,9 @@ parameterisation_build.parameterisation_build(fname=path + 'Spatial/parameterisa
 
 define_variables.report_includes(fname=path + 'includes/Report.h', reports=Reports)
 define_variables.report_destructor(fname=path + 'Destructors/ReportDestruct.cpp', reports=Reports)
+
+define_variables.includes(fname=path + 'includes/Basin.h', signs=['Nitrogen addition'], datas=[Nitrogen_addition], max_category=setting.max_category)
+config_build.read_nitrogen(fname=path+'IO/readNitrogenFile.cpp', Nitrogen_inputs=Nitrogen_addition)
 
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)

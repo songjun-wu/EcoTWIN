@@ -15,7 +15,9 @@ class Basin {
   double roundoffERR;
   int _rowNum, _colNum;
   double _dx, _nodata;
-  sortedGrid _sortedGrid;
+  int num_landuse;        // The number of land use types
+  vector<int> landuse_idx;  // The location of each land use type in param.ini or N_addition.ini
+  sortedGrid _sortedGrid; 
   /* end of Properties */
 
   public:
@@ -105,6 +107,7 @@ class Basin {
   svector *_GWf_toChn;  // Groundwater flow to Channel [m]
   svector *_Q;  // Discharge [m3/s]
   svector *_Qupstream;  // Upstream inflow [m3/s]
+  svector *_Echan;  // Channel evaporation [m]
   svector *_tmp;  // Temporal variable for testing [-]
   svector *_snowacc;  // Snow accumulation for testing [m]
   svector *_rinfilt;  // Reinflitration into soil layer 1 [m]
@@ -119,8 +122,6 @@ class Basin {
   svector *_p_perc1;  // Percolation proportion in layer 1
   svector *_p_perc2;  // Percolation proportion in layer 2
   svector *_p_perc3;  // Percolation proportion in layer 3
-  svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
-  svector *_minerl_soil;  // Soil mineralisation [mgN/L*m = gN/m2]
   /* end of Fluxes */
 
 
@@ -139,6 +140,34 @@ class Basin {
   svector *_d18o_Qupstream_acc;  // Total amount of 18o in upstream inflow to channel storage [‰ * m]
   /* end of Tracking */
 
+  // Nitrogen addition and plant uptakes are identical for each year, so they only need to be sorted once (or once after change in parameterisation)
+  // 2d vector [num_landuse][366 days]
+  vector<vector <double>> _nitrogen_addition_layer1;
+  vector<vector <double>> _nitrogen_addition_layer2;
+  vector<vector <double>> _potential_uptake_layer1;
+  vector<vector <double>> _potential_uptake_layer2;
+  vector<vector <double>> _potential_uptake_layer3;
+  /* Nitrogen addition */
+  vector<double> fert_add;
+  vector<double> fert_day;
+  vector<double> fert_down;
+  vector<double> fert_period;
+  vector<double> manure_add;
+  vector<double> manure_day;
+  vector<double> manure_down;
+  vector<double> manure_period;
+  vector<double> residue_add;
+  vector<double> residue_day;
+  vector<double> residue_down;
+  vector<double> residue_period;
+  vector<double> up1;
+  vector<double> up2;
+  vector<double> up3;
+  vector<double> upper_uptake;
+  vector<double> plant_day;
+  vector<double> harvest_day;
+  /* end of Nitrogen addition */
+
   /* Nitrogen */
   svector *_no3_I;  // no3 in Canopy storage [mgN/L]
   svector *_no3_snow;  // no3 in Snow depth in [mgN/L]
@@ -148,6 +177,10 @@ class Basin {
   svector *_no3_layer3;  // no3 in Soil moisture in layer 3 [mgN/L]
   svector *_no3_GW;  // no3 in Groundwater storage [mgN/L]
   svector *_no3_chanS;  // no3 in Channel storage [mgN/L]
+  svector *_nitrogen_add;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
+  svector *_plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
+  svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
+  svector *_minerl_soil;  // Soil mineralisation [mgN/L*m = gN/m2]
   svector *_humusN1;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
   svector *_humusN2;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
   svector *_humusN3;  // Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
@@ -235,30 +268,47 @@ class Basin {
   int Routing_Q_1(Control &ctrl, Param &par); // Stream routing based on Kinematic Wave
   int Routing_GWflow_1(Control &ctrl, Param &par); // GW flow routing based on linear approximation of Kinematic Wave
 
-  /* Soil profiles */
+  /* Energy balance */
   int Get_soil_temperature(double &Ta, double &Ts, double &LAI);
 
-  /* Soil profiles */
+  /* Isotopic tracking */
   int Mixing_full(double storage, double &cstorage, double input, double cinput);  // Full mixing within the timestep
   int Mixing_canopy_tracking(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing and fractionaton
   int Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Canopy snowpack and throughfall
   int Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and fractionaton
   int Mixing_GW_tracking(Control &ctrl, Atmosphere &atm);  // GW storage mixing
   int Mixing_routing_tracking(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
+  int Mixing_channel_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Fractionation due to channel evaporation
   int Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, svector &sv_di_old, svector &sv_di_new, svector &sv_di_evap, int issoil);  // Fractionation due to canopy or soil evaporation
 
-  /* Soil profiles */
+  /* Channel */
+  int Solve_channel(Control &ctrl, Param &par, Atmosphere &atm);
+  int Channel_evaporation_1(Control &ctrl, Atmosphere &atm, Param &par);  // Penman equation
+  int Channel_evaporation_2(Control &ctrl, Atmosphere &atm, Param &par);  // Priestley-Taylor equation
+
+  /* Nitrogen module */
   int Solve_canopy_nitrogen(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing with precipitation and erichment due to evaporation
   int Solve_surface_nitrogen(Control &ctrl, Atmosphere &atm, Param &par);  // Ponding water mixing with snow melt
   int Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and transformation
   int Solve_GW_nitrogen(Control &ctrl, Atmosphere &atm);  // GW storage mixing
   int Solve_routing_nitrogen(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
-
+  
+  int Sort_nitrogen_addition(Control &ctrl, Param &par);  // Sort 366 days at first iteration
+  int Nitrogen_addition(Control &ctrl, Param &par);
+  int Sort_plant_uptake(Control &ctrl, Param &par);
+  int Plant_uptake(Control &ctrl, Param &par);
   int Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par);
   int Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par);
 
+  /* Functions */
+  int Sort_percolation_travel_time(Control &ctrl, Param &par);
+  int Sort_root_fraction(Control &ctrl,Param &par);  // Estimate root fraction
   double Temp_factor(const double db_Ts);  // Temperature factor of nitrogen transformation
   double Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaS, const double db_depth); // Moisture factor of nitrogen transformation
+
+  /* IO functions */
+  int ReadNitrogenFile(Control &ctrl, Param &par, string fname);
+
 };
 
 #endif /* BASIN_H_ */

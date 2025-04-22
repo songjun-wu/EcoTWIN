@@ -50,8 +50,7 @@ class Report {
     ofstream of__GWf_out;  // GW flow to downstream cell [m]
     ofstream of__GWf_toChn;  // Groundwater flow to Channel [m]
     ofstream of__Q;  // Discharge [m3/s]
-    ofstream of__deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
-    ofstream of__minerl_soil;  // Soil mineralisation [mgN/L*m = gN/m2]
+    ofstream of__Echan;  // Channel evaporation [m]
     ofstream of__d18o_I;  // d18o in Canopy storage [‰]
     ofstream of__d18o_snow;  // d18o in Snow depth in [‰]
     ofstream of__d18o_pond;  // d18o in Ponding water in [‰]
@@ -68,6 +67,10 @@ class Report {
     ofstream of__no3_layer3;  // no3 in Soil moisture in layer 3 [mgN/L]
     ofstream of__no3_GW;  // no3 in Groundwater storage [mgN/L]
     ofstream of__no3_chanS;  // no3 in Channel storage [mgN/L]
+    ofstream of__nitrogen_add;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
+    ofstream of__plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
+    ofstream of__deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
+    ofstream of__minerl_soil;  // Soil mineralisation [mgN/L*m = gN/m2]
 
     svector *_I_acc;  // Canopy storage [m]
     svector *_snow_acc;  // Snow depth in [m]
@@ -103,8 +106,7 @@ class Report {
     svector *_GWf_out_acc;  // GW flow to downstream cell [m]
     svector *_GWf_toChn_acc;  // Groundwater flow to Channel [m]
     svector *_Q_acc;  // Discharge [m3/s]
-    svector *_deni_soil_acc;  // Soil denitrification [mgN/L*m = gN/m2]
-    svector *_minerl_soil_acc;  // Soil mineralisation [mgN/L*m = gN/m2]
+    svector *_Echan_acc;  // Channel evaporation [m]
     svector *_d18o_I_acc;  // d18o in Canopy storage [‰]
     svector *_d18o_snow_acc;  // d18o in Snow depth in [‰]
     svector *_d18o_pond_acc;  // d18o in Ponding water in [‰]
@@ -121,6 +123,10 @@ class Report {
     svector *_no3_layer3_acc;  // no3 in Soil moisture in layer 3 [mgN/L]
     svector *_no3_GW_acc;  // no3 in Groundwater storage [mgN/L]
     svector *_no3_chanS_acc;  // no3 in Channel storage [mgN/L]
+    svector *_nitrogen_add_acc;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
+    svector *_plant_uptake_acc;  // Plant uptake [mgN/L*m = gN/m2]
+    svector *_deni_soil_acc;  // Soil denitrification [mgN/L*m = gN/m2]
+    svector *_minerl_soil_acc;  // Soil mineralisation [mgN/L*m = gN/m2]
     /* end of Report */
 
     //ctor

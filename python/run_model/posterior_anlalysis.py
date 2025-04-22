@@ -15,7 +15,7 @@ def plot_hydrology():
     Vars.extend(['snowmelt', 'throufall', None, None, None, None])
     Vars.extend(['infiltration', 'perc_layer1', 'perc_layer2', 'perc_layer3', None, None])
     Vars.extend(['rinfiltration', 'rperc_layer1', 'rperc_layer2', 'rperc_layer3', 'rrperc_layer3', None])
-    Vars.extend(['canopy_evap', 'soil_evap', 'transp_layer1', 'transp_layer2', 'transp_layer3', None])
+    Vars.extend(['canopy_evap', 'soil_evap', 'transp_layer1', 'transp_layer2', 'transp_layer3', 'channel_evaporation'])
     Vars.extend(['overland_flow_input','overland_flow_output','interflow_input', 'interflow_output','GWflow_input', 'GWflow_output'])
     Vars.extend(['overland_flow_toChn', None, 'interflow_toChn', None, 'GWflow_toChn', 'discharge'])
     Vars.extend([])
@@ -45,11 +45,14 @@ def plot_hydrology():
             ax[i//ncol, i%ncol].axis('off')
         else:
             try:
-                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[:, :]
+                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[:, Info.spin_up:]
                 data = data[site_idx,:]
                 
                 data[data==nodata] = np.nan
                 ax[i//ncol, i%ncol].plot(data, linewidth=0.3, c='skyblue', zorder=1)
+
+                #if Vars[i]=='discharge':
+                #    print(data[:5]) # todo
                     
                 title_hgt = 0.9
                 hgt_gradient = 0.11
@@ -66,7 +69,7 @@ def plot_hydrology():
                 ax[i//ncol, i%ncol].axis('off')
 
     fig.savefig(output_path + '999_All_in_Ts.png')
-    print('Plot saved at :  ', output_path + '999_All_in_Ts.png')
+    #print('Plot saved at :  ', output_path + '999_All_in_Ts.png')
 
 
     fig, ax = plt.subplots(nrow, ncol, figsize=(16,25), dpi=300)
@@ -82,13 +85,13 @@ def plot_hydrology():
                 mask = np.full(chanmask.shape, np.nan)
                 tmp = np.loadtxt(Path.data_path + 'spatial/dem.asc', skiprows=6)
                 tmp = tmp>0
-                mask[tmp] = 1
-                
+                mask[tmp] = 1 
     
 
                 data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, 30, 22))[:, :, :]
                 data[data==nodata] = np.nan
                 
+                print(Vars[i], np.nanmean(data[:, 1,10]))  # todo
 
                 if ('discharge' in Vars[i]) or ('_toChn' in Vars[i]) or ('chanS' in Vars[i]):
                     for kk in range(data.shape[0]):
@@ -119,7 +122,7 @@ def plot_hydrology():
                 pass
                 #ax[i//ncol, i%ncol].axis('off')
     fig.savefig(output_path + '999_All_in_map.png')
-    print('Plot saved at :  ', output_path + '999_All_in_map.png')
+    #print('Plot saved at :  ', output_path + '999_All_in_map.png')
 
 def plot_tracking():
     Vars = ['d18o_canopy_storage', 'd18o_snow_depth','d18o_pond', None, None, None]
@@ -128,7 +131,7 @@ def plot_tracking():
     Vars.extend(['age_SMC_layer1', 'age_SMC_layer2', 'age_SMC_layer3', 'age_groundwater_storage', None, 'age_chanS'])
     Vars.extend(['no3_canopy_storage', 'no3_snow_depth','no3_pond', None, None, None])
     Vars.extend(['no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'no3_groundwater_storage', None, 'no3_chanS'])
-    Vars.extend(['deni_soil', None, None, None, None, None])
+    Vars.extend(['nitrogen_addition', 'deni_soil', None, None, None, None])
 
     Vars.extend([])
 
@@ -146,7 +149,7 @@ def plot_tracking():
             ax[i//ncol, i%ncol].axis('off')
         else:
             try:
-                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[:, :]
+                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[:, Info.spin_up:]
                 data = data[site_idx,:]
 
                 data[data==nodata] = np.nan
@@ -167,7 +170,7 @@ def plot_tracking():
                 ax[i//ncol, i%ncol].axis('off')
 
     fig.savefig(output_path + '999_All_in_Ts_tracking.png')
-    print('Plot saved at :  ', output_path + '999_All_in_Ts_tracking.png')
+    #print('Plot saved at :  ', output_path + '999_All_in_Ts_tracking.png')
 
 
     fig, ax = plt.subplots(nrow, ncol, figsize=(16,25), dpi=300)
@@ -183,15 +186,12 @@ def plot_tracking():
 
                 data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, 30, 22))[:, :, :]
                 data[data==nodata] = np.nan
-
-                if i==0:
-                    print(data.shape)  # todo
                
                 if ('discharge' in Vars[i]) or ('_toChn' in Vars[i]) or ('_chanS' in Vars[i]):
                     for kk in range(data.shape[0]):
                         data[kk,:,:][ ~chanmask] = np.nan
-
-                #print(Vars[i], np.nanmin(np.nanmean(data, axis=0)), np.nanmean(np.nanmean(data, axis=0)), np.nanmax(np.nanmean(data, axis=0)))  # todo
+                
+                print(Vars[i], np.nanmean(data[:, 1,10]))  # todo
 
                 im = ax[i//ncol, i%ncol].imshow(np.nanmean(data, axis=0), cmap='viridis', zorder=1, label='1')
                 ax[i//ncol, i%ncol].set_frame_on(False)
@@ -213,7 +213,7 @@ def plot_tracking():
             
                 
     fig.savefig(output_path + '999_All_in_map_tracking.png')
-    print('Plot saved at :  ', output_path + '999_All_in_map_tracking.png')
+    #print('Plot saved at :  ', output_path + '999_All_in_map_tracking.png')
 
 def plot_param():
     param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1).T
@@ -232,7 +232,7 @@ def plot_param():
 
     fig, ax = plt.subplots(1, 1, figsize=(15,20), dpi=300)
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
-    ax.imshow(param, cmap='viridis')
+    ax.imshow(param, cmap='viridis', aspect=1.3)
     ax.set_yticks(np.arange(param.shape[0]))
     ax.set_yticklabels(param_names, weight='bold')
     fig.savefig('999_param.png')
@@ -241,14 +241,48 @@ def plot_param():
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
     for i in range(param.shape[0]):
         param[i] = np.sort(param[i])
-    ax.imshow(param, cmap='viridis')
+    ax.imshow(param, cmap='viridis', aspect=1.3)
     ax.set_yticks(np.arange(param.shape[0]))
     ax.set_yticklabels(param_names, weight='bold')
     fig.savefig('999_param_sorted.png')
 
 
+def plot_param_valid():
+    param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1).T
+    validIdx = np.loadtxt('/data/scratch/wusongj/paper4/param_good.txt').astype(np.int)
+    aspect = 1.3 * len(validIdx) / param.shape[1]
 
+    param = param[:, validIdx]
+    keys = Param.ref.keys()
+    param_names = []
+    for key in keys:
+        dict = Param.ref[key]
+        if dict['type'] == 'global':
+            param_names.append(key)
+        elif dict['type'] == 'soil':
+            for i in range(Info.N_soil):
+                param_names.append(key + '_s' + str(i))
+        elif dict['type'] == 'landuse':
+            for i in range(Info.N_landuse):
+                param_names.append(key + '_v' + str(i))
+
+    fig, ax = plt.subplots(1, 1, figsize=(15,20), dpi=300)
+    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
+    ax.imshow(param, cmap='viridis', aspect=aspect)
+    ax.set_yticks(np.arange(param.shape[0]))
+    ax.set_yticklabels(param_names, weight='bold')
+    fig.savefig('999_param_valid.png')
+
+    fig, ax = plt.subplots(1, 1, figsize=(15,20), dpi=300)
+    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
+    for i in range(param.shape[0]):
+        param[i] = np.sort(param[i])
+    ax.imshow(param, cmap='viridis', aspect=aspect)
+    ax.set_yticks(np.arange(param.shape[0]))
+    ax.set_yticklabels(param_names, weight='bold')
+    fig.savefig('999_param_valid_sorted.png')
 
 plot_hydrology()
 plot_tracking()
 #plot_param()
+#plot_param_valid()

@@ -5,23 +5,26 @@
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
 ../codes/IO/IO_function.cpp \
-../codes/IO/readParamFile.cpp \
 ../codes/IO/readConfigFile.cpp \
+../codes/IO/readParamFile.cpp \
 ../codes/IO/report.cpp \
+../codes/IO/readNitrogenFile.cpp \
 
 
 OBJS += \
 ./IO/IO_function.o \
-./IO/readParamFile.o \
 ./IO/readConfigFile.o \
+./IO/readParamFile.o \
 ./IO/report.o \
+./IO/readNitrogenFile.o \
 
 
 CPP_DEPS += \
 ./IO/IO_function.d \
-./IO/readParamFile.d \
 ./IO/readConfigFile.d \
+./IO/readParamFile.d \
 ./IO/report.d \
+./IO/readNitrogenFile.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

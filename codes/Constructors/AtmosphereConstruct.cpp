@@ -16,6 +16,13 @@
   if (ctrl.opt_evap == 1){
     _PET = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
+    _airpressure = new svector(_sortedGrid.size);
+    _Rnet = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_chanE == 1){
+    _windspeed = new svector(_sortedGrid.size);
+  }
   if (ctrl.opt_tracking_isotope == 1){
     _d18o_P = new svector(_sortedGrid.size);
   }
