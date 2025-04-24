@@ -38,27 +38,28 @@ def plot_hydrology():
     fig, ax = plt.subplots(nrow, ncol, figsize=(30,18), dpi=300)
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
 
-    site_idx = 3  # Demnitz Millcreek 26
+    site_idx = 1  # Demnitz Millcreek 26
 
     for i in range(len(Vars)):
         if Vars[i] == None:
             ax[i//ncol, i%ncol].axis('off')
         else:
             try:
-                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[:, Info.spin_up:]
+                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
                 data = data[site_idx,:]
                 
                 data[data==nodata] = np.nan
                 ax[i//ncol, i%ncol].plot(data, linewidth=0.3, c='skyblue', zorder=1)
 
-                #if Vars[i]=='discharge':
-                #    print(data[:5]) # todo
+                
                     
                 title_hgt = 0.9
                 hgt_gradient = 0.11
                 if "discharge" in Vars[i]:
                     obs = np.fromfile(Path.data_path + 'discharge_obs.bin').reshape(len(Output.sim['q']['sim_idx']), -1)[site_idx, :]
                     X = np.arange(len(obs))
+                    if Vars[i]=='discharge':
+                        print(data[:5], obs[5000:5005]) # todo
                     ax[i//ncol, i%ncol].scatter(X, obs, c='salmon', s=0.3, alpha=0.3, zorder=2)
                     ax[i//ncol, i%ncol].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(data+1e-3, obs+1e-3), 2)), fontsize=12, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                     ax[i//ncol, i%ncol].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(data+1e-3, obs+1e-3), 2)), fontsize=12, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
@@ -91,7 +92,7 @@ def plot_hydrology():
                 data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, 30, 22))[:, :, :]
                 data[data==nodata] = np.nan
                 
-                print(Vars[i], np.nanmean(data[:, 1,10]))  # todo
+                #print(Vars[i], np.nanmean(data[:, 1,10]))  # todo
 
                 if ('discharge' in Vars[i]) or ('_toChn' in Vars[i]) or ('chanS' in Vars[i]):
                     for kk in range(data.shape[0]):
@@ -191,7 +192,7 @@ def plot_tracking():
                     for kk in range(data.shape[0]):
                         data[kk,:,:][ ~chanmask] = np.nan
                 
-                print(Vars[i], np.nanmean(data[:, 1,10]))  # todo
+                #print(Vars[i], np.nanmean(data[:, 1,10]))  # todo
 
                 im = ax[i//ncol, i%ncol].imshow(np.nanmean(data, axis=0), cmap='viridis', zorder=1, label='1')
                 ax[i//ncol, i%ncol].set_frame_on(False)
@@ -221,14 +222,15 @@ def plot_param():
     param_names = []
     for key in keys:
         dict = Param.ref[key]
-        if dict['type'] == 'global':
-            param_names.append(key)
-        elif dict['type'] == 'soil':
-            for i in range(Info.N_soil):
-                param_names.append(key + '_s' + str(i))
-        elif dict['type'] == 'landuse':
-            for i in range(Info.N_landuse):
-                param_names.append(key + '_v' + str(i))
+        if dict['fix_value'] is None:
+            if dict['type'] == 'global':
+                param_names.append(key)
+            elif dict['type'] == 'soil':
+                for i in range(Info.N_soil):
+                    param_names.append(key + '_s' + str(i))
+            elif dict['type'] == 'landuse':
+                for i in range(Info.N_landuse):
+                    param_names.append(key + '_v' + str(i))
 
     fig, ax = plt.subplots(1, 1, figsize=(15,20), dpi=300)
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
@@ -257,14 +259,15 @@ def plot_param_valid():
     param_names = []
     for key in keys:
         dict = Param.ref[key]
-        if dict['type'] == 'global':
-            param_names.append(key)
-        elif dict['type'] == 'soil':
-            for i in range(Info.N_soil):
-                param_names.append(key + '_s' + str(i))
-        elif dict['type'] == 'landuse':
-            for i in range(Info.N_landuse):
-                param_names.append(key + '_v' + str(i))
+        if dict['fix_value'] is None:
+            if dict['type'] == 'global':
+                param_names.append(key)
+            elif dict['type'] == 'soil':
+                for i in range(Info.N_soil):
+                    param_names.append(key + '_s' + str(i))
+            elif dict['type'] == 'landuse':
+                for i in range(Info.N_landuse):
+                    param_names.append(key + '_v' + str(i))
 
     fig, ax = plt.subplots(1, 1, figsize=(15,20), dpi=300)
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
@@ -283,6 +286,6 @@ def plot_param_valid():
     fig.savefig('999_param_valid_sorted.png')
 
 plot_hydrology()
-plot_tracking()
+#plot_tracking()
 #plot_param()
 #plot_param_valid()

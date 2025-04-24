@@ -34,7 +34,7 @@ def likelihood(param, chainID):
             obs = _obs[i,:]
             err += GEM_tools.nselnnse(sim, obs, weight_nse=0.9, weight_lnnse=0.1) * dict['weights'][i]
 
-    loglikeli = np.log(err) * (-1*500)
+    loglikeli = np.log(err) * (-1*100)
     if np.isnan(loglikeli):
         loglikeli = -np.inf
     

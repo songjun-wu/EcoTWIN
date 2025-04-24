@@ -142,7 +142,7 @@ class Dream:
                 print('Warning: Gamma values loaded and adapt gamma = True.  Gamma values will be further adapted.')
         else:
             self.gamma_probabilities = [1/float(self.ngamma) for i in range(self.ngamma)]
-
+        
         #Set crossover values and gamma (the proportion of dimensions to crossover/gamma level to choose)
         self.CR_values = np.array([m/float(self.nCR) for m in range(1, self.nCR+1)])  
         self.gamma_level_values = np.array([m for m in range(1, self.ngamma+1)])
@@ -168,7 +168,8 @@ class Dream:
 
         #Set the number of seedchains to 10*dimensions to fit
         if self.nseedchains == None:
-            self.nseedchains = self.total_var_dimension*10
+            #self.nseedchains = self.total_var_dimension*10
+            self.nseedchains = self.total_var_dimension * 2
 
         #Set array of gamma values (decreasing step size with increasing level)
         gamma_array = np.zeros((self.ngamma, DEpairs, self.total_var_dimension))
@@ -185,6 +186,7 @@ class Dream:
 
         self.local_count = 0
         self.global_count = 0
+
         
 
         self.chain_n = None
@@ -206,18 +208,49 @@ class Dream:
                 self.chainID =chainID
                 self.chain_n = chainID
                 self.nchains = self.size
+                
 
+                Dream_shared_vars.win_history = MPI.Win.Create(Dream_shared_vars.history, comm=self.comm)
+                Dream_shared_vars.win_history.Fence()
+
+                
+                """
+                # Create shared memory for history
+                self.comm.Barrier()
+                Dream_shared_vars.win_history = MPI.Win.Allocate_shared(
+                    np.prod(Dream_shared_vars.history_arr_shape) * np.dtype(np.float64).itemsize,
+                    comm=self.comm
+                )
+
+                buf, _ = Dream_shared_vars.win_history.Shared_query(rank=0)
+                Dream_shared_vars.history = np.ndarray(
+                    Dream_shared_vars.history_arr_shape,
+                    dtype=np.float64,
+                    buffer=buf
+                )
+
+                self.comm.Barrier()
+                Dream_shared_vars.win_history.Fence()
+                print(self.chainID, Dream_shared_vars.history[0])
+                """
+                
                 if self.rank == 0 and not self.history_file and Dream_shared_vars.history_seeded == b'F':
                     if self.verbose:
                         print('Seeding history with ', self.nseedchains, ' draws from prior.')
                     for i in range(self.nseedchains):
                         start_loc = i * self.total_var_dimension
                         end_loc = start_loc + self.total_var_dimension
-                        Dream_shared_vars.history[start_loc:end_loc] = self.draw_from_prior(self.variables)
+                        init_arr = self.draw_from_prior(self.variables)           
+                        Dream_shared_vars.history[start_loc:end_loc] = init_arr
                     Dream_shared_vars.history_seeded = b'T'
+                    
+                #Dream_shared_vars.win_history.Lock(0)
+                Dream_shared_vars.win_history.Get(Dream_shared_vars.history, target_rank=0, target=0)
+                #Dream_shared_vars.win_history.Unlock(0)
+                Dream_shared_vars.win_history.Fence()
 
                 Dream_shared_vars.history_seeded = self.comm.bcast(Dream_shared_vars.history_seeded, root=0)
-                Dream_shared_vars.history = self.comm.bcast(Dream_shared_vars.history, root=0)
+                #Dream_shared_vars.history = self.comm.bcast(Dream_shared_vars.history, root=0)
 
                 if self.start_random:
                     q0 = self.draw_from_prior(self.variables, random_seed=True)
@@ -247,17 +280,17 @@ class Dream:
             
             #Set DE pair choice to be used for generating proposal point for this iteration.
             DEpair_choice = self.set_DEpair(self.DEpairs)
-            
+
             #Select gamma size level
             gamma_level = self.set_gamma_level(self.gamma_probabilities, self.gamma_level_values)
         
 
             #Generate proposal points
             if not run_snooker:
-                proposed_pts = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=False)                
+                proposed_pts = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=False)              
             else:
                 proposed_pts, snooker_logp_prop, z = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=True)                 
-
+            
             if self.last_logp == None:
                 self.last_prior, self.last_like = self.logp(q0, chainID, total_iterations)
                 self.last_logp = T*self.last_like + self.last_prior
@@ -324,10 +357,8 @@ class Dream:
                     
                     q_new = metrop_select(np.nan_to_num(total_proposed_logp - total_old_logp), q, q0)
                 else:
-                    
                     q_new = metrop_select(np.nan_to_num(q_logp) - np.nan_to_num(self.last_logp), q, q0)
                 
-
             if not np.array_equal(q0, q_new):
                 if self.multitry == 1:
                     if self.verbose:
@@ -353,7 +384,7 @@ class Dream:
             
             
             #Place new point in history given history thinning rate
-            if self.iter % self.history_thin == 0:
+            if self.iter % self.history_thin == 0 or self.iter == (self.niterations - 1):
                 self.global_count = self.record_history(self.nseedchains, self.total_var_dimension, q_new, self.len_history)  
             if self.iter < self.crossover_burnin+1:
                 self.set_current_position_arr(self.total_var_dimension, q_new)
@@ -368,7 +399,7 @@ class Dream:
                 else:
                     self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR=1)
 
-            
+
             if self.adapt_gamma and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma) == 1.0) and not run_snooker:
                 self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
 
@@ -403,6 +434,8 @@ class Dream:
                     self.CR_probabilities = self.comm.bcast(self.CR_probabilities, root=0)
             
             self.iter += 1
+
+
         except Exception as e:
             traceback.print_exc()
             raise e
@@ -652,6 +685,7 @@ class Dream:
                 
         end_locs = [int(i + ndimensions) for i in start_locs]
         sampled_chains = [Dream_shared_vars.history[start_loc:end_loc] for start_loc, end_loc in zip(start_locs, end_locs)]
+
 
         return sampled_chains
         
@@ -937,26 +971,47 @@ class Dream:
         Dream_shared_vars.history[start_loc:end_loc] = np.array(q_new).flatten()
         self.local_count += 1
         """
-        
-
-        
+ 
 
         self.global_count = self.local_count * self.nchains + self.chainID
         nhistoryrecs = self.global_count + nseedchains
-        start_loc = int(nhistoryrecs * ndimensions)
+        start_loc = int((nhistoryrecs) * ndimensions)
         end_loc = int(start_loc + ndimensions)
 
-        Dream_shared_vars.history[start_loc:end_loc] = np.array(q_new).flatten()
+        #Dream_shared_vars.win_history.Lock(0)
+        #Dream_shared_vars.win_history.Lock(lock_type=MPI.LOCK_SHARED, rank=0)
+        Dream_shared_vars.win_history.Get(Dream_shared_vars.history, target_rank=0, target=0)  # Pull the whole array
+        Dream_shared_vars.win_history.Put(
+                np.array(q_new).flatten(),  # local data
+                target_rank=0,  # rank to write
+                target=start_loc * q_new.dtype.itemsize
+            )
+        #Dream_shared_vars.win_history.Unlock(0)
+        Dream_shared_vars.win_history.Fence()
+        #Dream_shared_vars.win_history.Flush(0)
+        #print(self.chainID, np.sum(np.isnan(Dream_shared_vars.history)), flush=True)
+        #start_loc1 = int (((self.local_count-1) * self.nchains  + self.chainID + nseedchains) * ndimensions)
+        #end_loc1 = int(start_loc1 + ndimensions)
+        #print(start_loc, end_loc, start_loc1, end_loc1, q_new.flatten()[:5], Dream_shared_vars.history[start_loc:end_loc][:5], Dream_shared_vars.history[start_loc1:end_loc1][:5], flush=True) # todo
+        #print(self.local_count * self.nchains, nseedchains, ndimensions, start_loc1, flush=True)
+        #print(self.chainID, start_loc, end_loc, q_new[:3], Dream_shared_vars.history[start_loc:end_loc][:3],  start_loc1, end_loc1, Dream_shared_vars.history[start_loc1:end_loc1][:3], flush=True)
 
         self.local_count += 1
 
-        if self.save_history and len_history == (nhistoryrecs+1)*ndimensions:
-            if not self.model_name:
-                prefix = datetime.now().strftime('%Y_%m_%d_%H:%M:%S')+'_'
-            else:
-                prefix = self.model_name+'_'
-            
-            self.save_history_to_disc(Dream_shared_vars.history, prefix)
+        #if self.save_history and len_history == (nhistoryrecs+1)*ndimensions:
+        """
+        if self.save_history and self.iter == (self.niterations - 1):
+            #if not (np.any(np.isnan(Dream_shared_vars.history))):
+            try:
+                if not self.model_name:
+                    prefix = datetime.now().strftime('%Y_%m_%d_%H:%M:%S')+'_'
+                else:
+                    prefix = self.model_name+'_'
+                    self.save_history_to_disc(Dream_shared_vars.history, prefix)
+            except:
+                pass
+        """        
+                
         
         return self.global_count
             
@@ -971,8 +1026,7 @@ class Dream:
             Prefix to add to history filename when saving"""
         
         filename = prefix+'DREAM_chain_history.npy'
-        
-        print('Saving history to file: ', os.getcwd() + filename)
+        print('Rank ', self.chainID, ' :   Saving history to file: ', os.getcwd() + filename)
         np.save(filename, history)
         
         #Also save crossover probabilities if adapted

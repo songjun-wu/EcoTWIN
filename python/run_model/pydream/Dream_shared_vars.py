@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-
+nseedchains = None
+history_arr_shape = None
 history = None
+win_history = None
 current_positions = None
 nchains = None
 cross_probs = None

@@ -35,11 +35,14 @@ class Cali:
     TASK_name = 'DREAM_cali_DMC'
     nchains = 100
 
+    nbatchs = 10  # Number of batches
     niterations = 500  # Number of iterations for each batch
-    nbatchs = 20  # Number of batches
+    
 
     restart = False   # Whether restart?
     restart_niteration = 500 # restart since which iteration?
+
+    history_thin = 10
 
     
 

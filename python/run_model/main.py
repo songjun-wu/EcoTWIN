@@ -4,6 +4,7 @@ import GEM_tools
 import sys
 from optparse import OptionParser
 import numpy as np
+import time
 
 
 
@@ -19,6 +20,8 @@ mode = options.mode
 
 if options.def_py == None:
     options.def_py = 'def_GEM'
+if mode == 'DREAM_cali':
+    options.def_py = 'def_GEM_cali'
 
 sys.path.insert(0, current_path+'/')
 exec('from ' + options.def_py + ' import *')
@@ -27,53 +30,36 @@ exec('from ' + options.def_py + ' import *')
 
 
 if mode == 'DREAM_cali':
-    from pydream.core import run_dream
-    from pydream.parameters import SampledParam
-    from pydream.convergence import Gelman_Rubin
-    from scipy.stats import uniform
-    from likelihood import likelihood
 
-    # Model structure update
-    #os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
-    #os.system('python3 develop.py')
+    nbatch = Cali.nbatchs
 
-    os.chdir(Path.work_path)
-    
-    # Create and clean the directory
-    GEM_tools.sort_directory(mode, Path, Cali)
-    GEM_tools.set_env(mode, Path, Cali)
-    GEM_tools.set_config(mode, Path, Cali)
-    param_N = GEM_tools.get_param_N(Info, Param)
-
-    # Define parameters
-    parameters_to_sample = SampledParam(uniform, loc=np.full(param_N, 0.0), scale=1) # Parameter ranges from 0 to 1
-
-    # Start calibration
-    try:
-        Cali.nchains = int(os.environ.get('SLURM_NTASKS', 20))
-    except:
-        pass
+    cmds = []
     if not Cali.restart:
-        total_iterations = Cali.niterations
-        run_dream(savePath=Path.result_path, parameters=[parameters_to_sample], likelihood=likelihood, niterations=Cali.niterations, total_iterations=total_iterations, nchains=Cali.nchains, multitry=False, gamma_levels=4, adapt_gamma=True, history_thin=1, model_name=Cali.TASK_name, verbose=False, restart=False)
-    
-        for i in range(Cali.nbatchs-1):
-            starts = GEM_tools.get_restart_param(Path, Cali, param_N, total_iterations)
-            total_iterations += Cali.niterations
-            run_dream(savePath=Path.result_path, parameters=[parameters_to_sample], likelihood=likelihood,
-                                                niterations=Cali.niterations, total_iterations=total_iterations,  nchains=Cali.nchains, start=starts, multitry=False, gamma_levels=4,
-                                                adapt_gamma=True, history_thin=1, model_name=Cali.TASK_name,
-                                                verbose=False, restart=True)
+        nbatch -= 1
+        cmds.append('mpirun -np $SLURM_NTASKS python3 DREAM_cali.py --mode DREAM_cali --def_py def_GEM_cali --niteration '+str(Cali.niterations)+ \
+                    ' --restart False  --restart_niteration ' + str(Cali.restart_niteration))
+        for i in range(nbatch):
+            cmds.append('mpirun -np $SLURM_NTASKS python3 DREAM_cali.py --mode DREAM_cali --def_py def_GEM_cali --niteration '+str(Cali.niterations)+ \
+                    ' --restart True  --restart_niteration ' + str(Cali.niterations * (i+1)))
     else:
-        total_iterations = Cali.restart_niteration
+        for i in range(nbatch):
+            cmds.append('mpirun -np $SLURM_NTASKS python3 DREAM_cali.py --mode DREAM_cali --def_py def_GEM_cali --niteration '+str(Cali.niterations)+ \
+                     ' --restart True  --restart_niteration ' + str(Cali.restart_niteration + Cali.niterations * i ))
+    
+    for cmd in cmds:
+        with open('/data/scratch/wusongj/paper4/scripts/DREAM_cali.slurm', 'r') as f:
+            lines = f.readlines()
+        for i in range(len(lines)):
+            if 'mpirun' in lines[i]:
+                lines[i] = cmd
+        with open('/data/scratch/wusongj/paper4/scripts/DREAM_cali.slurm', 'w') as f:
+            f.writelines(lines)
 
-        for i in range(Cali.nbatchs):
-            starts = GEM_tools.get_restart_param(Path, Cali, param_N, total_iterations)
-            total_iterations += Cali.niterations
-            run_dream(savePath=Path.result_path, parameters=[parameters_to_sample], likelihood=likelihood,
-                                                niterations=Cali.niterations, total_iterations=total_iterations,  nchains=Cali.nchains, start=starts, multitry=False, gamma_levels=4,
-                                                adapt_gamma=True, history_thin=1, model_name=Cali.TASK_name,
-                                                verbose=False, restart=True)
+        os.system('sh protocal_cali.sh')
+        print(cmd)
+        while (GEM_tools.checkTaskStatus('dmc_cali') > 0):
+            time.sleep(10)
+
         
         
 elif mode == 'forward':
@@ -136,7 +122,7 @@ elif mode == 'test':
     validIdx = np.loadtxt('/data/scratch/wusongj/paper4/param_good.txt').astype(np.int)
     
     #for i in range(len(validIdx)):
-    for i in [0]:
+    for i in [-1]:
         idx = validIdx[i]
         print(idx)
         # Which parameter set to use?
@@ -194,7 +180,7 @@ elif mode == 'check':
     n_batch = 0
     for i in range(Cali.nchains):
         flag = True
-        for niteration in np.arange(0, 1e5, Cali.niterations)[::-1]:
+        for niteration in np.arange(0, 2e5, Cali.niterations)[::-1]:
             if flag:
                 try:
                     loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
@@ -224,7 +210,6 @@ elif mode == 'aaa':
     sim_iso = np.transpose(np.fromfile(Path.work_path + '/forward/outputs/d18o_chanS_TS.bin').reshape(Cali.nchains, -1, Output.N_sites), axes=[0,2,1])[:, :, Info.spin_up:]  
     obs_iso = np.fromfile(Path.data_path + 'd18o_stream_obs.bin').reshape(len(Output.sim['iso_stream']['sim_idx']), -1)
 
-
     validIdx = []
     
     for i in range(Cali.nchains):
@@ -243,13 +228,15 @@ elif mode == 'aaa':
             print(np.round(GEM_tools.nse(X, Y),2), end=" ")
             
         print('')
-        if np.mean(likelihoods[:3]) > 0.4:
+        if np.mean(likelihoods[:3]) > 0.3:
             validIdx.append(i)
     np.savetxt('/data/scratch/wusongj/paper4/param_good.txt', validIdx)
     print(len(validIdx))
     
     sim_q = sim_q[validIdx, :, :][:,Output.sim['q']['sim_idx'],:]
     sim_iso = sim_iso[validIdx, :, :][:,Output.sim['iso_stream']['sim_idx'],:]
+
+
 
     fig, ax = plt.subplots(4,2, figsize=(8,6), dpi=300)
     plt.subplots_adjust(left=0.1, bottom=0.05, right=0.99, top=0.99, wspace=0.1, hspace=0.1)

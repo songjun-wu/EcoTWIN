@@ -1,6 +1,16 @@
 import os
 import shutil
 import numpy as np
+import subprocess
+
+def checkTaskStatus(mode):
+    task = subprocess.Popen("squeue -u wusongj", shell=True, stdout=subprocess.PIPE)
+    task_return = [a.decode() for a in task.stdout.readlines()]
+    counter = 0
+    for i in range(len(task_return)):
+        if mode in task_return[i]:
+            counter += 1
+    return counter
 
 def save_to_ascii(data, path, ref_path):
     with open(ref_path) as f:
