@@ -25,7 +25,7 @@ int main(){
   oAtmosphere = new Atmosphere(*oControl);
   oReport = new Report(*oControl);
 
-  oBasin->Initialisation(*oControl, *oParam);
+  oBasin->Initialisation(*oControl, *oParam, *oAtmosphere);
   oReport->Report_Initialisation(*oControl);
 
   auto stop1 = std::chrono::high_resolution_clock::now();
@@ -35,7 +35,7 @@ int main(){
     oControl->Get_year_month_day();
     
     oBasin->Solve_timesteps(*oControl, *oParam, *oAtmosphere);
-
+    
     // report outputs
     oReport->Report_all(*oControl, *oBasin); 
     

@@ -19,7 +19,7 @@ int Basin::Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par){
         dissIN1 = theta1 * _depth1->val[j] * _no3_layer1->val[j];
         dissIN2 = theta2 * _depth2->val[j] * _no3_layer2->val[j];
         dissIN3 = theta3 * par._depth3->val[j] * _no3_layer3->val[j];
-        Ts = Get_soil_temperature(atm._Ta->val[j], Ts, _LAI->val[j]);  // Soil temperature [Degree C]
+        Ts = Get_soil_temperature(atm._Ta->val[j], _LAI->val[j]);  // Soil temperature [Degree C]
 
 
         // Soil temperature factor [-]
@@ -33,9 +33,9 @@ int Basin::Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par){
         _fastN1->val[j] += degrad1;
         // Mineralisation: from fastN pool to dissolved IN
         minerl1 = _fastN1->val[j] * min(par._mineralisation_soil->val[j] * fct_Ts * fct_theta / DT, 1.0);
-        _fastN1->val[j] -= dissIN1;
+        _fastN1->val[j] -= minerl1;
         dissIN1 += minerl1;
-
+       
         // Layer 2
         fct_theta = Moist_factor(theta2, _thetaWP2->val[j], _thetaS2->val[j], _depth2->val[j]);
         // Degradation: from humusN pool to fastN pool
@@ -44,7 +44,7 @@ int Basin::Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par){
         _fastN2->val[j] += degrad2;
         // Mineralisation: from fastN pool to dissolved IN
         minerl2 = _fastN2->val[j] * min(par._mineralisation_soil->val[j] * fct_Ts * fct_theta / DT, 1.0);
-        _fastN2->val[j] -= dissIN2;
+        _fastN2->val[j] -= minerl2;
         dissIN2 += minerl2;
 
         // Layer 3
@@ -55,7 +55,7 @@ int Basin::Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par){
         _fastN3->val[j] += degrad3;
         // Mineralisation: from fastN pool to dissolved IN
         minerl3 = _fastN3->val[j] * min(par._mineralisation_soil->val[j] * fct_Ts * fct_theta / DT, 1.0);
-        _fastN3->val[j] -= dissIN3;
+        _fastN3->val[j] -= minerl3;
         dissIN3 += minerl3;
 
         // Update global variables

@@ -132,9 +132,16 @@ def plot_tracking():
     Vars.extend(['age_SMC_layer1', 'age_SMC_layer2', 'age_SMC_layer3', 'age_groundwater_storage', None, 'age_chanS'])
     Vars.extend(['no3_canopy_storage', 'no3_snow_depth','no3_pond', None, None, None])
     Vars.extend(['no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'no3_groundwater_storage', None, 'no3_chanS'])
-    Vars.extend(['nitrogen_addition', 'deni_soil', None, None, None, None])
+    Vars.extend(['nitrogen_addition', 'deni_soil', 'minerl_soil', None, None, 'deni_river'])
 
-    Vars.extend([])
+    ylims = [None, None, None, None, None, None]
+    ylims.extend([[-15,0],[-15,0],[-15,0],None, None,[-10,0]])
+    ylims.extend([None, None, None, None, None, None])
+    ylims.extend([None, None, None, None, None, None])
+    ylims.extend([None, None, None, None, None, None])
+    ylims.extend([None, None, None, None, None, None])
+    ylims.extend([None, None, None, None, None, None])
+    ylims.extend([None, None, None, None, None, None])
 
     nrow = 8
     ncol = 6
@@ -155,6 +162,8 @@ def plot_tracking():
 
                 data[data==nodata] = np.nan
                 ax[i//ncol, i%ncol].plot(data, linewidth=0.3, c='skyblue', zorder=1)
+                if ylims[i] is not None:
+                    ax[i//ncol, i%ncol].set_ylim(ylims[i])
                     
                 title_hgt = 0.9
                 hgt_gradient = 0.11
@@ -188,11 +197,11 @@ def plot_tracking():
                 data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, 30, 22))[:, :, :]
                 data[data==nodata] = np.nan
                
-                if ('discharge' in Vars[i]) or ('_toChn' in Vars[i]) or ('_chanS' in Vars[i]):
+                if ('discharge' in Vars[i]) or ('_toChn' in Vars[i]) or ('_chanS' in Vars[i]) or ('river' in Vars[i]):
                     for kk in range(data.shape[0]):
                         data[kk,:,:][ ~chanmask] = np.nan
                 
-                #print(Vars[i], np.nanmean(data[:, 1,10]))  # todo
+                print(Vars[i], np.nanmean(data[:]))  # todo
 
                 im = ax[i//ncol, i%ncol].imshow(np.nanmean(data, axis=0), cmap='viridis', zorder=1, label='1')
                 ax[i//ncol, i%ncol].set_frame_on(False)
@@ -286,6 +295,6 @@ def plot_param_valid():
     fig.savefig('999_param_valid_sorted.png')
 
 plot_hydrology()
-#plot_tracking()
+plot_tracking()
 #plot_param()
 #plot_param_valid()

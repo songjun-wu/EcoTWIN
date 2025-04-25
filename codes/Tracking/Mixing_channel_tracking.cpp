@@ -21,7 +21,7 @@ int Basin::Mixing_channel_tracking(Control &ctrl, Atmosphere &atm, Param &par){
             _tmp->equals(*_chanS);
             _tmp->plus(*_Echan);
             // Fractionation due to channel evaporation
-            Fractionation(atm, *_Echan, *_tmp, *_d18o_chanS, *_d18o_chanS, *_tmp, 0);  // issoil = 0
+            Fractionation(atm, par, *_Echan, *_tmp, *_d18o_chanS, *_d18o_chanS, *_tmp, 0);  // issoil = 0
 
         }
         

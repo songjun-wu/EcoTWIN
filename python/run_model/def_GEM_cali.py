@@ -35,7 +35,7 @@ class Cali:
     TASK_name = 'DREAM_cali_DMC'
     nchains = 100
 
-    nbatchs = 10  # Number of batches
+    nbatchs = 20  # Number of batches
     niterations = 500  # Number of iterations for each batch
     
 
@@ -43,6 +43,8 @@ class Cali:
     restart_niteration = 500 # restart since which iteration?
 
     history_thin = 10
+
+    static_config = False  # Whether to define the configs at the beginning to speed up
 
     
 
@@ -54,8 +56,8 @@ class Output:
 
     sim_q_idx       = [2, 3, 4, 5]   # 32, 26, 26x, 29a
     sim_iso_idx     = [1, 2, 3, 5]   # 25, 32, 26,  29a
-    sim_q_weights   = np.array([0.05, 0.45, 0.45, 0.05]) * 1
-    sim_iso_weights = np.array([0.4, 0.25, 0.25, 0.1]) * 0
+    sim_q_weights   = np.array([0.05, 0.45, 0.45, 0.05]) * 0.5
+    sim_iso_weights = np.array([0.25, 0.4, 0.25, 0.1]) * 0.5
     sim = {}
     sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'weights':sim_q_weights, 'type':'Ts'}
     sim['iso_stream']       = {'sim_file':'d18o_chanS_TS.bin' , 'obs_file':'d18o_stream_obs.bin', 'sim_idx':sim_iso_idx, 'weights':sim_iso_weights, 'type':'Ts'}
@@ -125,21 +127,21 @@ class Param:
     ref['Echan_alpha']   = {'type':'soil',   'log':1, 'file':'Echan_alpha',   'min':[0.1]*Info.N_soil, 'max':[10]*Info.N_soil, 'fix_value':None}  # Correction factor in Priestley-Taylor equation
 
     # Mixing
-    ref['nearsurface_mixing']   = {'type':'soil',   'log':0, 'file':'nearsurface_mixing',   'min':[0]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
-    
+    ref['nearsurface_mixing']   = {'type':'landuse',   'log':0, 'file':'nearsurface_mixing',   'min':[0]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None} 
     
     # Tracking
+    ref['CG_n_soil'] = {'type':'global',   'log':0, 'file':'CG_n_soil',   'min':[0.5], 'max':[1], 'fix_value':None}
     ref['d18o_init_GW'] = {'type':'global',   'log':0, 'file':'d18o_init_GW',   'min':[-9]*Info.N_soil, 'max':[-7.5]*Info.N_soil, 'fix_value':None}
 
     # Nitrogen simulation
-    ref['denitrification_aquatic']   = {'type':'landuse',   'log':1, 'file':'denitrification_aquatic',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
-    ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
-    ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
-    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4]*Info.N_landuse, 'max':[1.1]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
-    ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-3]*Info.N_landuse, 'max':[1e3]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
-    ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-4]*Info.N_landuse, 'max':[0.4]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
-    ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
-    
+    ref['denitrification_river']   = {'type':'landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':[1e-3]*Info.N_landuse}
+    #ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
+    #ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':[0]*Info.N_landuse}
+    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4]*Info.N_landuse, 'max':[1.1]*Info.N_landuse, 'fix_value':[1e-2]*Info.N_landuse}
+    ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-3]*Info.N_landuse, 'max':[1e3]*Info.N_landuse, 'fix_value':[1e-3]*Info.N_landuse}
+    ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-4]*Info.N_landuse, 'max':[0.4]*Info.N_landuse, 'fix_value':[1e-4]*Info.N_landuse}
+    ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':[100]*Info.N_landuse}
+  
     
 
 

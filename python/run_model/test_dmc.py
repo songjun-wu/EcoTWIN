@@ -148,6 +148,23 @@ for i in range(len(fnames)):
     fig.savefig('/home/wusongj/GEM/test_dmc/spatial/2_cat_'+str(i+1)+'.png')
 
 
+p0 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_0.map'), np.nan).astype(np.float64)
+p1 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_1.map'), np.nan).astype(np.float64)
+p2 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_2.map'), np.nan).astype(np.float64)
+p3 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_3.map'), np.nan).astype(np.float64)
+
+humusN = 8033
+fastN = 200
+
+prep_tools.saveToASCII(unit_soil*8033, 'humusN1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*8033, 'humusN2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*8033, 'humusN3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
+prep_tools.saveToASCII(unit_soil*200, 'fastN1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*200, 'fastN2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*200, 'fastN3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
+
 
 
 
@@ -161,7 +178,7 @@ np.repeat(df['RH_3015']/100, 1).to_numpy().tofile(home_dir+'climate/RH.bin')
 np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 np.repeat(df['Tmax_3015'], 1).to_numpy().tofile(home_dir+'climate/Tmax.bin')
 
-np.repeat(df['airPressure_3015'], 1).to_numpy().tofile(home_dir+'climate/airpressure.bin')
+np.repeat(df['airPressure_3015']*100, 1).to_numpy().tofile(home_dir+'climate/airpressure.bin')  # hPa to Pa
 np.repeat(df['windSpeed_3015'], 1).to_numpy().tofile(home_dir+'climate/windspeed.bin')
 
 Rn = calculate_net_radiation(df['sdown'], df['ldown'], df['Tmean_3015'])
@@ -170,8 +187,10 @@ np.repeat(Rn, 1).tofile(home_dir+'climate/Rnet.bin')
 np.repeat(df['d2H_14dMV_3015'], 1).to_numpy().tofile(home_dir+'climate/d2h_P.bin')
 np.repeat(df['d18O_14dMV_3015'], 1).to_numpy().tofile(home_dir+'climate/d18o_P.bin')
 
-np.repeat(df['PET']/1000, 1).to_numpy().tofile(home_dir+'climate/PET.bin')
+pet = df['PET']/1000 / 1.2
+np.repeat(pet, 1).to_numpy().tofile(home_dir+'climate/PET.bin')
 
+print(np.mean(pet)*365)
 
 lai = np.full((len(df['lai_2']), 9), -9999.0)
 lai[:,5] = df['lai_0']
@@ -186,7 +205,6 @@ print(obs_q.shape)
 
 df = pd.read_csv('/home/wusongj/paper3_scripts/configs/obs_all.csv', index_col='time')
 df.index = pd.to_datetime(df.index)
-print(df.columns)
 df = df.loc[datetime(1994,1,1):datetime(2022,1,1), :].loc[:, ['d18o_stream_25', 'd18o_stream_32', 'd18o_stream_26', 'd18o_stream_29a']]
 arr = df.to_numpy().T
 arr.tofile(home_dir + 'd18o_stream_obs.bin')

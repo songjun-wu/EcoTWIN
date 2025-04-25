@@ -133,6 +133,12 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__no3_layer3, "no3_SMC_layer3", lines);
   readInto(fn__no3_GW, "no3_groundwater_storage", lines);
   readInto(fn__no3_chanS, "no3_chanS", lines);
+  readInto(fn__humusN1, "humusN1", lines);
+  readInto(fn__humusN2, "humusN2", lines);
+  readInto(fn__humusN3, "humusN3", lines);
+  readInto(fn__fastN1, "fastN1", lines);
+  readInto(fn__fastN2, "fastN2", lines);
+  readInto(fn__fastN3, "fastN3", lines);
   /* end of Nitrogen */
 
 
@@ -170,10 +176,9 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__Echan_alpha, "Echan_alpha", lines);
   readInto(fn__nearsurface_mixing, "nearsurface_mixing", lines);
   readInto(fn__ratio_to_interf, "ratio_to_interf", lines);
+  readInto(fn__CG_n_soil, "CG_n_soil", lines);
   readInto(fn__d18o_init_GW, "d18o_init_GW", lines);
-  readInto(fn__denitrification_aquatic, "denitrification_aquatic", lines);
-  readInto(fn__autotrophic_uptake_aquatic, "autotrophic_uptake_aquatic", lines);
-  readInto(fn__primary_production_aquatic, "primary_production_aquatic", lines);
+  readInto(fn__denitrification_river, "denitrification_river", lines);
   readInto(fn__denitrification_soil, "denitrification_soil", lines);
   readInto(fn__degradation_soil, "degradation_soil", lines);
   readInto(fn__mineralisation_soil, "mineralisation_soil", lines);
@@ -237,6 +242,13 @@ int Control::ReadConfigFile(string fname){
   readInto(report__plant_uptake, "report_plant_uptake", lines);
   readInto(report__deni_soil, "report_deni_soil", lines);
   readInto(report__minerl_soil, "report_minerl_soil", lines);
+  readInto(report__deni_river, "report_deni_river", lines);
+  readInto(report__humusN1, "report_humusN1", lines);
+  readInto(report__humusN2, "report_humusN2", lines);
+  readInto(report__humusN3, "report_humusN3", lines);
+  readInto(report__fastN1, "report_fastN1", lines);
+  readInto(report__fastN2, "report_fastN2", lines);
+  readInto(report__fastN3, "report_fastN3", lines);
   /* end of Report */
 
   return EXIT_SUCCESS;

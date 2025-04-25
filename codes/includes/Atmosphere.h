@@ -35,8 +35,8 @@ class Atmosphere {
   ifstream if__airpressure;  // Air pressure [Pa]
   svector *_Rnet;  // Net radiation [W/m2]
   ifstream if__Rnet;  // Net radiation [W/m2]
-  svector *_windspeed;  // Air pressure [m/s]
-  ifstream if__windspeed;  // Air pressure [m/s]
+  svector *_windspeed;  // Wind speed at 2 m [m/s]
+  ifstream if__windspeed;  // Wind speed at 2 m [m/s]
   svector *_d18o_P;  // d18O in precipitation [‰]
   ifstream if__d18o_P;  // d18O in precipitation [‰]
   /* end of Climate */

@@ -75,12 +75,11 @@ Param::Param(Control &ctrl){
     _Echan_alpha = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_tracking_isotope == 1){
+    _CG_n_soil = new svector(_sortedGrid.size);
     _d18o_init_GW = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_nitrogen_sim == 1){
-    _denitrification_aquatic = new svector(_sortedGrid.size);
-    _autotrophic_uptake_aquatic = new svector(_sortedGrid.size);
-    _primary_production_aquatic = new svector(_sortedGrid.size);
+    _denitrification_river = new svector(_sortedGrid.size);
     _denitrification_soil = new svector(_sortedGrid.size);
     _degradation_soil = new svector(_sortedGrid.size);
     _mineralisation_soil = new svector(_sortedGrid.size);
@@ -92,7 +91,8 @@ Param::Param(Control &ctrl){
   ReadParamFile(ctrl, fname);
 
   param_category = new svector_2d(ctrl.num_category , _sortedGrid);
-  
+
   // Assign parameter spatially
   Parameterisation(ctrl);
+
 }

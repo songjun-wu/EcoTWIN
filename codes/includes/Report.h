@@ -71,6 +71,13 @@ class Report {
     ofstream of__plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
     ofstream of__deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
     ofstream of__minerl_soil;  // Soil mineralisation [mgN/L*m = gN/m2]
+    ofstream of__deni_river;  // Aquatic denitrification [mgN/L*m = gN/m2]
+    ofstream of__humusN1;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+    ofstream of__humusN2;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+    ofstream of__humusN3;  // Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
+    ofstream of__fastN1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+    ofstream of__fastN2;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+    ofstream of__fastN3;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
 
     svector *_I_acc;  // Canopy storage [m]
     svector *_snow_acc;  // Snow depth in [m]
@@ -127,6 +134,13 @@ class Report {
     svector *_plant_uptake_acc;  // Plant uptake [mgN/L*m = gN/m2]
     svector *_deni_soil_acc;  // Soil denitrification [mgN/L*m = gN/m2]
     svector *_minerl_soil_acc;  // Soil mineralisation [mgN/L*m = gN/m2]
+    svector *_deni_river_acc;  // Aquatic denitrification [mgN/L*m = gN/m2]
+    svector *_humusN1_acc;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+    svector *_humusN2_acc;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+    svector *_humusN3_acc;  // Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
+    svector *_fastN1_acc;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+    svector *_fastN2_acc;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+    svector *_fastN3_acc;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
     /* end of Report */
 
     //ctor

@@ -23,7 +23,7 @@ int Basin::Solve_surface_nitrogen(Control &ctrl, Atmosphere &atm, Param &par){
 
     // Mixing snow accumulation or snow melt
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-
+        
         // Mixing snow with throughfall if temperature is below snow rain threshold
         if (atm._Ta->val[j] < par._snow_rain_thre->val[j]){
             Mixing_full(_snow_old->val[j], _no3_snow->val[j], _snowacc->val[j], _no3_pond->val[j]);

@@ -67,11 +67,6 @@ Cali = config.Cali
 Info = config.Info
 Param = config.Param 
 
-history_thin = Cali.history_thin
-os.chdir(Path.work_path)
-if rank==0:
-    param_N = GEM_tools.get_param_N(Info, Param)
-    build_history(Cali.TASK_name, size, options.niterations, param_N, history_thin)
 
 
 try:

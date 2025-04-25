@@ -63,18 +63,17 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
             no3_pond_old = no3_pond;
             no3_layer1_old = _no3_layer1->val[j];
             nearsurface_mixing =  par._nearsurface_mixing->val[j];
-            pond_to_mix = pond_old * nearsurface_mixing;
+            pond_to_mix = min(pond_old * nearsurface_mixing, ST1);
             no3_pond = no3_pond_old * (1 - nearsurface_mixing) + no3_layer1_old * nearsurface_mixing;
             no3_layer1 = (no3_pond_old * pond_to_mix + no3_layer1_old * (ST1 - pond_to_mix)) / ST1;
         }
-
+        
 
         Mixing_full(ST1, no3_layer1, _infilt->val[j], no3_pond);
         ST1 += (_infilt->val[j] - _Perc1->val[j]);
         // Erichment due to evaporation and transpiration
         no3_layer1 = ST1 * no3_layer1 / (ST1 - _Es->val[j] - _Tr1->val[j]);
         ST1 -= (_Es->val[j] + _Tr1->val[j]);
-        
 
         // Mixing layer 2
         Mixing_full(ST2, no3_layer2, _Perc1->val[j], no3_layer1);
@@ -105,6 +104,8 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
         Nitrogen_addition(ctrl, par);
 
         // Plant uptake
+        Sort_plant_uptake(ctrl, par);
+        Plant_uptake(ctrl, par);
 
 
         /* Nitrogen Transformation */

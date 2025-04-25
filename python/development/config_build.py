@@ -1,7 +1,35 @@
 from develop_tools import *
 import numpy as np
 
-def read_configs(fname, options, signs, datas, reports):
+def force_config(fname, options):
+    opt_list = []
+    content = []
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+        start, end = locate_text(lines, '/* Force configs */', '/* end of Force configs */')
+
+        for key in options.keys():
+            item = options.get(key)
+            if item['key'] is None:
+                continue
+            if not item['key'] in opt_list:
+                opt_list.append(item['key'])
+                description = '#' + item['general_description'] + '\n'
+                description = description.replace('#', '  // ')
+
+
+
+                content.append(description)
+                content.append('  '+ item['key'] + ' = '+str(item['value'])+ ';\n')
+    
+        content = lines[:start] + content + lines[end:]
+
+    if(('').join(content) != ('').join(lines)):        
+        with open(fname, 'w') as f:
+            f.writelines(content)
+
+def read_configs(fname, options, signs, datas, reports, static_config):
+    
     with open(fname, 'r') as f:
         lines = f.readlines()
         start, end = locate_text(lines, '/* Options */', '/* end of Options */')
@@ -14,7 +42,10 @@ def read_configs(fname, options, signs, datas, reports):
                 continue
             if not item['key'] in opt_list:
                 opt_list.append(item['key'])
-                content.append('  readInto('+item['key']+', "'+item['key']+'", lines);\n')
+                if static_config:
+                    content.append('  // readInto('+item['key']+', "'+item['key']+'", lines);\n')
+                else:
+                    content.append('  readInto('+item['key']+', "'+item['key']+'", lines);\n')
 
         content = lines[:start] + content + lines[end:]
     if(('').join(content) != ('').join(lines)):
@@ -142,7 +173,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('# 1: report maps; 2: report time series at gauging stations\n')
     for i in range(len(reports)):
         data = reports[i]
-        if data[5] != None:
+        if data[5] != None and data[6] == 1:
             text.append('report_'+data[5]+'  =  0   # '+data[2] + '\n')
 
     with open(path + 'config.ini', 'r') as f:
@@ -166,7 +197,7 @@ def report_build(fname, reports):
         content.append('  // Create files for report\n')  
         for i in range(len(reports)):
             data = reports[i]
-            if data[5] is not None:
+            if data[5] is not None and data[6] == 1:
                 content.append('  if (ctrl.report_'+data[0]+'==1)  report_create(ctrl.path_ResultsFolder+"'+data[5]+'_TS.bin", of_'+data[0]+');\n')
                 content.append('  else if (ctrl.report_'+data[0]+'==2)  report_create(ctrl.path_ResultsFolder+"'+data[5]+'_map.bin", of_'+data[0]+');\n\n')
         content = lines[:start] + content + lines[end:]
@@ -184,7 +215,7 @@ def report_build(fname, reports):
         content.append('  // 1: report time series at gauging stations; 2: report maps\n')  
         for i in range(len(reports)):
             data = reports[i]
-            if data[5] is not None:
+            if data[5] is not None and data[6] == 1:
                 content.append('  if (ctrl.report_'+data[0]+'==1) {reportTS(ctrl, Bsn.'+data[0]+', of_'+data[0]+');}\n')
         content = lines[:start] + content + lines[end:]
     
@@ -202,7 +233,7 @@ def report_build(fname, reports):
         content.append('  // 1: report time series at gauging stations; 2: report maps\n')  
         for i in range(len(reports)):
             data = reports[i]
-            if data[5] is not None:
+            if data[5] is not None and data[6] == 1:
                 content.append('  if (ctrl.report_'+data[0]+'==2) {reportMap(ctrl, '+data[0]+'_acc, ctrl._sortedGrid, of_'+data[0]+');}\n')
         content = lines[:start] + content + lines[end:]
     
@@ -220,7 +251,7 @@ def report_build(fname, reports):
         content = []     
         for i in range(len(reports)):
             data = reports[i]
-            if data[5] is not None:
+            if data[5] is not None and data[6] == 1 :
                 content.append('  if (ctrl.report_'+data[0]+'==2) '+data[0]+'_acc = new svector(ctrl._sortedGrid.size);\n')
         content = lines[:start] + content + lines[end:]
     
@@ -237,7 +268,7 @@ def report_build(fname, reports):
         content = []     
         for i in range(len(reports)):
             data = reports[i]
-            if data[5] is not None:
+            if data[5] is not None and data[6] == 1:
                 content.append('  if (ctrl.report_'+data[0]+'==2) '+data[0]+'_acc->plus(*Bsn.'+data[0]+');\n')
         content = lines[:start] + content + lines[end:]
     

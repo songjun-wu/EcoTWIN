@@ -13,6 +13,8 @@ CPP_SRCS += \
 ../codes/Nitrogen/Solve_surface_nitrogen.cpp \
 ../codes/Nitrogen/Nitrogen_addition.cpp \
 ../codes/Nitrogen/Plant_uptake.cpp \
+../codes/Nitrogen/Solve_channel_nitrogen.cpp \
+../codes/Nitrogen/Instream_transformation.cpp \
 
 
 OBJS += \
@@ -25,6 +27,8 @@ OBJS += \
 ./Nitrogen/Solve_surface_nitrogen.o \
 ./Nitrogen/Nitrogen_addition.o \
 ./Nitrogen/Plant_uptake.o \
+./Nitrogen/Solve_channel_nitrogen.o \
+./Nitrogen/Instream_transformation.o \
 
 
 CPP_DEPS += \
@@ -37,6 +41,8 @@ CPP_DEPS += \
 ./Nitrogen/Solve_surface_nitrogen.d \
 ./Nitrogen/Nitrogen_addition.d \
 ./Nitrogen/Plant_uptake.d \
+./Nitrogen/Solve_channel_nitrogen.d \
+./Nitrogen/Instream_transformation.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

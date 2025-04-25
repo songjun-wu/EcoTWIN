@@ -14,7 +14,7 @@ int Basin::Solve_channel(Control &ctrl, Param &par, Atmosphere &atm){
     }
 
     if (ctrl.opt_nitrogen_sim==1){
-    
+        Solve_channel_nitrogen(ctrl, atm, par);
     }
     
    

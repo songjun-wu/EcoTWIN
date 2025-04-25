@@ -121,7 +121,8 @@ struct Control{
   // Channel evaporation
   // 0: Disabled
   // 1: Penman equation
-  // 2: Priestley-Taylor equation
+  // 2: Penman equation with constant wind speed
+  // 3: Priestley-Taylor equation
   int opt_chanE;
   /* end of Options */
 
@@ -170,7 +171,7 @@ struct Control{
   string fn__RH;  // Relative humidity [decimal]
   string fn__PET;  // Potential evapotranspiration [m]
   string fn__airpressure;  // Air pressure [Pa]
-  string fn__windspeed;  // Air pressure [m/s]
+  string fn__windspeed;  // Wind speed at 2 m [m/s]
   string fn__Rnet;  // Net radiation [W/m2]
   string fn__d18o_P;  // d18O in precipitation [‰]
   /* end of Climate */
@@ -209,6 +210,12 @@ struct Control{
   string fn__no3_layer3;  // no3 in Soil moisture in layer 3 [mgN/L]
   string fn__no3_GW;  // no3 in Groundwater storage [mgN/L]
   string fn__no3_chanS;  // no3 in Channel storage [mgN/L]
+  string fn__humusN1;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+  string fn__humusN2;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+  string fn__humusN3;  // Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
+  string fn__fastN1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
+  string fn__fastN2;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
+  string fn__fastN3;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
   /* end of Nitrogen */
 
   /* Parameters */
@@ -245,10 +252,9 @@ struct Control{
   string fn__Echan_alpha;  // orrection factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
   string fn__nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
+  string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   string fn__d18o_init_GW;  // Initial d18O of GW storage [‰]
-  string fn__denitrification_aquatic;  // Reference rates of aquatic denitrification [-]
-  string fn__autotrophic_uptake_aquatic;  // Reference rates of aquatic autotrophic uptake [-]
-  string fn__primary_production_aquatic;  // Reference rates of aquatic primary production [-]
+  string fn__denitrification_river;  // Reference rates of aquatic denitrification [-]
   string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   string fn__degradation_soil;  // Reference rates of soil degradation [kg/ha]
   string fn__mineralisation_soil;  // Reference rates of soil mineralisation [kg/ha]
@@ -315,6 +321,7 @@ struct Control{
   int report__PT;  // report Potential transpiration [m]
   int report__tmp;  // report Temporal variable for testing [-]
   int report__snowacc;  // report Snow accumulation for testing [m]
+  int report__TchanS;  // report Instream temperature conceptualised as 20-day's average of air temperature [degree C]
   int report__d18o_I;  // report d18o in Canopy storage [‰]
   int report__d18o_snow;  // report d18o in Snow depth in [‰]
   int report__d18o_pond;  // report d18o in Ponding water in [‰]
@@ -339,6 +346,7 @@ struct Control{
   int report__plant_uptake;  // report Plant uptake [mgN/L*m = gN/m2]
   int report__deni_soil;  // report Soil denitrification [mgN/L*m = gN/m2]
   int report__minerl_soil;  // report Soil mineralisation [mgN/L*m = gN/m2]
+  int report__deni_river;  // report Aquatic denitrification [mgN/L*m = gN/m2]
   int report__humusN1;  // report Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
   int report__humusN2;  // report Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
   int report__humusN3;  // report Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
@@ -362,6 +370,7 @@ struct Control{
   // Read configurations
   int getAsciiHeader(string fname);
   int ReadConfigFile(string confilename = "config.ini");
+
 
   /* Grids sorting */
   sortedGrid _sortedGrid;

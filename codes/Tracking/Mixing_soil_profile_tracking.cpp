@@ -36,19 +36,21 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     - interflow_toChn   
     */
 
+    double pond_old, ST1, d18o_pond_old, d18o_layer1_old, nearsurface_mixing, pond_to_mix;
+
     if (ctrl.opt_tracking_isotope==1) {
         
         // Mixing layer 1
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
             // Mix ponding water with top layer storage
-            double pond_old = _pond->val[j] + _infilt->val[j];
-            double ST1 = _theta1_old->val[j] * _depth1->val[j];
+            pond_old = _pond->val[j] + _infilt->val[j];
+            ST1 = _theta1_old->val[j] * _depth1->val[j];
             if (pond_old > roundoffERR and ST1 > roundoffERR){
-                double d18o_pond_old = _d18o_pond->val[j];
-                double d18o_layer1_old = _d18o_layer1->val[j];
-                double nearsurface_mixing =  par._nearsurface_mixing->val[j];
-                double pond_to_mix = pond_old * nearsurface_mixing;
+                d18o_pond_old = _d18o_pond->val[j];
+                d18o_layer1_old = _d18o_layer1->val[j];
+                nearsurface_mixing =  par._nearsurface_mixing->val[j];
+                pond_to_mix = min(pond_old * nearsurface_mixing, ST1);
                 _d18o_pond->val[j] = d18o_pond_old * (1 - nearsurface_mixing) + d18o_layer1_old * nearsurface_mixing;
                 _d18o_layer1->val[j] = (d18o_pond_old * pond_to_mix + d18o_layer1_old * (ST1 - pond_to_mix)) / ST1;
             }
@@ -64,7 +66,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         _tmp->minus(*_Perc1);
 
         // Fractionation due to soil evaporation (only for layer 1)
-        Fractionation(atm, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 0);  // issoil = 1; todo
+        Fractionation(atm, par, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 1);  // issoil = 1; todo
 
 
         // Mixing layer 2

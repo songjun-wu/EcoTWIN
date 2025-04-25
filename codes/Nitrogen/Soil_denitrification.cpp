@@ -23,7 +23,7 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         diss_IN1 = theta1 * _depth1->val[j] * no3_layer1;
         diss_IN2 = theta2 * _depth2->val[j] * no3_layer2;
         diss_IN3 = theta3 * par._depth3->val[j] * no3_layer3;
-        Ts = Get_soil_temperature(atm._Ta->val[j], Ts, _LAI->val[j]);  // Soil temperature [Degree C]
+        Ts = Get_soil_temperature(atm._Ta->val[j], _LAI->val[j]);  // Soil temperature [Degree C]
 
 
         // Soil temperature factor [-]
@@ -87,15 +87,15 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
 
 
 
-double Basin::Temp_factor(const double db_Ts){
+double Basin::Temp_factor(const double T){
 
-    double Ts = db_Ts;  // Soil temperature [Degree C]
-    double f_Ts = pow(2, (Ts - 20.0) / 10.0);  // Temperature factor
 
-    if (Ts < 5.0) f_Ts *= (Ts / 5.0);
-    if (Ts < 0.0) f_Ts = 0.0;
+    double f_T = pow(2, (T - 20.0) / 10.0);  // Temperature factor
 
-    return f_Ts;
+    if (T < 5.0) f_T *= (T / 5.0);
+    if (T < 0.0) f_T = 0.0;
+
+    return f_T;
 
 }
 

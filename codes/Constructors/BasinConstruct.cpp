@@ -103,6 +103,7 @@
   _Echan = new svector(_sortedGrid.size);
   _tmp = new svector(_sortedGrid.size);
   _snowacc = new svector(_sortedGrid.size);
+  _TchanS = new svector(_sortedGrid.size);
   if (ctrl.opt_reinfil == 1){
     _rinfilt = new svector(_sortedGrid.size);
     _rPerc1 = new svector(_sortedGrid.size);
@@ -154,12 +155,13 @@
     _plant_uptake = new svector(_sortedGrid.size);
     _deni_soil = new svector(_sortedGrid.size);
     _minerl_soil = new svector(_sortedGrid.size);
-    _humusN1 = new svector(_sortedGrid.size);
-    _humusN2 = new svector(_sortedGrid.size);
-    _humusN3 = new svector(_sortedGrid.size);
-    _fastN1 = new svector(_sortedGrid.size);
-    _fastN2 = new svector(_sortedGrid.size);
-    _fastN3 = new svector(_sortedGrid.size);
+    _deni_river = new svector(_sortedGrid.size);
+    _humusN1 = new svector(ctrl.path_BasinFolder + ctrl.fn__humusN1, _rowNum, _colNum, _sortedGrid);
+    _humusN2 = new svector(ctrl.path_BasinFolder + ctrl.fn__humusN2, _rowNum, _colNum, _sortedGrid);
+    _humusN3 = new svector(ctrl.path_BasinFolder + ctrl.fn__humusN3, _rowNum, _colNum, _sortedGrid);
+    _fastN1 = new svector(ctrl.path_BasinFolder + ctrl.fn__fastN1, _rowNum, _colNum, _sortedGrid);
+    _fastN2 = new svector(ctrl.path_BasinFolder + ctrl.fn__fastN2, _rowNum, _colNum, _sortedGrid);
+    _fastN3 = new svector(ctrl.path_BasinFolder + ctrl.fn__fastN3, _rowNum, _colNum, _sortedGrid);
     _no3_ovf_in_acc = new svector(_sortedGrid.size);
     _no3_interf_in_acc = new svector(_sortedGrid.size);
     _no3_GWf_in_acc = new svector(_sortedGrid.size);

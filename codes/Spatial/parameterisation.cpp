@@ -300,6 +300,13 @@ int Param::Parameterisation(Control &ctrl){
 
   if (ctrl.opt_tracking_isotope == 1){
   
+  _CG_n_soil->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (CG_n_soil[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _CG_n_soil->val[j] += param_category->val[k][j] * CG_n_soil[k];
+     }}}
+  
   _d18o_init_GW->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (d18o_init_GW[k]!=nodata) {
@@ -311,25 +318,11 @@ int Param::Parameterisation(Control &ctrl){
 
   if (ctrl.opt_nitrogen_sim == 1){
   
-  _denitrification_aquatic->reset();
+  _denitrification_river->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (denitrification_aquatic[k]!=nodata) {
+      if (denitrification_river[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _denitrification_aquatic->val[j] += param_category->val[k][j] * denitrification_aquatic[k];
-     }}}
-  
-  _autotrophic_uptake_aquatic->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (autotrophic_uptake_aquatic[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _autotrophic_uptake_aquatic->val[j] += param_category->val[k][j] * autotrophic_uptake_aquatic[k];
-     }}}
-  
-  _primary_production_aquatic->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (primary_production_aquatic[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _primary_production_aquatic->val[j] += param_category->val[k][j] * primary_production_aquatic[k];
+        _denitrification_river->val[j] += param_category->val[k][j] * denitrification_river[k];
      }}}
   
   _denitrification_soil->reset();

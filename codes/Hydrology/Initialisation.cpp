@@ -1,6 +1,6 @@
 #include "Basin.h"
 
-int Basin::Initialisation(Control &ctrl, Param &par){
+int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
 
     // Initialisation of GW storage
     if (ctrl.opt_init_GW == 1){
@@ -11,6 +11,10 @@ int Basin::Initialisation(Control &ctrl, Param &par){
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
       Store_states();  // Store all water storages for mixing
       _d18o_GW->equals(*par._d18o_init_GW); // Asign isotopic composition to GW
+    }
+
+    if (ctrl.opt_nitrogen_sim==1){
+      _TchanS->equals(*atm._Ta);
     }
 
     // Initilisation of channel storage

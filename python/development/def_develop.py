@@ -145,10 +145,13 @@ class Opt:
 
 
     cond['chanE_1']   = {'key':'opt_chanE', 'value':1, 
-                        'general_description':'Channel evaporation\n# 0: Disabled\n# 1: Penman equation\n# 2: Priestley-Taylor equation',
+                        'general_description':'Channel evaporation\n# 0: Disabled\n# 1: Penman equation\n# 2: Penman equation with constant wind speed\n# 3: Priestley-Taylor equation',
                         'description':'Channel evaporation based on Penman equation'}
     cond['chanE_2']   = {'key':'opt_chanE', 'value':2, 
-                        'general_description':'Channel evaporation\n# 0: Disabled\n# 1: Penman equation\n# 2: Priestley-Taylor equation',
+                        'general_description':'Channel evaporation\n# 0: Disabled\n# 1: Penman equation\n# 2: Penman equation with constant wind speed\n# 3: Priestley-Taylor equation',
+                        'description':'Channel evaporation based on Priestley-Taylor equation'}
+    cond['chanE_3']   = {'key':'opt_chanE', 'value':3, 
+                        'general_description':'Channel evaporation\n# 0: Disabled\n# 1: Penman equation\n# 2: Penman equation with constant wind speed\n# 3: Priestley-Taylor equation',
                         'description':'Channel evaporation based on Priestley-Taylor equation'}
 
     

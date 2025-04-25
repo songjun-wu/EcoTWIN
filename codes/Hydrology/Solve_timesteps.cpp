@@ -6,10 +6,12 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     Solve_canopy(ctrl, par, atm);
 
     Solve_surface(ctrl, par, atm);
-    
+
     Solve_soil_profile(ctrl, par, atm);
 
     Routing(ctrl, par);
+
+    Solve_channel(ctrl, par, atm);
     
     //Check_mass_balance(ctrl, par, atm);
 
@@ -17,9 +19,7 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
         Store_states();  // Store all water storages for mixing
     }
 
-    Solve_channel(ctrl, par, atm);
-
-
+    
 
     return EXIT_SUCCESS;
 }

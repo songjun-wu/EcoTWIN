@@ -61,10 +61,9 @@ class Param {
   vector<double> Echan_alpha;
   vector<double> nearsurface_mixing;
   vector<double> ratio_to_interf;
+  vector<double> CG_n_soil;
   vector<double> d18o_init_GW;
-  vector<double> denitrification_aquatic;
-  vector<double> autotrophic_uptake_aquatic;
-  vector<double> primary_production_aquatic;
+  vector<double> denitrification_river;
   vector<double> denitrification_soil;
   vector<double> degradation_soil;
   vector<double> mineralisation_soil;
@@ -102,10 +101,9 @@ class Param {
   svector *_wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   svector *_Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   svector *_Echan_alpha;  // orrection factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
+  svector *_CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   svector *_d18o_init_GW;  // Initial d18O of GW storage [‰]
-  svector *_denitrification_aquatic;  // Reference rates of aquatic denitrification [-]
-  svector *_autotrophic_uptake_aquatic;  // Reference rates of aquatic autotrophic uptake [-]
-  svector *_primary_production_aquatic;  // Reference rates of aquatic primary production [-]
+  svector *_denitrification_river;  // Reference rates of aquatic denitrification [-]
   svector *_denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   svector *_degradation_soil;  // Reference rates of soil degradation [kg/ha]
   svector *_mineralisation_soil;  // Reference rates of soil mineralisation [kg/ha]

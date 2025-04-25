@@ -113,7 +113,7 @@ elif mode == 'forward':
 elif mode == 'test':
     # Model structure update
     os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
-    #os.system('python3 develop.py')  # todo
+    os.system('python3 develop.py')  # todo
 
     # set the env
     GEM_tools.set_env(mode, Path, Cali)
@@ -122,12 +122,11 @@ elif mode == 'test':
     validIdx = np.loadtxt('/data/scratch/wusongj/paper4/param_good.txt').astype(np.int)
     
     #for i in range(len(validIdx)):
-    for i in [-1]:
+    for i in [0]:
         idx = validIdx[i]
         print(idx)
         # Which parameter set to use?
         param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1)[idx,:]
-        #param = np.append(param, np.full(50, 0.5))
         #param = np.full(150, 0.5)
         GEM_tools.gen_param(Path.run_path, Info, Param, param)
         GEM_tools.gen_no3_addtion(Path.run_path, Info)
@@ -228,7 +227,7 @@ elif mode == 'aaa':
             print(np.round(GEM_tools.nse(X, Y),2), end=" ")
             
         print('')
-        if np.mean(likelihoods[:3]) > 0.3:
+        if np.mean(np.array(likelihoods)[[0,1,2,4,5,6]]) > 0.4:
             validIdx.append(i)
     np.savetxt('/data/scratch/wusongj/paper4/param_good.txt', validIdx)
     print(len(validIdx))
@@ -245,10 +244,14 @@ elif mode == 'aaa':
         ax[i,0].fill_between(X, np.percentile(sim_q[:,i,:], 5, axis=0), np.percentile(sim_q[:,i,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
         ax[i,0].plot(X, np.mean(sim_q[:,i,:], axis=0), linewidth=1, c='skyblue', zorder=3)
         ax[i,0].scatter(X, obs_q[i,:], c='salmon', s=0.3, alpha=0.2, zorder=1)
+        ax[i,0].set_ylim([-0.1, 1.5])
+        ax[i,0].set_yticks([0, 0.5, 1, 1.5])
 
         ax[i,1].fill_between(X, np.percentile(sim_iso[:,i,:], 5, axis=0), np.percentile(sim_iso[:,i,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
         ax[i,1].plot(X, np.mean(sim_iso[:,i,:], axis=0), linewidth=1, c='skyblue', zorder=3)
-        ax[i,1].scatter(X, obs_iso[i,:], c='salmon', s=0.3, alpha=0.2, zorder=1)
+        ax[i,1].scatter(X, obs_iso[i,:], c='salmon', s=0.8, alpha=0.2, zorder=4)
+        ax[i,1].set_ylim([-10.5, -3])
+        ax[i,1].set_yticks([-10, -8, -6, -4])
 
         if i!=(obs_q.shape[0]-1):
             ax[i,0].set_xticklabels([])
@@ -265,7 +268,7 @@ elif mode == 'aaa':
         ax[i,0].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
         ax[i,0].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
         ax[i,0].text(0.05, title_hgt - hgt_gradient * 1, 'Q at '+sites[0][i]+' (m3/s)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,0].transAxes)        
-        print(np.round(GEM_tools.nse(X, Y), 2))
+        print(np.round(GEM_tools.nse(X, Y), 2), end='  ')
         X = np.mean(sim_iso[:, i, :],axis=0)
         Y = obs_iso[i]
         title_hgt = 0.9
@@ -273,6 +276,6 @@ elif mode == 'aaa':
         ax[i,1].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
         ax[i,1].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
         ax[i,1].text(0.05, title_hgt - hgt_gradient * 1, 'd18O at '+sites[1][i]+' (per mille)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,1].transAxes)        
-        
+        print(np.round(GEM_tools.nse(X, Y), 2))
     
     fig.savefig('tmp.png')

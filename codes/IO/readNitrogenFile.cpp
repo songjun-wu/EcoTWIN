@@ -33,14 +33,17 @@ int Basin::ReadNitrogenFile(Control &ctrl, Param &par, string fname){
     par.readIntoParam(fert_day, "fert_day", lines);
     par.readIntoParam(fert_down, "fert_down", lines);
     par.readIntoParam(fert_period, "fert_period", lines);
+    par.readIntoParam(fert_IN, "fert_IN", lines);
     par.readIntoParam(manure_add, "manure_add", lines);
     par.readIntoParam(manure_day, "manure_day", lines);
     par.readIntoParam(manure_down, "manure_down", lines);
     par.readIntoParam(manure_period, "manure_period", lines);
+    par.readIntoParam(manure_IN, "manure_IN", lines);
     par.readIntoParam(residue_add, "residue_add", lines);
     par.readIntoParam(residue_day, "residue_day", lines);
     par.readIntoParam(residue_down, "residue_down", lines);
     par.readIntoParam(residue_period, "residue_period", lines);
+    par.readIntoParam(residue_fastN, "residue_fastN", lines);
     par.readIntoParam(up1, "up1", lines);
     par.readIntoParam(up2, "up2", lines);
     par.readIntoParam(up3, "up3", lines);

@@ -40,9 +40,12 @@ int Basin::Sort_plant_uptake(Control &ctrl, Param &par){
 int Basin::Plant_uptake(Control &ctrl, Param &par){
 
     double p_cell;  // The proportion of each land use type in the grid cell [decimal]
-    double ST1, ST2;  // Soil storage in layer 1 and 2 [m]
     double root_fraction_1;  // root_fraction_1 / (root_fraction_1 + root_fraction_2); [decimal]
-    double puptake_layer1, puptake_layer2, puptake_layer3;  // Potentail uptake in layer 1-3 [gN/m2]
+    double theta1, theta2, theta3;  // Soil moisture content in layer 1-3 [decimal]
+    double dissIN1, dissIN2, dissIN3;  // IN storage in layer 1-3 [gN/m2]
+    double potential_plant_uptake1, potential_plant_uptake2, potential_plant_uptake3;  // Potentail uptake in layer 1-3 [gN/m2]
+    double plant_uptake1, plant_uptake2, plant_uptake3;  // Actual plant uptake in layer 1-3 [gN/m2]
+    double max_uptake;  // Maximum plant uptake [gN/m2]
     int idx;
 
     double day_of_year = ctrl.day_of_year;;  // Day of year
@@ -50,25 +53,55 @@ int Basin::Plant_uptake(Control &ctrl, Param &par){
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
-        puptake_layer1 = puptake_layer2 = puptake_layer3 = 0;
+        
+        potential_plant_uptake1 = potential_plant_uptake2 = potential_plant_uptake3 = 0;
+        
         root_fraction_1 = _p_perc1->val[j] / (_p_perc1->val[j] + _p_perc2->val[j]);
 
+        // Get potential uptake
         for (int i = 0; i < num_landuse; i++) {
             idx = landuse_idx[i];
             p_cell = par.param_category->val[idx][j];
             if (p_cell <= 0) {
                 continue;
             }
-            
             if (day_of_year >= plant_day[idx] and day_of_year < harvest_day[idx]) {
-                puptake_layer1 += _potential_uptake_layer1[i][day_of_year-1] * p_cell * root_fraction_1;
-                puptake_layer2 += _potential_uptake_layer2[i][day_of_year-1] * p_cell * (1 - root_fraction_1);
-                puptake_layer3 += _potential_uptake_layer3[i][day_of_year-1] * p_cell; 
-            }
-
-            
-
+                potential_plant_uptake1 += _potential_uptake_layer1[i][day_of_year-1] * p_cell * root_fraction_1;
+                potential_plant_uptake2 += _potential_uptake_layer2[i][day_of_year-1] * p_cell * (1 - root_fraction_1);
+                potential_plant_uptake3 += _potential_uptake_layer3[i][day_of_year-1] * p_cell; 
+            }            
         }
+
+        plant_uptake1 = plant_uptake2 = plant_uptake3 = 0;
+        theta1 = _theta1->val[j];
+        theta2 = _theta2->val[j];
+        theta3 = _theta3->val[j];
+        dissIN1 = theta1 * _depth1->val[j] * _no3_layer1->val[j];
+        dissIN2 = theta2 * _depth2->val[j] * _no3_layer2->val[j];
+        dissIN3 = theta3 * par._depth3->val[j] * _no3_layer3->val[j];
+
+        // Calculate actual uptake
+        // Layer1
+        if (dissIN1 > roundoffERR and potential_plant_uptake1 > roundoffERR){
+            max_uptake = dissIN1 * (theta1 - _thetaWP1->val[j]) / theta1;
+            plant_uptake1 = min(potential_plant_uptake1, max_uptake);
+            _no3_layer1->val[j] = (dissIN1 - plant_uptake1) / (theta1 * _depth1->val[j]);
+        }
+        // Layer 2
+        if (dissIN2 > roundoffERR and potential_plant_uptake2 > roundoffERR){
+            max_uptake = dissIN2 * (theta2 - _thetaWP2->val[j]) / theta2;
+            plant_uptake2 = min(potential_plant_uptake2, max_uptake);
+            _no3_layer2->val[j] = (dissIN2 - plant_uptake2) / (theta2 * _depth2->val[j]);
+        }
+        // Layer 3
+        if (dissIN3 > roundoffERR and potential_plant_uptake3 > roundoffERR){
+            max_uptake = dissIN3 * (theta3 - _thetaWP3->val[j]) / theta3;
+            plant_uptake3 = min(potential_plant_uptake3, max_uptake);
+            _no3_layer3->val[j] = (dissIN3 - plant_uptake3) / (theta3 * par._depth3->val[j]);
+        }
+
+        // Aggregate plant uptake in three layers; NO3 concentration has been updated
+        _plant_uptake->val[j] = plant_uptake1 + plant_uptake2 + plant_uptake3;
     }
     return EXIT_SUCCESS;
 }

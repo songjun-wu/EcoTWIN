@@ -50,10 +50,9 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(Echan_alpha, "Echan_alpha", lines);
   readIntoParam(nearsurface_mixing, "nearsurface_mixing", lines);
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
+  readIntoParam(CG_n_soil, "CG_n_soil", lines);
   readIntoParam(d18o_init_GW, "d18o_init_GW", lines);
-  readIntoParam(denitrification_aquatic, "denitrification_aquatic", lines);
-  readIntoParam(autotrophic_uptake_aquatic, "autotrophic_uptake_aquatic", lines);
-  readIntoParam(primary_production_aquatic, "primary_production_aquatic", lines);
+  readIntoParam(denitrification_river, "denitrification_river", lines);
   readIntoParam(denitrification_soil, "denitrification_soil", lines);
   readIntoParam(degradation_soil, "degradation_soil", lines);
   readIntoParam(mineralisation_soil, "mineralisation_soil", lines);
@@ -70,7 +69,6 @@ void Param::readIntoParam(vector<double>& param_arr, string key, vector<string> 
     for (const auto& row : lines) {
         stringstream ss(row);
         string value;
-        
         if (getline(ss, value, ',')) { // Read the first column as key
             if (value == key) { // Check if it matches the given key
                 while (getline(ss, value, ',')) { // Read remaining values

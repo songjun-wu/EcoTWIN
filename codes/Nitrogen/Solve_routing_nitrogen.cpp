@@ -89,10 +89,9 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
             rPerc2 = rPerc3 = 0;
         }
 
-
         // Ponding water mixing with overland flow
         Mixing_full(_pond_old->val[j], _no3_pond->val[j], _ovf_in->val[j], _no3_ovf_in_acc->val[j] / _ovf_in->val[j]);
-
+        
         if (lat_ok == 1){  // Add 18O in overland outflow to the overland inflow of downstream cell
             _no3_ovf_in_acc->val[from_j] += _no3_pond->val[j] * _ovf_out->val[j];
         }
@@ -108,6 +107,8 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
             Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _no3_layer3->val[j], rPerc2, _no3_layer2->val[j]);
             // GW mixing with repercolation from layer 3
             Mixing_full(_GW_old->val[j], _no3_GW->val[j], rPerc3, _no3_layer3->val[j]);
+
+            
         }
 
         
@@ -129,7 +130,7 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
         if (lat_ok == 1){  // Add 18O in GW outflow to the GW inflow of downstream cell
             _no3_GWf_in_acc->val[from_j] += _no3_GW->val[j] * _GWf_out->val[j];
         }
-
+        
 
         // Channel storage mixing (with upstream inflow)
         if (_chnwidth->val[j] > roundoffERR){
@@ -141,9 +142,8 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
             Mixing_full(_chanS_old->val[j], _no3_chanS->val[j], q_in_all, no3_in_all_acc / q_in_all);
 
             if (lat_ok == 1){  // Add 18O in discharge to inflow of the downstream channel storage
-                _no3_Qupstream_acc->val[from_j] += _no3_chanS->val[j] * _Q->val[j] * m3s_to_m;
+                _no3_Qupstream_acc->val[from_j] += _no3_chanS->val[j] * _Q->val[j] * m3s_to_m;   
             }
-
         }
 
     }

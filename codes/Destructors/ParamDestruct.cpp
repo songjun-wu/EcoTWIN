@@ -65,12 +65,11 @@ int Param::dtor(Control &ctrl){
     if(_Echan_alpha) delete _Echan_alpha;
   }
   if (ctrl.opt_tracking_isotope == 1){
+    if(_CG_n_soil) delete _CG_n_soil;
     if(_d18o_init_GW) delete _d18o_init_GW;
   }
   if (ctrl.opt_nitrogen_sim == 1){
-    if(_denitrification_aquatic) delete _denitrification_aquatic;
-    if(_autotrophic_uptake_aquatic) delete _autotrophic_uptake_aquatic;
-    if(_primary_production_aquatic) delete _primary_production_aquatic;
+    if(_denitrification_river) delete _denitrification_river;
     if(_denitrification_soil) delete _denitrification_soil;
     if(_degradation_soil) delete _degradation_soil;
     if(_mineralisation_soil) delete _mineralisation_soil;

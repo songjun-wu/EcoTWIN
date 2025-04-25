@@ -98,6 +98,7 @@ int Basin::dtor(Control &ctrl){
   if(_Echan) delete _Echan;
   if(_tmp) delete _tmp;
   if(_snowacc) delete _snowacc;
+  if(_TchanS) delete _TchanS;
   if (ctrl.opt_reinfil == 1){
     if(_rinfilt) delete _rinfilt;
     if(_rPerc1) delete _rPerc1;
@@ -149,6 +150,7 @@ int Basin::dtor(Control &ctrl){
     if(_plant_uptake) delete _plant_uptake;
     if(_deni_soil) delete _deni_soil;
     if(_minerl_soil) delete _minerl_soil;
+    if(_deni_river) delete _deni_river;
     if(_humusN1) delete _humusN1;
     if(_humusN2) delete _humusN2;
     if(_humusN3) delete _humusN3;

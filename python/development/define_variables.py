@@ -290,7 +290,7 @@ def report_includes(fname, reports):
         with open(fname, 'w') as f:
                 f.writelines(content)
 
-def control_includes(fname, options, signs, datas, reports):
+def control_includes(fname, options, signs, datas, reports, static_config=False):
     with open(fname, 'r') as f:
         lines = f.readlines()
         start, end = locate_text(lines, '/* Options */', '/* end of Options */')
@@ -305,7 +305,10 @@ def control_includes(fname, options, signs, datas, reports):
             if not item['key'] in opt_list:
                 opt_list.append(item['key'])
                 content.append('  // ' + item['general_description'].replace('#', '  //') + '\n')
-                content.append('  int ' + item['key'] + ';\n')
+                if static_config:
+                    content.append('  static constexpr int ' + item['key'] + ' = ' + str(item['value']) +';\n')
+                else:
+                    content.append('  int ' + item['key'] + ';\n')
 
         content = lines[:start] + content + lines[end:]
     if(('').join(content) != ('').join(lines)):

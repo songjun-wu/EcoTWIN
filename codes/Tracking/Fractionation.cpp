@@ -1,6 +1,6 @@
 #include "Basin.h"
 
-int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, svector &sv_di_old, svector &sv_di_new, svector &sv_di_evap, int issoil){
+int Basin::Fractionation(Atmosphere &atm, Param &par, svector &sv_evap, svector &sv_V_new, svector &sv_di_old, svector &sv_di_new, svector &sv_di_evap, int issoil){
 
     double Ta, Ts, ha, hs, ha_p, ea_s, es_s, alpha_p, eps, eps_p, eps_k, m, n, f;
     double di_atm, di_s, di_new, di_evap, di_old; // Isotopic signitures
@@ -21,7 +21,7 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
         if (evap > roundoffERR){
 
             Ta = atm._Ta->val[j];  // Atmospheric temperature [Degree C]
-            Ts = Get_soil_temperature(Ta, Ts, _LAI->val[j]);  // Soil temperature [Degree C]
+            Ts = Get_soil_temperature(Ta, _LAI->val[j]);  // Soil temperature [Degree C]
             ha = atm._RH->val[j];  // Atmospheric relative humidity [decimal]         
             V_old = V_new + evap;  // Water storage before evaporation
 
@@ -33,7 +33,11 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
             
             ha_p = (issoil == 1) ? min(ha * ea_s / es_s, 1.0) : (ha + 1) / 2;  // Corrected relative humidity at the surface; should not exceed 1.0
 
+            
             hs = 1; // Soil relative humidity [decimal]
+            //beta = _theta1->val[j] > _thetaFC1->val[j] ? 1.0 : _theta1->val[j] / _thetaFC1->val[j];
+            //hs = beta + (1 - beta) * ha_p; 
+
             hs = hs < ha_p ? ha_p : hs;  // Soil humidity > Atmospheric humidity
 
             // Oxygen 18
@@ -45,7 +49,7 @@ int Basin::Fractionation(Atmosphere &atm, svector &sv_evap, svector &sv_V_new, s
             di_atm = (atm._d18o_P->val[j] - eps_p)/ alpha_p;  // Atmospheric Isotopic signiture
 
             //Water transport mode: from diffusive (=1, dry soil) to turbulent (=0.5, water body)
-            n = (issoil==1) ? 1 : 0.5;
+            n = (issoil==1) ? par._CG_n_soil->val[j] : 0.5;
 
             // Kinetic fractionation factor epsilon_k; Merlivat (1978)
             eps_k = (1 - ha_p) * (1 - 0.9859) * 1000 * n;  // [per mille]
