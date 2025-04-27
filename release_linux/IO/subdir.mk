@@ -6,25 +6,25 @@
 CPP_SRCS += \
 ../codes/IO/IO_function.cpp \
 ../codes/IO/readConfigFile.cpp \
+../codes/IO/readNitrogenFile.cpp \
 ../codes/IO/readParamFile.cpp \
 ../codes/IO/report.cpp \
-../codes/IO/readNitrogenFile.cpp \
 
 
 OBJS += \
 ./IO/IO_function.o \
 ./IO/readConfigFile.o \
+./IO/readNitrogenFile.o \
 ./IO/readParamFile.o \
 ./IO/report.o \
-./IO/readNitrogenFile.o \
 
 
 CPP_DEPS += \
 ./IO/IO_function.d \
 ./IO/readConfigFile.d \
+./IO/readNitrogenFile.d \
 ./IO/readParamFile.d \
 ./IO/report.d \
-./IO/readNitrogenFile.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

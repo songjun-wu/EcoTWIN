@@ -11,6 +11,7 @@ def likelihood(param, chainID):
     local_path = os.getcwd()
     runpath = Path.work_path + '/chain_' +str(chainID)  + '/run/'
     GEM_tools.gen_param(runpath, Info, Param, param)
+    GEM_tools.gen_no3_addtion(runpath, Info)
 
     os.chdir(runpath)
 
@@ -20,7 +21,6 @@ def likelihood(param, chainID):
     #os.system('./gEcoHydro')
     subprocess.run('./gEcoHydro', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
-
     err = 0
     for key in Output.sim.keys():
         dict = Output.sim.get(key)
@@ -32,16 +32,17 @@ def likelihood(param, chainID):
         for i in range(_obs.shape[0]):
             sim = _sim[dict['sim_idx'][i], :]
             obs = _obs[i,:]
-            err += GEM_tools.nselnnse(sim, obs, weight_nse=0.9, weight_lnnse=0.1) * dict['weights'][i]
+            err += (1 - GEM_tools.kge(sim, obs)) * dict['weights'][i]
+            #err += GEM_tools.nselnnse(sim, obs, 0.9, 0.1) * dict['weights'][i]
 
+    
     loglikeli = np.log(err) * (-1*100)
+
+
     if np.isnan(loglikeli):
         loglikeli = -np.inf
     
     os.chdir(local_path)
     return loglikeli
 
-
-#param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(100, -1)
-#for i in range(100):
-#    likelihood(param[i,:], 0)
+#likelihood(np.full(200, 0.5), 0)

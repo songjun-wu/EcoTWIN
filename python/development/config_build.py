@@ -81,7 +81,7 @@ def read_configs(fname, options, signs, datas, reports, static_config):
         content = []     
         content.append('  // 1: report time series at gauging stations; 2: report maps\n')  
         for i in range(len(reports)):
-            if reports[i][5] is not None:
+            if reports[i][5] is not None and reports[i][6] == 1:
                 content.append('  readInto('+'report_'+reports[i][0]+', "report_'+reports[i][5]+'", lines);\n')
         content = lines[:start] + content + lines[end:]
     if(('').join(content) != ('').join(lines)):    
@@ -173,6 +173,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('# 1: report maps; 2: report time series at gauging stations\n')
     for i in range(len(reports)):
         data = reports[i]
+
         if data[5] != None and data[6] == 1:
             text.append('report_'+data[5]+'  =  0   # '+data[2] + '\n')
 

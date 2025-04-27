@@ -55,7 +55,7 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
             // Concentration factor
             fct_conc = no3_layer2 * (no3_layer2 + 10);
             // Denitrification
-            deni2 = diss_IN2 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc / DT, 1.0);
+            deni2 = diss_IN2 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc * DT, 1.0);
             no3_layer2 = (diss_IN2 - deni2) / (theta2 * _depth2->val[j]);
         }
 
@@ -70,9 +70,11 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
             // Concentration factor
             fct_conc = no3_layer3 * (no3_layer3 + 10);
             // Denitrification
-            deni3 = diss_IN3 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc / DT, 1.0);
+            deni3 = diss_IN3 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc * DT, 1.0);
             no3_layer3 = (diss_IN3 - deni3) / (theta3 * par._depth3->val[j]);
         }
+
+        
 
         // Update global variables
         _deni_soil->val[j] = deni1 + deni2 + deni3;

@@ -19,7 +19,7 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
         Store_states();  // Store all water storages for mixing
     }
 
-    
+   
 
     return EXIT_SUCCESS;
 }

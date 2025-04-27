@@ -345,13 +345,6 @@ int Param::Parameterisation(Control &ctrl){
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _mineralisation_soil->val[j] += param_category->val[k][j] * mineralisation_soil[k];
      }}}
-  
-  _dissolution_soil->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (dissolution_soil[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _dissolution_soil->val[j] += param_category->val[k][j] * dissolution_soil[k];
-     }}}
 
   }
   /* end of Parameters */

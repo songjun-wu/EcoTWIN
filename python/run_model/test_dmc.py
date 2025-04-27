@@ -118,20 +118,35 @@ prep_tools.saveToASCII(unit_soil*-8, 'd18o_layer3', home_dir+'spatial/', 'float6
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
-
+p0 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_0.map'), np.nan).astype(np.float64)
+p1 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_1.map'), np.nan).astype(np.float64)
+p2 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_2.map'), np.nan).astype(np.float64)
+p3 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_3.map'), np.nan).astype(np.float64)
 ### Nitrogen
-prep_tools.saveToASCII(unit_soil*2, 'no3_I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*2, 'no3_snow', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*2, 'no3_pond', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*2, 'no3_layer1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*2, 'no3_layer2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*2, 'no3_layer3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*2, 'no3_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*2, 'no3_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+tmp = p0 * 15 + p1 * 1 + p2 * 1 + p3 * 3
+prep_tools.saveToASCII(tmp, 'no3_I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'no3_snow', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'no3_pond', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'no3_layer1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'no3_layer2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'no3_layer3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'no3_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'no3_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
+
+tmp = p0 * 803 + p1 * 500 + p2 * 500 + p3 * 803
+prep_tools.saveToASCII(tmp, 'humusN1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'humusN2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'humusN3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
+tmp = p0 * 20 + p1 * 2 + p2 * 2 + p3 * 10
+prep_tools.saveToASCII(tmp, 'fastN1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'fastN2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(tmp, 'fastN3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
 
 tmp = np.tile((unit_soil*1.0).flatten(), 50)
 tmp.tofile(home_dir+'spatial/'+'category_0.bin')
-
 fnames = ['unit.soil_BE', 'unit.soil_GL', 'unit.soil_PE', 'unit.soil_PZ', 'p_0', 'p_1', 'p_2', 'p_3' ]
 #fnames = ['p_0', 'p_1', 'p_2', 'p_3', 'p_0', 'p_1', 'p_2', 'p_3' ]
 for i in range(len(fnames)):
@@ -146,26 +161,6 @@ for i in range(len(fnames)):
     im = ax.imshow(data)
     fig.colorbar(im, ax=ax)
     fig.savefig('/home/wusongj/GEM/test_dmc/spatial/2_cat_'+str(i+1)+'.png')
-
-
-p0 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_0.map'), np.nan).astype(np.float64)
-p1 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_1.map'), np.nan).astype(np.float64)
-p2 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_2.map'), np.nan).astype(np.float64)
-p3 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_3.map'), np.nan).astype(np.float64)
-
-humusN = 8033
-fastN = 200
-
-prep_tools.saveToASCII(unit_soil*8033, 'humusN1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*8033, 'humusN2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*8033, 'humusN3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-
-prep_tools.saveToASCII(unit_soil*200, 'fastN1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*200, 'fastN2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-prep_tools.saveToASCII(unit_soil*200, 'fastN3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
-
-
-
 
 
 df = pd.read_csv('/home/wusongj/dmc/forHydrology/Climate/climate_interpolated_PET.csv')
@@ -201,13 +196,17 @@ lai.flatten().tofile(home_dir+'climate/LAI.bin')
 
 
 obs_q = np.fromfile('/home/wusongj/paper3_scripts/configs/discharge_obs.bin').reshape(4, -1)
-print(obs_q.shape)
+
 
 df = pd.read_csv('/home/wusongj/paper3_scripts/configs/obs_all.csv', index_col='time')
 df.index = pd.to_datetime(df.index)
 df = df.loc[datetime(1994,1,1):datetime(2022,1,1), :].loc[:, ['d18o_stream_25', 'd18o_stream_32', 'd18o_stream_26', 'd18o_stream_29a']]
 arr = df.to_numpy().T
 arr.tofile(home_dir + 'd18o_stream_obs.bin')
+
+obs_no3 = np.fromfile('/home/wusongj/paper3_scripts/configs/NO3--N_stream_obs.bin').reshape(6, -1)[[1,2,4,5], :]
+obs_no3.tofile(home_dir + 'no3_stream_obs.bin')
+print(obs_no3.shape)
 
 
 """

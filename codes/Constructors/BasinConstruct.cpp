@@ -155,6 +155,7 @@
     _plant_uptake = new svector(_sortedGrid.size);
     _deni_soil = new svector(_sortedGrid.size);
     _minerl_soil = new svector(_sortedGrid.size);
+    _degrad_soil = new svector(_sortedGrid.size);
     _deni_river = new svector(_sortedGrid.size);
     _humusN1 = new svector(ctrl.path_BasinFolder + ctrl.fn__humusN1, _rowNum, _colNum, _sortedGrid);
     _humusN2 = new svector(ctrl.path_BasinFolder + ctrl.fn__humusN2, _rowNum, _colNum, _sortedGrid);

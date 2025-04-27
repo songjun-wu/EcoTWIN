@@ -184,7 +184,8 @@ elif mode == 'check':
                 try:
                     loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
                     #print(len(loglikes), loglikes[-1], np.max(loglikes))
-                    arr.append(np.max(loglikes))
+                    print(i, loglikes[-1])
+                    arr.append(np.nanmax(loglikes))
                     lengths.append(len(loglikes))
                     niterations.append(niteration)
                     flag = False
@@ -198,7 +199,10 @@ elif mode == 'check':
     print('Average :  ' ,np.mean(arr))
     print('Maximum :  ' ,np.max(arr))
 
-
+elif mode == 'test11':
+    loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(93)+'_500.bin')
+    param = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_sampled_params_chain_'+str(93)+'_500.bin')
+    print(param)
 
 elif mode == 'aaa':
     from datetime import datetime, timedelta
@@ -227,7 +231,7 @@ elif mode == 'aaa':
             print(np.round(GEM_tools.nse(X, Y),2), end=" ")
             
         print('')
-        if np.mean(np.array(likelihoods)[[0,1,2,4,5,6]]) > 0.4:
+        if np.mean(np.array(likelihoods)[[4,5,6]]) > 0.4:
             validIdx.append(i)
     np.savetxt('/data/scratch/wusongj/paper4/param_good.txt', validIdx)
     print(len(validIdx))

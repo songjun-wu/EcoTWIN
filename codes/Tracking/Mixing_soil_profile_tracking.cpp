@@ -60,15 +60,6 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
             
         }
         
-        _tmp->equals(*_theta1_old);
-        _tmp->multiply(*_depth1);
-        _tmp->plus(*_infilt);
-        _tmp->minus(*_Perc1);
-
-        // Fractionation due to soil evaporation (only for layer 1)
-        Fractionation(atm, par, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 1);  // issoil = 1; todo
-
-
         // Mixing layer 2
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
             Mixing_full(_theta2_old->val[j] * _depth2->val[j], _d18o_layer2->val[j], _Perc1->val[j], _d18o_layer1->val[j]);
@@ -79,6 +70,13 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
             Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _d18o_layer3->val[j], _Perc2->val[j], _d18o_layer2->val[j]);
         }
+
+        // Fractionation due to soil evaporation (only for layer 1 but happens after percolation)
+        _tmp->equals(*_theta1_old);
+        _tmp->multiply(*_depth1);
+        _tmp->plus(*_infilt);
+        _tmp->minus(*_Perc1);
+        Fractionation(atm, par, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 1);  // issoil = 1; todo
 
     }
     return EXIT_SUCCESS;

@@ -679,14 +679,10 @@ class Dream:
             else:
                 chain_num = random.sample(range(int(self.global_count + nseedchains)), 1)
             start_locs = [int(i * ndimensions) for i in chain_num]
-            tmp_samples = [Dream_shared_vars.history[start_loc] for start_loc in start_locs]
-            if not np.any(np.isnan(tmp_samples)):
+            end_locs = [int(i + ndimensions) for i in start_locs]
+            sampled_chains = [Dream_shared_vars.history[start_loc:end_loc] for start_loc, end_loc in zip(start_locs, end_locs)]
+            if not np.any(np.isnan(sampled_chains)):
                 nanflag = False
-                
-        end_locs = [int(i + ndimensions) for i in start_locs]
-        sampled_chains = [Dream_shared_vars.history[start_loc:end_loc] for start_loc, end_loc in zip(start_locs, end_locs)]
-
-
         return sampled_chains
         
     def generate_proposal_points(self, n_proposed_pts, q0, CR, DEpairs, gamma_level, snooker):

@@ -192,6 +192,7 @@ class Basin {
   svector *_plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
   svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
   svector *_minerl_soil;  // Soil mineralisation [mgN/L*m = gN/m2]
+  svector *_degrad_soil;  // Soil degradation [mgN/L*m = gN/m2]
   svector *_deni_river;  // Aquatic denitrification [mgN/L*m = gN/m2]
   svector *_humusN1;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
   svector *_humusN2;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]

@@ -2,7 +2,7 @@
 
 int Basin::Instream_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
-    double no3_chanS, IN_chanS, fct_TchanS, fct_conc, chanS_m3;
+    double no3_chanS, IN_chanS, fct_TchanS, fct_conc, chanS_m3, deni_river;
     double dx_double = ctrl._dx * ctrl._dx;
     double DT = ctrl.Simul_tstep / 86400;  // all rates are calculated at daily timesteps
 
@@ -15,6 +15,8 @@ int Basin::Instream_transformation(Control &ctrl, Atmosphere &atm, Param &par){
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         if (_chnlength > 0){    // If this is a channel cell
 
+            deni_river = 0;
+
             if (_chanS->val[j] > 0){
 
                 no3_chanS =  _no3_chanS->val[j];
@@ -26,11 +28,11 @@ int Basin::Instream_transformation(Control &ctrl, Atmosphere &atm, Param &par){
                 fct_conc = no3_chanS / (no3_chanS + 1.5);  // Concentration factor [-]
 
                 // Instream denitrification
-                _deni_river->val[j] = min(par._denitrification_river->val[j] * fct_TchanS * fct_conc * (_chnlength->val[j] * _chnwidth->val[j]) / DT, IN_chanS);  // [gN]
-
+                deni_river = min(par._denitrification_river->val[j] * fct_TchanS * fct_conc * (_chnlength->val[j] * _chnwidth->val[j]) / DT, IN_chanS);  // [gN]
 
                 // Update global variables
-                _no3_chanS->val[j] = (IN_chanS - _deni_river->val[j]) / (chanS_m3);  // [g/m3 = mg/L]
+                _no3_chanS->val[j] = (IN_chanS - deni_river) / (chanS_m3);  // [gN/m3 = mgN/L]
+                _deni_river->val[j] = deni_river / dx_double; // from [gN] to [gN/m2]; consistent with other N processes
 
             } else {
                 _deni_river->val[j] = 0;

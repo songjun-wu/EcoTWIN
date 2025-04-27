@@ -232,10 +232,10 @@ def report_destructor(fname, reports):
             start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')
             content = []
             for i in range(len(data)):
-                if data[i][5]!=None:
+                if data[i][5]!=None and data[i][6]==1:
                     content.append('  if (of_'+data[i][0]+'.is_open())  of_'+data[i][0]+'.close();\n')
             for i in range(len(data)):
-                if data[i][5]!=None:
+                if data[i][5]!=None and data[i][6]==1:
                     content.append('  if (ctrl.report_'+data[i][0]+'==2) delete '+data[i][0]+'_acc;\n')
                     
           
@@ -340,7 +340,8 @@ def control_includes(fname, options, signs, datas, reports, static_config=False)
         content = []
         content.append('  // 1: report time series at gauging stations; 2: report maps\n')        
         for i in range(len(reports)):
-            content.append('  int report_'+reports[i][0]+';  // report '+reports[i][2]+'\n')
+            if reports[i][5] is not None and reports[i][6] == 1:
+                content.append('  int report_'+reports[i][0]+';  // report '+reports[i][2]+'\n')
         
         content = lines[:start] + content + lines[end:]
     if(('').join(content) != ('').join(lines)):

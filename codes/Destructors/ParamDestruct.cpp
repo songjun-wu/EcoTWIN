@@ -73,7 +73,6 @@ int Param::dtor(Control &ctrl){
     if(_denitrification_soil) delete _denitrification_soil;
     if(_degradation_soil) delete _degradation_soil;
     if(_mineralisation_soil) delete _mineralisation_soil;
-    if(_dissolution_soil) delete _dissolution_soil;
   }
   /* end of Parameters */
 

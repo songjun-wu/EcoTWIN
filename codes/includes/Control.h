@@ -258,7 +258,6 @@ struct Control{
   string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   string fn__degradation_soil;  // Reference rates of soil degradation [kg/ha]
   string fn__mineralisation_soil;  // Reference rates of soil mineralisation [kg/ha]
-  string fn__dissolution_soil;  // Reference rates of soil dissolution [kg/ha]
   /* end of Parameters */
 
   /* Report */
@@ -287,24 +286,6 @@ struct Control{
   int report__Tr1;  // report Transpiration in layer 1 [m]
   int report__Tr2;  // report Transpiration in layer 2 [m]
   int report__Tr3;  // report Transpiration in layer 3 [m]
-  int report__froot_layer1;  // report froot coefficient for all soil profile
-  int report__froot_layer2;  // report froot coefficient for layer 2
-  int report__froot_layer3;  // report froot coefficient for layer 3
-  int report__Ks1;  // report Saturated hydraulic conductivity in layer 1
-  int report__Ks2;  // report Saturated hydraulic conductivity in layer 2
-  int report__Ks3;  // report Saturated hydraulic conductivity in layer 3
-  int report__thetaS1;  // report Saturated soil moisture in layer 1
-  int report__thetaS2;  // report Saturated soil moisture in layer 2
-  int report__thetaS3;  // report Saturated soil moisture in layer 3
-  int report__thetaFC1;  // report Field capacity in layer 1
-  int report__thetaFC2;  // report Field capacity in layer 2
-  int report__thetaFC3;  // report Field capacity in layer 3
-  int report__thetaWP1;  // report Wilting point in layer 1
-  int report__thetaWP2;  // report Wilting point in layer 2
-  int report__thetaWP3;  // report Wilting point in layer 3
-  int report__p_perc1;  // report Percolation proportion in layer 1
-  int report__p_perc2;  // report Percolation proportion in layer 2
-  int report__p_perc3;  // report Percolation proportion in layer 3
   int report__ovf_in;  // report Overland flow from upstream cell(s) [m]
   int report__ovf_out;  // report Overland flow to downstream cell [m]
   int report__ovf_toChn;  // report Overland flow to Channel [m]
@@ -315,13 +296,7 @@ struct Control{
   int report__GWf_out;  // report GW flow to downstream cell [m]
   int report__GWf_toChn;  // report Groundwater flow to Channel [m]
   int report__Q;  // report Discharge [m3/s]
-  int report__Qupstream;  // report Upstream inflow [m3/s]
   int report__Echan;  // report Channel evaporation [m]
-  int report__PE;  // report Potential evaporation [m]
-  int report__PT;  // report Potential transpiration [m]
-  int report__tmp;  // report Temporal variable for testing [-]
-  int report__snowacc;  // report Snow accumulation for testing [m]
-  int report__TchanS;  // report Instream temperature conceptualised as 20-day's average of air temperature [degree C]
   int report__d18o_I;  // report d18o in Canopy storage [‰]
   int report__d18o_snow;  // report d18o in Snow depth in [‰]
   int report__d18o_pond;  // report d18o in Ponding water in [‰]
@@ -330,10 +305,6 @@ struct Control{
   int report__d18o_layer3;  // report d18o in Soil moisture in layer 3 [‰]
   int report__d18o_GW;  // report d18o in Groundwater storage [‰]
   int report__d18o_chanS;  // report d18o in Channel storage [‰]
-  int report__d18o_ovf_in_acc;  // report Total amount of 18o in overland inflow [‰ * m]
-  int report__d18o_interf_in_acc;  // report Total amount of 18o in inter-inflow [‰ * m]
-  int report__d18o_GWf_in_acc;  // report Total amount of 18o in GW inflow [‰ * m]
-  int report__d18o_Qupstream_acc;  // report Total amount of 18o in upstream inflow to channel storage [‰ * m]
   int report__no3_I;  // report no3 in Canopy storage [mgN/L]
   int report__no3_snow;  // report no3 in Snow depth in [mgN/L]
   int report__no3_pond;  // report no3 in Ponding water in [mgN/L]
@@ -346,17 +317,8 @@ struct Control{
   int report__plant_uptake;  // report Plant uptake [mgN/L*m = gN/m2]
   int report__deni_soil;  // report Soil denitrification [mgN/L*m = gN/m2]
   int report__minerl_soil;  // report Soil mineralisation [mgN/L*m = gN/m2]
+  int report__degrad_soil;  // report Soil degradation [mgN/L*m = gN/m2]
   int report__deni_river;  // report Aquatic denitrification [mgN/L*m = gN/m2]
-  int report__humusN1;  // report Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-  int report__humusN2;  // report Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
-  int report__humusN3;  // report Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
-  int report__fastN1;  // report Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-  int report__fastN2;  // report Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
-  int report__fastN3;  // report Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
-  int report__no3_ovf_in_acc;  // report Total amount of 18o in overland inflow [mgN/L*m = gN/m2]
-  int report__no3_interf_in_acc;  // report Total amount of 18o in inter-inflow [mgN/L*m = gN/m2]
-  int report__no3_GWf_in_acc;  // report Total amount of 18o in GW inflow [mgN/L*m = gN/m2]
-  int report__no3_Qupstream_acc;  // report Total amount of 18o in upstream inflow to channel storage [mgN/L*m = gN/m2]
   /* end of Report */
 
   public:

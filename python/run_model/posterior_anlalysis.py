@@ -132,7 +132,7 @@ def plot_tracking():
     Vars.extend(['age_SMC_layer1', 'age_SMC_layer2', 'age_SMC_layer3', 'age_groundwater_storage', None, 'age_chanS'])
     Vars.extend(['no3_canopy_storage', 'no3_snow_depth','no3_pond', None, None, None])
     Vars.extend(['no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'no3_groundwater_storage', None, 'no3_chanS'])
-    Vars.extend(['nitrogen_addition', 'deni_soil', 'minerl_soil', None, None, 'deni_river'])
+    Vars.extend(['nitrogen_addition', 'plant_uptake', 'deni_soil', 'minerl_soil', 'degrad_soil','deni_river'])
 
     ylims = [None, None, None, None, None, None]
     ylims.extend([[-15,0],[-15,0],[-15,0],None, None,[-10,0]])

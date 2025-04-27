@@ -150,6 +150,7 @@ int Basin::dtor(Control &ctrl){
     if(_plant_uptake) delete _plant_uptake;
     if(_deni_soil) delete _deni_soil;
     if(_minerl_soil) delete _minerl_soil;
+    if(_degrad_soil) delete _degrad_soil;
     if(_deni_river) delete _deni_river;
     if(_humusN1) delete _humusN1;
     if(_humusN2) delete _humusN2;

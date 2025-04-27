@@ -61,13 +61,8 @@ int Report::dtor(Control &ctrl){
   if (of__plant_uptake.is_open())  of__plant_uptake.close();
   if (of__deni_soil.is_open())  of__deni_soil.close();
   if (of__minerl_soil.is_open())  of__minerl_soil.close();
+  if (of__degrad_soil.is_open())  of__degrad_soil.close();
   if (of__deni_river.is_open())  of__deni_river.close();
-  if (of__humusN1.is_open())  of__humusN1.close();
-  if (of__humusN2.is_open())  of__humusN2.close();
-  if (of__humusN3.is_open())  of__humusN3.close();
-  if (of__fastN1.is_open())  of__fastN1.close();
-  if (of__fastN2.is_open())  of__fastN2.close();
-  if (of__fastN3.is_open())  of__fastN3.close();
   if (ctrl.report__I==2) delete _I_acc;
   if (ctrl.report__snow==2) delete _snow_acc;
   if (ctrl.report__pond==2) delete _pond_acc;
@@ -123,13 +118,8 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__plant_uptake==2) delete _plant_uptake_acc;
   if (ctrl.report__deni_soil==2) delete _deni_soil_acc;
   if (ctrl.report__minerl_soil==2) delete _minerl_soil_acc;
+  if (ctrl.report__degrad_soil==2) delete _degrad_soil_acc;
   if (ctrl.report__deni_river==2) delete _deni_river_acc;
-  if (ctrl.report__humusN1==2) delete _humusN1_acc;
-  if (ctrl.report__humusN2==2) delete _humusN2_acc;
-  if (ctrl.report__humusN3==2) delete _humusN3_acc;
-  if (ctrl.report__fastN1==2) delete _fastN1_acc;
-  if (ctrl.report__fastN2==2) delete _fastN2_acc;
-  if (ctrl.report__fastN3==2) delete _fastN3_acc;
   /* end of Report */
 
   return EXIT_SUCCESS;

@@ -6,22 +6,22 @@
 CPP_SRCS += \
 ../codes/Spatial/sortTSmask.cpp \
 ../codes/Spatial/grid.cpp \
-../codes/Spatial/parameterisation.cpp \
 ../codes/Spatial/sortGridLDD.cpp \
+../codes/Spatial/parameterisation.cpp \
 
 
 OBJS += \
 ./Spatial/sortTSmask.o \
 ./Spatial/grid.o \
-./Spatial/parameterisation.o \
 ./Spatial/sortGridLDD.o \
+./Spatial/parameterisation.o \
 
 
 CPP_DEPS += \
 ./Spatial/sortTSmask.d \
 ./Spatial/grid.d \
-./Spatial/parameterisation.d \
 ./Spatial/sortGridLDD.d \
+./Spatial/parameterisation.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

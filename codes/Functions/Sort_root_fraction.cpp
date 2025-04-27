@@ -15,7 +15,7 @@ int Basin::Sort_root_fraction(Control &ctrl, Param &par) {
             double depth2 = _depth2->val[j];
             double depth3 = par._depth3->val[j]; // The lower boundary is included for calibration 
 
-            root_tmp_layer1   = (1 - pow(froot_coeff, depth1 * 100)); // m to mm
+            root_tmp_layer1   = (1 - pow(froot_coeff, depth1 * 100)); // m to cm
             root_tmp_layer12  = (1 - pow(froot_coeff, (depth1 + depth2) * 100));
             root_tmp_layer123 = (1 - pow(froot_coeff, (depth1 + depth2 + depth3) * 100));
 

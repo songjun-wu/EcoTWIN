@@ -37,9 +37,6 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             ['_airpressure', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Air pressure [Pa]', 'grid', 'spatial_TS', 'Air_pressure', 0],
             ['_windspeed', [Opt.cond['chanE_1']], 'Wind speed at 2 m [m/s]', 'grid', 'spatial_TS', 'Wind_speed', 0],
             ['_Rnet', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Net radiation [W/m2]', 'grid', 'spatial_TS', 'Net_radiation', 0],
-
-
-
             ['_d18o_P', [Opt.cond['tracking_isotope_1']], 'd18O in precipitation [‰]', 'grid', 'spatial_TS', 'd18O_Precipitation', 0],
             
         ]
@@ -245,13 +242,13 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               
 
               # Nitrogen
-              ['_denitrification_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic denitrification [-]', 'grid', 'spatial_param', 'denitrification_river', 1],
-              #['_autotrophic_uptake_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic autotrophic uptake [-]', 'grid', 'spatial_param', 'autotrophic_uptake_aquatic'],
-              #['_primary_production_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic primary production [-]', 'grid', 'spatial_param', 'primary_production_aquatic'],
-              ['_denitrification_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil denitrification [kg/ha]', 'grid', 'spatial_param', 'denitrification_soil', 1],
-              ['_degradation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil degradation [kg/ha]', 'grid', 'spatial_param', 'degradation_soil', 1],
-              ['_mineralisation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil mineralisation [kg/ha]', 'grid', 'spatial_param', 'mineralisation_soil', 1],
-              ['_dissolution_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil dissolution [kg/ha]', 'grid', 'spatial_param', 'dissolution_soil', 1],              
+              ['_denitrification_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic denitrification [-]', 'grid', 'spatial_param', 'denitrification_river', 0],
+              #['_autotrophic_uptake_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic autotrophic uptake [-]', 'grid', 'spatial_param', 'autotrophic_uptake_aquatic', 0],
+              #['_primary_production_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic primary production [-]', 'grid', 'spatial_param', 'primary_production_aquatic', 0],
+              ['_denitrification_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil denitrification [kg/ha]', 'grid', 'spatial_param', 'denitrification_soil', 0],
+              ['_degradation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil degradation [kg/ha]', 'grid', 'spatial_param', 'degradation_soil', 0],
+              ['_mineralisation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil mineralisation [kg/ha]', 'grid', 'spatial_param', 'mineralisation_soil', 0],
+              #['_dissolution_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil dissolution [kg/ha]', 'grid', 'spatial_param', 'dissolution_soil', 0],              
             ]
 
 Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mgN/L]', 'grid', 'spatial', 'no3_canopy_storage', 1],
@@ -268,6 +265,7 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
             ['_plant_uptake', [Opt.cond['nitrogen_sim_1']], 'Plant uptake [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_uptake', 1],
             ['_deni_soil', [Opt.cond['nitrogen_sim_1']], 'Soil denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_soil', 1],
             ['_minerl_soil', [Opt.cond['nitrogen_sim_1']], 'Soil mineralisation [mgN/L*m = gN/m2]', 'grid', 'new', 'minerl_soil', 1],
+            ['_degrad_soil', [Opt.cond['nitrogen_sim_1']], 'Soil degradation [mgN/L*m = gN/m2]', 'grid', 'new', 'degrad_soil', 1],
             ['_deni_river', [Opt.cond['nitrogen_sim_1']], 'Aquatic denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_river', 1],
 
             # Internal fluxes
@@ -364,7 +362,7 @@ define_variables.basin_read_groundTs_maps(fname=path + 'Atmosphere/read_groundTs
 define_variables.control_includes(fname=path + 'includes/Control.h', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports, static_config=Cali.static_config)
 config_build.read_configs(fname=path+'IO/readConfigFile.cpp', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports, static_config=Cali.static_config)
 config_build.gen_config_template(homepath, signs=signs_control, options=Opt.cond, datas=datas_control, reports=Reports, parameters=Parameters, max_category=setting.max_category)
-config_build.report_build(fname=path+'IO/report.cpp', reports=Reports)
+
 
 
 define_variables.includes(fname=path + 'includes/Param.h', signs=signs_param, datas=datas_param, max_category=setting.max_category)
@@ -376,6 +374,7 @@ parameterisation_build.parameterisation_build(fname=path + 'Spatial/parameterisa
 
 define_variables.report_includes(fname=path + 'includes/Report.h', reports=Reports)
 define_variables.report_destructor(fname=path + 'Destructors/ReportDestruct.cpp', reports=Reports)
+config_build.report_build(fname=path+'IO/report.cpp', reports=Reports)
 
 define_variables.includes(fname=path + 'includes/Basin.h', signs=['Nitrogen addition'], datas=[Nitrogen_addition], max_category=setting.max_category)
 config_build.read_nitrogen(fname=path+'IO/readNitrogenFile.cpp', Nitrogen_inputs=Nitrogen_addition)

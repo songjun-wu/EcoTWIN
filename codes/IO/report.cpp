@@ -80,6 +80,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__plant_uptake==2) _plant_uptake_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__deni_soil==2) _deni_soil_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__minerl_soil==2) _minerl_soil_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__degrad_soil==2) _degrad_soil_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__deni_river==2) _deni_river_acc = new svector(ctrl._sortedGrid.size);
   /* end of Create maps */
   return EXIT_SUCCESS;
@@ -142,6 +143,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__plant_uptake==2) _plant_uptake_acc->plus(*Bsn._plant_uptake);
   if (ctrl.report__deni_soil==2) _deni_soil_acc->plus(*Bsn._deni_soil);
   if (ctrl.report__minerl_soil==2) _minerl_soil_acc->plus(*Bsn._minerl_soil);
+  if (ctrl.report__degrad_soil==2) _degrad_soil_acc->plus(*Bsn._degrad_soil);
   if (ctrl.report__deni_river==2) _deni_river_acc->plus(*Bsn._deni_river);
   /* end of Update maps */
   return EXIT_SUCCESS;
@@ -315,6 +317,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__minerl_soil==1)  report_create(ctrl.path_ResultsFolder+"minerl_soil_TS.bin", of__minerl_soil);
   else if (ctrl.report__minerl_soil==2)  report_create(ctrl.path_ResultsFolder+"minerl_soil_map.bin", of__minerl_soil);
 
+  if (ctrl.report__degrad_soil==1)  report_create(ctrl.path_ResultsFolder+"degrad_soil_TS.bin", of__degrad_soil);
+  else if (ctrl.report__degrad_soil==2)  report_create(ctrl.path_ResultsFolder+"degrad_soil_map.bin", of__degrad_soil);
+
   if (ctrl.report__deni_river==1)  report_create(ctrl.path_ResultsFolder+"deni_river_TS.bin", of__deni_river);
   else if (ctrl.report__deni_river==2)  report_create(ctrl.path_ResultsFolder+"deni_river_map.bin", of__deni_river);
 
@@ -386,6 +391,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__plant_uptake==1) {reportTS(ctrl, Bsn._plant_uptake, of__plant_uptake);}
   if (ctrl.report__deni_soil==1) {reportTS(ctrl, Bsn._deni_soil, of__deni_soil);}
   if (ctrl.report__minerl_soil==1) {reportTS(ctrl, Bsn._minerl_soil, of__minerl_soil);}
+  if (ctrl.report__degrad_soil==1) {reportTS(ctrl, Bsn._degrad_soil, of__degrad_soil);}
   if (ctrl.report__deni_river==1) {reportTS(ctrl, Bsn._deni_river, of__deni_river);}
   /* end of Report to time series */
   return EXIT_SUCCESS;
@@ -450,6 +456,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__plant_uptake==2) {reportMap(ctrl, _plant_uptake_acc, ctrl._sortedGrid, of__plant_uptake);}
   if (ctrl.report__deni_soil==2) {reportMap(ctrl, _deni_soil_acc, ctrl._sortedGrid, of__deni_soil);}
   if (ctrl.report__minerl_soil==2) {reportMap(ctrl, _minerl_soil_acc, ctrl._sortedGrid, of__minerl_soil);}
+  if (ctrl.report__degrad_soil==2) {reportMap(ctrl, _degrad_soil_acc, ctrl._sortedGrid, of__degrad_soil);}
   if (ctrl.report__deni_river==2) {reportMap(ctrl, _deni_river_acc, ctrl._sortedGrid, of__deni_river);}
   /* end of Report to maps */
   advance_report = 0;

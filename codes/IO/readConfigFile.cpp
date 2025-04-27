@@ -182,7 +182,6 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__denitrification_soil, "denitrification_soil", lines);
   readInto(fn__degradation_soil, "degradation_soil", lines);
   readInto(fn__mineralisation_soil, "mineralisation_soil", lines);
-  readInto(fn__dissolution_soil, "dissolution_soil", lines);
   /* end of Parameters */
 
   /* Report */
@@ -242,13 +241,8 @@ int Control::ReadConfigFile(string fname){
   readInto(report__plant_uptake, "report_plant_uptake", lines);
   readInto(report__deni_soil, "report_deni_soil", lines);
   readInto(report__minerl_soil, "report_minerl_soil", lines);
+  readInto(report__degrad_soil, "report_degrad_soil", lines);
   readInto(report__deni_river, "report_deni_river", lines);
-  readInto(report__humusN1, "report_humusN1", lines);
-  readInto(report__humusN2, "report_humusN2", lines);
-  readInto(report__humusN3, "report_humusN3", lines);
-  readInto(report__fastN1, "report_fastN1", lines);
-  readInto(report__fastN2, "report_fastN2", lines);
-  readInto(report__fastN3, "report_fastN3", lines);
   /* end of Report */
 
   return EXIT_SUCCESS;
