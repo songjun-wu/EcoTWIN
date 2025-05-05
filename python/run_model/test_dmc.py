@@ -118,6 +118,19 @@ prep_tools.saveToASCII(unit_soil*-8, 'd18o_layer3', home_dir+'spatial/', 'float6
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 prep_tools.saveToASCII(unit_soil*-8, 'd18o_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
 
+
+prep_tools.saveToASCII(unit_soil*0, 'age_I', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0, 'age_snow', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*0, 'age_pond', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*100, 'age_layer1', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*200, 'age_layer2', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*300, 'age_layer3', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*3000, 'age_GW', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+prep_tools.saveToASCII(unit_soil*10, 'age_chanS', home_dir+'spatial/', 'float64', mask, xllcorner=442449.229, yllcorner=5798066.25, cellsize=500, nodata=-9999)
+
+
+
+
 p0 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_0.map'), np.nan).astype(np.float64)
 p1 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_1.map'), np.nan).astype(np.float64)
 p2 = pcraster.pcr2numpy(pcraster.readmap('/home/wusongj/dmc/forHydrology/Spatial_500m/p_2.map'), np.nan).astype(np.float64)

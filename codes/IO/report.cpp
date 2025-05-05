@@ -68,6 +68,14 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__d18o_layer3==2) _d18o_layer3_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_GW==2) _d18o_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_chanS==2) _d18o_chanS_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_I==2) _age_I_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_snow==2) _age_snow_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_pond==2) _age_pond_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_layer1==2) _age_layer1_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_layer2==2) _age_layer2_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_layer3==2) _age_layer3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_GW==2) _age_GW_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_chanS==2) _age_chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_I==2) _no3_I_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_snow==2) _no3_snow_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_pond==2) _no3_pond_acc = new svector(ctrl._sortedGrid.size);
@@ -131,6 +139,14 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__d18o_layer3==2) _d18o_layer3_acc->plus(*Bsn._d18o_layer3);
   if (ctrl.report__d18o_GW==2) _d18o_GW_acc->plus(*Bsn._d18o_GW);
   if (ctrl.report__d18o_chanS==2) _d18o_chanS_acc->plus(*Bsn._d18o_chanS);
+  if (ctrl.report__age_I==2) _age_I_acc->plus(*Bsn._age_I);
+  if (ctrl.report__age_snow==2) _age_snow_acc->plus(*Bsn._age_snow);
+  if (ctrl.report__age_pond==2) _age_pond_acc->plus(*Bsn._age_pond);
+  if (ctrl.report__age_layer1==2) _age_layer1_acc->plus(*Bsn._age_layer1);
+  if (ctrl.report__age_layer2==2) _age_layer2_acc->plus(*Bsn._age_layer2);
+  if (ctrl.report__age_layer3==2) _age_layer3_acc->plus(*Bsn._age_layer3);
+  if (ctrl.report__age_GW==2) _age_GW_acc->plus(*Bsn._age_GW);
+  if (ctrl.report__age_chanS==2) _age_chanS_acc->plus(*Bsn._age_chanS);
   if (ctrl.report__no3_I==2) _no3_I_acc->plus(*Bsn._no3_I);
   if (ctrl.report__no3_snow==2) _no3_snow_acc->plus(*Bsn._no3_snow);
   if (ctrl.report__no3_pond==2) _no3_pond_acc->plus(*Bsn._no3_pond);
@@ -281,6 +297,30 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__d18o_chanS==1)  report_create(ctrl.path_ResultsFolder+"d18o_chanS_TS.bin", of__d18o_chanS);
   else if (ctrl.report__d18o_chanS==2)  report_create(ctrl.path_ResultsFolder+"d18o_chanS_map.bin", of__d18o_chanS);
 
+  if (ctrl.report__age_I==1)  report_create(ctrl.path_ResultsFolder+"age_canopy_storage_TS.bin", of__age_I);
+  else if (ctrl.report__age_I==2)  report_create(ctrl.path_ResultsFolder+"age_canopy_storage_map.bin", of__age_I);
+
+  if (ctrl.report__age_snow==1)  report_create(ctrl.path_ResultsFolder+"age_snow_depth_TS.bin", of__age_snow);
+  else if (ctrl.report__age_snow==2)  report_create(ctrl.path_ResultsFolder+"age_snow_depth_map.bin", of__age_snow);
+
+  if (ctrl.report__age_pond==1)  report_create(ctrl.path_ResultsFolder+"age_pond_TS.bin", of__age_pond);
+  else if (ctrl.report__age_pond==2)  report_create(ctrl.path_ResultsFolder+"age_pond_map.bin", of__age_pond);
+
+  if (ctrl.report__age_layer1==1)  report_create(ctrl.path_ResultsFolder+"age_SMC_layer1_TS.bin", of__age_layer1);
+  else if (ctrl.report__age_layer1==2)  report_create(ctrl.path_ResultsFolder+"age_SMC_layer1_map.bin", of__age_layer1);
+
+  if (ctrl.report__age_layer2==1)  report_create(ctrl.path_ResultsFolder+"age_SMC_layer2_TS.bin", of__age_layer2);
+  else if (ctrl.report__age_layer2==2)  report_create(ctrl.path_ResultsFolder+"age_SMC_layer2_map.bin", of__age_layer2);
+
+  if (ctrl.report__age_layer3==1)  report_create(ctrl.path_ResultsFolder+"age_SMC_layer3_TS.bin", of__age_layer3);
+  else if (ctrl.report__age_layer3==2)  report_create(ctrl.path_ResultsFolder+"age_SMC_layer3_map.bin", of__age_layer3);
+
+  if (ctrl.report__age_GW==1)  report_create(ctrl.path_ResultsFolder+"age_groundwater_storage_TS.bin", of__age_GW);
+  else if (ctrl.report__age_GW==2)  report_create(ctrl.path_ResultsFolder+"age_groundwater_storage_map.bin", of__age_GW);
+
+  if (ctrl.report__age_chanS==1)  report_create(ctrl.path_ResultsFolder+"age_chanS_TS.bin", of__age_chanS);
+  else if (ctrl.report__age_chanS==2)  report_create(ctrl.path_ResultsFolder+"age_chanS_map.bin", of__age_chanS);
+
   if (ctrl.report__no3_I==1)  report_create(ctrl.path_ResultsFolder+"no3_canopy_storage_TS.bin", of__no3_I);
   else if (ctrl.report__no3_I==2)  report_create(ctrl.path_ResultsFolder+"no3_canopy_storage_map.bin", of__no3_I);
 
@@ -379,6 +419,14 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__d18o_layer3==1) {reportTS(ctrl, Bsn._d18o_layer3, of__d18o_layer3);}
   if (ctrl.report__d18o_GW==1) {reportTS(ctrl, Bsn._d18o_GW, of__d18o_GW);}
   if (ctrl.report__d18o_chanS==1) {reportTS(ctrl, Bsn._d18o_chanS, of__d18o_chanS);}
+  if (ctrl.report__age_I==1) {reportTS(ctrl, Bsn._age_I, of__age_I);}
+  if (ctrl.report__age_snow==1) {reportTS(ctrl, Bsn._age_snow, of__age_snow);}
+  if (ctrl.report__age_pond==1) {reportTS(ctrl, Bsn._age_pond, of__age_pond);}
+  if (ctrl.report__age_layer1==1) {reportTS(ctrl, Bsn._age_layer1, of__age_layer1);}
+  if (ctrl.report__age_layer2==1) {reportTS(ctrl, Bsn._age_layer2, of__age_layer2);}
+  if (ctrl.report__age_layer3==1) {reportTS(ctrl, Bsn._age_layer3, of__age_layer3);}
+  if (ctrl.report__age_GW==1) {reportTS(ctrl, Bsn._age_GW, of__age_GW);}
+  if (ctrl.report__age_chanS==1) {reportTS(ctrl, Bsn._age_chanS, of__age_chanS);}
   if (ctrl.report__no3_I==1) {reportTS(ctrl, Bsn._no3_I, of__no3_I);}
   if (ctrl.report__no3_snow==1) {reportTS(ctrl, Bsn._no3_snow, of__no3_snow);}
   if (ctrl.report__no3_pond==1) {reportTS(ctrl, Bsn._no3_pond, of__no3_pond);}
@@ -444,6 +492,14 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__d18o_layer3==2) {reportMap(ctrl, _d18o_layer3_acc, ctrl._sortedGrid, of__d18o_layer3);}
   if (ctrl.report__d18o_GW==2) {reportMap(ctrl, _d18o_GW_acc, ctrl._sortedGrid, of__d18o_GW);}
   if (ctrl.report__d18o_chanS==2) {reportMap(ctrl, _d18o_chanS_acc, ctrl._sortedGrid, of__d18o_chanS);}
+  if (ctrl.report__age_I==2) {reportMap(ctrl, _age_I_acc, ctrl._sortedGrid, of__age_I);}
+  if (ctrl.report__age_snow==2) {reportMap(ctrl, _age_snow_acc, ctrl._sortedGrid, of__age_snow);}
+  if (ctrl.report__age_pond==2) {reportMap(ctrl, _age_pond_acc, ctrl._sortedGrid, of__age_pond);}
+  if (ctrl.report__age_layer1==2) {reportMap(ctrl, _age_layer1_acc, ctrl._sortedGrid, of__age_layer1);}
+  if (ctrl.report__age_layer2==2) {reportMap(ctrl, _age_layer2_acc, ctrl._sortedGrid, of__age_layer2);}
+  if (ctrl.report__age_layer3==2) {reportMap(ctrl, _age_layer3_acc, ctrl._sortedGrid, of__age_layer3);}
+  if (ctrl.report__age_GW==2) {reportMap(ctrl, _age_GW_acc, ctrl._sortedGrid, of__age_GW);}
+  if (ctrl.report__age_chanS==2) {reportMap(ctrl, _age_chanS_acc, ctrl._sortedGrid, of__age_chanS);}
   if (ctrl.report__no3_I==2) {reportMap(ctrl, _no3_I_acc, ctrl._sortedGrid, of__no3_I);}
   if (ctrl.report__no3_snow==2) {reportMap(ctrl, _no3_snow_acc, ctrl._sortedGrid, of__no3_snow);}
   if (ctrl.report__no3_pond==2) {reportMap(ctrl, _no3_pond_acc, ctrl._sortedGrid, of__no3_pond);}

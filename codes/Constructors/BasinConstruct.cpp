@@ -122,6 +122,12 @@
     _p_perc2 = new svector(_sortedGrid.size);
     _p_perc3 = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
+    _flux_ovf_in_acc = new svector(_sortedGrid.size);
+    _flux_interf_in_acc = new svector(_sortedGrid.size);
+    _flux_GWf_in_acc = new svector(_sortedGrid.size);
+    _flux_Qupstream_acc = new svector(_sortedGrid.size);
+  }
   /* end of Fluxes */
 
   /* Tracking */
@@ -134,10 +140,16 @@
     _d18o_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer3, _rowNum, _colNum, _sortedGrid);
     _d18o_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_GW, _rowNum, _colNum, _sortedGrid);
     _d18o_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_chanS, _rowNum, _colNum, _sortedGrid);
-    _d18o_ovf_in_acc = new svector(_sortedGrid.size);
-    _d18o_interf_in_acc = new svector(_sortedGrid.size);
-    _d18o_GWf_in_acc = new svector(_sortedGrid.size);
-    _d18o_Qupstream_acc = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_tracking_age == 1){
+    _age_I = new svector(ctrl.path_BasinFolder + ctrl.fn__age_I, _rowNum, _colNum, _sortedGrid);
+    _age_snow = new svector(ctrl.path_BasinFolder + ctrl.fn__age_snow, _rowNum, _colNum, _sortedGrid);
+    _age_pond = new svector(ctrl.path_BasinFolder + ctrl.fn__age_pond, _rowNum, _colNum, _sortedGrid);
+    _age_layer1 = new svector(ctrl.path_BasinFolder + ctrl.fn__age_layer1, _rowNum, _colNum, _sortedGrid);
+    _age_layer2 = new svector(ctrl.path_BasinFolder + ctrl.fn__age_layer2, _rowNum, _colNum, _sortedGrid);
+    _age_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__age_layer3, _rowNum, _colNum, _sortedGrid);
+    _age_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__age_GW, _rowNum, _colNum, _sortedGrid);
+    _age_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__age_chanS, _rowNum, _colNum, _sortedGrid);
   }
   /* end of Tracking */
 
@@ -163,10 +175,6 @@
     _fastN1 = new svector(ctrl.path_BasinFolder + ctrl.fn__fastN1, _rowNum, _colNum, _sortedGrid);
     _fastN2 = new svector(ctrl.path_BasinFolder + ctrl.fn__fastN2, _rowNum, _colNum, _sortedGrid);
     _fastN3 = new svector(ctrl.path_BasinFolder + ctrl.fn__fastN3, _rowNum, _colNum, _sortedGrid);
-    _no3_ovf_in_acc = new svector(_sortedGrid.size);
-    _no3_interf_in_acc = new svector(_sortedGrid.size);
-    _no3_GWf_in_acc = new svector(_sortedGrid.size);
-    _no3_Qupstream_acc = new svector(_sortedGrid.size);
   }
   /* end of Nitrogen */
 

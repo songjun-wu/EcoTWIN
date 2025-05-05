@@ -71,10 +71,10 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
     double m3s_to_m = ctrl.Simul_tstep/(ctrl._dx*ctrl._dx);
     double rPerc2, rPerc3;
 
-    _no3_ovf_in_acc->reset();
-    _no3_interf_in_acc->reset();
-    _no3_GWf_in_acc->reset();
-    _no3_Qupstream_acc->reset();
+    _flux_ovf_in_acc->reset();
+    _flux_interf_in_acc->reset();
+    _flux_GWf_in_acc->reset();
+    _flux_Qupstream_acc->reset();
 
     // ********* Mixing reinfiltration and percolation ********
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -90,10 +90,10 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
         }
 
         // Ponding water mixing with overland flow
-        Mixing_full(_pond_old->val[j], _no3_pond->val[j], _ovf_in->val[j], _no3_ovf_in_acc->val[j] / _ovf_in->val[j]);
+        Mixing_full(_pond_old->val[j], _no3_pond->val[j], _ovf_in->val[j], _flux_ovf_in_acc->val[j] / _ovf_in->val[j]);
         
         if (lat_ok == 1){  // Add 18O in overland outflow to the overland inflow of downstream cell
-            _no3_ovf_in_acc->val[from_j] += _no3_pond->val[j] * _ovf_out->val[j];
+            _flux_ovf_in_acc->val[from_j] += _no3_pond->val[j] * _ovf_out->val[j];
         }
 
 
@@ -114,21 +114,21 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
         
         // Interflow mixing with lateral inflow
         if (ctrl.opt_reinfil == 1){ 
-            Mixing_full(_theta3_old->val[j] * par._depth3->val[j] + rPerc2 - rPerc3, _no3_layer3->val[j], _interf_in->val[j], _no3_interf_in_acc->val[j] / _interf_in->val[j]);
+            Mixing_full(_theta3_old->val[j] * par._depth3->val[j] + rPerc2 - rPerc3, _no3_layer3->val[j], _interf_in->val[j], _flux_interf_in_acc->val[j] / _interf_in->val[j]);
             Mixing_full(_GW_old->val[j] + rPerc3, _no3_GW->val[j], _rrPerc3->val[j], _no3_layer3->val[j]); // GW mixed with repercolation due to excess interflow
         } else {
-            Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _no3_layer3->val[j], _interf_in->val[j], _no3_interf_in_acc->val[j] / _interf_in->val[j]);
+            Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _no3_layer3->val[j], _interf_in->val[j], _flux_interf_in_acc->val[j] / _interf_in->val[j]);
             Mixing_full(_GW_old->val[j], _no3_GW->val[j], _rrPerc3->val[j], _no3_layer3->val[j]); // GW mixed with repercolation due to excess interflow
         }
         if (lat_ok == 1){  // Add 18O in interflow outflow to the inferflow inflow of downstream cell
-            _no3_interf_in_acc->val[from_j] += _no3_layer3->val[j] * _interf_out->val[j];
+            _flux_interf_in_acc->val[from_j] += _no3_layer3->val[j] * _interf_out->val[j];
         }
 
         
         // GW flow mixing with lateral inflow
-        Mixing_full(_GW_old->val[j] + rPerc3 + _rrPerc3->val[j], _no3_GW->val[j], _GWf_in->val[j], _no3_GWf_in_acc->val[j] / _GWf_in->val[j]);
+        Mixing_full(_GW_old->val[j] + rPerc3 + _rrPerc3->val[j], _no3_GW->val[j], _GWf_in->val[j], _flux_GWf_in_acc->val[j] / _GWf_in->val[j]);
         if (lat_ok == 1){  // Add 18O in GW outflow to the GW inflow of downstream cell
-            _no3_GWf_in_acc->val[from_j] += _no3_GW->val[j] * _GWf_out->val[j];
+            _flux_GWf_in_acc->val[from_j] += _no3_GW->val[j] * _GWf_out->val[j];
         }
         
 
@@ -136,13 +136,13 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
         if (_chnwidth->val[j] > roundoffERR){
             
                             // Upstream inflow              Overland flow to channel                  Interflow to channel                           GW flow to channel
-            no3_in_all_acc = _no3_Qupstream_acc->val[j] + _no3_pond->val[j] * _ovf_toChn->val[j] + _no3_layer3->val[j] * _interf_toChn->val[j] + _no3_GW->val[j] * _GWf_toChn->val[j]; 
+            no3_in_all_acc = _flux_Qupstream_acc->val[j] + _no3_pond->val[j] * _ovf_toChn->val[j] + _no3_layer3->val[j] * _interf_toChn->val[j] + _no3_GW->val[j] * _GWf_toChn->val[j]; 
             q_in_all = _Qupstream->val[j] * m3s_to_m + _ovf_toChn->val[j] + _interf_toChn->val[j] + _GWf_toChn->val[j];
 
             Mixing_full(_chanS_old->val[j], _no3_chanS->val[j], q_in_all, no3_in_all_acc / q_in_all);
 
             if (lat_ok == 1){  // Add 18O in discharge to inflow of the downstream channel storage
-                _no3_Qupstream_acc->val[from_j] += _no3_chanS->val[j] * _Q->val[j] * m3s_to_m;   
+                _flux_Qupstream_acc->val[from_j] += _no3_chanS->val[j] * _Q->val[j] * m3s_to_m;   
             }
         }
 

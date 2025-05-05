@@ -29,10 +29,14 @@ def likelihood(param, chainID):
         if key == 'q':
             _sim += 1e-3
             _obs += 1e-3
+        if key == 'iso_stream':
+            obs_min = np.nanmin(_obs)
+            _sim -= obs_min
+            _obs -= obs_min
         for i in range(_obs.shape[0]):
             sim = _sim[dict['sim_idx'][i], :]
             obs = _obs[i,:]
-            err += (1 - GEM_tools.kge(sim, obs)) * dict['weights'][i]
+            err += (1 - GEM_tools.kge_modified(sim, obs)) * dict['weights'][i]
             #err += GEM_tools.nselnnse(sim, obs, 0.9, 0.1) * dict['weights'][i]
 
     

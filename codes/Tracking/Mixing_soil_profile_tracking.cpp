@@ -36,8 +36,9 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     - interflow_toChn   
     */
 
-    double pond_old, ST1, d18o_pond_old, d18o_layer1_old, nearsurface_mixing, pond_to_mix;
+    double pond_old, ST1, nearsurface_mixing, pond_to_mix, d18o_pond_old, d18o_layer1_old, age_pond_old, age_layer1_old;
 
+    // Isotope tracking
     if (ctrl.opt_tracking_isotope==1) {
         
         // Mixing layer 1
@@ -79,5 +80,47 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         Fractionation(atm, par, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 1);  // issoil = 1; todo
 
     }
+
+
+
+
+    // Age tracking
+    if (ctrl.opt_tracking_age==1) {
+        
+        // Mixing layer 1
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+
+            // Mix ponding water with top layer storage
+            pond_old = _pond->val[j] + _infilt->val[j];
+            ST1 = _theta1_old->val[j] * _depth1->val[j];
+            if (pond_old > roundoffERR and ST1 > roundoffERR){
+                age_pond_old = _age_pond->val[j];
+                age_layer1_old = _age_layer1->val[j];
+                nearsurface_mixing =  par._nearsurface_mixing->val[j];
+                pond_to_mix = min(pond_old * nearsurface_mixing, ST1);
+                _age_pond->val[j] = age_pond_old * (1 - nearsurface_mixing) + age_layer1_old * nearsurface_mixing;
+                _age_layer1->val[j] = (age_pond_old * pond_to_mix + age_layer1_old * (ST1 - pond_to_mix)) / ST1;
+            }
+
+            // Mix infiltration with top layer storage
+            Mixing_full(_theta1_old->val[j] * _depth1->val[j], _age_layer1->val[j], _infilt->val[j], _age_pond->val[j]);
+            
+        }
+        
+        // Mixing layer 2
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+            Mixing_full(_theta2_old->val[j] * _depth2->val[j], _age_layer2->val[j], _Perc1->val[j], _age_layer1->val[j]);
+        }
+
+
+        // Mixing layer 3
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+            Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _age_layer3->val[j], _Perc2->val[j], _age_layer2->val[j]);
+        }
+
+    }
+
+
+
     return EXIT_SUCCESS;
 }

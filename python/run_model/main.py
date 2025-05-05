@@ -89,18 +89,22 @@ elif mode == 'forward':
 
                 _sim_q = np.array([])
                 _sim_iso = np.array([])
+                _sim_no3 = np.array([])
                 
                 os.chdir(runpath)
                 for i in range(param.shape[0]):
                     shutil.rmtree(runpath + '/outputs')
                     os.mkdir(runpath + '/outputs')
                     GEM_tools.gen_param(runpath, Info, Param, param[i,:])
+                    GEM_tools.gen_no3_addtion(runpath, Info)
                     os.system('./gEcoHydro')
                     _sim_q = np.append(_sim_q, np.fromfile(runpath + '/outputs/discharge_TS.bin'))
                     _sim_iso = np.append(_sim_iso, np.fromfile(runpath + '/outputs/d18o_chanS_TS.bin'))
+                    _sim_no3 = np.append(_sim_no3, np.fromfile(runpath + '/outputs/no3_chanS_TS.bin'))
                     
                 _sim_q.tofile(Path.work_path + '/forward/outputs/discharge_TS.bin')
                 _sim_iso.tofile(Path.work_path + '/forward/outputs/d18o_chanS_TS.bin')
+                _sim_no3.tofile(Path.work_path + '/forward/outputs/no3_chanS_TS.bin')
                 flag = False
             except:
                 pass
@@ -121,8 +125,9 @@ elif mode == 'test':
 
     validIdx = np.loadtxt('/data/scratch/wusongj/paper4/param_good.txt').astype(np.int)
     
+    counter = 0
     #for i in range(len(validIdx)):
-    for i in [0]:
+    for i in [0, 1]:
         idx = validIdx[i]
         print(idx)
         # Which parameter set to use?
@@ -135,6 +140,22 @@ elif mode == 'test':
         os.chdir(Path.run_path)
         os.system('./gEcoHydro')
 
+        # Save outputs
+        fnames = os.listdir(Path.run_path + 'outputs/')
+        save_path = '/data/scratch/wusongj/paper4/forward/outputs_posterior/'
+        for fname in fnames:
+            if fname.split('.')[-1] == 'bin':
+                if (counter==0):
+                    if os.path.exists(save_path + fname):
+                        os.remove(save_path + fname)
+                    f = open(save_path + fname, 'w')
+                    f.close()
+                with open(save_path + fname, 'ab+') as f:
+                    np.fromfile(Path.run_path + 'outputs/' + fname).tofile(f)
+        
+        counter += 1
+                
+        # Plot individual results
         os.chdir(current_path)
         os.system('python3 posterior_anlalysis.py')
 
@@ -184,7 +205,6 @@ elif mode == 'check':
                 try:
                     loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
                     #print(len(loglikes), loglikes[-1], np.max(loglikes))
-                    print(i, loglikes[-1])
                     arr.append(np.nanmax(loglikes))
                     lengths.append(len(loglikes))
                     niterations.append(niteration)
@@ -196,8 +216,8 @@ elif mode == 'check':
                 break
     print('Chains  :  ', n_batch)
     print('Batch   :  ', int(np.mean(niterations)), np.mean(lengths))
-    print('Average :  ' ,np.mean(arr))
-    print('Maximum :  ' ,np.max(arr))
+    print('Average :  ', np.mean(arr))
+    print('Maximum :  ', np.max(arr))
 
 elif mode == 'test11':
     loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(93)+'_500.bin')
@@ -213,6 +233,9 @@ elif mode == 'aaa':
     sim_iso = np.transpose(np.fromfile(Path.work_path + '/forward/outputs/d18o_chanS_TS.bin').reshape(Cali.nchains, -1, Output.N_sites), axes=[0,2,1])[:, :, Info.spin_up:]  
     obs_iso = np.fromfile(Path.data_path + 'd18o_stream_obs.bin').reshape(len(Output.sim['iso_stream']['sim_idx']), -1)
 
+    sim_no3 = np.transpose(np.fromfile(Path.work_path + '/forward/outputs/no3_chanS_TS.bin').reshape(Cali.nchains, -1, Output.N_sites), axes=[0,2,1])[:, :, Info.spin_up:]  
+    obs_no3 = np.fromfile(Path.data_path + 'no3_stream_obs.bin').reshape(len(Output.sim['no3']['sim_idx']), -1)
+
     validIdx = []
     
     for i in range(Cali.nchains):
@@ -221,18 +244,24 @@ elif mode == 'aaa':
         for j in range(len(Output.sim['q']['sim_idx'])):
             X = sim_q[i, Output.sim['q']['sim_idx'][j],:] + 1e-3
             Y = obs_q[j] + 1e-3
-            likelihoods.append(GEM_tools.nse(X, Y))
-            print(np.round(GEM_tools.nse(X, Y),2), end=" ")
+            likelihoods.append(GEM_tools.kge(X, Y))
+            print(np.round(GEM_tools.kge(X, Y),2), end=" ")
         print(end="     ")
         for j in range(len(Output.sim['iso_stream']['sim_idx'])):
             X = sim_iso[i, Output.sim['iso_stream']['sim_idx'][j],:]
             Y = obs_iso[j]
-            likelihoods.append(GEM_tools.nse(X, Y))
-            print(np.round(GEM_tools.nse(X, Y),2), end=" ")
+            likelihoods.append(GEM_tools.kge(X, Y))
+            print(np.round(GEM_tools.kge(X, Y),2), end=" ")
+        for j in range(len(Output.sim['no3']['sim_idx'])):
+            X = sim_no3[i, Output.sim['no3']['sim_idx'][j],:]
+            Y = obs_no3[j]
+            likelihoods.append(GEM_tools.kge(X, Y))
+            print(np.round(GEM_tools.kge(X, Y),2), end=" ")
             
         print('')
-        if np.mean(np.array(likelihoods)[[4,5,6]]) > 0.4:
+        if np.mean(np.array(likelihoods)[[4,5,6]]) > 0.6:
             validIdx.append(i)
+
     np.savetxt('/data/scratch/wusongj/paper4/param_good.txt', validIdx)
     print(len(validIdx))
     
@@ -241,7 +270,7 @@ elif mode == 'aaa':
 
 
 
-    fig, ax = plt.subplots(4,2, figsize=(8,6), dpi=300)
+    fig, ax = plt.subplots(4,3, figsize=(12,6), dpi=300)
     plt.subplots_adjust(left=0.1, bottom=0.05, right=0.99, top=0.99, wspace=0.1, hspace=0.1)
     X = np.arange(datetime(1994,1,1), datetime(2022,1,2), timedelta(days=1)).astype(datetime)
     for i in range(obs_q.shape[0]):
@@ -257,29 +286,45 @@ elif mode == 'aaa':
         ax[i,1].set_ylim([-10.5, -3])
         ax[i,1].set_yticks([-10, -8, -6, -4])
 
+        ax[i,2].fill_between(X, np.percentile(sim_no3[:,i,:], 5, axis=0), np.percentile(sim_no3[:,i,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
+        ax[i,2].plot(X, np.mean(sim_no3[:,i,:], axis=0), linewidth=1, c='skyblue', zorder=3)
+        ax[i,2].scatter(X, obs_no3[i,:], c='salmon', s=0.8, alpha=0.2, zorder=4)
+        ax[i,2].set_ylim([0, 40])
+        ax[i,2].set_yticks([0, 6, 12, 18])
+
         if i!=(obs_q.shape[0]-1):
             ax[i,0].set_xticklabels([])
             ax[i,1].set_xticklabels([])
+            ax[i,2].set_xticklabels([])
 
     sites = [['Bruch Mill', 'Demnitz Mill', 'Demnitz', "Berkenbrueck"],
              ['Peat South', 'Bruch Mill', 'Demnitz Mill', "Berkenbrueck"]]
     for i in range(obs_q.shape[0]):
         X = np.mean(sim_q[:, i, :],axis=0) + 1e-3
         Y = obs_q[i] + 1e-3
-
         title_hgt = 0.9
         hgt_gradient = 0.11
-        ax[i,0].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
+        ax[i,0].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
         ax[i,0].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
         ax[i,0].text(0.05, title_hgt - hgt_gradient * 1, 'Q at '+sites[0][i]+' (m3/s)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,0].transAxes)        
-        print(np.round(GEM_tools.nse(X, Y), 2), end='  ')
+        print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2), end='     ')
+
         X = np.mean(sim_iso[:, i, :],axis=0)
         Y = obs_iso[i]
         title_hgt = 0.9
         hgt_gradient = 0.11
-        ax[i,1].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
+        ax[i,1].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
         ax[i,1].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
         ax[i,1].text(0.05, title_hgt - hgt_gradient * 1, 'd18O at '+sites[1][i]+' (per mille)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,1].transAxes)        
-        print(np.round(GEM_tools.nse(X, Y), 2))
+        print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2), end='     ')
+
+        X = np.mean(sim_no3[:, i, :],axis=0)
+        Y = obs_no3[i]
+        title_hgt = 0.9
+        hgt_gradient = 0.11
+        ax[i,2].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,2].transAxes)
+        ax[i,2].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,2].transAxes)
+        ax[i,2].text(0.05, title_hgt - hgt_gradient * 1, 'NO3 at '+sites[1][i]+' (mgN/L)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,2].transAxes)        
+        print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2))
     
     fig.savefig('tmp.png')

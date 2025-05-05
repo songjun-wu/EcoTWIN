@@ -21,6 +21,73 @@ def save_to_ascii(data, path, ref_path):
     with open(path, 'a') as f:
         np.savetxt(f, data.astype(np.float64))
 
+
+def kge11(sim, obs):
+    """
+    Calculate the Kling-Gupta Efficiency (KGE) between simulated and observed data.
+
+    Parameters
+    ----------
+    sim : array_like
+        Simulated values.
+    obs : array_like
+        Observed values.
+
+    Returns
+    -------
+    kge : float
+        Kling-Gupta Efficiency.
+    """
+    sim = np.asarray(sim, dtype=np.float64)
+    obs = np.asarray(obs, dtype=np.float64)
+
+    # Remove NaNs and placeholder values
+    mask = (~np.isnan(sim)) & (~np.isnan(obs)) & (obs != -9999)
+    sim = sim[mask]
+    obs = obs[mask]
+
+    if len(sim) == 0 or len(obs) == 0:
+        return np.nan  # Return nan if no valid data
+    
+    # Calculate statistics
+    r = np.corrcoef(sim, obs)[0, 1]
+    alpha = np.std(sim)/np.mean(sim) / (np.std(obs)/np.mean(obs))
+    beta = np.mean(sim) / np.mean(obs)
+    # Compute KGE
+    print('KGE  :   ', r, alpha, beta)
+    kge = 1 - np.sqrt((r - 1)**2 + (alpha - 1)**2 + (beta - 1)**2)
+
+    return kge
+
+
+def kge_modified(sim, obs):
+    validIDX = np.logical_not( np.logical_or( np.isnan(sim), np.isnan(obs) ) )
+    validIDX[obs==-9999] = False
+    sim = sim[validIDX]
+    obs = obs[validIDX]
+
+
+    sim_mean = np.mean(sim,dtype=np.float64)
+    obs_mean = np.mean(obs, dtype=np.float64)
+
+    r_num = np.sum((sim - sim_mean) * (obs - obs_mean),
+                   axis=0, dtype=np.float64)
+    r_den = np.sqrt(np.sum((sim - sim_mean) ** 2,
+                           axis=0, dtype=np.float64)
+                    * np.sum((obs - obs_mean) ** 2,
+                             dtype=np.float64))
+    eps = 1e-10
+    pearson_r = r_num / (r_den + eps)
+
+
+    #pearson_r = np.corrcoef(sim, obs)[0,1]
+    alpha = (np.std(sim) / sim_mean) / (np.std(obs) / obs_mean)
+    beta = sim_mean / obs_mean
+    
+    kge = 1 - np.sqrt((pearson_r-1)**2 + (alpha-1)**2 + 5 * (beta-1)**2)
+    return kge
+    
+
 def kge(sim, obs):
     validIDX = np.logical_not( np.logical_or( np.isnan(sim), np.isnan(obs) ) )
     validIDX[obs==-9999] = False
@@ -37,12 +104,13 @@ def kge(sim, obs):
                            axis=0, dtype=np.float64)
                     * np.sum((obs - obs_mean) ** 2,
                              dtype=np.float64))
-    pearson_r = r_num / r_den
+    eps = 1e-10
+    pearson_r = r_num / (r_den + eps)
 
 
     #pearson_r = np.corrcoef(sim, obs)[0,1]
-    alpha = np.var(sim) / np.var(obs)
-    beta = np.sum(sim) / np.sum(obs)
+    alpha = (np.std(sim) / sim_mean) / (np.std(obs) / obs_mean)
+    beta = sim_mean / obs_mean
     
     kge = 1 - np.sqrt((pearson_r-1)**2 + (alpha-1)**2 + (beta-1)**2)
 

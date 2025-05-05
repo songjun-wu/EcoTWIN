@@ -100,10 +100,17 @@ Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy stor
             ['_d18o_GW',  [Opt.cond['tracking_isotope_1']], 'd18o in Groundwater storage [‰]', 'grid', 'spatial', 'd18o_groundwater_storage', 1],
             ['_d18o_chanS',  [Opt.cond['tracking_isotope_1']], 'd18o in Channel storage [‰]', 'grid', 'spatial', 'd18o_chanS', 1],
 
-            ['_d18o_ovf_in_acc',  [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in overland inflow [‰ * m]', 'grid', 'new', None, 0],
-            ['_d18o_interf_in_acc',  [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in inter-inflow [‰ * m]', 'grid', 'new', None, 0],
-            ['_d18o_GWf_in_acc',  [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in GW inflow [‰ * m]', 'grid', 'new', None, 0],
-            ['_d18o_Qupstream_acc', [Opt.cond['tracking_isotope_1']], 'Total amount of 18o in upstream inflow to channel storage [‰ * m]', 'grid', 'new', None, 0]
+            ['_age_I',   [Opt.cond['tracking_age_1']], 'age in Canopy storage [days]', 'grid', 'spatial', 'age_canopy_storage', 1],
+            ['_age_snow',    [Opt.cond['tracking_age_1']], 'age in Snow depth in [days]', 'grid', 'spatial', 'age_snow_depth', 1],
+            ['_age_pond',    [Opt.cond['tracking_age_1']], 'age in Ponding water in [days]', 'grid', 'spatial', 'age_pond', 1],
+            ['_age_layer1',  [Opt.cond['tracking_age_1']], 'age in Soil moisture in layer 1 [days]', 'grid', 'spatial', 'age_SMC_layer1', 1],
+            ['_age_layer2',  [Opt.cond['tracking_age_1']], 'age in Soil moisture in layer 2 [days]', 'grid', 'spatial', 'age_SMC_layer2', 1],
+            ['_age_layer3',  [Opt.cond['tracking_age_1']], 'age in Soil moisture in layer 3 [days]', 'grid', 'spatial', 'age_SMC_layer3', 1], 
+            ['_age_GW',  [Opt.cond['tracking_age_1']], 'age in Groundwater storage [days]', 'grid', 'spatial', 'age_groundwater_storage', 1],
+            ['_age_chanS',  [Opt.cond['tracking_age_1']], 'age in Channel storage [days]', 'grid', 'spatial', 'age_chanS', 1],
+
+
+            
             ]
 
 
@@ -178,6 +185,11 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_tmp', [Opt.cond['none']], 'Temporal variable for testing [-]', 'grid', 'new', None, 0],
             ['_snowacc', [Opt.cond['none']], 'Snow accumulation for testing [m]', 'grid', 'new', None, 0],
             ['_TchanS', [Opt.cond['none']], "Instream temperature conceptualised as 20-day's average of air temperature [degree C]", 'grid', 'new', None, 0],
+
+            ['_flux_ovf_in_acc',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in overland inflow [original unit * m]', 'grid', 'new', None, 0],
+            ['_flux_interf_in_acc',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in inter-inflow [original unit * m]', 'grid', 'new', None, 0],
+            ['_flux_GWf_in_acc',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in GW inflow [original unit * m]', 'grid', 'new', None, 0],
+            ['_flux_Qupstream_acc', [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in upstream inflow to channel storage [original unit * m]', 'grid', 'new', None, 0]
 
             ]
 
@@ -277,11 +289,6 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
             ['_fastN2',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'fastN2', 0],
             ['_fastN3',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'fastN3', 0],
 
-
-            ['_no3_ovf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in overland inflow [mgN/L*m = gN/m2]', 'grid', 'new', None, 0],
-            ['_no3_interf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in inter-inflow [mgN/L*m = gN/m2]', 'grid', 'new', None, 0],
-            ['_no3_GWf_in_acc',  [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in GW inflow [mgN/L*m = gN/m2]', 'grid', 'new', None, 0],
-            ['_no3_Qupstream_acc', [Opt.cond['nitrogen_sim_1']], 'Total amount of 18o in upstream inflow to channel storage [mgN/L*m = gN/m2]', 'grid', 'new', None, 0]
             ]
 
 Nitrogen_addition = [['fert_add', [Opt.cond['nitrogen_sim_1']], 'Fertilizer addition [mgN/L*m = gN/m2]', 'vector', 'vector', None, 0],

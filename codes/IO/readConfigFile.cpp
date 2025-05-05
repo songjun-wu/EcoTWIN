@@ -122,6 +122,14 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__d18o_layer3, "d18o_SMC_layer3", lines);
   readInto(fn__d18o_GW, "d18o_groundwater_storage", lines);
   readInto(fn__d18o_chanS, "d18o_chanS", lines);
+  readInto(fn__age_I, "age_canopy_storage", lines);
+  readInto(fn__age_snow, "age_snow_depth", lines);
+  readInto(fn__age_pond, "age_pond", lines);
+  readInto(fn__age_layer1, "age_SMC_layer1", lines);
+  readInto(fn__age_layer2, "age_SMC_layer2", lines);
+  readInto(fn__age_layer3, "age_SMC_layer3", lines);
+  readInto(fn__age_GW, "age_groundwater_storage", lines);
+  readInto(fn__age_chanS, "age_chanS", lines);
   /* end of Tracking */
 
   /* Nitrogen */
@@ -229,6 +237,14 @@ int Control::ReadConfigFile(string fname){
   readInto(report__d18o_layer3, "report_d18o_SMC_layer3", lines);
   readInto(report__d18o_GW, "report_d18o_groundwater_storage", lines);
   readInto(report__d18o_chanS, "report_d18o_chanS", lines);
+  readInto(report__age_I, "report_age_canopy_storage", lines);
+  readInto(report__age_snow, "report_age_snow_depth", lines);
+  readInto(report__age_pond, "report_age_pond", lines);
+  readInto(report__age_layer1, "report_age_SMC_layer1", lines);
+  readInto(report__age_layer2, "report_age_SMC_layer2", lines);
+  readInto(report__age_layer3, "report_age_SMC_layer3", lines);
+  readInto(report__age_GW, "report_age_groundwater_storage", lines);
+  readInto(report__age_chanS, "report_age_chanS", lines);
   readInto(report__no3_I, "report_no3_canopy_storage", lines);
   readInto(report__no3_snow, "report_no3_snow_depth", lines);
   readInto(report__no3_pond, "report_no3_pond", lines);

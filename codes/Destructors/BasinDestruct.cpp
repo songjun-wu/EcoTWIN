@@ -117,6 +117,12 @@ int Basin::dtor(Control &ctrl){
     if(_p_perc2) delete _p_perc2;
     if(_p_perc3) delete _p_perc3;
   }
+  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
+    if(_flux_ovf_in_acc) delete _flux_ovf_in_acc;
+    if(_flux_interf_in_acc) delete _flux_interf_in_acc;
+    if(_flux_GWf_in_acc) delete _flux_GWf_in_acc;
+    if(_flux_Qupstream_acc) delete _flux_Qupstream_acc;
+  }
   /* end of Fluxes */
 
   /* Tracking */
@@ -129,10 +135,16 @@ int Basin::dtor(Control &ctrl){
     if(_d18o_layer3) delete _d18o_layer3;
     if(_d18o_GW) delete _d18o_GW;
     if(_d18o_chanS) delete _d18o_chanS;
-    if(_d18o_ovf_in_acc) delete _d18o_ovf_in_acc;
-    if(_d18o_interf_in_acc) delete _d18o_interf_in_acc;
-    if(_d18o_GWf_in_acc) delete _d18o_GWf_in_acc;
-    if(_d18o_Qupstream_acc) delete _d18o_Qupstream_acc;
+  }
+  if (ctrl.opt_tracking_age == 1){
+    if(_age_I) delete _age_I;
+    if(_age_snow) delete _age_snow;
+    if(_age_pond) delete _age_pond;
+    if(_age_layer1) delete _age_layer1;
+    if(_age_layer2) delete _age_layer2;
+    if(_age_layer3) delete _age_layer3;
+    if(_age_GW) delete _age_GW;
+    if(_age_chanS) delete _age_chanS;
   }
   /* end of Tracking */
 
@@ -158,10 +170,6 @@ int Basin::dtor(Control &ctrl){
     if(_fastN1) delete _fastN1;
     if(_fastN2) delete _fastN2;
     if(_fastN3) delete _fastN3;
-    if(_no3_ovf_in_acc) delete _no3_ovf_in_acc;
-    if(_no3_interf_in_acc) delete _no3_interf_in_acc;
-    if(_no3_GWf_in_acc) delete _no3_GWf_in_acc;
-    if(_no3_Qupstream_acc) delete _no3_Qupstream_acc;
   }
   /* end of Nitrogen */
 

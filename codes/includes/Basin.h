@@ -123,6 +123,10 @@ class Basin {
   svector *_p_perc1;  // Percolation proportion in layer 1
   svector *_p_perc2;  // Percolation proportion in layer 2
   svector *_p_perc3;  // Percolation proportion in layer 3
+  svector *_flux_ovf_in_acc;  // Total amount of solutes in overland inflow [original unit * m]
+  svector *_flux_interf_in_acc;  // Total amount of solutes in inter-inflow [original unit * m]
+  svector *_flux_GWf_in_acc;  // Total amount of solutes in GW inflow [original unit * m]
+  svector *_flux_Qupstream_acc;  // Total amount of solutes in upstream inflow to channel storage [original unit * m]
   /* end of Fluxes */
 
 
@@ -135,10 +139,14 @@ class Basin {
   svector *_d18o_layer3;  // d18o in Soil moisture in layer 3 [‰]
   svector *_d18o_GW;  // d18o in Groundwater storage [‰]
   svector *_d18o_chanS;  // d18o in Channel storage [‰]
-  svector *_d18o_ovf_in_acc;  // Total amount of 18o in overland inflow [‰ * m]
-  svector *_d18o_interf_in_acc;  // Total amount of 18o in inter-inflow [‰ * m]
-  svector *_d18o_GWf_in_acc;  // Total amount of 18o in GW inflow [‰ * m]
-  svector *_d18o_Qupstream_acc;  // Total amount of 18o in upstream inflow to channel storage [‰ * m]
+  svector *_age_I;  // age in Canopy storage [days]
+  svector *_age_snow;  // age in Snow depth in [days]
+  svector *_age_pond;  // age in Ponding water in [days]
+  svector *_age_layer1;  // age in Soil moisture in layer 1 [days]
+  svector *_age_layer2;  // age in Soil moisture in layer 2 [days]
+  svector *_age_layer3;  // age in Soil moisture in layer 3 [days]
+  svector *_age_GW;  // age in Groundwater storage [days]
+  svector *_age_chanS;  // age in Channel storage [days]
   /* end of Tracking */
 
   // Nitrogen addition and plant uptakes are identical for each year, so they only need to be sorted once (or once after change in parameterisation)
@@ -200,10 +208,6 @@ class Basin {
   svector *_fastN1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
   svector *_fastN2;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
   svector *_fastN3;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
-  svector *_no3_ovf_in_acc;  // Total amount of 18o in overland inflow [mgN/L*m = gN/m2]
-  svector *_no3_interf_in_acc;  // Total amount of 18o in inter-inflow [mgN/L*m = gN/m2]
-  svector *_no3_GWf_in_acc;  // Total amount of 18o in GW inflow [mgN/L*m = gN/m2]
-  svector *_no3_Qupstream_acc;  // Total amount of 18o in upstream inflow to channel storage [mgN/L*m = gN/m2]
   /* end of Nitrogen */
  
   
@@ -284,7 +288,7 @@ class Basin {
   /* Energy balance */
   double Get_soil_temperature(const double Ta, const double LAI);
 
-  /* Isotopic tracking */
+  /* Isotopic and Age tracking */
   int Mixing_full(double storage, double &cstorage, double input, double cinput);  // Full mixing within the timestep
   int Mixing_canopy_tracking(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing and fractionaton
   int Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Canopy snowpack and throughfall
@@ -293,6 +297,8 @@ class Basin {
   int Mixing_routing_tracking(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
   int Mixing_channel_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Fractionation due to channel evaporation
   int Fractionation(Atmosphere &atm, Param &par, svector &sv_evap, svector &sv_V_new, svector &sv_di_old, svector &sv_di_new, svector &sv_di_evap, int issoil);  // Fractionation due to canopy or soil evaporation
+  int Advance_age(); // Advance water ages by 1
+
 
   /* Channel */
   int Solve_channel(Control &ctrl, Param &par, Atmosphere &atm);
