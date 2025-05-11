@@ -126,8 +126,8 @@ elif mode == 'test':
     validIdx = np.loadtxt('/data/scratch/wusongj/paper4/param_good.txt').astype(np.int)
     
     counter = 0
-    #for i in range(len(validIdx)):
-    for i in [0, 1]:
+    for i in range(len(validIdx)):
+    #for i in [0, 1]:
         idx = validIdx[i]
         print(idx)
         # Which parameter set to use?
@@ -305,7 +305,7 @@ elif mode == 'aaa':
         title_hgt = 0.9
         hgt_gradient = 0.11
         ax[i,0].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
-        ax[i,0].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
+        #ax[i,0].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
         ax[i,0].text(0.05, title_hgt - hgt_gradient * 1, 'Q at '+sites[0][i]+' (m3/s)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,0].transAxes)        
         print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2), end='     ')
 
@@ -314,7 +314,7 @@ elif mode == 'aaa':
         title_hgt = 0.9
         hgt_gradient = 0.11
         ax[i,1].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
-        ax[i,1].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
+        #ax[i,1].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
         ax[i,1].text(0.05, title_hgt - hgt_gradient * 1, 'd18O at '+sites[1][i]+' (per mille)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,1].transAxes)        
         print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2), end='     ')
 
@@ -323,7 +323,7 @@ elif mode == 'aaa':
         title_hgt = 0.9
         hgt_gradient = 0.11
         ax[i,2].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,2].transAxes)
-        ax[i,2].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,2].transAxes)
+        #ax[i,2].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,2].transAxes)
         ax[i,2].text(0.05, title_hgt - hgt_gradient * 1, 'NO3 at '+sites[1][i]+' (mgN/L)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,2].transAxes)        
         print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2))
     

@@ -13,7 +13,6 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     + reinfiltration
     - repercolation1    
 
-
     ### Soil layer 2:
     (_thata2_old)
     + percolation1          (need to mix)
@@ -52,7 +51,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
                 d18o_layer1_old = _d18o_layer1->val[j];
                 nearsurface_mixing =  par._nearsurface_mixing->val[j];
                 pond_to_mix = min(pond_old * nearsurface_mixing, ST1);
-                _d18o_pond->val[j] = d18o_pond_old * (1 - nearsurface_mixing) + d18o_layer1_old * nearsurface_mixing;
+                _d18o_pond->val[j] = (d18o_pond_old * (pond_old - pond_to_mix) + d18o_layer1_old * pond_to_mix) / pond_old;
                 _d18o_layer1->val[j] = (d18o_pond_old * pond_to_mix + d18o_layer1_old * (ST1 - pond_to_mix)) / ST1;
             }
 
@@ -98,13 +97,12 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
                 age_layer1_old = _age_layer1->val[j];
                 nearsurface_mixing =  par._nearsurface_mixing->val[j];
                 pond_to_mix = min(pond_old * nearsurface_mixing, ST1);
-                _age_pond->val[j] = age_pond_old * (1 - nearsurface_mixing) + age_layer1_old * nearsurface_mixing;
+                _age_pond->val[j] = (age_pond_old * (pond_old - pond_to_mix) + age_layer1_old * pond_to_mix) / pond_old;
                 _age_layer1->val[j] = (age_pond_old * pond_to_mix + age_layer1_old * (ST1 - pond_to_mix)) / ST1;
             }
 
             // Mix infiltration with top layer storage
             Mixing_full(_theta1_old->val[j] * _depth1->val[j], _age_layer1->val[j], _infilt->val[j], _age_pond->val[j]);
-            
         }
         
         // Mixing layer 2

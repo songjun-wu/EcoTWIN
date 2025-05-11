@@ -15,6 +15,7 @@ int main(){
   Report *oReport;
 
   float advance_climate = 0; // resets to zero when Clim_input is updated
+  float advance_groundTs = 0;  // reset to zero when ground_input (e.g., LAI) is updated
   float advance_landuse = 0; // resets to zero when land use inputs is updated
   float advance_age = 0;     // resets to zero when water ages are advanced
   int Report_map_flag; // Whether to report maps
@@ -45,6 +46,7 @@ int main(){
     // Update counter
     oControl->current_ts += oControl->Simul_tstep;
     advance_climate += oControl->Simul_tstep;
+    advance_groundTs += oControl->Simul_tstep;
     advance_landuse += oControl->Simul_tstep;
     advance_age += oControl->Simul_tstep;
 
@@ -62,17 +64,21 @@ int main(){
     // Update climate inputs
     if (advance_climate >= oControl->Clim_input_tstep) {
       if (oControl->opt_climate_input_format == 1){
-      oAtmosphere->read_climate(*oControl);   
-    } else if  (oControl->opt_climate_input_format == 2) {
-      oAtmosphere->update_climate(*oControl);
-    }
-    
-    if (oControl->opt_groundTs_input_format == 1){
-      oBasin->read_groundTs(*oControl);
-    } else if  (oControl->opt_groundTs_input_format == 2) {
-      oBasin->update_groundTs(*oControl, *oParam);
-    }
+        oAtmosphere->read_climate(*oControl);   
+      } else if  (oControl->opt_climate_input_format == 2) {
+        oAtmosphere->update_climate(*oControl);
+      }
       advance_climate = 0;
+    }
+
+    // Update Ground inputs
+    if (advance_groundTs >= oControl->Clim_input_tstep) {
+      if (oControl->opt_groundTs_input_format == 1){
+        oBasin->read_groundTs(*oControl);
+      } else if  (oControl->opt_groundTs_input_format == 2) {
+        oBasin->update_groundTs(*oControl, *oParam);
+      }
+      advance_groundTs = 0;
     }
 
     // Update land use inputs

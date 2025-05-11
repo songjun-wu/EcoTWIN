@@ -3,14 +3,13 @@
 int Basin::Mixing_GW_tracking(Control &ctrl, Atmosphere &atm){
     /*
     ### GW:
-        (_GW_old)
-        + percolation3      (need to mix)
-        (_GW)
-        + repercolation3    
-        + GWf_in
-        - GWf_out
-        - GWf_toChn         
-                            
+    (_GW_old)
+    + percolation3      (need to mix)
+    (_GW)
+    + repercolation3    
+    + GWf_in
+    - GWf_out
+    - GWf_toChn                         
     */
 
     // Isotopes

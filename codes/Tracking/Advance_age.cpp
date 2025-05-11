@@ -11,7 +11,7 @@ int Basin::Advance_age(){
         _age_layer1->val[j] += 1;
         _age_layer2->val[j] += 1;
         _age_layer3->val[j] += 1;
-        _age_GW->val[j] += 1;
+        //_age_GW->val[j] += 1;
         _age_chanS->val[j] += 1;
         
     }
