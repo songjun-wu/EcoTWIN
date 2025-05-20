@@ -111,6 +111,7 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
             
         }
 
+
         
         // Interflow mixing with lateral inflow
         if (ctrl.opt_reinfil == 1){ 
@@ -124,14 +125,14 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
             _flux_interf_in_acc->val[from_j] += _no3_layer3->val[j] * _interf_out->val[j];
         }
 
-        
+
         // GW flow mixing with lateral inflow
         Mixing_full(_GW_old->val[j] + rPerc3 + _rrPerc3->val[j], _no3_GW->val[j], _GWf_in->val[j], _flux_GWf_in_acc->val[j] / _GWf_in->val[j]);
         if (lat_ok == 1){  // Add 18O in GW outflow to the GW inflow of downstream cell
             _flux_GWf_in_acc->val[from_j] += _no3_GW->val[j] * _GWf_out->val[j];
         }
         
-
+        
         // Channel storage mixing (with upstream inflow)
         if (_chnwidth->val[j] > roundoffERR){
             
@@ -146,11 +147,8 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
             }
         }
 
+
     }
-
-
-
-
 
     return EXIT_SUCCESS;
 }

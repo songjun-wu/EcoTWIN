@@ -15,11 +15,13 @@ def run_dream(parameters, likelihood, nchains=5, niterations=50000, start=None, 
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
+    
+    cores_pre_chain = 2
 
     if size < nchains:
         if rank == 0:
             print(f"Warning: Number of MPI processes ({size}) is less than requested chains ({nchains}). Adjusting nchains to {size}.")
-        nchains = size
+    nchains = size // cores_pre_chain  # Two cores for each chain
 
     if restart:
         if start is None:
@@ -103,7 +105,7 @@ def run_dream(parameters, likelihood, nchains=5, niterations=50000, start=None, 
                     shutil.rmtree(kwargs['savePath'])
                 os.makedirs(kwargs['savePath'])
 
-            args = (step_instance, niterations, start_point, verbose, nverbose, rank,
+            args = (step_instance, niterations, start_point, verbose, nverbose, rank//cores_pre_chain, rank%cores_pre_chain, nchains,
                     kwargs.get('savePath', '.'), kwargs.get('total_iterations', niterations),
                     kwargs.get('model_name', 'dream'))
 
@@ -120,36 +122,38 @@ def _sample_dream(args):
         verbose = args[3]
         nverbose = args[4]
         chainID = args[5]
-        savePath = args[6]
-        total_iterations = args[7]
-        model_name = args[8]
+        modelID = args[6]
+        nchains = args[7]
+        savePath = args[8]
+        total_iterations = args[9]
+        model_name = args[10]
 
         step_fxn = getattr(dream_instance, 'astep')
         q0 = start
         
         for iteration in range(iterations):
             old_params = q0
-
-            sampled_params, log_prior, log_like = step_fxn(q0, chainID, total_iterations)
-
-            log_ps = log_like + log_prior
-            q0 = sampled_params
-
-            if old_params is None:
-                old_params = q0
-
-            if iteration == 0:
-                f_param = open(savePath + model_name + '_sampled_params_chain_' + str(chainID) + '_' + str(total_iterations) + '.bin', 'ab+')
-                f_logps = open(savePath + model_name + '_logps_chain_' + str(chainID) + '_' + str(total_iterations) + '.bin', 'ab+')
             
-            sampled_params.tofile(f_param)
-            log_ps.tofile(f_logps)
+            sampled_params, log_prior, log_like, is_chain_master = step_fxn(q0, chainID, modelID, nchains, total_iterations)
+            if is_chain_master:
+                log_ps = log_like + log_prior
+                q0 = sampled_params
 
-            if chainID == 0:
-                print(iteration, log_ps, flush=True)
+                if old_params is None:
+                    old_params = q0
 
-        f_param.close()
-        f_logps.close()
+                if iteration == 0:
+                    f_param = open(savePath + model_name + '_sampled_params_chain_' + str(chainID) + '_' + str(total_iterations) + '.bin', 'ab+')
+                    f_logps = open(savePath + model_name + '_logps_chain_' + str(chainID) + '_' + str(total_iterations) + '.bin', 'ab+')
+                
+                sampled_params.tofile(f_param)
+                log_ps.tofile(f_logps)
+
+                if chainID == 0:
+                    print(iteration, log_ps, flush=True)
+        if is_chain_master:
+            f_param.close()
+            f_logps.close()
 
     except Exception as e:
         traceback.print_exc()

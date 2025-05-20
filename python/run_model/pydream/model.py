@@ -14,7 +14,7 @@ class Model():
         else:
             self.sampled_parameters = [sampled_parameters]
         
-    def total_logp(self, q0, chainID, total_iterations):
+    def total_logp(self, q0, chainID, modelID, total_iterations):
 
         prior_logp = 0
         var_start = 0
@@ -27,7 +27,7 @@ class Model():
                 prior_logp += param.prior(q0)
             var_start += param.dsize
 
-        loglike = self.likelihood(q0, chainID)
+        loglike = self.likelihood(q0, chainID, modelID)
 
         return prior_logp, loglike
     

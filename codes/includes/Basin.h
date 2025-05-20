@@ -209,6 +209,12 @@ class Basin {
   svector *_fastN2;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
   svector *_fastN3;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
   /* end of Nitrogen */
+
+  /* Save TS output to speed up calibration; Temporary implementation */
+  vector<double> vector_Q;
+  vector<double> vector_d18o_chanS;
+  vector<double> vector_no3_chanS;
+  
  
   
   Basin(Control &ctrl, Param &par);  // constrcuctor of Basin
@@ -329,6 +335,11 @@ class Basin {
 
   /* IO functions */
   int ReadNitrogenFile(Control &ctrl, Param &par, string fname);
+
+  /* Save TS output to speed up calibration; Temporary implementation */
+  int Report_for_cali(Control &ctrl);
+  int Save_for_cali(Control &ctrl);
+  bool save_vector_to_binary(const std::vector<double>& vec, const std::string& filename);
 
 };
 

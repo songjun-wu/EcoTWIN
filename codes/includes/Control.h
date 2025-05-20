@@ -31,7 +31,6 @@ struct Control{
   int Report_interval;
   int Update_interval;
   int num_category;  // Number of categories for parameterisation
-  int num_cliamte_zones;  // Number of climate zones
   /* end of Settings */
 
   /* Year month day */
@@ -266,6 +265,7 @@ struct Control{
   string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   string fn__degradation_soil;  // Reference rates of soil degradation [kg/ha]
   string fn__mineralisation_soil;  // Reference rates of soil mineralisation [kg/ha]
+  string fn__deni_soil_moisture_thres;  // The moisture threshold of soil denitrification
   /* end of Parameters */
 
   /* Report */

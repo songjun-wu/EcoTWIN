@@ -29,7 +29,6 @@ int Control::ReadConfigFile(string fname){
   readInto(Clim_input_tstep, "Clim_input_tstep", lines);
   readInto(Report_interval, "Report_interval", lines);
   readInto(Update_interval, "Update_interval", lines);
-  readInto(num_cliamte_zones, "num_cliamte_zones", lines);
   readInto(num_category, "num_category", lines);
   /* end of Settings */
 
@@ -190,6 +189,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__denitrification_soil, "denitrification_soil", lines);
   readInto(fn__degradation_soil, "degradation_soil", lines);
   readInto(fn__mineralisation_soil, "mineralisation_soil", lines);
+  readInto(fn__deni_soil_moisture_thres, "deni_soil_moisture_thres", lines);
   /* end of Parameters */
 
   /* Report */

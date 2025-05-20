@@ -65,7 +65,8 @@ def kge_modified(sim, obs):
     validIDX[obs==-9999] = False
     sim = sim[validIDX]
     obs = obs[validIDX]
-    
+
+
     sim_mean = np.mean(sim,dtype=np.float64)
     obs_mean = np.mean(obs, dtype=np.float64)
 
@@ -156,101 +157,82 @@ def add_edge(arr, ext=1, no_data = -9999.0):
 
 
 
-def sort_directory(mode, Path, Cali, Output):
+def sort_directory(mode, Path, Cali):
     if mode == 'DREAM_cali':
-
-        os.makedirs(Path.work_path, exist_ok=True)
+        if not os.path.exists(Path.work_path):
+            os.mkdir(Path.work_path)
         for i in range(Cali.nchains):
-            dir_for_each_chain = Path.work_path + '/chain_' +str(i) + '/' # Working directory for each chain
-            os.makedirs(dir_for_each_chain, exist_ok=True)
-            # Create sub-directories for each catchment
-            for kk in range(Output.N_catchments):
-                catchment_path = dir_for_each_chain + str(Output.Catchment_ID[kk]) + '/'
-                run_path =  catchment_path + '/run/'    # The path for model runs
-                output_path = run_path + 'outputs/'         # The path for output saving
-                os.makedirs(catchment_path, exist_ok=True)
-                os.makedirs(run_path, exist_ok=True)
-                os.makedirs(output_path, exist_ok=True)
-    
-    else:
-        os.makedirs(Path.work_path, exist_ok=True)
-        os.makedirs(Path.work_path+'/'+mode, exist_ok=True)
-        os.makedirs(Path.work_path+'/'+mode+'/outputs', exist_ok=True)  # Output folder
-
-        # Create sub-directories for each catchment
-        for kk in range(Output.N_catchments):
-            catchment_path = Path.work_path + '/' + mode + '/' + str(Output.Catchment_ID[kk]) + '/'
-            run_path =  catchment_path + '/run/'    # The path for model runs
+            dir_for_each_chain = Path.work_path + '/chain_' +str(i) # Working directory for each chain
+            if not os.path.exists(dir_for_each_chain):
+                os.mkdir(dir_for_each_chain)
+            
+            run_path =  dir_for_each_chain + '/run/'    # The path for model runs
             output_path = run_path + 'outputs/'         # The path for output saving
-            if os.path.exists(run_path):  # Clean the run path
-                shutil.rmtree(run_path)
-            os.makedirs(catchment_path, exist_ok=True)
-            os.makedirs(run_path, exist_ok=True)
-            os.makedirs(output_path, exist_ok=True)
+            if not os.path.exists(run_path):
+                os.mkdir(run_path)
+            if not os.path.exists(output_path):
+                os.mkdir(output_path)
+    
+    elif mode == 'forward':
+        if not os.path.exists(Path.work_path):
+            os.mkdir(Path.work_path)
+
+        if not os.path.exists(Path.work_path+'/forward'):
+            os.mkdir(Path.work_path+'/forward')
+        if not os.path.exists(Path.work_path+'/forward/outputs'):
+            os.mkdir(Path.work_path+'/forward/outputs')
+        run_path =  Path.work_path + '/forward/run/'    # The path for model runs
+        if os.path.exists(run_path):  # Clean the run path
+            shutil.rmtree(run_path)
+        os.mkdir(run_path)
+        output_path = run_path + 'outputs/'         # The path for output saving
+        if not os.path.exists(run_path):
+            os.mkdir(run_path)
+        if not os.path.exists(output_path):
+            os.mkdir(output_path)
 
         
  
 
-def set_env(mode, Path, nchains, Output):
+def set_env(mode, Path, nchains):
     if mode == 'DREAM_cali':
         for i in range(nchains):
-            dir_for_each_chain = Path.work_path + '/chain_' +str(i) + '/'    # Working directory for each chain
+            dir_for_each_chain = Path.work_path + '/chain_' +str(i)    # Working directory for each chain
+            run_path =  dir_for_each_chain + '/run/'        # The path for model runs
 
-            for kk in range(Output.N_catchments):
-                catchment_path = dir_for_each_chain + str(Output.Catchment_ID[kk]) + '/'   # Working directory for each catchment
-                run_path =  catchment_path + '/run/'        # The path for model runs
+            if os.path.exists(run_path):  # Clean the run path
+                shutil.rmtree(run_path)
+            os.mkdir(run_path)
 
-                if os.path.exists(run_path):  # Clean the run path
-                    shutil.rmtree(run_path)
-                os.mkdir(run_path)
-
-                # link the model
-                os.symlink(Path.model_path + Path.path_EXEC, run_path + Path.path_EXEC)
-                # copy inputs
-                #shutil.copytree(Path.data_path+'catchment_info/'+str(Output.Catchment_ID[kk])+'/spatial/', run_path+'spatial/')
-                # copy configs
-                shutil.copyfile(Path.config_path+'config.ini',  run_path+'config.ini')
-    
-    else:
-        for kk in range(Output.N_catchments):
-            catchment_path = Path.work_path + '/' + mode + '/' + str(Output.Catchment_ID[kk]) + '/'
-            run_path =  catchment_path + '/run/'    # The path for model runs
             # link the model
             os.symlink(Path.model_path + Path.path_EXEC, run_path + Path.path_EXEC)
             # copy inputs
-            #shutil.copytree(Path.data_path+'spatial/', run_path+'spatial/')
+            shutil.copytree(Path.data_path+'spatial/', run_path+'spatial/')
             # copy configs
             shutil.copyfile(Path.config_path+'config.ini',  run_path+'config.ini')
-
-
-def set_config(mode, Path, Cali, Output):
-    if mode == 'DREAM_cali':
-        for i in range(Cali.nchains):
-            dir_for_each_chain = Path.work_path + '/chain_' +str(i) + '/'    # Working directory for each chain
-            for kk in range(Output.N_catchments):
-                catchment_path = dir_for_each_chain + str(Output.Catchment_ID[kk]) + '/'   # Working directory for each catchment
-                run_path =  catchment_path + '/run/'        # The path for model runs
-
-                with open(run_path+'config.ini', 'r') as f:
-                    lines = np.array(f.readlines())
-                    lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/cali/'+str(Output.Catchment_ID[kk])+'/climate/\n', lines)
-                    lines = np.append('Maps_Folder = ' + Path.data_path + 'catchment_info/cali/'+str(Output.Catchment_ID[kk])+'/spatial/\n', lines)
-                with open(run_path+'config.ini', 'w') as f:
-                    f.writelines(lines)
     
-    else:
-        for kk in range(Output.N_catchments):
-            catchment_path = Path.work_path + '/' + mode + '/' + str(Output.Catchment_ID[kk]) + '/'
-            run_path =  catchment_path + '/run/'    # The path for model runs
-            with open(run_path+'config.ini', 'r') as f:
-                lines = np.array(f.readlines())
-
-                #lines = np.append('Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(Output.Catchment_ID[kk])+'/spatial/\n', lines)
-                #lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(Output.Catchment_ID[kk])+'/climate/\n', lines)
-                lines = np.append('Maps_Folder = ' + Path.data_path + 'catchment_info/cali/'+str(Output.Catchment_ID[kk])+'/spatial/\n', lines) # todo
-                lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/cali/'+str(Output.Catchment_ID[kk])+'/climate/\n', lines)
-            with open(run_path+'config.ini', 'w') as f:
-                f.writelines(lines)  
+    elif mode == 'forward':
+        run_path =  Path.work_path + '/forward/run/'    # The path for model runs
+        # link the model
+        os.symlink(Path.model_path + Path.path_EXEC, run_path + Path.path_EXEC)
+        # copy inputs
+        shutil.copytree(Path.data_path+'spatial/', run_path+'spatial/')
+        # copy configs
+        shutil.copyfile(Path.config_path+'config.ini',  run_path+'config.ini')
+        
+    elif mode == 'test':
+        # Clear run path
+        if os.path.exists(Path.run_path):
+            shutil.rmtree(Path.run_path)
+        os.mkdir(Path.run_path)
+        os.mkdir(Path.run_path + 'outputs/')
+        # link the model
+        os.symlink(Path.model_path + Path.path_EXEC, Path.run_path + Path.path_EXEC)
+        # copy inputs
+        shutil.copytree(Path.data_path+'spatial/', Path.run_path+'spatial/')
+        # copy configs
+        shutil.copyfile(Path.config_path+'config.ini',  Path.run_path+'config.ini')
+        #shutil.copyfile(Path.config_path+'param.ini',  Path.run_path+'param.ini')
 
 def get_restart_param(Path, Cali, param_N, total_iterations):
     starts = []
@@ -260,8 +242,33 @@ def get_restart_param(Path, Cali, param_N, total_iterations):
         starts.append(tmp[np.argwhere(likeli == np.max(likeli))[-1][-1], :])
     return starts
 
+def set_config(mode, Path, Cali):
+    if mode == 'DREAM_cali':
+        for i in range(Cali.nchains):
+            dir_for_each_chain = Path.work_path + '/chain_' +str(i)    # Working directory for each chain
+            run_path =  dir_for_each_chain + '/run/'        # The path for model runs
 
+            with open(run_path+'config.ini', 'r') as f:
+                lines = np.array(f.readlines())
+                lines = np.append('\nClim_Maps_Folder = ' + Path.data_path + 'climate/\n', lines)
+            with open(run_path+'config.ini', 'w') as f:
+                f.writelines(lines)
+    
+    elif mode == 'forward':
+        run_path =  Path.work_path + '/forward/run/'    # The path for model runs
+        with open(run_path+'config.ini', 'r') as f:
+            lines = np.array(f.readlines())
+            lines = np.append('\nClim_Maps_Folder = ' + Path.data_path + 'climate/\n', lines)
+        with open(run_path+'config.ini', 'w') as f:
+            f.writelines(lines)
 
+    
+    elif mode == 'test':
+        with open(Path.run_path+'config.ini', 'r') as f:
+            lines = np.array(f.readlines())
+            lines = np.append('\nClim_Maps_Folder = ' + Path.data_path + 'climate/\n', lines)
+        with open(Path.run_path+'config.ini', 'w') as f:
+            f.writelines(lines)
 
 def get_param_N(Info, Param):
     param_N = 0

@@ -28,10 +28,8 @@ exec('from ' + options.def_py + ' import *')
 
 
 
+
 if mode == 'DREAM_cali':
-    #GEM_tools.sort_directory(mode, Path, Cali, Output)
-    #GEM_tools.set_env(mode, Path, Cali.nchains, Output)
-    #GEM_tools.set_config(mode, Path, Cali, Output)
 
     nbatch = Cali.nbatchs
 
@@ -61,7 +59,6 @@ if mode == 'DREAM_cali':
         print(cmd)
         while (GEM_tools.checkTaskStatus('dmc_cali') > 0):
             time.sleep(10)
-    
 
         
         
@@ -71,9 +68,9 @@ elif mode == 'forward':
 
     os.chdir(Path.work_path)
     # Create and clean the directory
-    GEM_tools.sort_directory(mode, Path, Cali, Output)
-    GEM_tools.set_env(mode, Path, Cali, Output)
-    GEM_tools.set_config(mode, Path, Cali, Output)
+    GEM_tools.sort_directory(mode, Path, Cali)
+    GEM_tools.set_env(mode, Path, Cali)
+    GEM_tools.set_config(mode, Path, Cali)
 
     flag = True
     for niteration in np.arange(0, 1e5, Cali.niterations)[::-1]:
@@ -123,91 +120,77 @@ elif mode == 'test':
     os.system('python3 develop.py')  # todo
 
     # set the env
-    GEM_tools.sort_directory(mode, Path, Cali, Output)
-    GEM_tools.set_env(mode, Path, Cali, Output)
-    GEM_tools.set_config(mode, Path, Cali, Output)
+    GEM_tools.set_env(mode, Path, Cali)
+    GEM_tools.set_config(mode, Path, Cali)
 
-    #validIdx = np.loadtxt('/data/scratch/wusongj/paper4/param_good.txt').astype(np.int)
+    validIdx = np.loadtxt('/data/scratch/wusongj/paper4/param_good.txt').astype(np.int)
     
     counter = 0
-    #for i in range(len(validIdx)):
-    for i in [4]:
-        #for gg in range(len(Output.Catchment_ID)):
-        for gg in [0]:
-            catchment_ID = Output.Catchment_ID[gg]
-            print(Output.Catchment_ID)
-            run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
-            #idx = validIdx[i]
-            idx = i
-            print(idx)
-            # Which parameter set to use?
-            #param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1)[idx,:]
-            param = np.full(300, 0.5)
-            GEM_tools.gen_param(run_path, Info, Param, param)
-            GEM_tools.gen_no3_addtion(run_path, Info)
+    for i in range(len(validIdx)):
+    #for i in [0, 1]:
+        idx = validIdx[i]
+        print(idx)
+        # Which parameter set to use?
+        param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1)[idx,:]
+        #param = np.full(150, 0.5)
+        GEM_tools.gen_param(Path.run_path, Info, Param, param)
+        GEM_tools.gen_no3_addtion(Path.run_path, Info)
+        """"""
+        # Model run
+        os.chdir(Path.run_path)
+        os.system('./gEcoHydro')
 
-            # Model run
-            os.chdir(run_path)
-            os.system('./gEcoHydro')
+        # Save outputs
+        fnames = os.listdir(Path.run_path + 'outputs/')
+        save_path = '/data/scratch/wusongj/paper4/forward/outputs_posterior/'
+        for fname in fnames:
+            if fname.split('.')[-1] == 'bin':
+                if (counter==0):
+                    if os.path.exists(save_path + fname):
+                        os.remove(save_path + fname)
+                    f = open(save_path + fname, 'w')
+                    f.close()
+                with open(save_path + fname, 'ab+') as f:
+                    np.fromfile(Path.run_path + 'outputs/' + fname).tofile(f)
+        
+        counter += 1
+                
+        # Plot individual results
+        os.chdir(current_path)
+        os.system('python3 posterior_anlalysis.py')
 
-            
+        try:
+            shutil.copyfile(Path.output_path + '999_All_in_Ts.png', 'plots/999_All_in_Ts.png')
+            if os.path.exists('plots/999_All_in_Ts_'+str(idx)+'.png'):
+                os.remove('plots/999_All_in_Ts_'+str(idx)+'.png')
+            os.rename('plots/999_All_in_Ts.png', 'plots/999_All_in_Ts_'+str(idx)+'.png')
+        except Exception as e:
+            pass
+        
+        try:
+            shutil.copyfile(Path.output_path + '999_All_in_map.png', 'plots/999_All_in_map.png')
+            if os.path.exists('plots/999_All_in_map_'+str(idx)+'.png'):
+                os.remove('plots/999_All_in_map_'+str(idx)+'.png')
+            os.rename('plots/999_All_in_map.png', 'plots/999_All_in_map_'+str(idx)+'.png')
+        except Exception as e:
+            pass
 
-
-
-
-
-            """
-            # Save outputs
-            fnames = os.listdir(run_path + 'outputs/')
-            save_path = '/data/scratch/wusongj/paper4/forward/outputs_posterior/'
-            for fname in fnames:
-                if fname.split('.')[-1] == 'bin':
-                    if (counter==0):
-                        if os.path.exists(save_path + fname):
-                            os.remove(save_path + fname)
-                        f = open(save_path + fname, 'w')
-                        f.close()
-                    with open(save_path + fname, 'ab+') as f:
-                        np.fromfile(run_path + 'outputs/' + fname).tofile(f)
-            
-            counter += 1
-                    
-            # Plot individual results
-            os.chdir(current_path)
-            os.system('python3 posterior_anlalysis.py')
-
-            try:
-                shutil.copyfile(Path.output_path + '999_All_in_Ts.png', 'plots/999_All_in_Ts.png')
-                if os.path.exists('plots/999_All_in_Ts_'+str(idx)+'.png'):
-                    os.remove('plots/999_All_in_Ts_'+str(idx)+'.png')
-                os.rename('plots/999_All_in_Ts.png', 'plots/999_All_in_Ts_'+str(idx)+'.png')
-            except Exception as e:
-                pass
-            
-            try:
-                shutil.copyfile(Path.output_path + '999_All_in_map.png', 'plots/999_All_in_map.png')
-                if os.path.exists('plots/999_All_in_map_'+str(idx)+'.png'):
-                    os.remove('plots/999_All_in_map_'+str(idx)+'.png')
-                os.rename('plots/999_All_in_map.png', 'plots/999_All_in_map_'+str(idx)+'.png')
-            except Exception as e:
-                pass
-
-            try:
-                shutil.copyfile(Path.output_path + '999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_tracking.png')
-                if os.path.exists('plots/999_All_in_Ts_'+str(idx)+'_tracking.png'):
-                    os.remove('plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
-                os.rename('plots/999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
-            except Exception as e:
-                pass
-            
-            try:
-                shutil.copyfile(Path.output_path + '999_All_in_map_tracking.png', 'plots/999_All_in_map_tracking.png')
-                if os.path.exists('plots/999_All_in_map_'+str(idx)+'_tracking.png'):
-                    os.remove('plots/999_All_in_map_'+str(idx)+'_tracking.png')
-                os.rename('plots/999_All_in_map_tracking.png', 'plots/999_All_in_map_'+str(idx)+'_tracking.png')
-            except Exception as e:
-                pass
-            """
+        try:
+            shutil.copyfile(Path.output_path + '999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_tracking.png')
+            if os.path.exists('plots/999_All_in_Ts_'+str(idx)+'_tracking.png'):
+                os.remove('plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
+            os.rename('plots/999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
+        except Exception as e:
+            pass
+        
+        try:
+            shutil.copyfile(Path.output_path + '999_All_in_map_tracking.png', 'plots/999_All_in_map_tracking.png')
+            if os.path.exists('plots/999_All_in_map_'+str(idx)+'_tracking.png'):
+                os.remove('plots/999_All_in_map_'+str(idx)+'_tracking.png')
+            os.rename('plots/999_All_in_map_tracking.png', 'plots/999_All_in_map_'+str(idx)+'_tracking.png')
+        except Exception as e:
+            pass
+        
 
 
 elif mode == 'check':
@@ -220,7 +203,7 @@ elif mode == 'check':
         for niteration in np.arange(0, 2e5, Cali.niterations)[::-1]:
             if flag:
                 try:
-                    loglikes = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
+                    loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
                     #print(len(loglikes), loglikes[-1], np.max(loglikes))
                     arr.append(np.nanmax(loglikes))
                     lengths.append(len(loglikes))
@@ -231,13 +214,10 @@ elif mode == 'check':
                     pass
             else:
                 break
-
-    print(niterations, lengths)
     print('Chains  :  ', n_batch)
     print('Batch   :  ', int(np.mean(niterations)), np.mean(lengths))
     print('Average :  ', np.mean(arr))
     print('Maximum :  ', np.max(arr))
-    print(arr)
 
 elif mode == 'test11':
     loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(93)+'_500.bin')
@@ -348,65 +328,3 @@ elif mode == 'aaa':
         print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2))
     
     fig.savefig('tmp.png')
-
-
-
-elif mode == 'bbb':
-
-    for gg in [0]:
-        catchment_ID = Output.Catchment_ID[gg]
-        nsites = len(np.unique(Output.sim_q_idx[gg]+Output.sim_iso_idx[gg]+Output.sim_no3_idx[gg]))
-        discharge = np.fromfile('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS.bin').reshape(-1,nsites)
-        iso = np.fromfile('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/d18o_chanS_TS.bin').reshape(-1,nsites)
-        no3 = np.fromfile('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/no3_chanS_TS.bin').reshape(-1,nsites)
-        print(discharge.shape)
-        print(iso.shape)
-        print(no3.shape)
-
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS.txt', discharge)
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/d18o_chanS_TS.txt', iso)
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/no3_chanS_TS.txt', no3)
-
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS_mean.txt', np.mean(discharge, axis=1))
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/d18o_chanS_TS_mean.txt', np.mean(iso, axis=1))
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/no3_chanS_TS_mean.txt', np.mean(no3, axis=1))
-
-
-    """
-    path1 = '/data/scratch/wusongj/paper4/data/catchment_info/cali/291110/'
-    path2 = '/home/wusongj/GEM/test_dmc1//'
-    vars = os.listdir(path1+'climate')
-    for var in vars:
-        try:
-            data1 = np.fromfile(path1+'climate/'+var, dtype=np.float64)
-            data2 = np.fromfile(path2+'climate/'+var, dtype=np.float64)
-            data1[data1==-9999] = np.nan
-            data2[data2==-9999] = np.nan
-            print(var, np.nanmean(data1), np.nanmean(data2))
-        except:
-            pass
-    
-
-    path1 = '/data/scratch/wusongj/paper4/data/catchment_info/cali/291110/'
-    path2 = '/home/wusongj/GEM/test_dmc1/'
-    vars = sorted(os.listdir(path1+'spatial/'))
-    for var in vars:
-        try:
-            if var.endswith('asc'):
-                data1 = np.loadtxt(path1+'spatial/'+var, skiprows=6)
-                data2 = np.loadtxt(path2+'spatial/'+var, skiprows=6)
-                data1[data1==-9999] = np.nan
-                data2[data2==-9999] = np.nan
-                print(var, np.nanmean(data1), np.nanmean(data2))
-            elif var.endswith('bin'):
-                data1 = np.fromfile(path1+'spatial/'+var, dtype=np.float64)
-                data2 = np.fromfile(path2+'spatial/'+var, dtype=np.float64)
-                data1[data1==-9999] = np.nan
-                data2[data2==-9999] = np.nan
-                print(var, np.nanmean(data1), np.nanmean(data2))
-        except:
-            pass
-
-    cat_0 = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/291110/spatial/category_0.bin')
-    print(cat_0)
-    """

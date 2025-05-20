@@ -25,6 +25,7 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         diss_IN3 = theta3 * par._depth3->val[j] * no3_layer3;
         Ts = Get_soil_temperature(atm._Ta->val[j], _LAI->val[j]);  // Soil temperature [Degree C]
 
+        double moisture_function_threshold = par._deni_soil_moisture_thres->val[j];
 
         // Soil temperature factor [-]
         fct_Ts = Temp_factor(Ts);  
@@ -32,8 +33,8 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         // Layer 1
         if (theta1 > 0){
             // Soil moisture factor
-            if (theta1 / _thetaS1->val[j] > 0.7){
-                fct_theta = pow((theta1 / _thetaS1->val[j] - 0.7) / (1 - 0.7), 2.5);
+            if (theta1 / _thetaS1->val[j] > moisture_function_threshold){
+                fct_theta = pow((theta1 / _thetaS1->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5);
             } else{
                 fct_theta = 0;
             }
@@ -47,8 +48,8 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         // Layer 2
         if (theta2 > 0){
             // Soil moisture factor
-            if (theta2 / _thetaS2->val[j] > 0.7){
-                fct_theta = pow((theta2 / _thetaS2->val[j] - 0.7) / (1 - 0.7), 2.5);
+            if (theta2 / _thetaS2->val[j] > moisture_function_threshold){
+                fct_theta = pow((theta2 / _thetaS2->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5);
             } else{
                 fct_theta = 0;
             }
@@ -62,8 +63,8 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         // Layer 3
         if (theta3 > 0){
             // Soil moisture factor
-            if (theta3 / _thetaS3->val[j] > 0.7){
-                fct_theta = pow((theta3 / _thetaS3->val[j] - 0.7) / (1 - 0.7), 2.5);
+            if (theta3 / _thetaS3->val[j] > moisture_function_threshold){
+                fct_theta = pow((theta3 / _thetaS3->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5);
             } else{
                 fct_theta = 0;
             }

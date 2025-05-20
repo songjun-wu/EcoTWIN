@@ -67,6 +67,7 @@ class Param {
   vector<double> denitrification_soil;
   vector<double> degradation_soil;
   vector<double> mineralisation_soil;
+  vector<double> deni_soil_moisture_thres;
   svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
   svector *_wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
@@ -106,6 +107,7 @@ class Param {
   svector *_denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   svector *_degradation_soil;  // Reference rates of soil degradation [kg/ha]
   svector *_mineralisation_soil;  // Reference rates of soil mineralisation [kg/ha]
+  svector *_deni_soil_moisture_thres;  // The moisture threshold of soil denitrification
   /* end of Parameters */
 
   svector_2d *param_category;

@@ -345,6 +345,13 @@ int Param::Parameterisation(Control &ctrl){
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _mineralisation_soil->val[j] += param_category->val[k][j] * mineralisation_soil[k];
      }}}
+  
+  _deni_soil_moisture_thres->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (deni_soil_moisture_thres[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _deni_soil_moisture_thres->val[j] += param_category->val[k][j] * deni_soil_moisture_thres[k];
+     }}}
 
   }
   /* end of Parameters */

@@ -22,7 +22,7 @@ parser.add_option("--restart_niteration", dest="restart_niteration", help="  ")
 (options, args) = parser.parse_args()
 
 if options.def_py is None:
-    options.def_py = 'def_GEM_cali'
+    options.def_py = 'def_GEM'
 
 if options.restart == 'True':
     options.restart = True
@@ -57,6 +57,18 @@ def build_history(TASK_name, nchains, total_iterations, param_N, history_thin):
 
 
 
+
+
+# Import configuration
+sys.path.insert(0, os.getcwd())
+config = __import__(options.def_py)
+Path = config.Path
+Cali = config.Cali
+Info = config.Info
+Param = config.Param 
+
+
+
 try:
     # Import configuration
     sys.path.insert(0, os.getcwd())
@@ -65,7 +77,6 @@ try:
     Cali = config.Cali
     Info = config.Info
     Param = config.Param
-    Output = config.Output
 
     history_thin = Cali.history_thin
 
@@ -81,9 +92,9 @@ try:
         if rank == 0:
             try:
                 os.chdir(Path.work_path)
-                GEM_tools.sort_directory(options.mode, Path, Cali, Output)
-                GEM_tools.set_env(options.mode, Path, size, Output)
-                GEM_tools.set_config(options.mode, Path, Cali, Output)
+                GEM_tools.sort_directory(options.mode, Path, Cali)
+                GEM_tools.set_env(options.mode, Path, size)
+                GEM_tools.set_config(options.mode, Path, Cali)
                 param_N = GEM_tools.get_param_N(Info, Param)
                 print(f"Rank 0: Initialization complete. Starting {size} chains, param_N={param_N}", flush=True)
             except Exception as e:
@@ -92,8 +103,6 @@ try:
         else:
             os.chdir(Path.work_path)
             param_N = None
-
-        
 
         # Broadcast necessary data to all ranks
         param_N = comm.bcast(param_N, root=0)

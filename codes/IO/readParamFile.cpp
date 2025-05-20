@@ -56,6 +56,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(denitrification_soil, "denitrification_soil", lines);
   readIntoParam(degradation_soil, "degradation_soil", lines);
   readIntoParam(mineralisation_soil, "mineralisation_soil", lines);
+  readIntoParam(deni_soil_moisture_thres, "deni_soil_moisture_thres", lines);
   /* end of Parameters */
 
   input.close();

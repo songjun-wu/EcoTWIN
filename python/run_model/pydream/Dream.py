@@ -199,247 +199,202 @@ class Dream:
         self.verbose = verbose
         self.logp = self.model.total_logp
     
-    def astep(self, q0, chainID, total_iterations, T=1., last_loglike=None, last_logprior=None):
+    def astep(self, q0, chainID, modelID, nchains, total_iterations, T=1., last_loglike=None, last_logprior=None):
 
         # On first iteration, check that shared variables have been initialized (which only occurs if multiple chains have been started).
         if self.iter == 0:
             try:
-               
+                # Chain layout
                 self.chainID =chainID
+                self.modelID = modelID
                 self.chain_n = chainID
-                self.nchains = self.size
+                self.nchains = nchains
                 
-
-                Dream_shared_vars.win_history = MPI.Win.Create(Dream_shared_vars.history, comm=self.comm)
-                Dream_shared_vars.win_history.Fence()
-
+                # Intra-chain communicator (5 ranks per chain)
+                self.subcomm = self.comm.Split(color=chainID, key=self.rank)
+                self.subrank = self.subcomm.Get_rank()
                 
-                """
-                # Create shared memory for history
-                self.comm.Barrier()
-                Dream_shared_vars.win_history = MPI.Win.Allocate_shared(
-                    np.prod(Dream_shared_vars.history_arr_shape) * np.dtype(np.float64).itemsize,
-                    comm=self.comm
-                )
-
-                buf, _ = Dream_shared_vars.win_history.Shared_query(rank=0)
-                Dream_shared_vars.history = np.ndarray(
-                    Dream_shared_vars.history_arr_shape,
-                    dtype=np.float64,
-                    buffer=buf
-                )
-
-                self.comm.Barrier()
-                Dream_shared_vars.win_history.Fence()
-                print(self.chainID, Dream_shared_vars.history[0])
-                """
+                # Inter-chain communicator (only chain masters)
+                self.is_chain_master = (self.modelID == 0)
+                self.master_comm = self.comm.Split(color=0 if self.is_chain_master else MPI.UNDEFINED, key=self.rank)
                 
+                # Allocate full shared history array on rank 0 of master_comm
+                if self.is_chain_master:
+                    Dream_shared_vars.win_history = MPI.Win.Create(Dream_shared_vars.history, comm=self.master_comm)
+                    Dream_shared_vars.win_history.Fence()
+                else:
+                    Dream_shared_vars.win_history = None
+                    history = None
+
                 if self.rank == 0 and not self.history_file and Dream_shared_vars.history_seeded == b'F':
-                    if self.verbose:
-                        print('Seeding history with ', self.nseedchains, ' draws from prior.')
+
                     for i in range(self.nseedchains):
                         start_loc = i * self.total_var_dimension
                         end_loc = start_loc + self.total_var_dimension
                         init_arr = self.draw_from_prior(self.variables)           
                         Dream_shared_vars.history[start_loc:end_loc] = init_arr
                     Dream_shared_vars.history_seeded = b'T'
+                if self.is_chain_master:   
+                    #Dream_shared_vars.win_history.Lock(0)
+                    Dream_shared_vars.win_history.Get(Dream_shared_vars.history, target_rank=0, target=0)
+                    #Dream_shared_vars.win_history.Unlock(0)
+                    Dream_shared_vars.win_history.Fence()
+                     
+                    Dream_shared_vars.history_seeded = self.comm.bcast(Dream_shared_vars.history_seeded, root=0)
+                    #Dream_shared_vars.history = self.comm.bcast(Dream_shared_vars.history, root=0)
                     
-                #Dream_shared_vars.win_history.Lock(0)
-                Dream_shared_vars.win_history.Get(Dream_shared_vars.history, target_rank=0, target=0)
-                #Dream_shared_vars.win_history.Unlock(0)
-                Dream_shared_vars.win_history.Fence()
+                    if self.start_random:
+                        q0 = self.draw_from_prior(self.variables, random_seed=True)
 
-                Dream_shared_vars.history_seeded = self.comm.bcast(Dream_shared_vars.history_seeded, root=0)
-                #Dream_shared_vars.history = self.comm.bcast(Dream_shared_vars.history, root=0)
+                    # Also get length of history array so we know when to save it at end of run.
+                    if self.save_history:
+                        self.len_history = len(np.frombuffer(Dream_shared_vars.history))
 
-                if self.start_random:
-                    q0 = self.draw_from_prior(self.variables, random_seed=True)
+                    self.crossover_burnin = self.comm.bcast(self.crossover_burnin, root=0)
+                    
+            except Exception as e:
+                print('Error found in the first iteration :   ', e, flush=True)
 
-                # Also get length of history array so we know when to save it at end of run.
-                if self.save_history:
-                    self.len_history = len(np.frombuffer(Dream_shared_vars.history))
-
-                self.crossover_burnin = self.comm.bcast(self.crossover_burnin, root=0)
-
-            except AttributeError:
-                raise Exception('Dream should be run with multiple chains in parallel.  Set nchains > 1.')          
+            #except AttributeError:
+            #    raise Exception('Dream should be run with multiple chains in parallel.  Set nchains > 1.')          
         
         try:
-
+            
             if last_loglike != None:
                 self.last_like = last_loglike
                 self.last_prior = last_logprior
                 self.last_logp = T*self.last_like + self.last_prior
+            
+            if self.is_chain_master:        
+                #Determine whether to run snooker update or not for this iteration.
+                run_snooker = self.set_snooker()
                 
-            #Determine whether to run snooker update or not for this iteration.
-            run_snooker = self.set_snooker()
-            
-    
-            #Set crossover value for generating proposal point
-            CR = self.set_CR(self.CR_probabilities, self.CR_values)
-            
-            #Set DE pair choice to be used for generating proposal point for this iteration.
-            DEpair_choice = self.set_DEpair(self.DEpairs)
-
-            #Select gamma size level
-            gamma_level = self.set_gamma_level(self.gamma_probabilities, self.gamma_level_values)
         
+                #Set crossover value for generating proposal point
+                CR = self.set_CR(self.CR_probabilities, self.CR_values)
+                
+                #Set DE pair choice to be used for generating proposal point for this iteration.
+                DEpair_choice = self.set_DEpair(self.DEpairs)
 
-            #Generate proposal points
-            if not run_snooker:
-                proposed_pts = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=False)              
-            else:
-                proposed_pts, snooker_logp_prop, z = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=True)                 
+                #Select gamma size level
+                gamma_level = self.set_gamma_level(self.gamma_probabilities, self.gamma_level_values)
             
+
+                #Generate proposal points
+                if not run_snooker:
+                    proposed_pts = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=False)              
+                else:
+                    proposed_pts, snooker_logp_prop, z = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=True)                 
+            
+            # Broadcast proposed params to all model ranks in this chain
+            q0 = self.subcomm.bcast(q0, root=0)
             if self.last_logp == None:
-                self.last_prior, self.last_like = self.logp(q0, chainID, total_iterations)
+                self.last_prior, self.last_like = self.logp(q0, self.chainID, self.modelID, total_iterations)
                 self.last_logp = T*self.last_like + self.last_prior
+            # Gather results from model ranks
+            all_likes = self.subcomm.gather(self.last_logp, root=0)
+            if self.is_chain_master:
+                q_logp = np.log(np.sum(all_likes)) * (-1*100)
+                if np.isnan(q_logp):
+                    q_logp = -np.inf
             
-            #Evaluate logp(s)
-            if self.multitry == 1:
-                q_prior, q_loglike_noT = self.logp(np.squeeze(proposed_pts), chainID, total_iterations)
-                q_logp_noT = q_prior + q_loglike_noT
-                q_logp = T*q_loglike_noT + q_prior
-                q = np.squeeze(proposed_pts)
-            else:
-                log_priors, log_likes = self.mt_evaluate_logps(self.parallel, self.multitry, proposed_pts, self.logp, ref=False)
-                log_ps = T*log_likes + log_priors
-                    
-                #Check if all logps are -inf, in which case they'll all be impossible and we need to generate more proposal points
-                while np.all(np.isfinite(np.array(log_ps))==False):
-                    if run_snooker:
-                        proposed_pts, snooker_logp_prop, z = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=run_snooker)
-                    else:
-                        proposed_pts = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=run_snooker)
-                        
-                    log_priors, log_likes = self.mt_evaluate_logps(self.parallel, self.multitry, proposed_pts, self.logp, ref=False)
-                    log_ps = T*log_likes + log_priors
-                    
-                q_proposal, q_logp, q_logp_noT, q_loglike_noT, q_prior = self.mt_choose_proposal_pt(log_priors, log_likes, proposed_pts, T)
-                            
-                #Draw reference points around the randomly selected proposal point
-                if run_snooker:
-                    reference_pts, snooker_logp_ref, z_ref = self.generate_proposal_points(self.multitry - 1, q_proposal, CR, DEpair_choice, gamma_level, snooker=run_snooker)
-                else:
-                    reference_pts = self.generate_proposal_points(self.multitry - 1, q_proposal, CR, DEpair_choice, gamma_level, snooker=run_snooker)
-                
-                #Compute posterior density at reference points.
-                ref_log_priors, ref_log_likes = self.mt_evaluate_logps(self.parallel, self.multitry, reference_pts, self.logp, ref=True)
-                ref_log_ps = T * ref_log_likes + ref_log_priors
-
-            if self.multitry > 1:
-                if run_snooker:
-                    total_proposal_logp = log_ps + snooker_logp_prop
-                    #Goal is to determine the ratio =  p(y) * p(y --> X) / p(Xref) * p(Xref --> X) where y = proposal point, X = current point, and Xref = reference point
-                    # First determine p(y --> X) (i.e. moving from proposed point y to original point X)
-                    # p(y --> X) equals ||y - z||^(n-1), i.e. the snooker_logp for the proposed point
-                    # p(Xref --> X) is equal to p(Xref --> y) * p(y --> X) (i.e. moving from Xref to proposed point y to original point X)
-                    snooker_logp_ref = np.append(snooker_logp_ref, 0)
-                    total_reference_logp = ref_log_ps + snooker_logp_ref + snooker_logp_prop
-                
-                else:
-
-                    total_proposal_logp = log_ps
-                    total_reference_logp = ref_log_ps
-                
-                #Determine max logp for all proposed and reference points
-                max_logp = np.amax(np.concatenate((total_proposal_logp, total_reference_logp)))
-                weight_proposed = np.exp(total_proposal_logp - max_logp)
-                weight_reference = np.exp(total_reference_logp - max_logp)
-                q_new = metrop_select(np.nan_to_num(np.log(np.sum(weight_proposed) / np.sum(weight_reference))), q_proposal, q0)
-                
-            else:
+            #Evaluate proposed samples(s)
+            proposed_pts = proposed_pts if self.is_chain_master else None
+            proposed_pts = self.subcomm.bcast(proposed_pts, root=0)
+            
+            q_prior, q_loglike_noT = self.logp(np.squeeze(proposed_pts), self.chainID, self.modelID, total_iterations)
+            q_logp_noT = q_prior + q_loglike_noT
+            q_logp = T*q_loglike_noT + q_prior
+            q = np.squeeze(proposed_pts)
+            # Gather results from model ranks
+            all_likes = self.subcomm.gather(q_logp, root=0)
+            if self.is_chain_master:
+                q_logp = np.log(np.sum(all_likes)) * (-1*100)
+                if np.isnan(q_logp):
+                    q_logp = -np.inf
+            
+            # Sample evaluation
+            if self.is_chain_master:
                 if run_snooker:
                     total_proposed_logp = q_logp + snooker_logp_prop
                     norm = np.linalg.norm(q0 - z)
                     snooker_current_logp = np.log(norm, where=norm != 0) * (self.total_var_dimension - 1)
                     total_old_logp = self.last_logp + snooker_current_logp
-                    
                     q_new = metrop_select(np.nan_to_num(total_proposed_logp - total_old_logp), q, q0)
                 else:
                     q_new = metrop_select(np.nan_to_num(q_logp) - np.nan_to_num(self.last_logp), q, q0)
                 
-            if not np.array_equal(q0, q_new):
-                if self.multitry == 1:
-                    if self.verbose:
-                        print('Accepted point.  New logp: ', q_logp, ' old logp: ', self.last_logp, ' at temperature: ', T)
-                    
-                else:
-                    if self.verbose:
-                        print('Accepted point.  New logp: ', q_logp, ' old logp: ', self.last_logp, ' weight proposed: ', log_ps, ' weight ref: ', ref_log_ps, ' ratio: ', np.sum(weight_proposed) / np.sum(weight_reference), ' at temperature: ', T)
-                    
-                self.last_logp = q_logp_noT
-                self.last_prior = q_prior
-                self.last_like = q_loglike_noT
-                
-            else:
-                if self.multitry == 1:
-                    if self.verbose:
-                        print('Did not accept point.  Kept old logp: ',self.last_logp,' Tested logp: ',q_logp,' at temperature: ',T)
-                
-                else:
-                    if self.verbose:
-                        print('Did not accept point.  Kept old logp: ',self.last_logp,' Tested logp: ',q_logp,' weight proposed: ',log_ps,' weight ref: ',ref_log_ps,' ratio: ',np.sum(weight_proposed)/np.sum(weight_reference),' at temperature: ',T)
+                if not np.array_equal(q0, q_new):
+                    self.last_logp = q_logp_noT
+                    self.last_prior = q_prior
+                    self.last_like = q_loglike_noT
                 
             
-            
-            #Place new point in history given history thinning rate
-            if self.iter % self.history_thin == 0 or self.iter == (self.niterations - 1):
-                self.global_count = self.record_history(self.nseedchains, self.total_var_dimension, q_new, self.len_history)  
-            if self.iter < self.crossover_burnin+1:
-                self.set_current_position_arr(self.total_var_dimension, q_new)
-
-            #If adapting crossover values, estimate ideal crossover probabilities for each dimension during burn-in.
-            #Don't do this for the first 10 iterations to give all chains a chance to fill in the shared current position array
-            #Don't count iterations where gamma was set to 1 in crossover adaptation calculations
-            if self.adapt_crossover and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma) == 1.0):
-                #If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
-                if not run_snooker:
-                    self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR)
-                else:
-                    self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR=1)
-
-
-            if self.adapt_gamma and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma) == 1.0) and not run_snooker:
-                self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
-
-            if self.iter == self.crossover_burnin:
-                self.comm.Barrier()
-                self.local_burn_in = 1
-                total_burn_in = self.comm.allreduce(self.local_burn_in, op=MPI.SUM)
-
-                #if self.rank == 0:
-                #    Dream_shared_vars.nchains = total_burn_in
-                #total_burn_in = self.comm.bcast(total_burn_in, root=0)
+            if self.is_chain_master:
+                #Place new point in history given history thinning rate
                 
-                if self.adapt_gamma:
-                    self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
+                if self.iter % self.history_thin == 0 or self.iter == (self.niterations - 1):
+                    self.global_count = self.record_history(self.nseedchains, self.total_var_dimension, q_new, self.len_history)  
+                if self.iter < self.crossover_burnin+1:
+                    self.set_current_position_arr(self.total_var_dimension, q_new)
                 
-                if self.adapt_crossover:
+                #If adapting crossover values, estimate ideal crossover probabilities for each dimension during burn-in.
+                #Don't do this for the first 10 iterations to give all chains a chance to fill in the shared current position array
+                #Don't count iterations where gamma was set to 1 in crossover adaptation calculations
+                if self.adapt_crossover and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma) == 1.0):
                     #If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
                     if not run_snooker:
                         self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR)
                     else:
                         self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR=1)
-            
-                while total_burn_in != self.nchains:
-                    time.sleep(3)
-                    total_burn_in = self.comm.allreduce(self.local_burn_in, op=MPI.SUM)  
-                time.sleep(5)
 
-                if self.adapt_gamma:
-                    self.gamma_probabilities = self.comm.bcast(self.gamma_probabilities, root=0)
+                
+                if self.adapt_gamma and self.iter > 10 and self.iter < self.crossover_burnin and not np.any(np.array(self.gamma) == 1.0) and not run_snooker:
+                    self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
+                
+                
+
+                if self.iter == self.crossover_burnin:
                     
-                if self.adapt_crossover:
-                    self.CR_probabilities = self.comm.bcast(self.CR_probabilities, root=0)
+                    self.master_comm.Barrier()
+                    self.local_burn_in = 1
+                    
+                    total_burn_in = self.master_comm.allreduce(self.local_burn_in, op=MPI.SUM)
+                    
+                    #if self.rank == 0:
+                    #    Dream_shared_vars.nchains = total_burn_in
+                    #total_burn_in = self.comm.bcast(total_burn_in, root=0)
+                    
+                    if self.adapt_gamma:
+                        self.gamma_probabilities = self.estimate_gamma_level_probs(self.total_var_dimension, q0, q_new, gamma_level)
+                    
+                    if self.adapt_crossover:
+                        #If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
+                        if not run_snooker:
+                            self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR)
+                        else:
+                            self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR=1)
+                    
+                    while total_burn_in != self.nchains:
+                        time.sleep(3)
+                        total_burn_in = self.comm.allreduce(self.local_burn_in, op=MPI.SUM)  
+                    time.sleep(5)
+
+                    if self.adapt_gamma:
+                        self.gamma_probabilities = self.comm.bcast(self.gamma_probabilities, root=0)
+                        
+                    if self.adapt_crossover:
+                        self.CR_probabilities = self.comm.bcast(self.CR_probabilities, root=0)
+
             
+            q_new = q_new if self.is_chain_master else None
+                                
             self.iter += 1
-
-
+            
         except Exception as e:
             traceback.print_exc()
             raise e
-        return q_new, self.last_prior, self.last_like
+        return q_new, self.last_prior, self.last_like, self.is_chain_master
         
     def set_current_position_arr(self, ndimensions, q_new):
         """Add current position of chain to shared array available to other chains.
@@ -974,6 +929,7 @@ class Dream:
         start_loc = int((nhistoryrecs) * ndimensions)
         end_loc = int(start_loc + ndimensions)
 
+
         #Dream_shared_vars.win_history.Lock(0)
         #Dream_shared_vars.win_history.Lock(lock_type=MPI.LOCK_SHARED, rank=0)
         Dream_shared_vars.win_history.Get(Dream_shared_vars.history, target_rank=0, target=0)  # Pull the whole array
@@ -986,11 +942,12 @@ class Dream:
         Dream_shared_vars.win_history.Fence()
         #Dream_shared_vars.win_history.Flush(0)
         #print(self.chainID, np.sum(np.isnan(Dream_shared_vars.history)), flush=True)
+
         #start_loc1 = int (((self.local_count-1) * self.nchains  + self.chainID + nseedchains) * ndimensions)
         #end_loc1 = int(start_loc1 + ndimensions)
         #print(start_loc, end_loc, start_loc1, end_loc1, q_new.flatten()[:5], Dream_shared_vars.history[start_loc:end_loc][:5], Dream_shared_vars.history[start_loc1:end_loc1][:5], flush=True) # todo
         #print(self.local_count * self.nchains, nseedchains, ndimensions, start_loc1, flush=True)
-        #print(self.chainID, start_loc, end_loc, q_new[:3], Dream_shared_vars.history[start_loc:end_loc][:3],  start_loc1, end_loc1, Dream_shared_vars.history[start_loc1:end_loc1][:3], flush=True)
+        #print(self.local_count, self.chainID, start_loc, end_loc, q_new[:3], Dream_shared_vars.history[start_loc:end_loc][:3],  start_loc1, end_loc1, Dream_shared_vars.history[start_loc1:end_loc1][:3], flush=True)
 
         self.local_count += 1
 
@@ -1055,6 +1012,7 @@ def metrop_select(mr, q, q0):
         Proposed point
     q0 : numpy array
         Original point"""
+
 
     # Compare acceptance ratio to uniform random number
     if np.isfinite(mr) and np.log(np.random.uniform()) < mr:

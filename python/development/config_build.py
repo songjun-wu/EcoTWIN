@@ -114,12 +114,12 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('Clim_Maps_Folder = ./climate/\n')
     text.append('Output_Folder = ./outputs/\n\n')
     text.append('# Model configuration\n')
-    text.append('Simul_start = 2903299200 # Seconds since 1990-1-1 00:00:00\n')
-    text.append('Simul_end = 946857600 # in second\n')
+    text.append('Simul_start = 2472012000 # Seconds since 1900-1-1 00:00:00\n')
+    text.append('Simul_end = 1420070400 # in second  # Seconds from 1980-1-1 to 2024-12-31\n')
     text.append('Simul_tstep = 86400 # seconds (daily)\n')
     text.append('Clim_input_tstep = 86400 # seconds (daily)\n')
     text.append('Report_interval = -3 # The interval of map reports in seconds; or daily (-1), monthly (-2), or annually (-3) \n')
-    text.append('Update_interval = 946857600 # seconds (every 100 days); the interval for land use / soil type update \n\n')
+    text.append('Update_interval = 315619200  # seconds (every 10 years); the interval for land use / soil type update \n\n')
 
     text.append('# Options \n')
     opt_list = []
@@ -143,14 +143,14 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                 if counter == 0:
                     text.append('\n### '+signs[i]+'\n')
                     if signs[i] == 'Parameters':
-                        text.append('num_category = 9 # The number of categories for parameterisation ...\n' + \
+                        text.append('num_category = 13 # The number of categories for parameterisation ...\n' + \
                                     '#The categories should include the land use types, soil types, or any other types for parameterisation ...\n' + \
                                     '#The distribution of each category (in decimal proportion) should be specified in cat_id.asc ...\n' + \
-                                    '#The first category (column) represents global parameter (i.e., cat_0.asc should be 1)\n' )
+                                    '#The first category (column) represents global parameter (i.e., cat_0.bin should be filled with 1)\n' )
                         text.append('parameter_file = param.ini # The file contains all parameter name, values, and descriptio. Each column =  a category\n')
                     elif signs[i] == 'Climate':
-                        text.append('num_cliamte_zones = 1 # The number of climate zones for parameterisation.\n' )
-                        text.append('climate_zones = climate_zones.asc # Needed if opt_climate_input_format = 2; Zone ID should start from 0!\n')
+                        text.append('# The number of climate zones will be estimated from climate_zone raster as the maximum number.\n' )
+                        text.append('climate_zones = climate_zones.asc # Needed if opt_climate_input_format = 2; Zone ID should start from 1!\n')
                     elif signs[i] == 'GIS':
                         text.append('flow_direction  =  fdir.asc   # Flow direction [int; d8 method]\n')
                         text.append('Gauge_mask  =  Gauge_to_Report.asc   # Gauges that require outputs [int; start from 0]\n')
@@ -288,3 +288,17 @@ def read_nitrogen(fname, Nitrogen_inputs):
     if(('').join(content) != ('').join(lines)):        
         with open(fname, 'w') as f:
             f.writelines(content)
+
+
+def add_header(directory):
+    all_files = []
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            all_files.append(os.path.join(root, file))
+    print(all_files)
+
+
+    header = "\
+    Generic Ecohydrological Model\
+    "
+

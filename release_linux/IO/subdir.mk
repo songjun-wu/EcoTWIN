@@ -9,6 +9,7 @@ CPP_SRCS += \
 ../codes/IO/readParamFile.cpp \
 ../codes/IO/readConfigFile.cpp \
 ../codes/IO/report.cpp \
+../codes/IO/report_for_cali.cpp \
 
 
 OBJS += \
@@ -17,6 +18,7 @@ OBJS += \
 ./IO/readParamFile.o \
 ./IO/readConfigFile.o \
 ./IO/report.o \
+./IO/report_for_cali.o \
 
 
 CPP_DEPS += \
@@ -25,6 +27,7 @@ CPP_DEPS += \
 ./IO/readParamFile.d \
 ./IO/readConfigFile.d \
 ./IO/report.d \
+./IO/report_for_cali.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

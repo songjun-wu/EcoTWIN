@@ -83,6 +83,7 @@ Param::Param(Control &ctrl){
     _denitrification_soil = new svector(_sortedGrid.size);
     _degradation_soil = new svector(_sortedGrid.size);
     _mineralisation_soil = new svector(_sortedGrid.size);
+    _deni_soil_moisture_thres = new svector(_sortedGrid.size);
   }
   /* end of Parameters */
 

@@ -28,7 +28,7 @@ int main(){
   oReport = new Report(*oControl);
 
   oBasin->Initialisation(*oControl, *oParam, *oAtmosphere);
-  oReport->Report_Initialisation(*oControl);
+  // oReport->Report_Initialisation(*oControl);  // To be re-enabled
 
   auto stop1 = std::chrono::high_resolution_clock::now();
   
@@ -39,9 +39,10 @@ int main(){
     oBasin->Solve_timesteps(*oControl, *oParam, *oAtmosphere);
     
     // report outputs
-    oReport->Report_all(*oControl, *oBasin); 
+    //oReport->Report_all(*oControl, *oBasin);  // To be re-enabled
 
-  
+    // Temporary for faster calibration; todo
+    oBasin->Report_for_cali(*oControl);
 
     // Update counter
     oControl->current_ts += oControl->Simul_tstep;
@@ -89,13 +90,15 @@ int main(){
 
   }
 
+  // Temporary for faster calibration; todo
+  oBasin->Save_for_cali(*oControl);
+
   // Deconstructor
   //oAtmosphere->dtor(*oControl);
   //oBasin->dtor(*oControl);
   //oParam->dtor(*oControl);
   //oControl->dtor();
-  oReport->dtor(*oControl);
-
+  //oReport->dtor(*oControl); // To be re-enabled
   
   auto stop2  = std::chrono::high_resolution_clock::now();
 

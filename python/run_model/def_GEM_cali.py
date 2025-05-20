@@ -8,10 +8,9 @@ import numpy as np
 class Path:
     model_path = '/home/wusongj/GEM/stable_release/' # The path for model executable file
     path_EXEC = 'gEcoHydro'
-    data_path = '/home/wusongj/GEM/test_dmc/'                   # The path with spatial and climate data
-    config_path = '/home/wusongj/GEM/test_dmc/'                 # The path with configuration files (.ini)
-
-    work_path = '/data/scratch/wusongj/paper4/'            # Working directory
+    data_path = '/data/scratch/wusongj/paper4/data/'                   # The path with spatial and climate data
+    config_path = '/data/scratch/wusongj/paper4/data/config/'                 # The path with configuration files (.ini)
+    work_path = '/data/scratch/wusongj/paper4/cali/'            # Working directory
     
     run_path = work_path + 'run/'           # The path for model runs
     output_path = run_path + 'outputs/'     # The path for output saving
@@ -22,53 +21,54 @@ class Path:
 
 class Info:
     nodata = -9999.0 # nodata value for param.ini and all spatial maps
-    soil_index = [1,2,3,4]  # Column index in param.ini
-    landuse_index = [5,6,7,8]  # Column index in param.ini
+    soil_index = [1,2,3,4,5,6]  # Column index in param.ini
+    landuse_index = [7,8,9,10,11,12]  # Column index in param.ini
     N_soil = len(soil_index)  # Number of soil types
     N_landuse = len(landuse_index) # Number of land use types
     spin_up = 731  # warming days
 
     ### N additon ###
+    # Crop, pasture, grass, forest, sparse/bare soil, urban
     nadd = {}
-    nadd['fert_add'] = {'value':[12, 0, 0, 1]}
-    nadd['fert_day'] = {'value':[87, 87, 87, 87]}
-    nadd['fert_down'] = {'value':[0.4, 0.4, 0.4, 0.4]}
-    nadd['fert_period'] = {'value':[30, 30, 30, 30]}
-    nadd['fert_IN'] = {'value':[0.5, 0.5, 0.5, 0.5]}
+    nadd['fert_add'] = {'value':[12, 2, 0, 0, 0, 0]}
+    nadd['fert_day'] = {'value':[87, 87, 87, 87, 87, 87]}
+    nadd['fert_down'] = {'value':[0.4, 0.4, 0.4, 0.4, 0.4, 0.4]}
+    nadd['fert_period'] = {'value':[30, 30, 30, 30, 30, 30]}
+    nadd['fert_IN'] = {'value':[0.5, 0.5, 0.5, 0.5, 0.5, 0.5]}
 
-    nadd['manure_add'] = {'value':[1.5, 0, 0, 3]}
-    nadd['manure_day'] = {'value':[110, 110, 110, 110]}
-    nadd['manure_down'] = {'value':[0.4, 0.3, 0.3, 0.3]}
-    nadd['manure_period'] = {'value':[30, 30, 30, 30]}
-    nadd['manure_IN'] = {'value':[0.5, 0.5, 0.5, 0.5]}
+    nadd['manure_add'] = {'value':[1.5, 4, 1, 0, 0, 2]}
+    nadd['manure_day'] = {'value':[110, 110, 110, 110, 110, 110]}
+    nadd['manure_down'] = {'value':[0.4, 0.3, 0.3, 0.3, 0.3, 0.3]}
+    nadd['manure_period'] = {'value':[30, 30, 30, 30, 30, 30]}
+    nadd['manure_IN'] = {'value':[0.5, 0.5, 0.5, 0.5, 0.5, 0.5]}
 
-    nadd['residue_add'] = {'value':[2, 1, 1, 2]}
-    nadd['residue_day'] = {'value':[242, 290, 290, 260]}
-    nadd['residue_down'] = {'value':[0.3, 0.3, 0.3, 0.3]}
-    nadd['residue_period'] = {'value':[30, 30, 30, 30]}
-    nadd['residue_fastN'] = {'value':[0.6, 0.6, 0.6, 0.6]}
+    nadd['residue_add'] = {'value':[2, 2, 1, 1, 0, 0]}
+    nadd['residue_day'] = {'value':[242, 260, 260, 290, 290, 290]}
+    nadd['residue_down'] = {'value':[0.3, 0.3, 0.3, 0.3, 0.3, 0.3]}
+    nadd['residue_period'] = {'value':[30, 30, 30, 30, 30, 30]}
+    nadd['residue_fastN'] = {'value':[0.6, 0.6, 0.6, 0.6, 0.6, 0.6]}
 
-    nadd['up1'] = {'value':[10, 3, 3, 5]}
-    nadd['up2'] = {'value':[0.5, 1, 1, 0.8]}
-    nadd['up3'] = {'value':[5e-2, 2e-2, 2e-2, 3e-2]}
-    nadd['upper_uptake'] = {'value':[0.3, 0.5, 0.5, 0.4]}
-    nadd['plant_day'] = {'value':[85, 55, 55, 85]}    
-    nadd['harvest_day'] = {'value':[220, 300, 300, 350]}
+    nadd['up1'] = {'value':[10, 5, 5, 3, 3, 3]}
+    nadd['up2'] = {'value':[0.5, 0.8, 0.8, 1, 1, 1]}
+    nadd['up3'] = {'value':[5e-2, 3e-2, 3e-2, 2e-2, 2e-2, 2e-2]}
+    nadd['upper_uptake'] = {'value':[0.3, 0.4, 0.4, 0.5, 0.5, 0.5]}
+    nadd['plant_day'] = {'value':[85, 85, 85, 55, 55, 55]}    
+    nadd['harvest_day'] = {'value':[220, 300, 300, 300, 300, 300]}
 
 
 class Cali:
     # DREAM calibration
-    TASK_name = 'DREAM_cali_DMC'
-    nchains = 100
+    TASK_name = 'DREAM_cali'
+    nchains = 10
 
-    nbatchs = 40  # Number of batches
-    niterations = 500  # Number of iterations for each batch
+    nbatchs = 3  # Number of batches
+    niterations = 50  # Number of iterations for each batch
     
 
-    restart = True   # Whether restart?
+    restart = False   # Whether restart?
     restart_niteration = 20000 # restart since which iteration?
 
-    history_thin = 10
+    history_thin = 1
 
     static_config = False  # Whether to define the configs at the beginning to speed up
 
@@ -76,17 +76,48 @@ class Cali:
 
 
 class Output:
-    N_sites         = 6     # The number of sites for outputs (> 0 in Tsmask.asc)
 
-    # sites: 24, 25, 32, 26, 26x, 29a
+    Catchment_ID    = [6, 291110, 566445, 442364, 1034751]              # WOS-ID of each catchment
+    N_catchments    = len(Catchment_ID)     # Number of catchments
+    
 
-    sim_q_idx       = [2, 3, 4, 5]      # 32, 26, 26x, 29a
-    sim_iso_idx     = [1, 2, 3, 5]      # 25, 32, 26,  29a
-    sim_no3_idx     = [0, 1, 3, 5]      # 24, 25, 26,  29a
+    # Site ID in each catchment; shape = (N_catchments, N_sites)
+    sim_q_idx       = [ [0, 2, 3, 7, 9, 11, 13, 14],        #6
+                        [0, 1, 2, 3, 4, 6, 7, 8, 10, 11, 13, 14, 16, 17, 23, 24, 25, 26],
+                        [1, 2, 5, 6, 7, 8, 13, 14, 16, 18, 19, 21, 27, 28, 30, 33, 35],
+                        [2, 3, 4, 6],
+                        [0, 2, 3, 4, 5]
+                        ]
+    
+    sim_iso_idx     = [ [6, 10],
+                        [0, 22, 27, 28, 29, 30, 31],
+                        [10, 11, 20, 22, 24, 26, 29, 31],
+                        [0],
+                        [],
+                        ]
+    
+    sim_no3_idx     = [ [1, 4, 5, 8, 12],
+                        [5, 9, 12, 15, 18, 19, 20, 21, 25, 27, 28],
+                        [0, 3, 4, 9, 12, 15, 17, 23, 25, 32, 34],
+                        [1, 5, 7],
+                        [1, 6]
+                        ]
 
-    sim_q_weights   = np.array([0.05, 0.45, 0.45, 0.05]) * 0.333
-    sim_iso_weights = np.array([0.3, 0.3, 0.3, 0.1]) * 0.333
-    sim_no3_weights = np.array([0.3, 0.3, 0.3, 0.1]) * 0.333
+    N_sites         = [] # Number of sites in each catchment
+    for i in range(N_catchments):
+        N_sites.append(len(np.unique(sim_q_idx[i]+sim_iso_idx[i]+sim_no3_idx[i])))
+    
+
+    # Weight for each site in each catchment; shape = (N_catchments, N_sites)
+    sim_q_weights   = []
+    sim_iso_weights = []
+    sim_no3_weights = []
+
+    for i in range(N_catchments):
+        n_valid_varaible = int(len(sim_q_idx[i])>0) + int(len(sim_iso_idx[i])>0) + int(len(sim_no3_idx[i])>0)
+        sim_q_weights.append(np.full(len(sim_q_idx[i]), 1)/len(sim_q_idx[i])/N_catchments/n_valid_varaible)
+        sim_iso_weights.append(np.full(len(sim_iso_idx[i]), 1)/len(sim_iso_idx[i])/N_catchments/n_valid_varaible)
+        sim_no3_weights.append(np.full(len(sim_no3_idx[i]), 1)/len(sim_no3_idx[i])/N_catchments/n_valid_varaible)
 
     sim = {}
     sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'weights':sim_q_weights, 'type':'Ts'}
@@ -139,7 +170,7 @@ class Param:
     ref['percExp']   = {'type':'soil',   'log':0, 'file':'percExp',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil, 'fix_value':None}
     
     # Evapotranspiration
-    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.95, 0.999, 0.999, 0.95], 'fix_value':None} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
+    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.95, 0.95, 0.95, 0.999, 0.92, 0.81], 'fix_value':None} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
 
     # GW recharge
     ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-10]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
@@ -162,7 +193,7 @@ class Param:
     
     # Tracking
     ref['CG_n_soil'] = {'type':'global',   'log':0, 'file':'CG_n_soil',   'min':[0.5], 'max':[1], 'fix_value':None}
-    ref['d18o_init_GW'] = {'type':'global',   'log':0, 'file':'d18o_init_GW',   'min':[-9]*Info.N_soil, 'max':[-7.5]*Info.N_soil, 'fix_value':None}
+    ref['d18o_init_GW'] = {'type':'global',   'log':0, 'file':'d18o_init_GW',   'min':[-15]*Info.N_soil, 'max':[-7.5]*Info.N_soil, 'fix_value':None}
 
     # Nitrogen simulation
     ref['denitrification_river']   = {'type':'landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None}
@@ -172,6 +203,7 @@ class Param:
     ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-6]*Info.N_landuse, 'max':[1e-4]*Info.N_landuse, 'fix_value':None}
     ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-4]*Info.N_landuse, 'max':[0.4]*Info.N_landuse, 'fix_value':None}
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None}
+    ref['deni_soil_moisture_thres']   = {'type':'landuse',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.2]*Info.N_landuse, 'max':[0.85]*Info.N_landuse, 'fix_value':None}
   
     
 
