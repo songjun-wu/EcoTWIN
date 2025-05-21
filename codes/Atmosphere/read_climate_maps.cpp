@@ -116,8 +116,10 @@ int Atmosphere::init_climate_maps(string fname, ifstream &ifHandle){
     if (_climzones->val[j] > max){
       max = _climzones->val[j];
     }
-  _nzones = max+1;
   }
+
+  _nzones = max + 1; // Climate zone starts from 0 after correction
+
   return EXIT_SUCCESS;
 }
 

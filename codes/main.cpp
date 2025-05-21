@@ -73,7 +73,7 @@ int main(){
     }
 
     // Update Ground inputs
-    if (advance_groundTs >= oControl->Clim_input_tstep) {
+    if (advance_groundTs >= oControl->Ground_input_tstep) {
       if (oControl->opt_groundTs_input_format == 1){
         oBasin->read_groundTs(*oControl);
       } else if  (oControl->opt_groundTs_input_format == 2) {

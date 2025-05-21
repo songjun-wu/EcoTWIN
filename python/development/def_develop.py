@@ -12,6 +12,9 @@ class Opt:
     cond['climate_input_format_2'] = {'key':'opt_climate_input_format', 'value':2,
                                       'general_description':'How is climate inputs orgainsed?\n# 1: raster\n# 2: aggregated binary file (climate_zone file should be specified)',
                                       'description':'Binary inputs based on cliamte zones'}
+    cond['GroundTs_input_format_1'] = {'key':'opt_groundTs_input_format', 'value':1,
+                                      'general_description':'How is Ground time series inputs orgainsed?\n# 1: raster\n# 2: aggregated binary file (Time series should be prepared for each of the category; input.bin.shape = (N of timestep, num_category))',
+                                      'description':'Binary inputs from binary inputs (LAI.bin, timesteps, lats, lons)'}
     cond['GroundTs_input_format_2'] = {'key':'opt_groundTs_input_format', 'value':2,
                                       'general_description':'How is Ground time series inputs orgainsed?\n# 1: raster\n# 2: aggregated binary file (Time series should be prepared for each of the category; input.bin.shape = (N of timestep, num_category))',
                                       'description':'Binary inputs based on cliamte zones'}

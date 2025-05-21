@@ -134,8 +134,7 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
         
         
         // Channel storage mixing (with upstream inflow)
-        if (_chnwidth->val[j] > roundoffERR){
-            
+        if (_chnwidth->val[j] > roundoffERR){            
                             // Upstream inflow              Overland flow to channel                  Interflow to channel                           GW flow to channel
             no3_in_all_acc = _flux_Qupstream_acc->val[j] + _no3_pond->val[j] * _ovf_toChn->val[j] + _no3_layer3->val[j] * _interf_toChn->val[j] + _no3_GW->val[j] * _GWf_toChn->val[j]; 
             q_in_all = _Qupstream->val[j] * m3s_to_m + _ovf_toChn->val[j] + _interf_toChn->val[j] + _GWf_toChn->val[j];
@@ -146,7 +145,7 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
                 _flux_Qupstream_acc->val[from_j] += _no3_chanS->val[j] * _Q->val[j] * m3s_to_m;   
             }
         }
-
+        
 
     }
 

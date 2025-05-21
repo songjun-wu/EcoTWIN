@@ -32,6 +32,12 @@
   if (ctrl.opt_climate_input_format == 2) {
     _climzones = new svector(ctrl.path_BasinFolder + ctrl.fn__climzones, _rowNum, _colNum, _sortedGrid);
   }
+
+  // Climate zone starts from 0 after correction (1 in inputs)
+  for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+    _climzones->val[j] -= 1;
+  }
+
   
   if (ctrl.opt_climate_input_format == 1){
     open_climate(ctrl);

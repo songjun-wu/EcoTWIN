@@ -22,7 +22,6 @@ int Basin::read_groundTs_maps(ifstream &ifHandle, svector &climateMap){
   double *data=NULL;
   int dim  = _rowNum*_colNum;
   int r, c;
-
   data = new double[dim];
   ifHandle.read((char *)data, sizeof(double)*dim);
   for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -56,8 +55,8 @@ int Basin::update_groundTs_maps(ifstream &ifHandle, Param &par, svector &groundT
   double *data=NULL;
   int nzones = par.param_category->n_category;
   data = new double[nzones];
-  ifHandle.read((char *)data, sizeof(double)*nzones);  
-  
+  ifHandle.read((char *)data, sizeof(double)*nzones); 
+ 
   groundTsMap.reset();
   for (int k=1; k<nzones; k++){  // The first category is for global inputs; Skipped because all GroundTs inputs are land use or soil dependent
       if (data[k]!=_nodata){

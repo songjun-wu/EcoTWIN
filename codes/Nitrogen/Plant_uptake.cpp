@@ -53,7 +53,7 @@ int Basin::Plant_uptake(Control &ctrl, Param &par){
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
-        
+
         potential_plant_uptake1 = potential_plant_uptake2 = potential_plant_uptake3 = 0;
         
         root_fraction_1 = _p_perc1->val[j] / (_p_perc1->val[j] + _p_perc2->val[j]);
@@ -82,24 +82,32 @@ int Basin::Plant_uptake(Control &ctrl, Param &par){
 
         // Calculate actual uptake
         // Layer1
-        if (dissIN1 > roundoffERR and potential_plant_uptake1 > roundoffERR){
-            max_uptake = dissIN1 * (theta1 - _thetaWP1->val[j]) / theta1;
-            plant_uptake1 = min(potential_plant_uptake1, max_uptake);
-            _no3_layer1->val[j] = (dissIN1 - plant_uptake1) / (theta1 * _depth1->val[j]);
+        if (theta1 > _thetaWP1->val[j]){
+            if (dissIN1 > roundoffERR and potential_plant_uptake1 > roundoffERR){
+                max_uptake = dissIN1 * (theta1 - _thetaWP1->val[j]) / theta1;
+                plant_uptake1 = min(potential_plant_uptake1, max_uptake);
+                _no3_layer1->val[j] = (dissIN1 - plant_uptake1) / (theta1 * _depth1->val[j]);
+            }
         }
+        
         // Layer 2
-        if (dissIN2 > roundoffERR and potential_plant_uptake2 > roundoffERR){
-            max_uptake = dissIN2 * (theta2 - _thetaWP2->val[j]) / theta2;
-            plant_uptake2 = min(potential_plant_uptake2, max_uptake);
-            _no3_layer2->val[j] = (dissIN2 - plant_uptake2) / (theta2 * _depth2->val[j]);
+        if (theta2 > _thetaWP2->val[j]){
+            if (dissIN2 > roundoffERR and potential_plant_uptake2 > roundoffERR){
+                max_uptake = dissIN2 * (theta2 - _thetaWP2->val[j]) / theta2;
+                plant_uptake2 = min(potential_plant_uptake2, max_uptake);
+                _no3_layer2->val[j] = (dissIN2 - plant_uptake2) / (theta2 * _depth2->val[j]);
+            }
         }
+        
         // Layer 3
-        if (dissIN3 > roundoffERR and potential_plant_uptake3 > roundoffERR){
-            max_uptake = dissIN3 * (theta3 - _thetaWP3->val[j]) / theta3;
-            plant_uptake3 = min(potential_plant_uptake3, max_uptake);
-            _no3_layer3->val[j] = (dissIN3 - plant_uptake3) / (theta3 * par._depth3->val[j]);
+        if (theta3 > _thetaWP3->val[j]){
+            if (dissIN3 > roundoffERR and potential_plant_uptake3 > roundoffERR){
+                max_uptake = dissIN3 * (theta3 - _thetaWP3->val[j]) / theta3;
+                plant_uptake3 = min(potential_plant_uptake3, max_uptake);
+                _no3_layer3->val[j] = (dissIN3 - plant_uptake3) / (theta3 * par._depth3->val[j]);
+            }
         }
-
+    
         // Aggregate plant uptake in three layers; NO3 concentration has been updated
         _plant_uptake->val[j] = plant_uptake1 + plant_uptake2 + plant_uptake3;
     }

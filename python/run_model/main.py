@@ -352,8 +352,9 @@ elif mode == 'aaa':
 
 
 elif mode == 'bbb':
-
+    
     for gg in [0]:
+        """"""
         catchment_ID = Output.Catchment_ID[gg]
         nsites = len(np.unique(Output.sim_q_idx[gg]+Output.sim_iso_idx[gg]+Output.sim_no3_idx[gg]))
         discharge = np.fromfile('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS.bin').reshape(-1,nsites)
@@ -370,8 +371,24 @@ elif mode == 'bbb':
         np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS_mean.txt', np.mean(discharge, axis=1))
         np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/d18o_chanS_TS_mean.txt', np.mean(iso, axis=1))
         np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/no3_chanS_TS_mean.txt', np.mean(no3, axis=1))
+        
+
+        for fname in os.listdir('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/'):
+            if not fname.endswith('bin'):
+                continue
+            if fname != 'LAI.bin':
+                data = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/' + fname).reshape(16437, -1)
+                np.savetxt('/data/scratch/wusongj/paper4/test/' + fname.split('.')[0] + '.txt', data[:,43])
+                print(fname, data.shape)
+            else:
+                data = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/LAI.bin').reshape(-1,  185, 160)
+                np.savetxt('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/LAI.txt', data[:, 37, 60])
+                print(fname, data.shape)
 
 
+
+
+elif mode == 'examine_inputs':
     """
     path1 = '/data/scratch/wusongj/paper4/data/catchment_info/cali/291110/'
     path2 = '/home/wusongj/GEM/test_dmc1//'
@@ -410,3 +427,4 @@ elif mode == 'bbb':
     cat_0 = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/291110/spatial/category_0.bin')
     print(cat_0)
     """
+    pass

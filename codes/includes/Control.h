@@ -28,6 +28,7 @@ struct Control{
   int Simul_end;
   int Simul_tstep;
   int Clim_input_tstep;
+  int Ground_input_tstep;
   int Report_interval;
   int Update_interval;
   int num_category;  // Number of categories for parameterisation
@@ -366,6 +367,7 @@ struct Control{
 
   template<class T> static T string_as_T( const string& s);
   template<class T> void readInto(T &value, string key, vector<string> lines);
+  vector<int> VectorArgSort(vector<int> &v);
   
 };
 

@@ -114,10 +114,11 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('Clim_Maps_Folder = ./climate/\n')
     text.append('Output_Folder = ./outputs/\n\n')
     text.append('# Model configuration\n')
-    text.append('Simul_start = 2472012000 # Seconds since 1900-1-1 00:00:00\n')
+    text.append('Simul_start = 2524608000 # Seconds since 1900-1-1 00:00:00\n')
     text.append('Simul_end = 1420070400 # in second  # Seconds from 1980-1-1 to 2024-12-31\n')
     text.append('Simul_tstep = 86400 # seconds (daily)\n')
     text.append('Clim_input_tstep = 86400 # seconds (daily)\n')
+    text.append('Ground_input_tstep = 604800 # seconds (every 7 days)\n')
     text.append('Report_interval = -3 # The interval of map reports in seconds; or daily (-1), monthly (-2), or annually (-3) \n')
     text.append('Update_interval = 315619200  # seconds (every 10 years); the interval for land use / soil type update \n\n')
 

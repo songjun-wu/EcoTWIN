@@ -27,6 +27,7 @@ int Control::ReadConfigFile(string fname){
   readInto(Simul_end, "Simul_end", lines);
   readInto(Simul_tstep, "Simul_tstep", lines);
   readInto(Clim_input_tstep, "Clim_input_tstep", lines);
+  readInto(Ground_input_tstep, "Ground_input_tstep", lines);  
   readInto(Report_interval, "Report_interval", lines);
   readInto(Update_interval, "Update_interval", lines);
   readInto(num_category, "num_category", lines);

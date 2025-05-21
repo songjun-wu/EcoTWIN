@@ -278,6 +278,19 @@ int Basin::Soil_proporty(Control &ctrl, Param &par){
 
     }
 
+    // Initial content should not exceed field capacity or lower than wilting point to avoid numeric error
+    if (ctrl.current_ts == 0){
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+            _theta1->val[j] = max(_theta1->val[j], _thetaWP1->val[j]);
+            _theta2->val[j] = max(_theta2->val[j], _thetaWP2->val[j]);
+            _theta3->val[j] = max(_theta3->val[j], _thetaWP3->val[j]);
+            _theta1->val[j] = min(_theta1->val[j], _thetaFC1->val[j]);
+            _theta2->val[j] = min(_theta2->val[j], _thetaFC2->val[j]);
+            _theta3->val[j] = min(_theta3->val[j], _thetaFC3->val[j]);
+        }
+    }
+    
+
     return EXIT_SUCCESS;
 }
 

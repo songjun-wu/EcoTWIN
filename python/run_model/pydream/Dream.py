@@ -251,9 +251,11 @@ class Dream:
                         self.len_history = len(np.frombuffer(Dream_shared_vars.history))
 
                     self.crossover_burnin = self.comm.bcast(self.crossover_burnin, root=0)
+
+                    print('DREAM initialisation done for chain '+str(self.chainID)+' model '+str(self.modelID), flush=True)
                     
             except Exception as e:
-                print('Error found in the first iteration :   ', e, flush=True)
+                print('Error found in the DREAM initialisation :   ', e, flush=True)
 
             #except AttributeError:
             #    raise Exception('Dream should be run with multiple chains in parallel.  Set nchains > 1.')          
