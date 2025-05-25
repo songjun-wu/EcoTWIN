@@ -205,7 +205,7 @@ class Dream:
         if self.iter == 0:
             try:
                 # Chain layout
-                self.chainID =chainID
+                self.chainID = chainID
                 self.modelID = modelID
                 self.chain_n = chainID
                 self.nchains = nchains
@@ -287,33 +287,30 @@ class Dream:
                     proposed_pts = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=False)              
                 else:
                     proposed_pts, snooker_logp_prop, z = self.generate_proposal_points(self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=True)                 
-            
+
             # Broadcast proposed params to all model ranks in this chain
             q0 = self.subcomm.bcast(q0, root=0)
+
             if self.last_logp == None:
                 self.last_prior, self.last_like = self.logp(q0, self.chainID, self.modelID, total_iterations)
+                # Gather results from model ranks
+                all_likes = self.subcomm.gather(self.last_like, root=0)
+                if self.is_chain_master:
+                    self.last_like = np.log(np.sum(all_likes)) * (-1*100)
                 self.last_logp = T*self.last_like + self.last_prior
-            # Gather results from model ranks
-            all_likes = self.subcomm.gather(self.last_logp, root=0)
-            if self.is_chain_master:
-                q_logp = np.log(np.sum(all_likes)) * (-1*100)
-                if np.isnan(q_logp):
-                    q_logp = -np.inf
             
             #Evaluate proposed samples(s)
             proposed_pts = proposed_pts if self.is_chain_master else None
             proposed_pts = self.subcomm.bcast(proposed_pts, root=0)
-            
             q_prior, q_loglike_noT = self.logp(np.squeeze(proposed_pts), self.chainID, self.modelID, total_iterations)
+            # Gather results from model ranks
+            all_likes = self.subcomm.gather(q_loglike_noT, root=0)
+            if self.is_chain_master:
+                q_loglike_noT = np.log(np.sum(all_likes)) * (-1*100)
             q_logp_noT = q_prior + q_loglike_noT
             q_logp = T*q_loglike_noT + q_prior
             q = np.squeeze(proposed_pts)
-            # Gather results from model ranks
-            all_likes = self.subcomm.gather(q_logp, root=0)
-            if self.is_chain_master:
-                q_logp = np.log(np.sum(all_likes)) * (-1*100)
-                if np.isnan(q_logp):
-                    q_logp = -np.inf
+            
             
             # Sample evaluation
             if self.is_chain_master:

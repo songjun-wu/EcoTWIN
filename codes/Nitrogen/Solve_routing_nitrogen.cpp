@@ -46,6 +46,7 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
     (_theta3)
 
     ### GW:
+    - irrigation_from_GW
     + percolation3      (mixed)
     (_GW_old)
     + repercolation3    (need to mix)
@@ -56,6 +57,7 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
     (_GW)
 
     ### chanS:
+    - irrigation_from_river
     (_chanS_old)
     + _Qupstream        (need to mix)
     + _ovf_toChn        (need to mix)

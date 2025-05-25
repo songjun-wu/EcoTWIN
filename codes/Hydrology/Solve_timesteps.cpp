@@ -3,6 +3,8 @@
 
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
 
+    // seperate weighting factor for lateral routing and to channel?
+    // Water abstraction from GW?
 
     Solve_canopy(ctrl, par, atm);
 

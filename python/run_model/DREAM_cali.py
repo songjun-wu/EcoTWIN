@@ -5,6 +5,7 @@ import numpy as np
 from mpi4py import MPI
 from scipy.stats import uniform
 import GEM_tools
+import time
 
 # Initialize MPI
 comm = MPI.COMM_WORLD
@@ -70,22 +71,31 @@ try:
     history_thin = Cali.history_thin
 
     if options.mode == 'DREAM_cali':
+        from likelihood import likelihood
+    elif options.mode == 'cali_sep':
+        from likelihood_sep import likelihood
+    
+
+    if options.mode == 'DREAM_cali' or options.mode == 'cali_sep':
         from pydream.core import run_dream
         from pydream.parameters import SampledParam
-        from likelihood import likelihood
 
         # Set number of chains equal to number of processes
-        Cali.nchains = size
+        nchains = size // Cali.cores_for_each_chain
+        Cali.nchains = nchains
+
+        if rank != 0:
+            time.sleep(5)
 
         # Only rank 0 does initialization
         if rank == 0:
             try:
                 os.chdir(Path.work_path)
                 GEM_tools.sort_directory(options.mode, Path, Cali, Output)
-                GEM_tools.set_env(options.mode, Path, size, Output)
+                GEM_tools.set_env(options.mode, Path, nchains, Output)
                 GEM_tools.set_config(options.mode, Path, Cali, Output)
                 param_N = GEM_tools.get_param_N(Info, Param)
-                print(f"Rank 0: Initialization complete. Starting {size} chains, param_N={param_N}", flush=True)
+                print(f"Rank 0: Initialization complete. Starting {nchains} chains, param_N={param_N}", flush=True)
             except Exception as e:
                 print(f"Rank 0: Initialization failed: {e}", flush=True)
                 raise
@@ -113,7 +123,8 @@ try:
                         likelihood=likelihood,
                         niterations=int(options.niterations),
                         total_iterations=total_iterations,
-                        nchains=size,
+                        nchains=nchains,
+                        cores_for_each_chain = Cali.cores_for_each_chain,
                         multitry=False,
                         gamma_levels=4,
                         adapt_gamma=True,
@@ -132,7 +143,7 @@ try:
             
             total_iterations = int(options.restart_niteration)
             if rank==0:
-             build_history(Cali.TASK_name, size, total_iterations, param_N, history_thin)
+                build_history(Cali.TASK_name, nchains, total_iterations, param_N, history_thin)
             starts = GEM_tools.get_restart_param(Path, Cali, param_N, total_iterations)
             total_iterations += int(options.niterations)
             comm.Barrier()
@@ -145,7 +156,8 @@ try:
                     likelihood=likelihood,
                     niterations=int(options.niterations),
                     total_iterations=total_iterations,
-                    nchains=size,
+                    nchains=nchains,
+                    cores_for_each_chain = Cali.cores_for_each_chain,
                     start=starts,
                     multitry=False,
                     gamma_levels=4,
@@ -167,3 +179,14 @@ try:
 except Exception as e:
     print(f"Rank {rank}: Error: {e}", flush=True)
     comm.Abort(1)
+
+
+if options.mode == 'test':
+    param_N = GEM_tools.get_param_N(Info, Param)
+    total_iterations = int(options.restart_niteration)
+    #if rank==0:
+    #    build_history(Cali.TASK_name, 50, total_iterations, param_N, history_thin)
+    starts = GEM_tools.get_restart_param(Path, Cali, param_N, total_iterations)
+    print(len(starts), starts[49])
+
+

@@ -77,6 +77,8 @@
   _Tr1 = new svector(_sortedGrid.size);
   _Tr2 = new svector(_sortedGrid.size);
   _Tr3 = new svector(_sortedGrid.size);
+  _irrigation_from_river = new svector(_sortedGrid.size);
+  _irrigation_from_GW = new svector(_sortedGrid.size);
   _Ks1 = new svector(_sortedGrid.size);
   _Ks2 = new svector(_sortedGrid.size);
   _Ks3 = new svector(_sortedGrid.size);
@@ -189,8 +191,8 @@
   }
 
   // Read nitrogen addition information
-  if (ctrl.opt_nitrogen_sim==1){
-    ReadNitrogenFile(ctrl, par, "N_addition.ini");
+  if (ctrl.opt_nitrogen_sim==1 or ctrl.opt_irrigation==1){
+    ReadCropFile(ctrl, par, "Crop_info.ini");
   }
   
  

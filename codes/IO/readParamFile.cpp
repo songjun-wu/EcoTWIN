@@ -48,6 +48,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(wGWf, "wGWf", lines);
   readIntoParam(Manningn, "Manningn", lines);
   readIntoParam(Echan_alpha, "Echan_alpha", lines);
+  readIntoParam(irrigation_coeff, "irrigation_coeff", lines);
   readIntoParam(nearsurface_mixing, "nearsurface_mixing", lines);
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
   readIntoParam(CG_n_soil, "CG_n_soil", lines);

@@ -10,9 +10,9 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
 
     double dx = ctrl._dx;
     double dt = ctrl.Simul_tstep;
-    double dtdx = dt / dx;
+    // double dtdx = dt / dx;
     double dx_square = dx * dx;
-
+    double dtdx;
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
@@ -25,16 +25,17 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
             
             chnlength = _chnlength->val[j];  // [m]
 
+            dtdx = dt / chnlength;  // todo
+
             from_j = _sortedGrid.to_cell[j];
 
             if (Qall + Qupstream > 0){
 
-                
-
                 sqrtS = pow(_slope->val[j], 0.5);
 
-                Manningn = par._Manningn->val[j] * chnlength;  // Manning's N scaled with channel length
-                a = pow(pow(chnwidth,0.67)*Manningn/sqrtS, 0.6); //wetted perimeter approximated with channel width
+                //Manningn = par._Manningn->val[j] * chnlength;  // Manning's N scaled with channel length
+                Manningn = par._Manningn->val[j];
+                a = pow(pow(chnwidth,0.67)*Manningn/sqrtS, 0.6); // Wetted perimeter approximated with channel width
 
                 //initial guess
                 avQ = 0.5*(Qupstream);
@@ -54,11 +55,10 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
                     if (Qk1 <=0){// if NR cannot converge then get some of the available water out and exit the loop
                         Qk1 = 0.61803*((dtdx*Qupstream) + dt*Qall)/(dtdx+abQ);
                         break;
-                }
+                    }
                     count++;
                 }while(fabs(fQj1i1)>0.00001 && count < 50);
                 
-
                 _chanS->val[j] = std::max(0.0,(Qupstream+Qall*_dx  - Qk1)*dt) / dx_square;  // Channel storage [m]
                 _Q->val[j] = Qk1; // Discharge [m3/s]
                 
@@ -66,11 +66,9 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
                     _Qupstream->val[from_j] += Qk1;  // Discharge inflow [m3/s]
                 }
 
-
+                // cout << _chanS->val[j] * dx_square / (_chnlength->val[j] * _chnwidth->val[j]) << "    "<< _chnlength->val[j] << "     " << _chnwidth->val[j] << "     " << _Q->val[j] << endl;
             }
-        }
-
-        
+        }    
     }
 
     return EXIT_SUCCESS;

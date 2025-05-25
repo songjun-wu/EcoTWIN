@@ -64,6 +64,9 @@ int Param::dtor(Control &ctrl){
   if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
     if(_Echan_alpha) delete _Echan_alpha;
   }
+  if (ctrl.opt_irrigation == 1){
+    if(_irrigation_coeff) delete _irrigation_coeff;
+  }
   if (ctrl.opt_tracking_isotope == 1){
     if(_CG_n_soil) delete _CG_n_soil;
     if(_d18o_init_GW) delete _d18o_init_GW;

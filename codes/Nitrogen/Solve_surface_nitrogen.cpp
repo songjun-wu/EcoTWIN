@@ -13,6 +13,8 @@ int Basin::Solve_surface_nitrogen(Control &ctrl, Atmosphere &atm, Param &par){
     (_pond_old = 0.0)
     + Th
     + snowmelt
+    + irrigation_from_river
+    + irrigation_from_GW
     (pond)
     - Infiltration      
     + ovf_in            
@@ -21,7 +23,9 @@ int Basin::Solve_surface_nitrogen(Control &ctrl, Atmosphere &atm, Param &par){
     - ovf_toChn           
     */
 
-    // Mixing snow accumulation or snow melt
+    double irrigation_amount, irrigation_conc;
+
+    // Mixing snow and irrigation
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         
         // Mixing snow with throughfall if temperature is below snow rain threshold
@@ -31,6 +35,13 @@ int Basin::Solve_surface_nitrogen(Control &ctrl, Atmosphere &atm, Param &par){
             _no3_pond->val[j] = _no3_I->val[j]; // Align the composition in ponding water with that in throughfall
             //mix throughfall with snow melt
             Mixing_full(_Th->val[j], _no3_pond->val[j], _snowmelt->val[j], _no3_snow->val[j]);
+        }
+
+        // Mixing with irrigation
+        irrigation_amount = _irrigation_from_river->val[j] + _irrigation_from_GW->val[j];
+        if (irrigation_amount > roundoffERR){
+            irrigation_conc = (_irrigation_from_river->val[j] * _no3_chanS->val[j] + _irrigation_from_GW->val[j] * _no3_GW->val[j]) / irrigation_amount;
+            Mixing_full(_pond->val[j], _no3_pond->val[j], irrigation_amount, irrigation_conc);
         }
         
     }

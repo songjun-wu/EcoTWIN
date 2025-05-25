@@ -5,6 +5,7 @@ import sys
 from optparse import OptionParser
 import numpy as np
 import time
+import post_plot
 
 
 
@@ -20,8 +21,10 @@ mode = options.mode
 
 if options.def_py == None:
     options.def_py = 'def_GEM'
-if mode == 'DREAM_cali':
+elif (mode == 'DREAM_cali') or (mode == 'check'):
     options.def_py = 'def_GEM_cali'
+elif (mode == 'cali_sep') or (mode == 'check_sep'):
+    options.def_py = 'def_GEM_cali_sep'
 
 sys.path.insert(0, current_path+'/')
 exec('from ' + options.def_py + ' import *')
@@ -59,63 +62,154 @@ if mode == 'DREAM_cali':
 
         os.system('sh protocal_cali.sh')
         print(cmd)
-        while (GEM_tools.checkTaskStatus('dmc_cali') > 0):
+        while (GEM_tools.checkTaskStatus('EU_cali') > 0):
             time.sleep(10)
     
 
-        
-        
-elif mode == 'forward':
+# Calibrate seperate catchments
+if mode == 'cali_sep':
+    import pickle
+    #catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
+    catchment_to_cali = ['831616_001', '83811_001', '291111_001', '6_001']
 
-    runpath = Path.work_path + '/forward/run/'
 
-    os.chdir(Path.work_path)
-    # Create and clean the directory
-    GEM_tools.sort_directory(mode, Path, Cali, Output)
-    GEM_tools.set_env(mode, Path, Cali, Output)
-    GEM_tools.set_config(mode, Path, Cali, Output)
+    for catchment in catchment_to_cali:
+        os.makedirs('/data/scratch/wusongj/paper4/cali_sep/' + catchment, exist_ok=True)
 
-    flag = True
-    for niteration in np.arange(0, 1e5, Cali.niterations)[::-1]:
-        if flag:
-            try:
-                # Get param
-                param = np.array([])
-                for i in range(Cali.nchains):
-                    likeli = np.fromfile(Path.result_path + 'DREAM_cali_DMC_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
-                    tmp = np.fromfile(Path.result_path + 'DREAM_cali_DMC_sampled_params_chain_'+str(i)+'_'+str(int(niteration))+'.bin').reshape(len(likeli), -1)
-                    param = np.append(param, tmp[np.argwhere(likeli == np.max(likeli))[-1][-1], :])
-                    print(niteration, likeli[np.argwhere(likeli == np.max(likeli))[-1][-1]])
+    max_nodes = 5 if len(catchment_to_cali) > 5 else len(catchment_to_cali)
 
-                param.tofile(Path.work_path + 'param.bin')
-                param = param.reshape(Cali.nchains, -1)
-
-                _sim_q = np.array([])
-                _sim_iso = np.array([])
-                _sim_no3 = np.array([])
-                
-                os.chdir(runpath)
-                for i in range(param.shape[0]):
-                    shutil.rmtree(runpath + '/outputs')
-                    os.mkdir(runpath + '/outputs')
-                    GEM_tools.gen_param(runpath, Info, Param, param[i,:])
-                    GEM_tools.gen_no3_addtion(runpath, Info)
-                    os.system('./gEcoHydro')
-                    _sim_q = np.append(_sim_q, np.fromfile(runpath + '/outputs/discharge_TS.bin'))
-                    _sim_iso = np.append(_sim_iso, np.fromfile(runpath + '/outputs/d18o_chanS_TS.bin'))
-                    _sim_no3 = np.append(_sim_no3, np.fromfile(runpath + '/outputs/no3_chanS_TS.bin'))
-                    
-                _sim_q.tofile(Path.work_path + '/forward/outputs/discharge_TS.bin')
-                _sim_iso.tofile(Path.work_path + '/forward/outputs/d18o_chanS_TS.bin')
-                _sim_no3.tofile(Path.work_path + '/forward/outputs/no3_chanS_TS.bin')
-                flag = False
-            except:
-                pass
-        else:
-            break
-            
+    print(max_nodes, Cali.niterations)
+    shutil.copyfile('def_GEM_cali_sep.py', '/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep.py')
 
     
+    # Construct cmd for each catchment
+    for batchID in range(max_nodes):
+        nbatch = Cali.nbatchs
+        locals()['cmds'+str(batchID)] = []
+        if not Cali.restart:
+            nbatch -= 1
+            locals()['cmds'+str(batchID)].append('mpirun -np $SLURM_NTASKS python3 DREAM_cali.py --mode cali_sep --def_py def_GEM_cali_sep_'+str(batchID)+' --niteration '+str(Cali.niterations)+ \
+                        ' --likelihood likelihood_sep_'+str(batchID)+' --restart False  --restart_niteration ' + str(Cali.restart_niteration))
+            for i in range(nbatch):
+                locals()['cmds'+str(batchID)].append('mpirun -np $SLURM_NTASKS python3 DREAM_cali.py --mode cali_sep --def_py def_GEM_cali_sep_'+str(batchID)+' --niteration '+str(Cali.niterations)+ \
+                        ' --likelihood likelihood_sep_'+str(batchID)+' --restart True  --restart_niteration ' + str(Cali.niterations * (i+1)))
+        else:
+            for i in range(nbatch):
+                locals()['cmds'+str(batchID)].append('mpirun -np $SLURM_NTASKS python3 DREAM_cali.py --mode cali_sep --def_py def_GEM_cali_sep_'+str(batchID)+' --niteration '+str(Cali.niterations)+ \
+                        ' --likelihood likelihood_sep_'+str(batchID)+' --restart True  --restart_niteration ' + str(Cali.restart_niteration + Cali.niterations * i ))
+    
+    
+    for batchID in range(max_nodes):
+
+        # Construct DREAM algorithm  for each catchment
+        shutil.copyfile('/data/scratch/wusongj/paper4/scripts/likelihood_sep.py', '/data/scratch/wusongj/paper4/scripts/likelihood_sep_'+str(batchID)+'.py')
+        with open('/data/scratch/wusongj/paper4/scripts/likelihood_sep_'+str(batchID)+'.py', 'r') as f:
+            lines = f.readlines()
+        for i in range(len(lines)):
+            if 'from def_GEM_cali_sep' in lines[i]:
+                lines[i] = 'from def_GEM_cali_sep_'+str(batchID)+' import *\n'
+        with open('/data/scratch/wusongj/paper4/scripts/likelihood_sep_'+str(batchID)+'.py', 'w') as f:
+            f.writelines(lines)
+
+        # Construct slurm submission file for each catchment
+        shutil.copyfile('/data/scratch/wusongj/paper4/scripts/protocal_cali_sep.sh', '/data/scratch/wusongj/paper4/scripts/protocal_cali_sep_'+str(batchID)+'.sh')
+        with open('/data/scratch/wusongj/paper4/scripts/protocal_cali_sep_'+str(batchID)+'.sh', 'r') as f:
+            lines = f.readlines()
+        for i in range(len(lines)):
+            if 'sbatch' in lines[i]:
+                lines[i] = 'sbatch DREAM_cali_sep_'+str(batchID)+'.slurm'
+        with open('/data/scratch/wusongj/paper4/scripts/protocal_cali_sep_'+str(batchID)+'.sh', 'w') as f:
+            f.writelines(lines)
+    
+        # Constrcut slurm config
+        shutil.copyfile('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep.slurm', '/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm')
+        with open('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm', 'r') as f:
+            lines = f.readlines()
+        for i in range(len(lines)):
+            if 'mpirun' in lines[i]:
+                lines[i] = locals()['cmds'+str(batchID)][0]
+            if '#SBATCH --job-name=' in lines[i]:
+                lines[i] = '#SBATCH --job-name=' + '"c' + str(batchID) + '"\n'
+        with open('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm', 'w') as f:
+            f.writelines(lines)
+        
+        # Construct def.py
+        shutil.copyfile('/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep.py', '/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep_'+str(batchID)+'.py')
+        with open('/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep_'+str(batchID)+'.py', 'r') as f:
+            lines = f.readlines()
+        for i in range(len(lines)):
+            if 'work_path = ' in lines[i]:
+                lines[i] = "    work_path = '/data/scratch/wusongj/paper4/cali_sep/"+catchment_to_cali[batchID]+"/'\n"
+            if 'Catchment_ID    =' in lines[i]:
+                lines[i] = '    Catchment_ID    = ["'+catchment_to_cali[batchID]+'"]\n'
+        with open('/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep_'+str(batchID)+'.py', 'w') as f:
+            f.writelines(lines)
+        # Initial submission
+        os.system('sh /data/scratch/wusongj/paper4/scripts/protocal_cali_sep_'+str(batchID)+'.sh')
+
+    # Monitor tasks and renew submission
+    catchment_under_cali = [f for f in catchment_to_cali[:max_nodes]]
+    completed_tasks_for_each_catchment = np.full(max_nodes, 0)
+    completed_catchments = 0
+    while completed_catchments!=len(catchment_to_cali):
+        for batchID in range(max_nodes):
+            if (GEM_tools.checkTaskStatus('c' + str(batchID)) <= 0):
+                completed_tasks_for_each_catchment[batchID] += 1
+                # To next task
+                if completed_tasks_for_each_catchment[batchID] < Cali.nbatchs:
+                    # Constrcut slurm config
+                    shutil.copyfile('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep.slurm', '/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm')
+                    with open('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm', 'r') as f:
+                        lines = f.readlines()
+                    for i in range(len(lines)):
+                        if 'mpirun' in lines[i]:
+                            lines[i] = locals()['cmds'+str(batchID)][completed_tasks_for_each_catchment[batchID]]
+                        if '#SBATCH --job-name=' in lines[i]:
+                            lines[i] = '#SBATCH --job-name=' + '"c' + str(batchID) + '"\n'
+                    with open('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm', 'w') as f:
+                        f.writelines(lines)
+                    os.system('sh /data/scratch/wusongj/paper4/scripts/protocal_cali_sep_'+str(batchID)+'.sh')
+
+                
+                # Move to next catchment once completed
+                elif completed_tasks_for_each_catchment[batchID] == Cali.nbatchs and completed_tasks_for_each_catchment[batchID]!=-1:
+
+                    completed_catchments += 1
+
+                    try:
+                        completed_tasks_for_each_catchment[batchID] = 0
+                        catchment_under_cali[batchID] = catchment_to_cali[max_nodes+completed_catchments]
+                        # Constrcut slurm config
+                        shutil.copyfile('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep.slurm', '/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm')
+                        with open('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm', 'r') as f:
+                            lines = f.readlines()
+                        for i in range(len(lines)):
+                            if 'mpirun' in lines[i]:
+                                lines[i] = locals()['cmds'+str(batchID)][completed_tasks_for_each_catchment[batchID]]
+                            if '#SBATCH --job-name=' in lines[i]:
+                                lines[i] = '#SBATCH --job-name=' + '"c' + str(batchID) + '"\n'
+                        with open('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm', 'w') as f:
+                            f.writelines(lines)
+                        
+                        # Construct def.py
+                        shutil.copyfile('/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep.py', '/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep_'+str(batchID)+'.py')
+                        with open('/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep_'+str(batchID)+'.py', 'r') as f:
+                            lines = f.readlines()
+                        for i in range(len(lines)):
+                            if 'work_path = ' in lines[i]:
+                                lines[i] = "    work_path = '/data/scratch/wusongj/paper4/cali_sep/"+catchment_to_cali[max_nodes+completed_catchments]+"/'\n"
+                            if 'Catchment_ID    =' in lines[i]:
+                                lines[i] = '    Catchment_ID    = ["'+catchment_to_cali[max_nodes+completed_catchments]+'"]\n'
+                        with open('/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep_'+str(batchID)+'.py', 'w') as f:
+                            f.writelines(lines)
+                        os.system('sh /data/scratch/wusongj/paper4/scripts/protocal_cali_sep_'+str(batchID)+'.sh')
+                    except:
+                        completed_tasks_for_each_catchment[batchID] = -1
+
+
+        print(completed_catchments, completed_tasks_for_each_catchment, catchment_under_cali)                
+        time.sleep(120)
+
 
 elif mode == 'test':
     # Model structure update
@@ -131,84 +225,48 @@ elif mode == 'test':
     
     counter = 0
     #for i in range(len(validIdx)):
-    for i in [4]:
+    for i in [3]:  # chainID
         #for gg in range(len(Output.Catchment_ID)):
-        for gg in [0]:
+        #for gg in [0,1,2,3,5,6,7]:
+        for gg in [7]:  # Catchment ID
+
             catchment_ID = Output.Catchment_ID[gg]
-            print(Output.Catchment_ID)
+            print(catchment_ID)
             run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
             #idx = validIdx[i]
             idx = i
-            print(idx)
+            print(idx, catchment_ID)
             # Which parameter set to use?
-            #param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1)[idx,:]
+            #param = np.loadtxt('/data/scratch/wusongj/paper4/cali/chain_0/param.txt')
+            #param = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_sampled_params_chain_'+str(idx)+'_200.bin').reshape(-1, 189)[-1,:]
+            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain_'+str(idx)+'_700.bin')[0]
+            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain_'+str(idx)+'_700.bin').reshape(-1, 189)[0,:]
+            
             param = np.full(300, 0.5)
             GEM_tools.gen_param(run_path, Info, Param, param)
             GEM_tools.gen_no3_addtion(run_path, Info)
-
+            
+            
             # Model run
-            os.chdir(run_path)
+            os.chdir(run_path)           
             os.system('./gEcoHydro')
-
-            
-
-
-
-
-
-            """
-            # Save outputs
-            fnames = os.listdir(run_path + 'outputs/')
-            save_path = '/data/scratch/wusongj/paper4/forward/outputs_posterior/'
-            for fname in fnames:
-                if fname.split('.')[-1] == 'bin':
-                    if (counter==0):
-                        if os.path.exists(save_path + fname):
-                            os.remove(save_path + fname)
-                        f = open(save_path + fname, 'w')
-                        f.close()
-                    with open(save_path + fname, 'ab+') as f:
-                        np.fromfile(run_path + 'outputs/' + fname).tofile(f)
-            
-            counter += 1
-                    
-            # Plot individual results
             os.chdir(current_path)
-            os.system('python3 posterior_anlalysis.py')
 
-            try:
-                shutil.copyfile(Path.output_path + '999_All_in_Ts.png', 'plots/999_All_in_Ts.png')
-                if os.path.exists('plots/999_All_in_Ts_'+str(idx)+'.png'):
-                    os.remove('plots/999_All_in_Ts_'+str(idx)+'.png')
-                os.rename('plots/999_All_in_Ts.png', 'plots/999_All_in_Ts_'+str(idx)+'.png')
-            except Exception as e:
-                pass
             
-            try:
-                shutil.copyfile(Path.output_path + '999_All_in_map.png', 'plots/999_All_in_map.png')
-                if os.path.exists('plots/999_All_in_map_'+str(idx)+'.png'):
-                    os.remove('plots/999_All_in_map_'+str(idx)+'.png')
-                os.rename('plots/999_All_in_map.png', 'plots/999_All_in_map_'+str(idx)+'.png')
-            except Exception as e:
-                pass
+            # Plot spatial maps and Ts results
+            post_plot.plot_hydrology(run_path+'outputs/', 'hydro_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/')
+            post_plot.plot_tracking(run_path+'outputs/', 'WQ_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/')
 
-            try:
-                shutil.copyfile(Path.output_path + '999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_tracking.png')
-                if os.path.exists('plots/999_All_in_Ts_'+str(idx)+'_tracking.png'):
-                    os.remove('plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
-                os.rename('plots/999_All_in_Ts_tracking.png', 'plots/999_All_in_Ts_'+str(idx)+'_tracking.png')
-            except Exception as e:
-                pass
-            
-            try:
-                shutil.copyfile(Path.output_path + '999_All_in_map_tracking.png', 'plots/999_All_in_map_tracking.png')
-                if os.path.exists('plots/999_All_in_map_'+str(idx)+'_tracking.png'):
-                    os.remove('plots/999_All_in_map_'+str(idx)+'_tracking.png')
-                os.rename('plots/999_All_in_map_tracking.png', 'plots/999_All_in_map_'+str(idx)+'_tracking.png')
-            except Exception as e:
-                pass
-            """
+            fnames = ['hydro_'+str(catchment_ID)+'_Ts.png', 'hydro_'+str(catchment_ID)+'_map.png',
+                      'WQ_'+str(catchment_ID)+'_Ts.png', 'WQ_'+str(catchment_ID)+'_map.png']
+            for fname in fnames:
+                if os.path.exists(run_path+'outputs/'+fname):
+                    shutil.copyfile(run_path+'outputs/'+fname, 'plots/'+fname.split('.')[0]+'_'+str(idx)+'.png')
 
+
+            # Plot performance
+            post_plot.plot_performance(run_path+'outputs/', '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', current_path+'/plots/', catchment_ID, idx)
+    
 
 elif mode == 'check':
     arr = []
@@ -232,129 +290,58 @@ elif mode == 'check':
             else:
                 break
 
-    print(niterations, lengths)
+    #print(niterations, lengths)
     print('Chains  :  ', n_batch)
     print('Batch   :  ', int(np.mean(niterations)), np.mean(lengths))
     print('Average :  ', np.mean(arr))
     print('Maximum :  ', np.max(arr))
-    print(arr)
+    #print(arr, np.argwhere(arr==np.max(arr)))
 
-elif mode == 'test11':
-    loglikes = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_logps_chain_'+str(93)+'_500.bin')
-    param = np.fromfile('/data/scratch/wusongj/paper4/results/DREAM_cali_DMC_sampled_params_chain_'+str(93)+'_500.bin')
-    print(param)
+elif mode == 'check_sep':
+    for catchment_ID in os.listdir('/data/scratch/wusongj/paper4/cali_sep'):
+        if not os.path.isdir('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID):
+            continue
+        try:
+            print('')
+            arr = []
+            lengths = []
+            niterations = []
+            n_batch = 0
+            for i in range(Cali.nchains):
+                flag = True
+                for niteration in np.arange(0, 2e5, Cali.niterations)[::-1]:
+                    if flag:
+                        try:
+                            loglikes = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
+                            #print(len(loglikes), loglikes[-1], np.max(loglikes))
+                            arr.append(np.nanmax(loglikes))
+                            lengths.append(len(loglikes))
+                            niterations.append(niteration)
+                            flag = False
+                            n_batch += 1
+                        except:
+                            pass
+                    else:
+                        break
 
-elif mode == 'aaa':
-    from datetime import datetime, timedelta
-    import matplotlib.pyplot as plt
-    sim_q = np.transpose(np.fromfile(Path.work_path + '/forward/outputs/discharge_TS.bin').reshape(Cali.nchains, -1, Output.N_sites), axes=[0,2,1])[:, :, Info.spin_up:]  
-    obs_q = np.fromfile(Path.data_path + 'discharge_obs.bin').reshape(len(Output.sim['q']['sim_idx']), -1)
-
-    sim_iso = np.transpose(np.fromfile(Path.work_path + '/forward/outputs/d18o_chanS_TS.bin').reshape(Cali.nchains, -1, Output.N_sites), axes=[0,2,1])[:, :, Info.spin_up:]  
-    obs_iso = np.fromfile(Path.data_path + 'd18o_stream_obs.bin').reshape(len(Output.sim['iso_stream']['sim_idx']), -1)
-
-    sim_no3 = np.transpose(np.fromfile(Path.work_path + '/forward/outputs/no3_chanS_TS.bin').reshape(Cali.nchains, -1, Output.N_sites), axes=[0,2,1])[:, :, Info.spin_up:]  
-    obs_no3 = np.fromfile(Path.data_path + 'no3_stream_obs.bin').reshape(len(Output.sim['no3']['sim_idx']), -1)
-
-    validIdx = []
-    
-    for i in range(Cali.nchains):
-        likelihoods = []
-        print(i, end='  ')
-        for j in range(len(Output.sim['q']['sim_idx'])):
-            X = sim_q[i, Output.sim['q']['sim_idx'][j],:] + 1e-3
-            Y = obs_q[j] + 1e-3
-            likelihoods.append(GEM_tools.kge(X, Y))
-            print(np.round(GEM_tools.kge(X, Y),2), end=" ")
-        print(end="     ")
-        for j in range(len(Output.sim['iso_stream']['sim_idx'])):
-            X = sim_iso[i, Output.sim['iso_stream']['sim_idx'][j],:]
-            Y = obs_iso[j]
-            likelihoods.append(GEM_tools.kge(X, Y))
-            print(np.round(GEM_tools.kge(X, Y),2), end=" ")
-        for j in range(len(Output.sim['no3']['sim_idx'])):
-            X = sim_no3[i, Output.sim['no3']['sim_idx'][j],:]
-            Y = obs_no3[j]
-            likelihoods.append(GEM_tools.kge(X, Y))
-            print(np.round(GEM_tools.kge(X, Y),2), end=" ")
-            
-        print('')
-        if np.mean(np.array(likelihoods)[[4,5,6]]) > 0.6:
-            validIdx.append(i)
-
-    np.savetxt('/data/scratch/wusongj/paper4/param_good.txt', validIdx)
-    print(len(validIdx))
-    
-    sim_q = sim_q[validIdx, :, :][:,Output.sim['q']['sim_idx'],:]
-    sim_iso = sim_iso[validIdx, :, :][:,Output.sim['iso_stream']['sim_idx'],:]
+            #print(niterations, lengths)
+            print('Catchment : ' + catchment_ID + '   Chains : ' + str(n_batch) + '   Batch : ', int(np.mean(niterations)), np.mean(lengths))
+            print('Average :  ', np.mean(arr))
+            print('Maximum :  ', np.max(arr), ' found in  chain ', np.argwhere(arr==np.max(arr)))
+            #print(arr, np.argwhere(arr==np.max(arr)))
+        except:
+            print('No results found in catchment ',  catchment_ID)
 
 
-
-    fig, ax = plt.subplots(4,3, figsize=(12,6), dpi=300)
-    plt.subplots_adjust(left=0.1, bottom=0.05, right=0.99, top=0.99, wspace=0.1, hspace=0.1)
-    X = np.arange(datetime(1994,1,1), datetime(2022,1,2), timedelta(days=1)).astype(datetime)
-    for i in range(obs_q.shape[0]):
-        ax[i,0].fill_between(X, np.percentile(sim_q[:,i,:], 5, axis=0), np.percentile(sim_q[:,i,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
-        ax[i,0].plot(X, np.mean(sim_q[:,i,:], axis=0), linewidth=1, c='skyblue', zorder=3)
-        ax[i,0].scatter(X, obs_q[i,:], c='salmon', s=0.3, alpha=0.2, zorder=1)
-        ax[i,0].set_ylim([-0.1, 1.5])
-        ax[i,0].set_yticks([0, 0.5, 1, 1.5])
-
-        ax[i,1].fill_between(X, np.percentile(sim_iso[:,i,:], 5, axis=0), np.percentile(sim_iso[:,i,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
-        ax[i,1].plot(X, np.mean(sim_iso[:,i,:], axis=0), linewidth=1, c='skyblue', zorder=3)
-        ax[i,1].scatter(X, obs_iso[i,:], c='salmon', s=0.8, alpha=0.2, zorder=4)
-        ax[i,1].set_ylim([-10.5, -3])
-        ax[i,1].set_yticks([-10, -8, -6, -4])
-
-        ax[i,2].fill_between(X, np.percentile(sim_no3[:,i,:], 5, axis=0), np.percentile(sim_no3[:,i,:], 95, axis=0), linewidth=1, alpha=0.4, color='skyblue', zorder=2)
-        ax[i,2].plot(X, np.mean(sim_no3[:,i,:], axis=0), linewidth=1, c='skyblue', zorder=3)
-        ax[i,2].scatter(X, obs_no3[i,:], c='salmon', s=0.8, alpha=0.2, zorder=4)
-        ax[i,2].set_ylim([0, 40])
-        ax[i,2].set_yticks([0, 6, 12, 18])
-
-        if i!=(obs_q.shape[0]-1):
-            ax[i,0].set_xticklabels([])
-            ax[i,1].set_xticklabels([])
-            ax[i,2].set_xticklabels([])
-
-    sites = [['Bruch Mill', 'Demnitz Mill', 'Demnitz', "Berkenbrueck"],
-             ['Peat South', 'Bruch Mill', 'Demnitz Mill', "Berkenbrueck"]]
-    for i in range(obs_q.shape[0]):
-        X = np.mean(sim_q[:, i, :],axis=0) + 1e-3
-        Y = obs_q[i] + 1e-3
-        title_hgt = 0.9
-        hgt_gradient = 0.11
-        ax[i,0].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=8, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
-        #ax[i,0].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=7, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,0].transAxes)
-        ax[i,0].text(0.05, title_hgt - hgt_gradient * 1, 'Q at '+sites[0][i]+' (m3/s)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,0].transAxes)        
-        print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2), end='     ')
-
-        X = np.mean(sim_iso[:, i, :],axis=0)
-        Y = obs_iso[i]
-        title_hgt = 0.9
-        hgt_gradient = 0.11
-        ax[i,1].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=8, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
-        #ax[i,1].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=8, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,1].transAxes)
-        ax[i,1].text(0.05, title_hgt - hgt_gradient * 1, 'd18O at '+sites[1][i]+' (per mille)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,1].transAxes)        
-        print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2), end='     ')
-
-        X = np.mean(sim_no3[:, i, :],axis=0)
-        Y = obs_no3[i]
-        title_hgt = 0.9
-        hgt_gradient = 0.11
-        ax[i,2].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge11(X, Y), 2)), fontsize=8, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,2].transAxes)
-        #ax[i,2].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(X, Y), 2)), fontsize=8, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i,2].transAxes)
-        ax[i,2].text(0.05, title_hgt - hgt_gradient * 1, 'NO3 at '+sites[1][i]+' (mgN/L)', fontsize=8, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i,2].transAxes)        
-        print(np.round(GEM_tools.nse(X, Y), 2), np.round(GEM_tools.kge(X, Y), 2))
-    
-    fig.savefig('tmp.png')
 
 
 
 elif mode == 'bbb':
+
+
     
-    for gg in [0]:
-        """"""
+    for gg in [4]:
+        print(Output.Catchment_ID)
         catchment_ID = Output.Catchment_ID[gg]
         nsites = len(np.unique(Output.sim_q_idx[gg]+Output.sim_iso_idx[gg]+Output.sim_no3_idx[gg]))
         discharge = np.fromfile('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS.bin').reshape(-1,nsites)
@@ -372,7 +359,7 @@ elif mode == 'bbb':
         np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/d18o_chanS_TS_mean.txt', np.mean(iso, axis=1))
         np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/no3_chanS_TS_mean.txt', np.mean(no3, axis=1))
         
-
+    """
         for fname in os.listdir('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/'):
             if not fname.endswith('bin'):
                 continue
@@ -384,7 +371,8 @@ elif mode == 'bbb':
                 data = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/LAI.bin').reshape(-1,  185, 160)
                 np.savetxt('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/LAI.txt', data[:, 37, 60])
                 print(fname, data.shape)
-
+    """
+    pass
 
 
 

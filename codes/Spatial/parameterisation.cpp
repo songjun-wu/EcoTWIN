@@ -298,6 +298,17 @@ int Param::Parameterisation(Control &ctrl){
 
   }
 
+  if (ctrl.opt_irrigation == 1){
+  
+  _irrigation_coeff->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (irrigation_coeff[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _irrigation_coeff->val[j] += param_category->val[k][j] * irrigation_coeff[k];
+     }}}
+
+  }
+
   if (ctrl.opt_tracking_isotope == 1){
   
   _CG_n_soil->reset();

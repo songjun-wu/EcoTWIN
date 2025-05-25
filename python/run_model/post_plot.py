@@ -3,16 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from def_GEM import Path, Info, Cali, Param, Output
 import GEM_tools
+import pandas as pd
 
 
 nodata = Info.nodata
 
 
 
-def plot_hydrology(output_path, if_average):
+def plot_hydrology(output_path, output_name, spatial_path):
     Vars = ['canopy_storage', 'snow_depth','pond', None, None, None]
     Vars.extend(['SMC_layer1', 'SMC_layer2', 'SMC_layer3', 'groundwater_storage', None, None])
-    Vars.extend(['snowmelt', 'throufall', None, None, None, None])
+    Vars.extend(['snowmelt', 'throufall', 'irrigation_from_GW', 'irrigation_from_river', None, None])
     Vars.extend(['infiltration', 'perc_layer1', 'perc_layer2', 'perc_layer3', None, None])
     Vars.extend(['rinfiltration', 'rperc_layer1', 'rperc_layer2', 'rperc_layer3', 'rrperc_layer3', None])
     Vars.extend(['canopy_evap', 'soil_evap', 'transp_layer1', 'transp_layer2', 'transp_layer3', 'channel_evaporation'])
@@ -32,11 +33,11 @@ def plot_hydrology(output_path, if_average):
 
     weights = [1e3, 1e3, 1e3, 1e3, 1e3, 1e3]
     weights.extend([1, 1, 1, 1e3, 1e3, 1e3])
-    weights.extend([365*1e3, 365*1e3, 365*1e3, 1365*1e3, 365*1e3, 365*1e3])  # mm/yr
-    weights.extend([365*1e3, 365*1e3, 365*1e3, 1365*1e3, 365*1e3, 365*1e3])
-    weights.extend([365*1e3, 365*1e3, 365*1e3, 1365*1e3, 365*1e3, 365*1e3])
-    weights.extend([365*1e3, 365*1e3, 365*1e3, 1365*1e3, 365*1e3, 365*1e3])
-    weights.extend([365*1e3, 365*1e3, 365*1e3, 1365*1e3, 365*1e3, 365*1e3])
+    weights.extend([365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3])  # mm/yr
+    weights.extend([365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3])
+    weights.extend([365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3])
+    weights.extend([365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3])
+    weights.extend([365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3, 365*1e3])
     weights.extend([10*365, 10*365, 10*365, 10*365, 10*365, 1])
 
     
@@ -46,19 +47,17 @@ def plot_hydrology(output_path, if_average):
 
 
     fig, ax = plt.subplots(nrow, ncol, figsize=(30,18), dpi=300)
-    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
+    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.98, top=0.99, wspace=0.2, hspace=0.2)
 
     site_idx = 1  # Demnitz Millcreek 26
-
+    valid_subplots = 0
     for i in range(len(Vars)):
         if Vars[i] == None:
             ax[i//ncol, i%ncol].axis('off')
         else:
             try:
-                if if_average:
-                    data = (np.mean(np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, 10959, Output.N_sites), axis=0).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
-                else:
-                    data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
+
+                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
                 
                 
                 data = data[site_idx,:]
@@ -73,37 +72,37 @@ def plot_hydrology(output_path, if_average):
                 if "discharge" in Vars[i]:
                     obs = np.fromfile(Path.data_path + 'discharge_obs.bin').reshape(len(Output.sim['q']['sim_idx']), -1)[site_idx, :]
                     X = np.arange(len(obs))
-                    if Vars[i]=='discharge':
-                        print(data[:5], obs[5000:5005]) # todo
                     ax[i//ncol, i%ncol].scatter(X, obs, c='salmon', s=0.3, alpha=0.3, zorder=2)
                     ax[i//ncol, i%ncol].text(0.95, title_hgt - hgt_gradient * 1, 'KGE:'+str(np.round(GEM_tools.kge(data+1e-3, obs+1e-3), 2)), fontsize=12, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                     ax[i//ncol, i%ncol].text(0.95, title_hgt - hgt_gradient * 2, 'NSE:'+str(np.round(GEM_tools.nse(data+1e-3, obs+1e-3), 2)), fontsize=12, weight='bold', horizontalalignment='right', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                 ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 0, Vars[i], fontsize=12, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                 ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 1,'Mean:' + f"{np.nanmean(data):.1e}", fontsize=12, horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                 ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 2,'Max :' + f"{np.nanmax(data):.1e}", fontsize=12, horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
+                valid_subplots += 1
             except Exception as e:
                 ax[i//ncol, i%ncol].axis('off')
-
-    fig.savefig(output_path + '999_All_in_Ts.png')
+    if valid_subplots>0:
+        fig.savefig(output_path + output_name + '_map.png')
     #print('Plot saved at :  ', output_path + '999_All_in_Ts.png')
 
 
     fig, ax = plt.subplots(nrow, ncol, figsize=(16,25), dpi=300)
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.01, hspace=0.08)
+    valid_subplots = 0
     for i in range(len(Vars)):
         if Vars[i] == None:
             pass
             ax[i//ncol, i%ncol].axis('off')
         else:
             try:
-                chanmask = np.loadtxt(Path.data_path + 'spatial/chnwidth.asc', skiprows=6)
+                chanmask = np.loadtxt(spatial_path + '/chnwidth.asc', skiprows=6)
                 chanmask = chanmask>0
                 mask = np.full(chanmask.shape, np.nan)
-                tmp = np.loadtxt(Path.data_path + 'spatial/dem.asc', skiprows=6)
+                tmp = np.loadtxt(spatial_path + '/dem.asc', skiprows=6)
                 tmp = tmp>0
                 mask[tmp] = 1 
     
-                data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, 30, 22))[:, :, :]
+                data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, mask.shape[0], mask.shape[1]))[:, :, :]
                 data[data==nodata] = np.nan
                 data *= weights[i]
                 
@@ -134,14 +133,15 @@ def plot_hydrology(output_path, if_average):
                 hgt_gradient = 0.11
                 
                 ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 0, Vars[i], fontsize=15, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
-
+                valid_subplots += 1
             except Exception as e:
                 pass
                 #ax[i//ncol, i%ncol].axis('off')
-    fig.savefig(output_path + '999_All_in_map.png')
-    print('Plot saved at :  ', output_path + '999_All_in_map.png')
+    if valid_subplots > 0:
+        fig.savefig(output_path + output_name +'_Ts.png')
+        #print('Plot saved at :  ', output_path + output_name +'_Ts.png')
 
-def plot_tracking(output_path, if_average):
+def plot_tracking(output_path, output_name, spatial_path):
     Vars = ['d18o_canopy_storage', 'd18o_snow_depth','d18o_pond', None, None, None]
     Vars.extend(['d18o_SMC_layer1', 'd18o_SMC_layer2', 'd18o_SMC_layer3', 'd18o_groundwater_storage', None, 'd18o_chanS'])
     Vars.extend(['age_canopy_storage', 'age_snow_depth','age_pond', None, None, None])
@@ -175,19 +175,18 @@ def plot_tracking(output_path, if_average):
 
 
     fig, ax = plt.subplots(nrow, ncol, figsize=(30,18), dpi=300)
-    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
+    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.98, top=0.99, wspace=0.2, hspace=0.2)
 
     site_idx = 3  # Demnitz Millcreek 26
 
+    valid_subplots = 0
     for i in range(len(Vars)):
         if Vars[i] == None:
             ax[i//ncol, i%ncol].axis('off')
         else:
             try:
-                if if_average:
-                    data = (np.mean(np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, 10959, Output.N_sites), axis=0).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
-                else:
-                    data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
+
+                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
 
                 data = data[site_idx,:]
                 data[data==nodata] = np.nan
@@ -208,25 +207,27 @@ def plot_tracking(output_path, if_average):
                 ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 0, Vars[i], fontsize=12, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                 ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 1,'Mean:' + f"{np.nanmean(data):.1e}", fontsize=12, horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                 ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 2,'Max :' + f"{np.nanmax(data):.1e}", fontsize=12, horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
+                valid_subplots += 1
             except Exception as e:
                 ax[i//ncol, i%ncol].axis('off')
-
-    fig.savefig(output_path + '999_All_in_Ts_tracking.png')
+    if valid_subplots > 0:
+        fig.savefig(output_path + output_name + '_map.png')
     #print('Plot saved at :  ', output_path + '999_All_in_Ts_tracking.png')
 
 
     fig, ax = plt.subplots(nrow, ncol, figsize=(16,25), dpi=300)
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.01, hspace=0.08)
+    valid_subplots = 0
     for i in range(len(Vars)):
         if Vars[i] == None:
             ax[i//ncol, i%ncol].axis('off')
             pass
         else:
             try:
-                chanmask = np.loadtxt(Path.data_path + 'spatial/chnwidth.asc', skiprows=6)
+                chanmask = np.loadtxt(spatial_path + '/chnwidth.asc', skiprows=6)
                 chanmask = chanmask>0
 
-                data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, 30, 22))[:, :, :]
+                data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, chanmask.shape[0], chanmask.shape[1]))[:, :, :]
                 data[data==nodata] = np.nan
                 data *= weights[i]
                
@@ -234,8 +235,6 @@ def plot_tracking(output_path, if_average):
                     for kk in range(data.shape[0]):
                         data[kk,:,:][ ~chanmask] = np.nan
                 
-                print(Vars[i], np.nanmean(data[:]))  # todo
-
                 im = ax[i//ncol, i%ncol].imshow(np.nanmean(data, axis=0), cmap='viridis', zorder=1, label='1')
                 ax[i//ncol, i%ncol].set_frame_on(False)
                 ax[i//ncol, i%ncol].set_xticks([])
@@ -251,12 +250,58 @@ def plot_tracking(output_path, if_average):
                 ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 0, Vars[i], fontsize=15, weight='bold', horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                 #ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 1,'Mean:' + f"{np.mean(data):.1e}", fontsize=12, horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                 #ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 2,'Max :' + f"{np.max(data):.1e}", fontsize=12, horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
+                valid_subplots += 1
             except Exception as e:
                 ax[i//ncol, i%ncol].axis('off')
             
+    if valid_subplots > 0:
+        fig.savefig(output_path + output_name + '_Ts.png')
+
+def plot_performance(sim_path, obs_path, output_path, catchment_ID, chainID):
+
+    catchment_idx = np.squeeze(np.argwhere(np.array(Output.Catchment_ID)==catchment_ID))
+
+
+    nrow = 9
+    ncol = 4
+
+    fig, ax = plt.subplots(nrow, ncol, figsize=(12,8), dpi=300)
+    tindex = pd.date_range('1980-1-1', '2024-12-31')[Info.spin_up:]
+
+    counter = 0
+    
+    for key, value in Output.sim.items():
+        dict = Output.sim[key]
+        N_sites = dict['N_sites'][catchment_idx]
+        sim_idx = dict['sim_idx'][catchment_idx]
+        if len(sim_idx) > 0:
+            obs_all = np.fromfile(obs_path+dict['obs_file']).reshape(len(sim_idx), -1)
+            sim_all = np.fromfile(sim_path+dict['sim_file']).reshape(-1, N_sites).T
+
+            sim_all = sim_all[:, Info.spin_up:]
+            
+
+            for kk in range(len(sim_idx)):
+
+                sim = sim_all[sim_idx[kk],:] + 1e-5
+                obs = obs_all[kk, :] + 1e-5
+
+                tmp = np.full(len(sim), np.nan)
+                tmp[:len(obs)] = obs
+
+                ax[counter//ncol, counter%ncol].plot(tindex, sim, linewidth=0.5)
+                ax[counter//ncol, counter%ncol].scatter(tindex, tmp, c='red', s=0.5, alpha=0.3)
                 
-    fig.savefig(output_path + '999_All_in_map_tracking.png')
-    #print('Plot saved at :  ', output_path + '999_All_in_map_tracking.png')
+                print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.kge_modified(sim, tmp),2))
+
+                counter += 1
+
+    fig.savefig(output_path+'performance_'+catchment_ID+'_'+str(chainID)+'.png', transparent=False)
+
+
+
+
+
 
 def plot_param():
     param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1).T
@@ -329,7 +374,7 @@ def plot_param_valid():
 
 #plot_hydrology(output_path = Path.output_path, if_average=False)
 #plot_tracking(output_path = Path.output_path, if_average=False)
-plot_hydrology(output_path = '/data/scratch/wusongj/paper4/forward/outputs_posterior/', if_average=True)
-plot_tracking(output_path = '/data/scratch/wusongj/paper4/forward/outputs_posterior/', if_average=True)
+#plot_hydrology(output_path = '/data/scratch/wusongj/paper4/forward/outputs_posterior/', if_average=True)
+#plot_tracking(output_path = '/data/scratch/wusongj/paper4/forward/outputs_posterior/', if_average=True)
 #plot_param()
 #plot_param_valid()

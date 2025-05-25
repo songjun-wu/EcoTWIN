@@ -138,9 +138,11 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_Tr2', [Opt.cond['none']], 'Transpiration in layer 2 [m]', 'grid', 'new', 'transp_layer2', 1],
             ['_Tr3', [Opt.cond['none']], 'Transpiration in layer 3 [m]', 'grid', 'new', 'transp_layer3', 1],
 
-            
+            # Irrigation
+            ['_irrigation_from_river', [Opt.cond['none']], 'Water extraction from river [m]', 'grid', 'new', 'irrigation_from_river', 1],
+            ['_irrigation_from_GW', [Opt.cond['none']], 'Water extraction from GW [m]', 'grid', 'new', 'irrigation_from_GW', 1],
 
-
+            # Other internal variables
             ['_froot_layer1', [Opt.cond['evap_1']], 'froot coefficient for all soil profile', 'grid', 'new', None, 0],
             ['_froot_layer2', [Opt.cond['evap_1']], 'froot coefficient for layer 2', 'grid', 'new', None, 0],
             ['_froot_layer3', [Opt.cond['evap_1']], 'froot coefficient for layer 3', 'grid', 'new', None, 0],
@@ -176,6 +178,9 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_Qupstream', [Opt.cond['none']], 'Upstream inflow [m3/s]', 'grid', 'new', None, 0],
 
             ['_Echan', [Opt.cond['none']], 'Channel evaporation [m]', 'grid', 'new', 'channel_evaporation', 1],
+
+            
+            
 
 
             
@@ -226,7 +231,6 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_percExp', [Opt.cond['perc_2']], 'The exponential parameter for percolation [-], only needed when opt_percolation = 2', 'grid', 'spatial_param', 'percExp', 0],
 
               # GW
-              
               ['_init_GW', [Opt.cond['init_GW_1']], 'The initial GW storage [m], only needed when opt_init_GW = 1', 'grid', 'spatial_param', 'init_GW', 0],
               ['_wRecharge', [Opt.cond['none']], 'The weighting parameter for GW recharge [-], only needed when opt_recharge = 1', 'grid', 'spatial_param', 'wRecharge', 0],
 
@@ -241,11 +245,15 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_Manningn', [Opt.cond['routQ_1']], 'Manning N for stream routing [-], only needed when opt_routQ = 1', 'grid', 'spatial_param', 'Manningn', 0],
 
               # Channel 
-              ['_Echan_alpha', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'orrection factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2', 'grid', 'spatial_param', 'Echan_alpha', 0],
+              ['_Echan_alpha', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'correction factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2', 'grid', 'spatial_param', 'Echan_alpha', 0],
+
+              # Irrigation
+              ['_irrigation_coeff', [Opt.cond['irrigation_1']], 'Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled', 'grid', 'spatial_param', 'irrigation_coeff', 0],
 
               # Mixing
               ['_nearsurface_mixing', [Opt.cond['none']], 'The proportion of pond to mix with layer1  [decimal]', 'grid', 'spatial_param', 'nearsurface_mixing', 0],
               ['_ratio_to_interf', [Opt.cond['none']], 'The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]', 'grid', 'spatial_param', 'ratio_to_interf', 0],
+
 
               # Tracking
               ['_CG_n_soil', [Opt.cond['tracking_isotope_1']], 'Parameter N in CG model for soil water fractionation [-]', 'grid', 'spatial_param', 'CG_n_soil', 0],
@@ -292,6 +300,7 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
 
             ]
 
+
 Nitrogen_addition = [['fert_add', [Opt.cond['nitrogen_sim_1']], 'Fertilizer addition [mgN/L*m = gN/m2]', 'vector', 'vector', None, 0],
                      ['fert_day', [Opt.cond['nitrogen_sim_1']], 'Day of year to start fertilization [day]', 'vector', 'vector', None, 0],
                      ['fert_down', [Opt.cond['nitrogen_sim_1']], 'The proportion of fertilizer reaching deep soil [decimal]', 'vector', 'vector', None, 0],
@@ -321,6 +330,10 @@ Nitrogen_addition = [['fert_add', [Opt.cond['nitrogen_sim_1']], 'Fertilizer addi
                      ['plant_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation planting [day]', 'vector', 'vector', None, 0],
                      ['harvest_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation harvest [day]', 'vector', 'vector', None, 0],
                     ]
+
+Irrigation  = [
+                ['irrigation_thres', [Opt.cond['irrigation_1']], 'The threshold (soil moisture/field capacity) below which irrigation is needed', 'vector', 'vector', None, 0],
+              ]
 
 
 Reports = [Storages[j] for j in (np.squeeze(np.argwhere([i[4]=='spatial' for i in Storages])))]
@@ -384,8 +397,9 @@ define_variables.report_includes(fname=path + 'includes/Report.h', reports=Repor
 define_variables.report_destructor(fname=path + 'Destructors/ReportDestruct.cpp', reports=Reports)
 config_build.report_build(fname=path+'IO/report.cpp', reports=Reports)
 
+define_variables.includes(fname=path + 'includes/Basin.h', signs=['Irrigation'], datas=[Irrigation], max_category=setting.max_category)
 define_variables.includes(fname=path + 'includes/Basin.h', signs=['Nitrogen addition'], datas=[Nitrogen_addition], max_category=setting.max_category)
-config_build.read_nitrogen(fname=path+'IO/readNitrogenFile.cpp', Nitrogen_inputs=Nitrogen_addition)
+config_build.read_crop_info(fname=path+'IO/readCropFile.cpp', Nitrogen_inputs=Nitrogen_addition, Irrigation_inputs=Irrigation)
 
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)

@@ -27,12 +27,16 @@ class Opt:
     cond['nitrogen_sim_1'] = {'key':'opt_nitrogen_sim', 'value':1,
                                   'general_description':'Enable nitrogen simulation?\n# 0: disabled\n# 1: enabled',
                                   'description':'Nitrogen simulation'}
+    cond['irrigation_1']   = {'key':'opt_irrigation', 'value':1, 
+                        'general_description':'Agricultural irrigation\n# 0: disabled\n# 1: enabled',
+                        'description':'Irrigation Enabled'}
     cond['reinfil_1']   = {'key':'opt_reinfil', 'value':1, 
                         'general_description':'Reinfiltration during overland flow routing',
                         'description':'Reinfiltration Enabled'}
     cond['reinfil_0']   = {'key':'opt_reinfil', 'value':0, 
                         'general_description':'Reinfiltration during overland flow routing\n# 0: Disabled\n# 1: Enabled',
                         'description':'Reinfiltration Disaled'}
+    
     
     
 

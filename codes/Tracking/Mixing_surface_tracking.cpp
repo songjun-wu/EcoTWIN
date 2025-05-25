@@ -13,6 +13,8 @@ int Basin::Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par){
     (_pond_old = 0.0)
     + Th
     + snowmelt
+    + irrigation_from_river
+    + irrigation_from_GW
     (pond)
     - Infiltration      
     + ovf_in            
@@ -21,9 +23,11 @@ int Basin::Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par){
     - ovf_toChn           
     */
 
+    double irrigation_amount, irrigation_conc;
+
     // Isotopes
     if (ctrl.opt_tracking_isotope==1) {
-        // Mixing snow accumulation or snow melt
+        // Mixing snow and irrigation
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
             // Mixing snow with throughfall if temperature is below snow rain threshold
@@ -32,14 +36,20 @@ int Basin::Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par){
             } else{  // Else throughfall mixes with snow melt
                 Mixing_full(_Th->val[j], _d18o_pond->val[j], _snowmelt->val[j], _d18o_snow->val[j]);
             }
-            
+
+            // Mixing with irrigation
+            irrigation_amount = _irrigation_from_river->val[j] + _irrigation_from_GW->val[j];
+            if (irrigation_amount > roundoffERR){
+                irrigation_conc = (_irrigation_from_river->val[j] * _d18o_chanS->val[j] + _irrigation_from_GW->val[j] * _d18o_GW->val[j]) / irrigation_amount;
+                Mixing_full(_pond->val[j], _d18o_pond->val[j], irrigation_amount, irrigation_conc);
+            }
         }
     }
 
 
     // Ages
     if (ctrl.opt_tracking_age==1) {
-        // Mixing snow accumulation or snow melt
+        // Mixing snow and irrigation
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
             // Mixing snow with throughfall if temperature is below snow rain threshold
@@ -48,7 +58,13 @@ int Basin::Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par){
             } else{  // Else throughfall mixes with snow melt
                 Mixing_full(_Th->val[j], _age_pond->val[j], _snowmelt->val[j], _age_snow->val[j]);
             }
-            
+
+            // Mixing with irrigation
+            irrigation_amount = _irrigation_from_river->val[j] + _irrigation_from_GW->val[j];
+            if (irrigation_amount > roundoffERR){
+                irrigation_conc = (_irrigation_from_river->val[j] * _age_chanS->val[j] + _irrigation_from_GW->val[j] * _age_GW->val[j]) / irrigation_amount;
+                Mixing_full(_pond->val[j], _age_pond->val[j], irrigation_amount, irrigation_conc);
+            }
         }
     }
 

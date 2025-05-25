@@ -3,6 +3,7 @@
 int Basin::Mixing_GW_tracking(Control &ctrl, Atmosphere &atm){
     /*
     ### GW:
+    - irrigation_from_GW
     (_GW_old)
     + percolation3      (need to mix)
     (_GW)

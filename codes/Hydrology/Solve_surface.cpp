@@ -3,11 +3,14 @@
 int Basin::Solve_surface(Control &ctrl, Param &par, Atmosphere &atm){
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-
         if (ctrl.opt_snow == 1){
             Snow_acc_melt(par, atm, j);
         }
-       
+    }
+
+    // Irrigation
+    if (ctrl.opt_irrigation==1){
+        Irrigation(ctrl, par);
     }
 
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){

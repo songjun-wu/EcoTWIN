@@ -72,6 +72,8 @@ int Basin::dtor(Control &ctrl){
   if(_Tr1) delete _Tr1;
   if(_Tr2) delete _Tr2;
   if(_Tr3) delete _Tr3;
+  if(_irrigation_from_river) delete _irrigation_from_river;
+  if(_irrigation_from_GW) delete _irrigation_from_GW;
   if(_Ks1) delete _Ks1;
   if(_Ks2) delete _Ks2;
   if(_Ks3) delete _Ks3;

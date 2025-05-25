@@ -10,18 +10,16 @@ from .model import Model
 import time
 import traceback
 
-def run_dream(parameters, likelihood, nchains=5, niterations=50000, start=None, restart=False, verbose=True, nverbose=10, tempering=False, **kwargs):
+def run_dream(parameters, likelihood, nchains=5, cores_for_each_chain=1, niterations=50000, start=None, restart=False, verbose=True, nverbose=10, tempering=False, **kwargs):
     """Run DREAM given a set of parameters with priors and a likelihood function."""
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
     
-    cores_pre_chain = 2
-
     if size < nchains:
         if rank == 0:
             print(f"Warning: Number of MPI processes ({size}) is less than requested chains ({nchains}). Adjusting nchains to {size}.")
-    nchains = size // cores_pre_chain  # Two cores for each chain
+    nchains = size // cores_for_each_chain  # Two cores for each chain
 
     if restart:
         if start is None:
@@ -96,7 +94,7 @@ def run_dream(parameters, likelihood, nchains=5, niterations=50000, start=None, 
             comm.Barrier()
         else:
             if type(start) is list:
-                start_point = start[rank] if rank < len(start) else None
+                start_point = start[rank//cores_for_each_chain]
             else:
                 start_point = start
 
@@ -105,7 +103,7 @@ def run_dream(parameters, likelihood, nchains=5, niterations=50000, start=None, 
                     shutil.rmtree(kwargs['savePath'])
                 os.makedirs(kwargs['savePath'])
 
-            args = (step_instance, niterations, start_point, verbose, nverbose, rank//cores_pre_chain, rank%cores_pre_chain, nchains,
+            args = (step_instance, niterations, start_point, verbose, nverbose, rank//cores_for_each_chain, rank%cores_for_each_chain, nchains,
                     kwargs.get('savePath', '.'), kwargs.get('total_iterations', niterations),
                     kwargs.get('model_name', 'dream'))
 
@@ -169,7 +167,7 @@ def _setup_mp_dream_pool(nchains, niterations, step_instance, start_pt=None):
         old_history = np.load(step_instance.history_file)
         print('Precentage of nan value in history file  :  ', 1 - np.sum(~np.isnan(old_history)/len(old_history)), np.sum(~np.isnan(old_history)), len(old_history), flush=True)  # todo
         len_old_history = len(old_history.flatten())
-        nold_history_records = len_old_history / step_instance.total_var_dimension
+        nold_history_records = int(len_old_history / step_instance.total_var_dimension)
         step_instance.nseedchains = min(nold_history_records, step_instance.nseedchains)
 
         if niterations < step_instance.history_thin:

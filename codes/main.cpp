@@ -18,7 +18,6 @@ int main(){
   float advance_groundTs = 0;  // reset to zero when ground_input (e.g., LAI) is updated
   float advance_landuse = 0; // resets to zero when land use inputs is updated
   float advance_age = 0;     // resets to zero when water ages are advanced
-  int Report_map_flag; // Whether to report maps
   
 
   oControl = new Control;
@@ -26,20 +25,19 @@ int main(){
   oBasin = new Basin(*oControl, *oParam);
   oAtmosphere = new Atmosphere(*oControl);
   oReport = new Report(*oControl);
-
-  oBasin->Initialisation(*oControl, *oParam, *oAtmosphere);
-  // oReport->Report_Initialisation(*oControl);  // To be re-enabled
-
-  auto stop1 = std::chrono::high_resolution_clock::now();
   
+  oBasin->Initialisation(*oControl, *oParam, *oAtmosphere);
+  oReport->Report_Initialisation(*oControl);  // To be re-enabled
+  
+  auto stop1 = std::chrono::high_resolution_clock::now();
+
   while (oControl->current_ts < oControl->Simul_end){
 
     oControl->Get_year_month_day();
-    
     oBasin->Solve_timesteps(*oControl, *oParam, *oAtmosphere);
-    
+
     // report outputs
-    //oReport->Report_all(*oControl, *oBasin);  // To be re-enabled
+    oReport->Report_all(*oControl, *oBasin);  // To be re-enabled
 
     // Temporary for faster calibration; todo
     oBasin->Report_for_cali(*oControl);
@@ -98,7 +96,7 @@ int main(){
   //oBasin->dtor(*oControl);
   //oParam->dtor(*oControl);
   //oControl->dtor();
-  //oReport->dtor(*oControl); // To be re-enabled
+  oReport->dtor(*oControl); // To be re-enabled
   
   auto stop2  = std::chrono::high_resolution_clock::now();
 

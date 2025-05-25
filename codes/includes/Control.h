@@ -63,6 +63,10 @@ struct Control{
   // 0: disabled
   // 1: enabled
   int opt_nitrogen_sim;
+  // Agricultural irrigation
+  // 0: disabled
+  // 1: enabled
+  int opt_irrigation;
   // Reinfiltration during overland flow routing
   int opt_reinfil;
   // Canopy interception
@@ -257,7 +261,8 @@ struct Control{
   string fn__GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
   string fn__wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   string fn__Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
-  string fn__Echan_alpha;  // orrection factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
+  string fn__Echan_alpha;  // correction factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
+  string fn__irrigation_coeff;  // Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled
   string fn__nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
@@ -295,6 +300,8 @@ struct Control{
   int report__Tr1;  // report Transpiration in layer 1 [m]
   int report__Tr2;  // report Transpiration in layer 2 [m]
   int report__Tr3;  // report Transpiration in layer 3 [m]
+  int report__irrigation_from_river;  // report Water extraction from river [m]
+  int report__irrigation_from_GW;  // report Water extraction from GW [m]
   int report__ovf_in;  // report Overland flow from upstream cell(s) [m]
   int report__ovf_out;  // report Overland flow to downstream cell [m]
   int report__ovf_toChn;  // report Overland flow to Channel [m]

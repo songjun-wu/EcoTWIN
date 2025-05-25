@@ -17,6 +17,9 @@ def includes(fname, signs, datas, max_category):
         if sign == 'Nitrogen addition':
             for kk in range(len(data)):
                 content.append('  vector<double> ' + data[kk][0] + ';\n')
+        if sign == 'Irrigation':
+            for kk in range(len(data)):
+                content.append('  vector<double> ' + data[kk][0] + ';\n')
         with open(fname, 'r') as f:
             lines = f.readlines()
             start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')

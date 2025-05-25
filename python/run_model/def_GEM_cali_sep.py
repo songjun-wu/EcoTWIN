@@ -4,17 +4,19 @@
 
 from datetime import datetime
 import numpy as np
+import pickle
 
 class Path:
-    model_path = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
+    model_path = '/home/wusongj/GEM/stable_release/' # The path for model executable file
     path_EXEC = 'gEcoHydro'
     data_path = '/data/scratch/wusongj/paper4/data/'                   # The path with spatial and climate data
     config_path = '/data/scratch/wusongj/paper4/data/config/'                 # The path with configuration files (.ini)
-    work_path = '/data/scratch/wusongj/paper4/'            # Working directory
+    work_path = '/data/scratch/wusongj/paper4/cali_sep/ABC/'            # Working directory
     
-    #run_path = work_path + 'run/'           # The path for model runs
-    #output_path = run_path + 'outputs/'     # The path for output saving
-    #result_path = work_path + 'results/'    # The path to save all posterior results
+    run_path = work_path + 'run/'           # The path for model runs
+    output_path = run_path + 'outputs/'     # The path for output saving
+
+    result_path = work_path + 'results/'    # The path to save all posterior results
 
 
 
@@ -57,18 +59,17 @@ class Info:
     nadd['irrigation_thres'] = {'value':[0.7,0.4,0,0,0,0]}  # The threshold (soil moisture/field capacity) below which irrigation is needed
 
 
-
 class Cali:
     # DREAM calibration
-    TASK_name = 'DREAM_cali'
-    nchains = 50
-    cores_for_each_chain = 4
+    TASK_name = 'sep_cali'
+    nchains = 20
+    cores_for_each_chain = 1
 
-    nbatchs = 5  # Number of batches
+    nbatchs = 20  # Number of batches
     niterations = 100  # Number of iterations for each batch
     
 
-    restart = True   # Whether restart?
+    restart = False   # Whether restart?
     restart_niteration = 100 # restart since which iteration?
 
     history_thin = 5
@@ -80,43 +81,30 @@ class Cali:
 
 class Output:
 
-    Catchment_ID    = ['6_001', '291110_001', '566445_001', '442364_001', '1034751_001', '291111_001', '83811_001', '831616_001']              # WOS-ID of each catchment
+    Catchment_ID    = []
     N_catchments    = len(Catchment_ID)     # Number of catchments
     
 
     # Site ID in each catchment; shape = (N_catchments, N_sites)
-    sim_q_idx       = [ [0, 2, 3, 7, 9, 11, 12],
-                        [0, 1, 2, 3, 4, 6, 7, 8, 10, 11, 13, 14, 16, 17, 22, 23, 24, 25],
-                        [1, 2, 5, 6, 7, 9, 13, 14, 16, 18, 20, 21, 27],
-                        [2, 3, 4, 6],
-                        [0, 2, 3, 4, 5],
-                        [0, 1, 2, 4, 5, 6, 7, 8, 9, 10],
-                        [0, 1, 2, 3],
-                        [0, 1, 2, 3],
-                        ]
-    
-    sim_iso_idx     = [ [6],
-                        [0, 21, 26, 27, 28, 29, 30],
-                        [10, 11, 19, 22, 24, 26],
-                        [0],
-                        [],
-                        [],
-                        [],
-                        [4, 5],
-                        ]
-    
-    sim_no3_idx     = [ [1, 4, 5, 8, 10],
-                        [5, 9, 12, 15, 18, 19, 20, 21, 24, 26, 27],
-                        [0, 3, 4, 8, 12, 15, 17, 23, 25],
-                        [1, 5, 7],
-                        [1],
-                        [2, 3],
-                        [3],
-                        []
-                        ]
-
+    sim_q_idx       = []
+    sim_iso_idx     = []
+    sim_no3_idx     = []
     N_sites         = [] # Number of sites in each catchment
+
+    
+
+    catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
+    discharge_gauge_list = pickle.load(open(Path.data_path+'catchment_info/cali/discharge_gauge_list','rb'))
+    isotope_gauge_list = pickle.load(open(Path.data_path+'catchment_info/cali/isotope_gauge_list','rb'))
+    nitrate_gauge_list = pickle.load(open(Path.data_path+'catchment_info/cali/nitrate_gauge_list','rb'))
+
+    
+
     for i in range(N_catchments):
+        
+        sim_q_idx.append(discharge_gauge_list[np.where(catchment_to_cali==Catchment_ID[i])[0][0]])
+        sim_iso_idx.append(isotope_gauge_list[np.where(catchment_to_cali==Catchment_ID[i])[0][0]])
+        sim_no3_idx.append(nitrate_gauge_list[np.where(catchment_to_cali==Catchment_ID[i])[0][0]])
         N_sites.append(len(np.unique(sim_q_idx[i]+sim_iso_idx[i]+sim_no3_idx[i])))
     
 
@@ -130,11 +118,11 @@ class Output:
         sim_q_weights.append(np.full(len(sim_q_idx[i]), 1)/len(sim_q_idx[i])/N_catchments/n_valid_varaible)
         sim_iso_weights.append(np.full(len(sim_iso_idx[i]), 1)/len(sim_iso_idx[i])/N_catchments/n_valid_varaible)
         sim_no3_weights.append(np.full(len(sim_no3_idx[i]), 1)/len(sim_no3_idx[i])/N_catchments/n_valid_varaible)
-
+  
     sim = {}
-    sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'weights':sim_q_weights, 'N_sites':N_sites, 'type':'Ts'}
-    sim['iso_stream']       = {'sim_file':'d18o_chanS_TS.bin' , 'obs_file':'d18o_stream_obs.bin', 'sim_idx':sim_iso_idx, 'weights':sim_iso_weights, 'N_sites':N_sites, 'type':'Ts'}
-    sim['no3']      = {'sim_file':'no3_chanS_TS.bin' , 'obs_file':'no3_stream_obs.bin', 'sim_idx':sim_no3_idx, 'weights':sim_no3_weights, 'N_sites':N_sites, 'type':'Ts'}
+    sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'weights':sim_q_weights, 'type':'Ts'}
+    sim['iso_stream']       = {'sim_file':'d18o_chanS_TS.bin' , 'obs_file':'d18o_stream_obs.bin', 'sim_idx':sim_iso_idx, 'weights':sim_iso_weights, 'type':'Ts'}
+    sim['no3']      = {'sim_file':'no3_chanS_TS.bin' , 'obs_file':'no3_stream_obs.bin', 'sim_idx':sim_no3_idx, 'weights':sim_no3_weights, 'type':'Ts'}
 
     
 
@@ -220,9 +208,6 @@ class Param:
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None}
     ref['deni_soil_moisture_thres']   = {'type':'landuse',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.2]*Info.N_landuse, 'max':[0.85]*Info.N_landuse, 'fix_value':None}
   
-  
-    
-
 
     
 

@@ -24,7 +24,7 @@ int Basin::Sort_plant_uptake(Control &ctrl, Param &par){
                     }
                 }
 
-                _potential_uptake_layer1[i].push_back(uptake_IN * upper_uptake[idx]); //* p_cell * root_fraction_1
+                _potential_uptake_layer1[i].push_back(uptake_IN * upper_uptake[idx]); // * p_cell * root_fraction_1
                 _potential_uptake_layer2[i].push_back(uptake_IN * upper_uptake[idx]);   // * p_cell * (1 - root_fraction_1)
                 _potential_uptake_layer3[i].push_back(uptake_IN * (1 - upper_uptake[idx])); // * p_cell 
 

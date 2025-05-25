@@ -12,7 +12,6 @@ int Basin::Sort_nitrogen_addition(Control &ctrl, Param &par){
         for (int i = 0; i < num_landuse; i++) {
 
             idx = landuse_idx[i];
-
             _fertN_add_layer1_IN.push_back(vector<double> ());
             _fertN_add_layer1_fastN.push_back(vector<double> ());
             _fertN_add_layer2_IN.push_back(vector<double> ());

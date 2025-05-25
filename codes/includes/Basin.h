@@ -84,6 +84,8 @@ class Basin {
   svector *_Tr1;  // Transpiration in layer 1 [m]
   svector *_Tr2;  // Transpiration in layer 2 [m]
   svector *_Tr3;  // Transpiration in layer 3 [m]
+  svector *_irrigation_from_river;  // Water extraction from river [m]
+  svector *_irrigation_from_GW;  // Water extraction from GW [m]
   svector *_Ks1;  // Saturated hydraulic conductivity in layer 1
   svector *_Ks2;  // Saturated hydraulic conductivity in layer 2
   svector *_Ks3;  // Saturated hydraulic conductivity in layer 3
@@ -186,6 +188,10 @@ class Basin {
   vector<double> plant_day;
   vector<double> harvest_day;
   /* end of Nitrogen addition */
+
+  /* Irrigation */
+  vector<double> irrigation_thres;
+  /* end of Irrigation */
 
   /* Nitrogen */
   svector *_no3_I;  // no3 in Canopy storage [mgN/L]
@@ -311,6 +317,9 @@ class Basin {
   int Channel_evaporation_1(Control &ctrl, Atmosphere &atm, Param &par);  // Penman equation
   int Channel_evaporation_2(Control &ctrl, Atmosphere &atm, Param &par);  // Priestley-Taylor equation
 
+  /* Irrigation module */
+  int Irrigation(Control &ctrl, Param &par);
+
   /* Nitrogen module */
   int Solve_canopy_nitrogen(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing with precipitation and erichment due to evaporation
   int Solve_surface_nitrogen(Control &ctrl, Atmosphere &atm, Param &par);  // Ponding water mixing with snow melt
@@ -334,7 +343,7 @@ class Basin {
   double Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaS, const double db_depth); // Moisture factor of nitrogen transformation
 
   /* IO functions */
-  int ReadNitrogenFile(Control &ctrl, Param &par, string fname);
+  int ReadCropFile(Control &ctrl, Param &par, string fname);
 
   /* Save TS output to speed up calibration; Temporary implementation */
   int Report_for_cali(Control &ctrl);

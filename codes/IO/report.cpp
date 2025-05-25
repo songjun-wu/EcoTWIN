@@ -1,14 +1,12 @@
 #include "Report.h"
 
 int Report::Report_all(Control &ctrl, Basin &Bsn){
-  
+
   // Updates maps for each timestep
   Report_update_maps(ctrl, Bsn);
   advance_report += ctrl.Simul_tstep;
-  
   // Report to TS for each timestep
   Report_to_Ts(ctrl, Bsn);
-
   // Report to maps (daily, monthly, annually, or at specific interval)
   if (ctrl.Report_interval == -1){           // Report daily
     if (advance_report >= 86400) Report_to_maps(ctrl);
@@ -49,6 +47,8 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__Tr1==2) _Tr1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Tr2==2) _Tr2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Tr3==2) _Tr3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__irrigation_from_river==2) _irrigation_from_river_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__irrigation_from_GW==2) _irrigation_from_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__ovf_in==2) _ovf_in_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__ovf_out==2) _ovf_out_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__ovf_toChn==2) _ovf_toChn_acc = new svector(ctrl._sortedGrid.size);
@@ -95,6 +95,7 @@ int Report::Report_create_maps(Control &ctrl){
 }
 
 int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
+
   /* Update maps */
   if (ctrl.report__I==2) _I_acc->plus(*Bsn._I);
   if (ctrl.report__snow==2) _snow_acc->plus(*Bsn._snow);
@@ -120,6 +121,8 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Tr1==2) _Tr1_acc->plus(*Bsn._Tr1);
   if (ctrl.report__Tr2==2) _Tr2_acc->plus(*Bsn._Tr2);
   if (ctrl.report__Tr3==2) _Tr3_acc->plus(*Bsn._Tr3);
+  if (ctrl.report__irrigation_from_river==2) _irrigation_from_river_acc->plus(*Bsn._irrigation_from_river);
+  if (ctrl.report__irrigation_from_GW==2) _irrigation_from_GW_acc->plus(*Bsn._irrigation_from_GW);
   if (ctrl.report__ovf_in==2) _ovf_in_acc->plus(*Bsn._ovf_in);
   if (ctrl.report__ovf_out==2) _ovf_out_acc->plus(*Bsn._ovf_out);
   if (ctrl.report__ovf_toChn==2) _ovf_toChn_acc->plus(*Bsn._ovf_toChn);
@@ -162,6 +165,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__degrad_soil==2) _degrad_soil_acc->plus(*Bsn._degrad_soil);
   if (ctrl.report__deni_river==2) _deni_river_acc->plus(*Bsn._deni_river);
   /* end of Update maps */
+  
   return EXIT_SUCCESS;
 }
 
@@ -239,6 +243,12 @@ int Report::Report_Initialisation(Control &ctrl){
 
   if (ctrl.report__Tr3==1)  report_create(ctrl.path_ResultsFolder+"transp_layer3_TS.bin", of__Tr3);
   else if (ctrl.report__Tr3==2)  report_create(ctrl.path_ResultsFolder+"transp_layer3_map.bin", of__Tr3);
+
+  if (ctrl.report__irrigation_from_river==1)  report_create(ctrl.path_ResultsFolder+"irrigation_from_river_TS.bin", of__irrigation_from_river);
+  else if (ctrl.report__irrigation_from_river==2)  report_create(ctrl.path_ResultsFolder+"irrigation_from_river_map.bin", of__irrigation_from_river);
+
+  if (ctrl.report__irrigation_from_GW==1)  report_create(ctrl.path_ResultsFolder+"irrigation_from_GW_TS.bin", of__irrigation_from_GW);
+  else if (ctrl.report__irrigation_from_GW==2)  report_create(ctrl.path_ResultsFolder+"irrigation_from_GW_map.bin", of__irrigation_from_GW);
 
   if (ctrl.report__ovf_in==1)  report_create(ctrl.path_ResultsFolder+"overland_flow_input_TS.bin", of__ovf_in);
   else if (ctrl.report__ovf_in==2)  report_create(ctrl.path_ResultsFolder+"overland_flow_input_map.bin", of__ovf_in);
@@ -374,6 +384,7 @@ int Report::Report_Initialisation(Control &ctrl){
 
 
 int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
+  
   /* Report to time series */
   // 1: report time series at gauging stations; 2: report maps
   if (ctrl.report__I==1) {reportTS(ctrl, Bsn._I, of__I);}
@@ -400,6 +411,8 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Tr1==1) {reportTS(ctrl, Bsn._Tr1, of__Tr1);}
   if (ctrl.report__Tr2==1) {reportTS(ctrl, Bsn._Tr2, of__Tr2);}
   if (ctrl.report__Tr3==1) {reportTS(ctrl, Bsn._Tr3, of__Tr3);}
+  if (ctrl.report__irrigation_from_river==1) {reportTS(ctrl, Bsn._irrigation_from_river, of__irrigation_from_river);}
+  if (ctrl.report__irrigation_from_GW==1) {reportTS(ctrl, Bsn._irrigation_from_GW, of__irrigation_from_GW);}
   if (ctrl.report__ovf_in==1) {reportTS(ctrl, Bsn._ovf_in, of__ovf_in);}
   if (ctrl.report__ovf_out==1) {reportTS(ctrl, Bsn._ovf_out, of__ovf_out);}
   if (ctrl.report__ovf_toChn==1) {reportTS(ctrl, Bsn._ovf_toChn, of__ovf_toChn);}
@@ -473,6 +486,8 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__Tr1==2) {reportMap(ctrl, _Tr1_acc, ctrl._sortedGrid, of__Tr1);}
   if (ctrl.report__Tr2==2) {reportMap(ctrl, _Tr2_acc, ctrl._sortedGrid, of__Tr2);}
   if (ctrl.report__Tr3==2) {reportMap(ctrl, _Tr3_acc, ctrl._sortedGrid, of__Tr3);}
+  if (ctrl.report__irrigation_from_river==2) {reportMap(ctrl, _irrigation_from_river_acc, ctrl._sortedGrid, of__irrigation_from_river);}
+  if (ctrl.report__irrigation_from_GW==2) {reportMap(ctrl, _irrigation_from_GW_acc, ctrl._sortedGrid, of__irrigation_from_GW);}
   if (ctrl.report__ovf_in==2) {reportMap(ctrl, _ovf_in_acc, ctrl._sortedGrid, of__ovf_in);}
   if (ctrl.report__ovf_out==2) {reportMap(ctrl, _ovf_out_acc, ctrl._sortedGrid, of__ovf_out);}
   if (ctrl.report__ovf_toChn==2) {reportMap(ctrl, _ovf_toChn_acc, ctrl._sortedGrid, of__ovf_toChn);}

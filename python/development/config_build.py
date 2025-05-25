@@ -115,7 +115,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('Output_Folder = ./outputs/\n\n')
     text.append('# Model configuration\n')
     text.append('Simul_start = 2524608000 # Seconds since 1900-1-1 00:00:00\n')
-    text.append('Simul_end = 1420070400 # in second  # Seconds from 1980-1-1 to 2024-12-31\n')
+    text.append('Simul_end = 1420156800 # in second  # Seconds from 1980-1-1 to 2024-12-31\n')
     text.append('Simul_tstep = 86400 # seconds (daily)\n')
     text.append('Clim_input_tstep = 86400 # seconds (daily)\n')
     text.append('Ground_input_tstep = 604800 # seconds (every 7 days)\n')
@@ -278,13 +278,24 @@ def report_build(fname, reports):
         with open(fname, 'w') as f:
             f.writelines(content)
 
-def read_nitrogen(fname, Nitrogen_inputs):
+def read_crop_info(fname, Nitrogen_inputs, Irrigation_inputs):
     content = []
     with open(fname, 'r') as f:
         lines = f.readlines()
         start, end = locate_text(lines, '/* Nitrogen addition */', '/* end of Nitrogen addition */')
         for i in range(len(Nitrogen_inputs)):
             content.append('    par.readIntoParam(' + Nitrogen_inputs[i][0] + ', "' + Nitrogen_inputs[i][0] + '", lines);\n')
+        content = lines[:start] + content + lines[end:]
+    if(('').join(content) != ('').join(lines)):        
+        with open(fname, 'w') as f:
+            f.writelines(content)
+    
+    content = []
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+        start, end = locate_text(lines, '/* Irrigation */', '/* end of Irrigation */')
+        for i in range(len(Irrigation_inputs)):
+            content.append('    par.readIntoParam(' + Irrigation_inputs[i][0] + ', "' + Irrigation_inputs[i][0] + '", lines);\n')
         content = lines[:start] + content + lines[end:]
     if(('').join(content) != ('').join(lines)):        
         with open(fname, 'w') as f:

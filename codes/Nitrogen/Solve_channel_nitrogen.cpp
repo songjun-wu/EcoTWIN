@@ -5,6 +5,7 @@ int Basin::Solve_channel_nitrogen(Control &ctrl, Atmosphere &atm, Param &par){
     /* Update the storages for routing flux mixing
 
     ### chanS:
+    - irrigation_from_river
     (_chanS_old)
     + _Qupstream        (need to mix)
     + _ovf_toChn        (need to mix)

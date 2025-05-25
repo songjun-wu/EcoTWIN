@@ -30,6 +30,8 @@ int Report::dtor(Control &ctrl){
   if (of__Tr1.is_open())  of__Tr1.close();
   if (of__Tr2.is_open())  of__Tr2.close();
   if (of__Tr3.is_open())  of__Tr3.close();
+  if (of__irrigation_from_river.is_open())  of__irrigation_from_river.close();
+  if (of__irrigation_from_GW.is_open())  of__irrigation_from_GW.close();
   if (of__ovf_in.is_open())  of__ovf_in.close();
   if (of__ovf_out.is_open())  of__ovf_out.close();
   if (of__ovf_toChn.is_open())  of__ovf_toChn.close();
@@ -95,6 +97,8 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__Tr1==2) delete _Tr1_acc;
   if (ctrl.report__Tr2==2) delete _Tr2_acc;
   if (ctrl.report__Tr3==2) delete _Tr3_acc;
+  if (ctrl.report__irrigation_from_river==2) delete _irrigation_from_river_acc;
+  if (ctrl.report__irrigation_from_GW==2) delete _irrigation_from_GW_acc;
   if (ctrl.report__ovf_in==2) delete _ovf_in_acc;
   if (ctrl.report__ovf_out==2) delete _ovf_out_acc;
   if (ctrl.report__ovf_toChn==2) delete _ovf_toChn_acc;

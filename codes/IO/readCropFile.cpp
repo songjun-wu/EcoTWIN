@@ -1,6 +1,6 @@
 #include "Basin.h"
 
-int Basin::ReadNitrogenFile(Control &ctrl, Param &par, string fname){
+int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){
     ifstream input;
     vector<string> lines;
     vector<double> is_landuse;
@@ -27,7 +27,7 @@ int Basin::ReadNitrogenFile(Control &ctrl, Param &par, string fname){
       }
     }
 
-
+    if (ctrl.opt_nitrogen_sim==1){
     /* Nitrogen addition */
     par.readIntoParam(fert_add, "fert_add", lines);
     par.readIntoParam(fert_day, "fert_day", lines);
@@ -51,6 +51,13 @@ int Basin::ReadNitrogenFile(Control &ctrl, Param &par, string fname){
     par.readIntoParam(plant_day, "plant_day", lines);
     par.readIntoParam(harvest_day, "harvest_day", lines);
     /* end of Nitrogen addition */
+    }
+
+    if (ctrl.opt_irrigation==1){
+    /* Irrigation */
+    par.readIntoParam(irrigation_thres, "irrigation_thres", lines);
+    /* end of Irrigation */
+    }
 
   input.close();
 

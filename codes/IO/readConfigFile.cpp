@@ -39,6 +39,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
   readInto(opt_tracking_age, "opt_tracking_age", lines);
   readInto(opt_nitrogen_sim, "opt_nitrogen_sim", lines);
+  readInto(opt_irrigation, "opt_irrigation", lines);
   readInto(opt_reinfil, "opt_reinfil", lines);
   readInto(opt_intecept, "opt_intecept", lines);
   readInto(opt_snow, "opt_snow", lines);
@@ -182,6 +183,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__wGWf, "wGWf", lines);
   readInto(fn__Manningn, "Manningn", lines);
   readInto(fn__Echan_alpha, "Echan_alpha", lines);
+  readInto(fn__irrigation_coeff, "irrigation_coeff", lines);
   readInto(fn__nearsurface_mixing, "nearsurface_mixing", lines);
   readInto(fn__ratio_to_interf, "ratio_to_interf", lines);
   readInto(fn__CG_n_soil, "CG_n_soil", lines);
@@ -219,6 +221,8 @@ int Control::ReadConfigFile(string fname){
   readInto(report__Tr1, "report_transp_layer1", lines);
   readInto(report__Tr2, "report_transp_layer2", lines);
   readInto(report__Tr3, "report_transp_layer3", lines);
+  readInto(report__irrigation_from_river, "report_irrigation_from_river", lines);
+  readInto(report__irrigation_from_GW, "report_irrigation_from_GW", lines);
   readInto(report__ovf_in, "report_overland_flow_input", lines);
   readInto(report__ovf_out, "report_overland_flow_output", lines);
   readInto(report__ovf_toChn, "report_overland_flow_toChn", lines);

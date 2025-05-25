@@ -74,6 +74,9 @@ Param::Param(Control &ctrl){
   if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
     _Echan_alpha = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_irrigation == 1){
+    _irrigation_coeff = new svector(_sortedGrid.size);
+  }
   if (ctrl.opt_tracking_isotope == 1){
     _CG_n_soil = new svector(_sortedGrid.size);
     _d18o_init_GW = new svector(_sortedGrid.size);

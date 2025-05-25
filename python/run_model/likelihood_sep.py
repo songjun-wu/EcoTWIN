@@ -3,23 +3,16 @@ import GEM_tools
 import shutil
 import subprocess
 import numpy as np
-from def_GEM_cali import *
+from def_GEM_cali_sep import *
 import time
 
 
 def likelihood(param, chainID, modelID):
 
     err = 0
-    
 
     if modelID == 0:
-        catchment_list = [0,6,7]
-    elif modelID == 1:
-        catchment_list = [1]
-    elif modelID == 2:
-        catchment_list = [2]
-    elif modelID == 3:
-        catchment_list = [3,5]
+        catchment_list = [0]
 
     # Loop over each catchment
     for kk in catchment_list:
@@ -71,9 +64,9 @@ def likelihood(param, chainID, modelID):
                     #    print('   ', Output.Catchment_ID[kk], key, i, GEM_tools.kge_modified(sim, obs), dict['weights'][kk][i], np.nanmean(sim), np.nanmean(obs) )
                     #    np.savetxt('/data/scratch/wusongj/paper4/cali/chain_0/param.txt', param)
                 
-        stop1 = time.time()
-        if chainID==0:
-            print(chainID, modelID, Output.Catchment_ID[kk], (stop1-stop0)/60, err, flush=True)
+        #stop1 = time.time()
+        #if chainID==0:
+        #    print(chainID, modelID, Output.Catchment_ID[kk], (stop1-stop0)/60, err, flush=True)
 
     
     os.chdir(local_path)
@@ -82,7 +75,6 @@ def likelihood(param, chainID, modelID):
         err = np.inf
 
     return err
-
 
 
 if __name__ == '__main__':

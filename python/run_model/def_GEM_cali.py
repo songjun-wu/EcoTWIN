@@ -55,20 +55,23 @@ class Info:
     nadd['plant_day'] = {'value':[85, 85, 85, 55, 55, 55]}    
     nadd['harvest_day'] = {'value':[220, 300, 300, 300, 300, 300]}
 
+    nadd['irrigation_thres'] = {'value':[0.7,0.4,0,0,0,0]}  # The threshold (soil moisture/field capacity) below which irrigation is needed
+
 
 class Cali:
     # DREAM calibration
     TASK_name = 'DREAM_cali'
-    nchains = 10
+    nchains = 50
+    cores_for_each_chain = 4
 
-    nbatchs = 3  # Number of batches
-    niterations = 50  # Number of iterations for each batch
+    nbatchs = 5  # Number of batches
+    niterations = 100  # Number of iterations for each batch
     
 
-    restart = False   # Whether restart?
-    restart_niteration = 20000 # restart since which iteration?
+    restart = True   # Whether restart?
+    restart_niteration = 100 # restart since which iteration?
 
-    history_thin = 1
+    history_thin = 5
 
     static_config = False  # Whether to define the configs at the beginning to speed up
 
@@ -77,30 +80,39 @@ class Cali:
 
 class Output:
 
-    Catchment_ID    = [6, 291110, 566445, 442364, 1034751]              # WOS-ID of each catchment
+    Catchment_ID    = ['6_001', '291110_001', '566445_001', '442364_001', '1034751_001', '291111_001', '83811_001', '831616_001']              # WOS-ID of each catchment
     N_catchments    = len(Catchment_ID)     # Number of catchments
     
 
     # Site ID in each catchment; shape = (N_catchments, N_sites)
-    sim_q_idx       = [ [0, 2, 3, 7, 9, 11, 13, 14],        #6
-                        [0, 1, 2, 3, 4, 6, 7, 8, 10, 11, 13, 14, 16, 17, 23, 24, 25, 26],
-                        [1, 2, 5, 6, 7, 8, 13, 14, 16, 18, 19, 21, 27, 28, 30, 33, 35],
+    sim_q_idx       = [ [0, 2, 3, 7, 9, 11, 12],
+                        [0, 1, 2, 3, 4, 6, 7, 8, 10, 11, 13, 14, 16, 17, 22, 23, 24, 25],
+                        [1, 2, 5, 6, 7, 9, 13, 14, 16, 18, 20, 21, 27],
                         [2, 3, 4, 6],
-                        [0, 2, 3, 4, 5]
+                        [0, 2, 3, 4, 5],
+                        [0, 1, 2, 4, 5, 6, 7, 8, 9, 10],
+                        [0, 1, 2, 3],
+                        [0, 1, 2, 3],
                         ]
     
-    sim_iso_idx     = [ [6, 10],
-                        [0, 22, 27, 28, 29, 30, 31],
-                        [10, 11, 20, 22, 24, 26, 29, 31],
+    sim_iso_idx     = [ [6],
+                        [0, 21, 26, 27, 28, 29, 30],
+                        [10, 11, 19, 22, 24, 26],
                         [0],
                         [],
+                        [],
+                        [],
+                        [4, 5],
                         ]
     
-    sim_no3_idx     = [ [1, 4, 5, 8, 12],
-                        [5, 9, 12, 15, 18, 19, 20, 21, 25, 27, 28],
-                        [0, 3, 4, 9, 12, 15, 17, 23, 25, 32, 34],
+    sim_no3_idx     = [ [1, 4, 5, 8, 10],
+                        [5, 9, 12, 15, 18, 19, 20, 21, 24, 26, 27],
+                        [0, 3, 4, 8, 12, 15, 17, 23, 25],
                         [1, 5, 7],
-                        [1, 6]
+                        [1],
+                        [2, 3],
+                        [3],
+                        []
                         ]
 
     N_sites         = [] # Number of sites in each catchment
@@ -174,26 +186,29 @@ class Param:
 
     # GW recharge
     ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-10]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
-    ref['init_GW'] = {'type':'soil',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_soil, 'max':[20]*Info.N_soil, 'fix_value':None} # Initial GW storage in m
+    ref['init_GW'] = {'type':'soil',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_soil, 'max':[100]*Info.N_soil, 'fix_value':None} # Initial GW storage in m
 
     # Routing
-    ref['pOvf_toChn']   = {'type':'soil',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)
-    ref['interfExp']   = {'type':'soil',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_soil, 'max':[10]*Info.N_soil, 'fix_value':None}
-    ref['winterf']   = {'type':'soil',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_soil, 'max':[1e7]*Info.N_soil, 'fix_value':None}  # Correction factor for linear Kinematic waver approximation of interflow
-    ref['GWfExp']   = {'type':'soil',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
-    ref['wGWf']   = {'type':'soil',   'log':1, 'file':'wGWf',   'min':[1e-15]*Info.N_soil, 'max':[1e-2]*Info.N_soil, 'fix_value':None}  # Proportion of GW storage for routing generation
-    ref['Manningn']   = {'type':'soil',   'log':1, 'file':'Manningn',   'min':[0.01]*Info.N_soil, 'max':[0.1]*Info.N_soil, 'fix_value':None}
-    ref['ratio_to_interf'] = {'type':'soil',   'log':0, 'file':'ratio_to_interf',   'min':[0]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
+    ref['pOvf_toChn']   = {'type':'landuse',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)
+    ref['interfExp']   = {'type':'landuse',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None}
+    ref['winterf']   = {'type':'landuse',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_landuse, 'max':[1e7]*Info.N_landuse, 'fix_value':None}  # Correction factor for linear Kinematic waver approximation of interflow
+    ref['GWfExp']   = {'type':'landuse',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}
+    ref['wGWf']   = {'type':'landuse',   'log':1, 'file':'wGWf',   'min':[1e-15]*Info.N_landuse, 'max':[1e-2]*Info.N_landuse, 'fix_value':None}  # Proportion of GW storage for routing generation
+    ref['Manningn']   = {'type':'landuse',   'log':1, 'file':'Manningn',   'min':[0.005]*Info.N_landuse, 'max':[0.5]*Info.N_landuse, 'fix_value':None}
+    ref['ratio_to_interf'] = {'type':'landuse',   'log':0, 'file':'ratio_to_interf',   'min':[0]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}
 
     # Channel
     ref['Echan_alpha']   = {'type':'landuse',   'log':1, 'file':'Echan_alpha',   'min':[0.1]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None}  # Correction factor in Priestley-Taylor equation
+
+    # Irrigation
+    ref['irrigation_coeff']   = {'type':'landuse',   'log':0, 'file':'irrigation_coeff',   'min':[0.1,0.01,0,0,0,0], 'max':[1.2,0.3,0,0,0,0], 'fix_value':None}  # Irrigation coefficient to determine the actual water demand from water deficit [-]
 
     # Mixing
     ref['nearsurface_mixing']   = {'type':'landuse',   'log':0, 'file':'nearsurface_mixing',   'min':[0]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None} 
     
     # Tracking
     ref['CG_n_soil'] = {'type':'global',   'log':0, 'file':'CG_n_soil',   'min':[0.5], 'max':[1], 'fix_value':None}
-    ref['d18o_init_GW'] = {'type':'global',   'log':0, 'file':'d18o_init_GW',   'min':[-15]*Info.N_soil, 'max':[-7.5]*Info.N_soil, 'fix_value':None}
+    ref['d18o_init_GW'] = {'type':'global',   'log':0, 'file':'d18o_init_GW',   'min':[-18]*Info.N_soil, 'max':[-7.5]*Info.N_soil, 'fix_value':None}
 
     # Nitrogen simulation
     ref['denitrification_river']   = {'type':'landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None}
@@ -205,7 +220,6 @@ class Param:
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None}
     ref['deni_soil_moisture_thres']   = {'type':'landuse',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.2]*Info.N_landuse, 'max':[0.85]*Info.N_landuse, 'fix_value':None}
   
-    
 
 
     

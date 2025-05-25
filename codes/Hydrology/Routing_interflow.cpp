@@ -20,6 +20,7 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
+
         chnlength = _chnlength->val[j];
         theta3 = _theta3->val[j];
         depth3 = par._depth3->val[j];
@@ -78,6 +79,7 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
             if (_sortedGrid.lat_ok[j] == 1){   // If there is a downstream cell
                 _interf_in->val[from_j] += interflow_toTrestrial;
             }
+            
         }
         
         _theta3->val[j] = theta3;

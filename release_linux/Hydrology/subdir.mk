@@ -11,6 +11,7 @@ CPP_SRCS += \
 ../codes/Hydrology/Solve_canopy.cpp \
 ../codes/Hydrology/Initialisation.cpp \
 ../codes/Hydrology/Solve_channel.cpp \
+../codes/Hydrology/Irrigation.cpp \
 ../codes/Hydrology/Interception.cpp \
 ../codes/Hydrology/Canopy_evaporation.cpp \
 ../codes/Hydrology/Reinfiltration.cpp \
@@ -39,6 +40,7 @@ OBJS += \
 ./Hydrology/Solve_canopy.o \
 ./Hydrology/Initialisation.o \
 ./Hydrology/Solve_channel.o \
+./Hydrology/Irrigation.o \
 ./Hydrology/Interception.o \
 ./Hydrology/Canopy_evaporation.o \
 ./Hydrology/Reinfiltration.o \
@@ -67,6 +69,7 @@ CPP_DEPS += \
 ./Hydrology/Solve_canopy.d \
 ./Hydrology/Initialisation.d \
 ./Hydrology/Solve_channel.d \
+./Hydrology/Irrigation.d \
 ./Hydrology/Interception.d \
 ./Hydrology/Canopy_evaporation.d \
 ./Hydrology/Reinfiltration.d \
