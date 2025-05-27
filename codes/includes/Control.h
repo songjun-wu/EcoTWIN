@@ -256,10 +256,12 @@ struct Control{
   string fn__init_GW;  // The initial GW storage [m], only needed when opt_init_GW = 1
   string fn__wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
   string fn__pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
+  string fn__Ks_vadose;  // The reference conductivity of vadose zone for interflow routing [m/s]
+  string fn__Ks_GW;  // The reference conductivity of GW zone for interflow routing [m/s]
+  string fn__lat_to_Chn_vadose;  // The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]
+  string fn__lat_to_Chn_GW;  // The ratio between conductivities of lateral flow and channel recharge in GW zone [-]
   string fn__interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
-  string fn__winterf;  // The weight parameter in kinematic wave solution  [-]
   string fn__GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
-  string fn__wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   string fn__Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   string fn__Echan_alpha;  // correction factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
   string fn__irrigation_coeff;  // Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled

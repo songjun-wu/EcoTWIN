@@ -153,6 +153,10 @@ if mode == 'cali_sep':
     completed_catchments = 0
     while completed_catchments!=len(catchment_to_cali):
         for batchID in range(max_nodes):
+
+            if completed_tasks_for_each_catchment[batchID]==-1:
+                continue
+
             if (GEM_tools.checkTaskStatus('c' + str(batchID)) <= 0):
                 completed_tasks_for_each_catchment[batchID] += 1
                 # To next task
@@ -177,7 +181,6 @@ if mode == 'cali_sep':
                     completed_catchments += 1
 
                     try:
-                        completed_tasks_for_each_catchment[batchID] = 0
                         catchment_under_cali[batchID] = catchment_to_cali[max_nodes+completed_catchments]
                         # Constrcut slurm config
                         shutil.copyfile('/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep.slurm', '/data/scratch/wusongj/paper4/scripts/DREAM_cali_sep_'+str(batchID)+'.slurm')
@@ -203,6 +206,7 @@ if mode == 'cali_sep':
                         with open('/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep_'+str(batchID)+'.py', 'w') as f:
                             f.writelines(lines)
                         os.system('sh /data/scratch/wusongj/paper4/scripts/protocal_cali_sep_'+str(batchID)+'.sh')
+                        completed_tasks_for_each_catchment[batchID] = 0
                     except:
                         completed_tasks_for_each_catchment[batchID] = -1
 
@@ -225,7 +229,7 @@ elif mode == 'test':
     
     counter = 0
     #for i in range(len(validIdx)):
-    for i in [3]:  # chainID
+    for i in [5]:  # chainID
         #for gg in range(len(Output.Catchment_ID)):
         #for gg in [0,1,2,3,5,6,7]:
         for gg in [7]:  # Catchment ID
@@ -237,12 +241,13 @@ elif mode == 'test':
             idx = i
             print(idx, catchment_ID)
             # Which parameter set to use?
+            param_N = GEM_tools.get_param_N(Info, Param)
             #param = np.loadtxt('/data/scratch/wusongj/paper4/cali/chain_0/param.txt')
             #param = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_sampled_params_chain_'+str(idx)+'_200.bin').reshape(-1, 189)[-1,:]
-            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain_'+str(idx)+'_700.bin')[0]
-            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain_'+str(idx)+'_700.bin').reshape(-1, 189)[0,:]
+            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain_'+str(idx)+'_4000.bin')[0]
+            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain_'+str(idx)+'_4000.bin').reshape(-1, param_N)[0,:]
             
-            param = np.full(300, 0.5)
+            #param = np.full(300, 0.5)
             GEM_tools.gen_param(run_path, Info, Param, param)
             GEM_tools.gen_no3_addtion(run_path, Info)
             
@@ -327,7 +332,13 @@ elif mode == 'check_sep':
             #print(niterations, lengths)
             print('Catchment : ' + catchment_ID + '   Chains : ' + str(n_batch) + '   Batch : ', int(np.mean(niterations)), np.mean(lengths))
             print('Average :  ', np.mean(arr))
-            print('Maximum :  ', np.max(arr), ' found in  chain ', np.argwhere(arr==np.max(arr)))
+            print('Maximum :  ', np.max(arr), ' found in  chain ', np.argwhere(arr==np.max(arr))[0][0])
+
+            #shutil.copyfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_logps_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin',
+            #                '/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'_sep_cali_logps_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin')
+            #shutil.copyfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_sampled_params_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin',
+            #                '/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'_sep_cali_sampled_params_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin')
+            
             #print(arr, np.argwhere(arr==np.max(arr)))
         except:
             print('No results found in catchment ',  catchment_ID)

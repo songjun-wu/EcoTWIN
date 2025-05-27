@@ -46,7 +46,7 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
 
             // Interflow to channel
             if (chnlength > 0){  // If there is channel in this grid cell
-                interflow_toChn = interflow_to_go * Ks3 * (1 - exp(-1 * par._interfExp->val[j] * interflow_to_go)) * par._winterf->val[j];  // [m2/s]
+                interflow_toChn = interflow_to_go * par._Ks_vadose->val[j] * (1 - exp(-1 * par._interfExp->val[j] * interflow_to_go)) * par._lat_to_Chn_vadose->val[j];  // [m2/s]
                 interflow_toChn *= dtdx; // Store interflow to channel in [m]
                 interflow_toChn *= (chnlength/dx); // Adjusted with channel length; [m]
                 interflow_toChn = min(interflow_toChn, interflow_to_go);  // Cannot exceed water to go
@@ -56,7 +56,7 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
             // Interflow to downstream grid
             // Linear approximation of Kinematic wave approach
             // Assumption: Q = head * alpha
-            alpha = Ks3 * sin(atan(_slope->val[j])) * par._winterf->val[j];  // [m/s]
+            alpha = par._Ks_vadose->val[j] * sin(atan(_slope->val[j]));  // [m/s]
             interflow_toTrestrial = interflow_to_go / (1 + alpha * dtdx) * alpha; // qx+1 = hx+1[m] * alpha; [m2/s]
             interflow_toTrestrial *= dtdx; // Store qx+1 in m
             interflow_toTrestrial = min(interflow_toTrestrial, interflow_to_go);  // Cannot exceed water to go [m]

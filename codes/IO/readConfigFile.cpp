@@ -177,10 +177,12 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__init_GW, "init_GW", lines);
   readInto(fn__wRecharge, "wRecharge", lines);
   readInto(fn__pOvf_toChn, "pOvf_toChn", lines);
+  readInto(fn__Ks_vadose, "Ks_vadose", lines);
+  readInto(fn__Ks_GW, "Ks_GW", lines);
+  readInto(fn__lat_to_Chn_vadose, "lat_to_Chn_vadose", lines);
+  readInto(fn__lat_to_Chn_GW, "lat_to_Chn_GW", lines);
   readInto(fn__interfExp, "interfExp", lines);
-  readInto(fn__winterf, "winterf", lines);
   readInto(fn__GWfExp, "GWfExp", lines);
-  readInto(fn__wGWf, "wGWf", lines);
   readInto(fn__Manningn, "Manningn", lines);
   readInto(fn__Echan_alpha, "Echan_alpha", lines);
   readInto(fn__irrigation_coeff, "irrigation_coeff", lines);

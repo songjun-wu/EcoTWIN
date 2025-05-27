@@ -242,36 +242,50 @@ int Param::Parameterisation(Control &ctrl){
         _pOvf_toChn->val[j] += param_category->val[k][j] * pOvf_toChn[k];
      }}}
   
+  _Ks_vadose->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (Ks_vadose[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _Ks_vadose->val[j] += param_category->val[k][j] * Ks_vadose[k];
+     }}}
+  
+  _lat_to_Chn_vadose->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (lat_to_Chn_vadose[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _lat_to_Chn_vadose->val[j] += param_category->val[k][j] * lat_to_Chn_vadose[k];
+     }}}
+  
   _interfExp->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (interfExp[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _interfExp->val[j] += param_category->val[k][j] * interfExp[k];
      }}}
-  
-  _winterf->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (winterf[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _winterf->val[j] += param_category->val[k][j] * winterf[k];
-     }}}
 
   }
 
   if (ctrl.opt_routGWf == 1){
+  
+  _Ks_GW->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (Ks_GW[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _Ks_GW->val[j] += param_category->val[k][j] * Ks_GW[k];
+     }}}
+  
+  _lat_to_Chn_GW->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (lat_to_Chn_GW[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _lat_to_Chn_GW->val[j] += param_category->val[k][j] * lat_to_Chn_GW[k];
+     }}}
   
   _GWfExp->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (GWfExp[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _GWfExp->val[j] += param_category->val[k][j] * GWfExp[k];
-     }}}
-  
-  _wGWf->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (wGWf[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _wGWf->val[j] += param_category->val[k][j] * wGWf[k];
      }}}
 
   }

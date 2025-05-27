@@ -311,6 +311,6 @@ def add_header(directory):
 
 
     header = "\
-    Generic Ecohydrological Model\
+    Generic Ecohydrological Model\n\
     "
 

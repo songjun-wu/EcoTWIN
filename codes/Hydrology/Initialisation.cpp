@@ -10,6 +10,9 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
     // Initilisation of old storages
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
       Store_states();  // Store all water storages for mixing
+      _d18o_layer1->equals(*par._d18o_init_GW); // Asign isotopic composition to soil layer1
+      _d18o_layer2->equals(*par._d18o_init_GW); // Asign isotopic composition to soil layer2
+      _d18o_layer3->equals(*par._d18o_init_GW); // Asign isotopic composition to soil layer3
       _d18o_GW->equals(*par._d18o_init_GW); // Asign isotopic composition to GW
     }
 

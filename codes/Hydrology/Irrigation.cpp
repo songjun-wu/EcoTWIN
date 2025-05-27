@@ -31,8 +31,8 @@ int Basin::Irrigation(Control &ctrl, Param &par){
             if (irrigation_thres[idx] <= roundoffERR or p_cell <= roundoffERR) continue;
        
             // Determine if irrigation is needed based on the water stress from the first two layers
-            plant_water_demand = (_thetaFC1->val[j]*_depth1->val[j] + _thetaFC2->val[j]*_depth2->val[j]) * irrigation_thres[idx];
-            available_water_storage = _theta1->val[j]*_depth1->val[j] + _theta2->val[j]*_depth2->val[j];
+            plant_water_demand = ((_thetaFC1->val[j]-_thetaWP1->val[j])*_depth1->val[j] + (_thetaFC2->val[j]-_thetaWP2->val[j])*_depth2->val[j]) * irrigation_thres[idx];
+            available_water_storage = (_theta1->val[j]-_thetaWP1->val[j])*_depth1->val[j] + (_theta2->val[j]-_thetaWP2->val[j])*_depth2->val[j];
             irrigation_deficit = (plant_water_demand - available_water_storage) * p_cell * par._irrigation_coeff->val[j];  // Deficit scaled by an irrigation coefficient
 
             if (irrigation_deficit > roundoffERR){

@@ -61,12 +61,14 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_routinterf == 1){
     _pOvf_toChn = new svector(_sortedGrid.size);
+    _Ks_vadose = new svector(_sortedGrid.size);
+    _lat_to_Chn_vadose = new svector(_sortedGrid.size);
     _interfExp = new svector(_sortedGrid.size);
-    _winterf = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_routGWf == 1){
+    _Ks_GW = new svector(_sortedGrid.size);
+    _lat_to_Chn_GW = new svector(_sortedGrid.size);
     _GWfExp = new svector(_sortedGrid.size);
-    _wGWf = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_routQ == 1){
     _Manningn = new svector(_sortedGrid.size);

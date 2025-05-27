@@ -40,7 +40,7 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
             // GWflow to channel
             if (chnlength > 0){  // If there is channel in this grid cell
                 // Here Ks3 is not used because GW routing should be independent from soil proporties
-                GWflow_toChn = GWflow_to_go * 1e-5 * (1 - exp(-1 * par._GWfExp->val[j] * GWflow_to_go)) * par._wGWf->val[j];  // [m2/s]
+                GWflow_toChn = GWflow_to_go * par._Ks_GW->val[j] * (1 - exp(-1 * par._GWfExp->val[j] * GWflow_to_go)) * par._lat_to_Chn_GW->val[j];  // [m2/s]
                 GWflow_toChn *= dtdx; // Store GWflow to channel in [m]
                 GWflow_toChn *= (chnlength/dx); // Adjusted with channel length; [m]
                 GWflow_toChn = min(GWflow_toChn, GWflow_to_go);  // Cannot exceed water to go
@@ -51,7 +51,7 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
             // Linear approximation of Kinematic wave approach
             // Assumption: Q = head * alpha
             // Here Ks3 is not used because GW routing should be independent from soil proporties
-            alpha = 1e-5 * par._wGWf->val[j];  // [m/s]
+            alpha = par._Ks_GW->val[j];  // [m/s]
             //alpha = Ks3 * sin(atan(_slope->val[j])) * par._wGWf->val[j];  // [m/s]
             GWflow_toTrestrial = GWflow_to_go / (1 + alpha * dtdx) * alpha; // qx+1 = hx+1[m] * alpha; [m2/s]
             GWflow_toTrestrial *= dtdx; // Store qx+1 in m

@@ -66,7 +66,7 @@ class Cali:
     cores_for_each_chain = 1
 
     nbatchs = 20  # Number of batches
-    niterations = 100  # Number of iterations for each batch
+    niterations = 1000  # Number of iterations for each batch
     
 
     restart = False   # Whether restart?
@@ -173,15 +173,17 @@ class Param:
     ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.95, 0.95, 0.95, 0.999, 0.92, 0.81], 'fix_value':None} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
 
     # GW recharge
-    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-10]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
+    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
     ref['init_GW'] = {'type':'soil',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_soil, 'max':[100]*Info.N_soil, 'fix_value':None} # Initial GW storage in m
 
     # Routing
     ref['pOvf_toChn']   = {'type':'landuse',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)
+    ref['Ks_vadose']   = {'type':'landuse',   'log':1, 'file':'Ks_vadose',   'min':[1e-8]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # The reference conductivity of vadose zone for interflow routing [m/s]
+    ref['Ks_GW']   = {'type':'landuse',   'log':1, 'file':'Ks_GW',   'min':[1e-8]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # The reference conductivity of GW zone for interflow routing [m/s]
+    ref['lat_to_Chn_vadose']   = {'type':'landuse',   'log':1, 'file':'lat_to_Chn_vadose',   'min':[1e-3]*Info.N_landuse, 'max':[1e2]*Info.N_landuse, 'fix_value':None} # The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]
+    ref['lat_to_Chn_GW']   = {'type':'landuse',   'log':1, 'file':'lat_to_Chn_GW',   'min':[1e-3]*Info.N_landuse, 'max':[1e2]*Info.N_landuse, 'fix_value':None} # The ratio between conductivities of lateral flow and channel recharge in GW zone [-]
     ref['interfExp']   = {'type':'landuse',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None}
-    ref['winterf']   = {'type':'landuse',   'log':1, 'file':'winterf',   'min':[1e-2]*Info.N_landuse, 'max':[1e7]*Info.N_landuse, 'fix_value':None}  # Correction factor for linear Kinematic waver approximation of interflow
     ref['GWfExp']   = {'type':'landuse',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}
-    ref['wGWf']   = {'type':'landuse',   'log':1, 'file':'wGWf',   'min':[1e-15]*Info.N_landuse, 'max':[1e-2]*Info.N_landuse, 'fix_value':None}  # Proportion of GW storage for routing generation
     ref['Manningn']   = {'type':'landuse',   'log':1, 'file':'Manningn',   'min':[0.005]*Info.N_landuse, 'max':[0.5]*Info.N_landuse, 'fix_value':None}
     ref['ratio_to_interf'] = {'type':'landuse',   'log':0, 'file':'ratio_to_interf',   'min':[0]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}
 

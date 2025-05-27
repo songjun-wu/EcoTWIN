@@ -237,11 +237,12 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               
               # Routing
               ['_pOvf_toChn', [Opt.cond['routinterf_1']], 'The weighting linear parameter for overland flow routing towards channel  [-]', 'grid', 'spatial_param', 'pOvf_toChn', 0],
+              ['_Ks_vadose', [Opt.cond['routinterf_1']], 'The reference conductivity of vadose zone for interflow routing [m/s]', 'grid', 'spatial_param', 'Ks_vadose', 0],
+              ['_Ks_GW', [Opt.cond['routGWf_1']], 'The reference conductivity of GW zone for interflow routing [m/s]', 'grid', 'spatial_param', 'Ks_GW', 0],
+              ['_lat_to_Chn_vadose', [Opt.cond['routinterf_1']], 'The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]', 'grid', 'spatial_param', 'lat_to_Chn_vadose', 0],
+              ['_lat_to_Chn_GW', [Opt.cond['routGWf_1']], 'The ratio between conductivities of lateral flow and channel recharge in GW zone [-]', 'grid', 'spatial_param', 'lat_to_Chn_GW', 0],
               ['_interfExp', [Opt.cond['routinterf_1']], 'The exponetial weighting parameter for interflow flow routing towards channel  [-]', 'grid', 'spatial_param', 'interfExp', 0],
-              ['_winterf', [Opt.cond['routinterf_1']], 'The weight parameter in kinematic wave solution  [-]', 'grid', 'spatial_param', 'winterf', 0],
               ['_GWfExp', [Opt.cond['routGWf_1']], 'The exponetial weighting parameter for GW flow routing towards channel  [-]', 'grid', 'spatial_param', 'GWfExp', 0],
-              #['_wGWf', [Opt.cond['routGWf_1']], 'The weight parameter in kinematic wave solution  [-]', 'grid', 'spatial_param', 'wGWf', 0],
-              ['_wGWf', [Opt.cond['routGWf_1']], 'The active proportion of GW storage that contributes to channel recharge  [-]', 'grid', 'spatial_param', 'wGWf', 0],
               ['_Manningn', [Opt.cond['routQ_1']], 'Manning N for stream routing [-], only needed when opt_routQ = 1', 'grid', 'spatial_param', 'Manningn', 0],
 
               # Channel 

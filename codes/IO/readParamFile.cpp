@@ -42,10 +42,12 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(init_GW, "init_GW", lines);
   readIntoParam(wRecharge, "wRecharge", lines);
   readIntoParam(pOvf_toChn, "pOvf_toChn", lines);
+  readIntoParam(Ks_vadose, "Ks_vadose", lines);
+  readIntoParam(Ks_GW, "Ks_GW", lines);
+  readIntoParam(lat_to_Chn_vadose, "lat_to_Chn_vadose", lines);
+  readIntoParam(lat_to_Chn_GW, "lat_to_Chn_GW", lines);
   readIntoParam(interfExp, "interfExp", lines);
-  readIntoParam(winterf, "winterf", lines);
   readIntoParam(GWfExp, "GWfExp", lines);
-  readIntoParam(wGWf, "wGWf", lines);
   readIntoParam(Manningn, "Manningn", lines);
   readIntoParam(Echan_alpha, "Echan_alpha", lines);
   readIntoParam(irrigation_coeff, "irrigation_coeff", lines);

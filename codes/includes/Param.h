@@ -53,10 +53,12 @@ class Param {
   vector<double> init_GW;
   vector<double> wRecharge;
   vector<double> pOvf_toChn;
+  vector<double> Ks_vadose;
+  vector<double> Ks_GW;
+  vector<double> lat_to_Chn_vadose;
+  vector<double> lat_to_Chn_GW;
   vector<double> interfExp;
-  vector<double> winterf;
   vector<double> GWfExp;
-  vector<double> wGWf;
   vector<double> Manningn;
   vector<double> Echan_alpha;
   vector<double> irrigation_coeff;
@@ -96,10 +98,12 @@ class Param {
   svector *_percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
   svector *_init_GW;  // The initial GW storage [m], only needed when opt_init_GW = 1
   svector *_pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
+  svector *_Ks_vadose;  // The reference conductivity of vadose zone for interflow routing [m/s]
+  svector *_lat_to_Chn_vadose;  // The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]
   svector *_interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
-  svector *_winterf;  // The weight parameter in kinematic wave solution  [-]
+  svector *_Ks_GW;  // The reference conductivity of GW zone for interflow routing [m/s]
+  svector *_lat_to_Chn_GW;  // The ratio between conductivities of lateral flow and channel recharge in GW zone [-]
   svector *_GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
-  svector *_wGWf;  // The active proportion of GW storage that contributes to channel recharge  [-]
   svector *_Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   svector *_Echan_alpha;  // correction factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
   svector *_irrigation_coeff;  // Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled

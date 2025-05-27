@@ -51,12 +51,14 @@ int Param::dtor(Control &ctrl){
   }
   if (ctrl.opt_routinterf == 1){
     if(_pOvf_toChn) delete _pOvf_toChn;
+    if(_Ks_vadose) delete _Ks_vadose;
+    if(_lat_to_Chn_vadose) delete _lat_to_Chn_vadose;
     if(_interfExp) delete _interfExp;
-    if(_winterf) delete _winterf;
   }
   if (ctrl.opt_routGWf == 1){
+    if(_Ks_GW) delete _Ks_GW;
+    if(_lat_to_Chn_GW) delete _lat_to_Chn_GW;
     if(_GWfExp) delete _GWfExp;
-    if(_wGWf) delete _wGWf;
   }
   if (ctrl.opt_routQ == 1){
     if(_Manningn) delete _Manningn;
