@@ -229,10 +229,10 @@ elif mode == 'test':
     
     counter = 0
     #for i in range(len(validIdx)):
-    for i in [5]:  # chainID
+    for i in [10]:  # chainID
         #for gg in range(len(Output.Catchment_ID)):
         #for gg in [0,1,2,3,5,6,7]:
-        for gg in [7]:  # Catchment ID
+        for gg in [0]:  # Catchment ID
 
             catchment_ID = Output.Catchment_ID[gg]
             print(catchment_ID)
@@ -244,13 +244,13 @@ elif mode == 'test':
             param_N = GEM_tools.get_param_N(Info, Param)
             #param = np.loadtxt('/data/scratch/wusongj/paper4/cali/chain_0/param.txt')
             #param = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_sampled_params_chain_'+str(idx)+'_200.bin').reshape(-1, 189)[-1,:]
-            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain_'+str(idx)+'_4000.bin')[0]
-            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain_'+str(idx)+'_4000.bin').reshape(-1, param_N)[0,:]
+            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain_'+str(idx)+'_1000.bin')
+            best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
+            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain_'+str(idx)+'_1000.bin').reshape(-1, param_N)[best_likeli_loc,:]
             
             #param = np.full(300, 0.5)
             GEM_tools.gen_param(run_path, Info, Param, param)
             GEM_tools.gen_no3_addtion(run_path, Info)
-            
             
             # Model run
             os.chdir(run_path)           

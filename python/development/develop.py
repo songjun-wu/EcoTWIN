@@ -366,7 +366,7 @@ datas_control = datas_atmos + datas_groundTs + datas_basin + datas_param
 
 
 
-
+""""""
 define_variables.includes(fname=path + 'includes/Atmosphere.h', signs=signs_atmos, datas=datas_atmos, max_category=setting.max_category)
 define_variables.destructor(fname=path + 'Destructors/AtmosphereDestruct.cpp', signs=signs_atmos, datas=datas_atmos)
 
@@ -405,4 +405,6 @@ config_build.read_crop_info(fname=path+'IO/readCropFile.cpp', Nitrogen_inputs=Ni
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)
 
+
+config_build.add_header('/home/wusongj/GEM/GEM_generic_ecohydrological_model/codes/')
 

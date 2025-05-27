@@ -289,10 +289,10 @@ def plot_performance(sim_path, obs_path, output_path, catchment_ID, chainID):
                 tmp = np.full(len(sim), np.nan)
                 tmp[:len(obs)] = obs
 
-                ax[counter//ncol, counter%ncol].plot(tindex, sim, linewidth=0.5)
+                ax[counter//ncol, counter%ncol].plot(tindex, sim, linewidth=0.5, alpha=0.7)
                 ax[counter//ncol, counter%ncol].scatter(tindex, tmp, c='red', s=0.5, alpha=0.3)
                 
-                print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.kge_modified(sim, tmp),2))
+                print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.kge_modified(sim, tmp),2), np.round(np.log(1-GEM_tools.kge_modified(sim, tmp))*-100))
 
                 counter += 1
 

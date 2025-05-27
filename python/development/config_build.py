@@ -1,5 +1,6 @@
 from develop_tools import *
 import numpy as np
+import os
 
 def force_config(fname, options):
     opt_list = []
@@ -303,14 +304,59 @@ def read_crop_info(fname, Nitrogen_inputs, Irrigation_inputs):
 
 
 def add_header(directory):
+    import time
+    from datetime import datetime
     all_files = []
     for root, dirs, files in os.walk(directory):
         for file in files:
-            all_files.append(os.path.join(root, file))
-    print(all_files)
+            if file.endswith('cpp') or file.endswith('h'):
+               
+                fpath = os.path.join(root, file)
+                date_of_modif = datetime.strptime(time.ctime(os.path.getctime(fpath)), "%a %b %d %H:%M:%S %Y")
+                date_modif = str(date_of_modif.day).zfill(2) + '.' + str(date_of_modif.month).zfill(2) + '.' + str(date_of_modif.year).zfill(4)  
 
 
-    header = "\
-    Generic Ecohydrological Model\n\
-    "
+                header = [
+        "/***************************************************************\n",
+        "* Generic Ecohydrological Model (GEM), a spatial-distributed module-based ecohydrological models\n",
+        "* for multiscale hydrological, isotopic, and water quality simulations\n",
+        "\n",
+        "* Copyright (c) 2025   Songjun Wu <songjun.wu@igb-berlin.de / songjun-wu@outlook.com>\n",
+        "\n",
+        "  * GEM is a free software under the terms of GNU GEneral Public License version 3,\n",
+        "  * Resitributon and modification are allowed under proper aknowledgement.\n",
+        "\n",
+        "* Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)\n",
+        "\n",
+        "* "+ file + '\n',
+        "  * Created  on: 30.02.2025\n",
+        "  * Modified on: " + date_modif + '\n',
+        "***************************************************************/\n",
+                        ]
+                
+                with open(fpath, 'r') as f:
+                    lines = f.readlines()
+                
+
+                try:
+                    start, end = locate_text(lines, '/***************************************************************', '***************************************************************/')
+                    
+                    if lines[start-1:end+1] != header:
+                        lines = header + ['\n\n'] + lines[end+1:]
+                        with open(fpath, 'w') as f:
+                            f.writelines(lines)
+                        print('Header updated for ' + fpath)
+                except:
+                    lines = header  + ['\n\n'] +  lines
+                    with open(fpath, 'w') as f:
+                        f.writelines(lines)
+                    print('No header found in '+fpath+'. Added')
+                    
+
+                
+
+
+    
+    
+    
 
