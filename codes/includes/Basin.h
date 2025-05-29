@@ -11,8 +11,10 @@
 
 * Basin.h
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #ifndef BASIN_H_
@@ -60,6 +62,7 @@ class Basin {
   svector *_bulkdensity2;  // Bulk density of layer 2 [g/cm3], only needed when opt_depthprofile = 3
   svector *_bulkdensity3;  // Bulk density of layer 3 [g/cm3], only needed when opt_depthprofile = 3
   svector *_silt1;  // Silt content of layer 1 [decimal], only needed when opt_pedotransf = 1 or 2
+  svector *_N_fertilization;  // The fertilization amount [g/m2], only needed when opt_fert_input = 1
   /* end of GIS */
 
   /* GroundTs */
@@ -183,6 +186,7 @@ class Basin {
   vector<vector <double>> _potential_uptake_layer2;
   vector<vector <double>> _potential_uptake_layer3;
   /* Nitrogen addition */
+  vector<double> is_crop;
   vector<double> fert_add;
   vector<double> fert_day;
   vector<double> fert_down;

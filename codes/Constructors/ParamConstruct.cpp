@@ -11,8 +11,10 @@
 
 * ParamConstruct.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #include "Param.h"
@@ -98,7 +100,9 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_tracking_isotope == 1){
     _CG_n_soil = new svector(_sortedGrid.size);
-    _d18o_init_GW = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_init_d18o == 1){
+    _delta_d18o_init_GW = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_nitrogen_sim == 1){
     _denitrification_river = new svector(_sortedGrid.size);

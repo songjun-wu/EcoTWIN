@@ -69,6 +69,8 @@ GIS = [ #['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial'
         ['_bulkdensity1', [Opt.cond['none']], 'Bulk density of layer 1 [g/cm3]', 'grid', 'spatial', 'bulk_density1', 0],
         ['_bulkdensity2', [Opt.cond['depthprofile_3']], 'Bulk density of layer 2 [g/cm3], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'bulk_density2', 0],
         ['_bulkdensity3', [Opt.cond['depthprofile_3']], 'Bulk density of layer 3 [g/cm3], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'bulk_density3', 0],
+
+        ['_N_fertilization', [Opt.cond['fert_input_1']], 'The fertilization amount [g/m2], only needed when opt_fert_input = 1', 'grid', 'spatial', 'N_fertilization', 0],
         ]
 
 
@@ -258,7 +260,7 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
 
               # Tracking
               ['_CG_n_soil', [Opt.cond['tracking_isotope_1']], 'Parameter N in CG model for soil water fractionation [-]', 'grid', 'spatial_param', 'CG_n_soil', 0],
-              ['_d18o_init_GW', [Opt.cond['tracking_isotope_1']], 'Initial d18O of GW storage [‰]', 'grid', 'spatial_param', 'd18o_init_GW', 0],
+              ['_delta_d18o_init_GW', [Opt.cond['init_d18o_1']], 'Initial d18O of GW storage [‰]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
               
               
 
@@ -302,7 +304,8 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
             ]
 
 
-Nitrogen_addition = [['fert_add', [Opt.cond['nitrogen_sim_1']], 'Fertilizer addition [mgN/L*m = gN/m2]', 'vector', 'vector', None, 0],
+Nitrogen_addition = [['is_crop', [Opt.cond['nitrogen_sim_1']], 'Crop flag [], the species should link to the nitrate fertilizer inputs', 'vector', 'vector', None, 0],
+                     ['fert_add', [Opt.cond['nitrogen_sim_1']], 'Fertilizer addition [mgN/L*m = gN/m2]', 'vector', 'vector', None, 0],
                      ['fert_day', [Opt.cond['nitrogen_sim_1']], 'Day of year to start fertilization [day]', 'vector', 'vector', None, 0],
                      ['fert_down', [Opt.cond['nitrogen_sim_1']], 'The proportion of fertilizer reaching deep soil [decimal]', 'vector', 'vector', None, 0],
                      ['fert_period', [Opt.cond['nitrogen_sim_1']], 'The duration of fertilization [day]', 'vector', 'vector', None, 0],
@@ -402,9 +405,11 @@ define_variables.includes(fname=path + 'includes/Basin.h', signs=['Irrigation'],
 define_variables.includes(fname=path + 'includes/Basin.h', signs=['Nitrogen addition'], datas=[Nitrogen_addition], max_category=setting.max_category)
 config_build.read_crop_info(fname=path+'IO/readCropFile.cpp', Nitrogen_inputs=Nitrogen_addition, Irrigation_inputs=Irrigation)
 
+config_build.add_header('/home/wusongj/GEM/GEM_generic_ecohydrological_model/codes/')
+
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)
 
 
-config_build.add_header('/home/wusongj/GEM/GEM_generic_ecohydrological_model/codes/')
+
 

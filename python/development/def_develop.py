@@ -160,5 +160,13 @@ class Opt:
     cond['chanE_3']   = {'key':'opt_chanE', 'value':3, 
                         'general_description':'Channel evaporation\n# 0: Disabled\n# 1: Penman equation\n# 2: Penman equation with constant wind speed\n# 3: Priestley-Taylor equation',
                         'description':'Channel evaporation based on Priestley-Taylor equation'}
+    
 
+    cond['init_d18o_1']   = {'key':'opt_init_d18o', 'value':1, 
+                        'general_description':'Whether to adjust the d18o compostion in inital storages\n# 0: NO\n# 1: YES (the parameter d18o_init_GW needs to be specified)',
+                        'description':'Adjust the initial d18o composition from raster inputs, the parameter d18o_init_GW needs to be specified'}
+
+    cond['fert_input_1']   = {'key':'opt_fert_input', 'value':1, 
+                        'general_description':'The format of fertilization inputs\n# 1: A raster map showing the potential fertilization amount in g/m2\n# 2: Specificed for each vegetation type in Crop_info.ini',
+                        'description':'The fertilization inputs are from a raster map'}
     

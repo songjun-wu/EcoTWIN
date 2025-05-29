@@ -22,6 +22,23 @@ def save_to_ascii(data, path, ref_path):
         np.savetxt(f, data.astype(np.float64))
 
 
+def save_outputs(output_path, save_path):
+
+    os.makedirs(save_path, exist_ok=True)
+
+    fnames = [f for f in os.listdir(output_path) if f.endswith('bin')]
+
+    for fname in fnames:
+        data = np.fromfile(output_path + fname)
+        if os.path.exists(save_path + fname):
+            with open(save_path + fname, 'ab+') as f:
+                data.tofile(f)
+        else:
+            with open(save_path + fname, 'w') as f:
+                data.tofile(f)
+
+
+
 def kge11(sim, obs):
     """
     Calculate the Kling-Gupta Efficiency (KGE) between simulated and observed data.

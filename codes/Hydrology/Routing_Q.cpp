@@ -11,7 +11,7 @@
 
 * Routing_Q.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 28.05.2025
 ***************************************************************/
 
 
@@ -29,29 +29,34 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
     double dt = ctrl.Simul_tstep;
     // double dtdx = dt / dx;
     double dx_square = dx * dx;
-    double dtdx;
+    double dtdx = dt / dx;
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         chnwidth = _chnwidth->val[j];  // [m]
         
         if (chnwidth>0){
-            Qall = (_chanS->val[j] + _ovf_toChn->val[j] + _interf_toChn->val[j] + _GWf_toChn->val[j]) * dx / dt; // Channel storage and all inflow from terrestrial grid [m] to [m2/s]
-            Qupstream = _Qupstream->val[j];  // Upstream discharge [m3/s]
 
-            
             chnlength = _chnlength->val[j];  // [m]
-
-            dtdx = dt / chnlength;  // todo
-
             from_j = _sortedGrid.to_cell[j];
 
+            //dtdx = dt / chnlength;  // todo
+            // Lateral inflow (including channel storage and all inflow from terrestrial grid  [m2/s]: lateral inflow per unit length >> (m*m2/s) / channel length)
+            Qall = (_chanS->val[j] + _ovf_toChn->val[j] + _interf_toChn->val[j] + _GWf_toChn->val[j]) * dx / dt; 
+            // Upstream discharge [m3/s]
+            Qupstream = _Qupstream->val[j];  
+            
             if (Qall + Qupstream > 0){
 
                 sqrtS = pow(_slope->val[j], 0.5);
 
                 //Manningn = par._Manningn->val[j] * chnlength;  // Manning's N scaled with channel length
                 Manningn = par._Manningn->val[j];
+
+                // The Manning's equation: Q = a * pow(A, m)
+                // For rectangle: a = sqrtS / n / pow(chnwidth,0.67); m = 5/3
+                // To estimate A from Q, we need : A = pow(1/a, 1/m) * pow(Q, m/1)
+                // Here the variable a = pow(1/a, 1/m) where 1/m = 0.6
                 a = pow(pow(chnwidth,0.67)*Manningn/sqrtS, 0.6); // Wetted perimeter approximated with channel width
 
                 //initial guess

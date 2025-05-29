@@ -11,8 +11,10 @@
 
 * readConfigFile.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #include "Control.h"
@@ -73,6 +75,8 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_routGWf, "opt_routGWf", lines);
   readInto(opt_routQ, "opt_routQ", lines);
   readInto(opt_chanE, "opt_chanE", lines);
+  readInto(opt_init_d18o, "opt_init_d18o", lines);
+  readInto(opt_fert_input, "opt_fert_input", lines);
   /* end of Options */
 
   /* GIS */
@@ -97,6 +101,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__bulkdensity1, "bulk_density1", lines);
   readInto(fn__bulkdensity2, "bulk_density2", lines);
   readInto(fn__bulkdensity3, "bulk_density3", lines);
+  readInto(fn__N_fertilization, "N_fertilization", lines);
   readInto(fn__fdir, "flow_direction", lines);
   readInto(fn__Gauge_to_Report, "Gauge_mask", lines);
   /* end of GIS */
@@ -206,7 +211,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__nearsurface_mixing, "nearsurface_mixing", lines);
   readInto(fn__ratio_to_interf, "ratio_to_interf", lines);
   readInto(fn__CG_n_soil, "CG_n_soil", lines);
-  readInto(fn__d18o_init_GW, "d18o_init_GW", lines);
+  readInto(fn__delta_d18o_init_GW, "delta_d18o_init_GW", lines);
   readInto(fn__denitrification_river, "denitrification_river", lines);
   readInto(fn__denitrification_soil, "denitrification_soil", lines);
   readInto(fn__degradation_soil, "degradation_soil", lines);

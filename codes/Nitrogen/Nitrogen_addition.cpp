@@ -11,8 +11,10 @@
 
 * Nitrogen_addition.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #include "Basin.h"
@@ -22,6 +24,7 @@ int Basin::Sort_nitrogen_addition(Control &ctrl, Param &par){
     double fertN_add_layer1_IN, fertN_add_layer1_fastN, fertN_add_layer2_IN, fertN_add_layer2_fastN;  // fertilisation and manure N addition to layer 1 and 2 [mgN/L*m = gN/m2]
     double resN_add_layer1_fastN, resN_add_layer1_humusN, resN_add_layer2_fastN, resN_add_layer2_humusN;  // Residue addition to layer 1 and 2 [mgN/L*m = gN/m2]
     int idx;
+    double fert_add_tmp;
     double DT = ctrl.Simul_tstep / 86400;  // all rates are calculated at daily timesteps
 
     if (par.sort_nitrogen_addition_OK == 0){
@@ -44,16 +47,31 @@ int Basin::Sort_nitrogen_addition(Control &ctrl, Param &par){
                 resN_add_layer1_fastN= resN_add_layer1_humusN = resN_add_layer2_fastN = resN_add_layer2_humusN = 0;
                        
                 // Fertilization addition to IN and fastN pools
-                if (fert_add[idx] > 0){
+                if (ctrl.opt_fert_input==1 and is_crop[idx] == 1){  // Input from raster map
+                    fert_add_tmp = 1.0;  // Will be scaled for each grid in module <Nitrogen_addition>
                     if (day_of_year >= fert_day[idx] and day_of_year< (fert_day[idx] + fert_period[idx])){
-                        fertN_add_layer1_IN     += fert_add[idx] * (1 - fert_down[idx]) * DT / fert_period[idx] * fert_IN[idx];         // * p_cell 
-                        fertN_add_layer1_fastN  += fert_add[idx] * (1 - fert_down[idx]) * DT / fert_period[idx] * (1 - fert_IN[idx]);   // * p_cell
-                        fertN_add_layer2_IN     += fert_add[idx] *      fert_down[idx]  * DT / fert_period[idx] * fert_IN[idx];         // * p_cell 
-                        fertN_add_layer2_fastN  += fert_add[idx] *      fert_down[idx]  * DT / fert_period[idx] * (1 - fert_IN[idx]);   // * p_cell
+                        fertN_add_layer1_IN     += fert_add_tmp * (1 - fert_down[idx]) * DT / fert_period[idx] * fert_IN[idx];         // * p_cell 
+                        fertN_add_layer1_fastN  += fert_add_tmp * (1 - fert_down[idx]) * DT / fert_period[idx] * (1 - fert_IN[idx]);   // * p_cell
+                        fertN_add_layer2_IN     += fert_add_tmp *      fert_down[idx]  * DT / fert_period[idx] * fert_IN[idx];         // * p_cell 
+                        fertN_add_layer2_fastN  += fert_add_tmp *      fert_down[idx]  * DT / fert_period[idx] * (1 - fert_IN[idx]);   // * p_cell
+                    }
+                } else {  // Input from table (Crop_info.ini)
+                    if (fert_add[idx] > 0){
+                        fert_add_tmp = fert_add[idx];
+                        if (day_of_year >= fert_day[idx] and day_of_year< (fert_day[idx] + fert_period[idx])){
+                            fertN_add_layer1_IN     += fert_add_tmp * (1 - fert_down[idx]) * DT / fert_period[idx] * fert_IN[idx];         // * p_cell 
+                            fertN_add_layer1_fastN  += fert_add_tmp * (1 - fert_down[idx]) * DT / fert_period[idx] * (1 - fert_IN[idx]);   // * p_cell
+                            fertN_add_layer2_IN     += fert_add_tmp *      fert_down[idx]  * DT / fert_period[idx] * fert_IN[idx];         // * p_cell 
+                            fertN_add_layer2_fastN  += fert_add_tmp *      fert_down[idx]  * DT / fert_period[idx] * (1 - fert_IN[idx]);   // * p_cell
+                        }
                     }
                 }
+
+                
                 
                 // Manure application to IN and fastN pools
+                if (ctrl.opt_fert_input==1 and is_crop[idx] == 1){}  // Fert and mannure imported from map, assigned to zero here
+
                 if (manure_add[idx] > 0){
                     if (day_of_year >= manure_day[idx] and day_of_year< (manure_day[idx] + manure_period[idx])){
                         fertN_add_layer1_IN     += manure_add[idx] * (1 - manure_down[idx]) * DT / manure_period[idx] * manure_IN[idx];         // * p_cell 
@@ -110,25 +128,32 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
         fertN_add_layer1_IN = fertN_add_layer1_fastN = fertN_add_layer2_IN = fertN_add_layer2_fastN = 0;
         resN_add_layer1_fastN = resN_add_layer1_humusN = resN_add_layer2_fastN = resN_add_layer2_humusN = 0;
 
+        // Calcualte the nitrogen addition to IN, fastN, and humus N pools in layer 1 and 2
         for (int i = 0; i < num_landuse; i++) {
             idx = landuse_idx[i];
             p_cell = par.param_category->val[idx][j];
 
             if (p_cell > 0){
-
-                fertN_add_layer1_IN += _fertN_add_layer1_IN[i][day_of_year-1] * p_cell;
-                fertN_add_layer1_fastN += _fertN_add_layer1_fastN[i][day_of_year-1] * p_cell;
-                fertN_add_layer2_IN += _fertN_add_layer2_IN[i][day_of_year-1] * p_cell;
-                fertN_add_layer2_fastN += _fertN_add_layer2_fastN[i][day_of_year-1] * p_cell;
-
+                // IN and fastN
+                if (ctrl.opt_fert_input==1 and is_crop[idx] == 1){  // Fertilizer is determined by raster inputs
+                    fertN_add_layer1_IN += _fertN_add_layer1_IN[i][day_of_year-1] * p_cell * _N_fertilization->val[j];
+                    fertN_add_layer1_fastN += _fertN_add_layer1_fastN[i][day_of_year-1] * p_cell * _N_fertilization->val[j];
+                    fertN_add_layer2_IN += _fertN_add_layer2_IN[i][day_of_year-1] * p_cell * _N_fertilization->val[j];
+                    fertN_add_layer2_fastN += _fertN_add_layer2_fastN[i][day_of_year-1] * p_cell * _N_fertilization->val[j];
+                } else { // Fertilizer is determined by table inputs (Crop_info.ini)
+                    fertN_add_layer1_IN += _fertN_add_layer1_IN[i][day_of_year-1] * p_cell;
+                    fertN_add_layer1_fastN += _fertN_add_layer1_fastN[i][day_of_year-1] * p_cell;
+                    fertN_add_layer2_IN += _fertN_add_layer2_IN[i][day_of_year-1] * p_cell;
+                    fertN_add_layer2_fastN += _fertN_add_layer2_fastN[i][day_of_year-1] * p_cell;
+                // humusN
                 resN_add_layer1_fastN += _resN_add_layer1_fastN[i][day_of_year-1] * p_cell;
                 resN_add_layer1_humusN += _resN_add_layer1_humusN[i][day_of_year-1] * p_cell;
                 resN_add_layer2_fastN += _resN_add_layer2_fastN[i][day_of_year-1] * p_cell;
                 resN_add_layer2_humusN += _resN_add_layer2_humusN[i][day_of_year-1] * p_cell;
-
-
+                }
             }
         }
+
         
         // Nitrogen addition to layer 1
         if (ST1 > 0){
@@ -151,8 +176,8 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
         _humusN2->val[j] += resN_add_layer2_humusN;
 
 
-        // Only counts the Nitrogen addition to IN pools
-        _nitrogen_add->val[j] = fertN_add_layer1_IN + fertN_add_layer2_IN;
+        // Only counts the Nitrogen addition to IN and fastN pools
+        _nitrogen_add->val[j] = fertN_add_layer1_IN + fertN_add_layer2_IN + fertN_add_layer1_fastN + fertN_add_layer2_fastN;
 
     }
     return EXIT_SUCCESS;

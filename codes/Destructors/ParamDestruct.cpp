@@ -11,8 +11,10 @@
 
 * ParamDestruct.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #include "Param.h"
@@ -88,7 +90,9 @@ int Param::dtor(Control &ctrl){
   }
   if (ctrl.opt_tracking_isotope == 1){
     if(_CG_n_soil) delete _CG_n_soil;
-    if(_d18o_init_GW) delete _d18o_init_GW;
+  }
+  if (ctrl.opt_init_d18o == 1){
+    if(_delta_d18o_init_GW) delete _delta_d18o_init_GW;
   }
   if (ctrl.opt_nitrogen_sim == 1){
     if(_denitrification_river) delete _denitrification_river;

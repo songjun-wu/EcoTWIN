@@ -11,8 +11,10 @@
 
 * BasinDestruct.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #include "Basin.h"
@@ -46,6 +48,9 @@ int Basin::dtor(Control &ctrl){
   }
   if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2){
     if(_silt1) delete _silt1;
+  }
+  if (ctrl.opt_fert_input == 1){
+    if(_N_fertilization) delete _N_fertilization;
   }
   /* end of GIS */
 

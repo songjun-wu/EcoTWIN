@@ -11,8 +11,10 @@
 
 * BasinConstruct.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
  #include "Basin.h"
@@ -52,6 +54,9 @@
   }
   if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2){
     _silt1 = new svector(ctrl.path_BasinFolder + ctrl.fn__silt1, _rowNum, _colNum, _sortedGrid);
+  }
+  if (ctrl.opt_fert_input == 1){
+    _N_fertilization = new svector(ctrl.path_BasinFolder + ctrl.fn__N_fertilization, _rowNum, _colNum, _sortedGrid);
   }
   /* end of GIS */
 

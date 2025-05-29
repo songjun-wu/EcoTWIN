@@ -70,13 +70,14 @@ if mode == 'DREAM_cali':
 if mode == 'cali_sep':
     import pickle
     #catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
-    catchment_to_cali = ['831616_001', '83811_001', '291111_001', '6_001']
+    catchment_to_cali = ['6_001', '291110_001', '566445_001', '442364_001', '1034751_001', '291111_001', '83811_001', '831616_001']
 
 
     for catchment in catchment_to_cali:
         os.makedirs('/data/scratch/wusongj/paper4/cali_sep/' + catchment, exist_ok=True)
 
-    max_nodes = 5 if len(catchment_to_cali) > 5 else len(catchment_to_cali)
+    max_nodes = 10 
+    max_nodes = max_nodes if len(catchment_to_cali) > max_nodes else len(catchment_to_cali)
 
     print(max_nodes, Cali.niterations)
     shutil.copyfile('def_GEM_cali_sep.py', '/data/scratch/wusongj/paper4/scripts/def_GEM_cali_sep.py')
@@ -229,10 +230,8 @@ elif mode == 'test':
     
     counter = 0
     #for i in range(len(validIdx)):
-    for i in [10]:  # chainID
-        #for gg in range(len(Output.Catchment_ID)):
-        #for gg in [0,1,2,3,5,6,7]:
-        for gg in [0]:  # Catchment ID
+    for i in [4]:  # chainID
+        for gg in [4]:  # Catchment ID
 
             catchment_ID = Output.Catchment_ID[gg]
             print(catchment_ID)
@@ -242,11 +241,9 @@ elif mode == 'test':
             print(idx, catchment_ID)
             # Which parameter set to use?
             param_N = GEM_tools.get_param_N(Info, Param)
-            #param = np.loadtxt('/data/scratch/wusongj/paper4/cali/chain_0/param.txt')
-            #param = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_sampled_params_chain_'+str(idx)+'_200.bin').reshape(-1, 189)[-1,:]
-            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain_'+str(idx)+'_1000.bin')
+            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain_'+str(idx)+'_2000.bin')
             best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
-            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain_'+str(idx)+'_1000.bin').reshape(-1, param_N)[best_likeli_loc,:]
+            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain_'+str(idx)+'_2000.bin').reshape(-1, param_N)[best_likeli_loc,:]
             
             #param = np.full(300, 0.5)
             GEM_tools.gen_param(run_path, Info, Param, param)
@@ -259,19 +256,77 @@ elif mode == 'test':
 
             
             # Plot spatial maps and Ts results
-            post_plot.plot_hydrology(run_path+'outputs/', 'hydro_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/')
-            post_plot.plot_tracking(run_path+'outputs/', 'WQ_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/')
+            post_plot.plot_hydrology(run_path+'outputs/', 'hydro_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', if_average=False)
+            post_plot.plot_tracking(run_path+'outputs/', 'WQ_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', if_average=False)
 
             fnames = ['hydro_'+str(catchment_ID)+'_Ts.png', 'hydro_'+str(catchment_ID)+'_map.png',
                       'WQ_'+str(catchment_ID)+'_Ts.png', 'WQ_'+str(catchment_ID)+'_map.png']
             for fname in fnames:
                 if os.path.exists(run_path+'outputs/'+fname):
                     shutil.copyfile(run_path+'outputs/'+fname, 'plots/'+fname.split('.')[0]+'_'+str(idx)+'.png')
-
+            
+            #post_plot.IMGtoVideo(os.getcwd()+'/plots/', run_path+'outputs/tmp_plots_for_animation/', output_name='hydrology_' + catchment_ID)
 
             # Plot performance
             post_plot.plot_performance(run_path+'outputs/', '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', current_path+'/plots/', catchment_ID, idx)
     
+
+elif mode == 'forward':
+    # Model structure update
+    os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
+    os.system('python3 develop.py')  # todo
+
+    # set the env
+    GEM_tools.sort_directory(mode, Path, Cali, Output)
+    GEM_tools.set_env(mode, Path, Cali, Output)
+    GEM_tools.set_config(mode, Path, Cali, Output)
+   
+    nchains = 20
+
+    counter = 0
+    #for i in range(len(validIdx)):
+    #for gg in [0,5,6,7]:  # Catchment ID
+    for gg in range(8):  # Catchment ID
+
+        
+
+        catchment_ID = Output.Catchment_ID[gg]
+        run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
+
+        param_all = np.array([])
+        if os.path.exists(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID):
+            shutil.rmtree(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID)
+        """"""
+        for chainID in range(nchains):
+            print(catchment_ID, chainID)
+            idx = chainID
+            # Which parameter set to use?
+            param_N = GEM_tools.get_param_N(Info, Param)
+
+            completed_nbatches = [f.split('.')[0].split('_')[-1] for f in os.listdir('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/')]
+            max_nbatches = np.max(np.array(completed_nbatches).astype(np.int16))
+
+            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_logps_chain_'+str(idx)+'_'+str(max_nbatches)+'.bin')
+            best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
+            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_sampled_params_chain_'+str(idx)+'_'+str(max_nbatches)+'.bin').reshape(-1, param_N)[best_likeli_loc,:]
+            param_all = np.append(param_all, param)
+ 
+            GEM_tools.gen_param(run_path, Info, Param, param)
+            GEM_tools.gen_no3_addtion(run_path, Info)
+            
+            # Model run
+            os.chdir(run_path)           
+            os.system('./gEcoHydro')
+            os.chdir(current_path)
+
+            # Save outputs for each catchment
+            GEM_tools.save_outputs(run_path+'outputs/', Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/')
+            # Plot performance
+
+        param_all.tofile(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/param.bin')
+
+        post_plot.plot_performance_all(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/','/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', current_path+'/plots/', catchment_ID, nchains)
+        post_plot.plot_param_all(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/', Path.work_path+'plots/', nchains, catchment_ID)
 
 elif mode == 'check':
     arr = []
@@ -334,10 +389,10 @@ elif mode == 'check_sep':
             print('Average :  ', np.mean(arr))
             print('Maximum :  ', np.max(arr), ' found in  chain ', np.argwhere(arr==np.max(arr))[0][0])
 
-            #shutil.copyfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_logps_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin',
-            #                '/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'_sep_cali_logps_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin')
-            #shutil.copyfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_sampled_params_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin',
-            #                '/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'_sep_cali_sampled_params_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin')
+            shutil.copyfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_logps_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin',
+                            '/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'_sep_cali_logps_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin')
+            shutil.copyfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_sampled_params_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin',
+                            '/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'_sep_cali_sampled_params_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin')
             
             #print(arr, np.argwhere(arr==np.max(arr)))
         except:
@@ -349,40 +404,23 @@ elif mode == 'check_sep':
 
 elif mode == 'bbb':
 
+    import matplotlib.pyplot as plt
 
-    
-    for gg in [4]:
-        print(Output.Catchment_ID)
-        catchment_ID = Output.Catchment_ID[gg]
-        nsites = len(np.unique(Output.sim_q_idx[gg]+Output.sim_iso_idx[gg]+Output.sim_no3_idx[gg]))
-        discharge = np.fromfile('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS.bin').reshape(-1,nsites)
-        iso = np.fromfile('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/d18o_chanS_TS.bin').reshape(-1,nsites)
-        no3 = np.fromfile('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/no3_chanS_TS.bin').reshape(-1,nsites)
-        print(discharge.shape)
-        print(iso.shape)
-        print(no3.shape)
+    for gg in [0,5,6,7]:
+        Catchment_ID = Output.Catchment_ID[gg]
 
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS.txt', discharge)
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/d18o_chanS_TS.txt', iso)
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/no3_chanS_TS.txt', no3)
-
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/discharge_TS_mean.txt', np.mean(discharge, axis=1))
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/d18o_chanS_TS_mean.txt', np.mean(iso, axis=1))
-        np.savetxt('/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/outputs/no3_chanS_TS_mean.txt', np.mean(no3, axis=1))
+        nchains = 20
+        counter = 0
+        likeli = np.array([])
+        for i in range(nchains):
+            likeli = np.append(likeli, np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+Catchment_ID+'/results/sep_cali_logps_chain_'+str(i)+'_'+str(max_nbatches)+'.bin'))
+        likeli = likeli.reshape(nchains, -1)
+        plt.plot(np.mean(likeli, axis=0))
+        plt.plot(np.max(likeli, axis=0))
+        print(Catchment_ID, np.mean(likeli, axis=0)[150], np.max(likeli, axis=0)[150])
         
-    """
-        for fname in os.listdir('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/'):
-            if not fname.endswith('bin'):
-                continue
-            if fname != 'LAI.bin':
-                data = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/' + fname).reshape(16437, -1)
-                np.savetxt('/data/scratch/wusongj/paper4/test/' + fname.split('.')[0] + '.txt', data[:,43])
-                print(fname, data.shape)
-            else:
-                data = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/LAI.bin').reshape(-1,  185, 160)
-                np.savetxt('/data/scratch/wusongj/paper4/data/catchment_info/cali/6/climate/LAI.txt', data[:, 37, 60])
-                print(fname, data.shape)
-    """
+        plt.savefig('/data/scratch/wusongj/paper4/plots/loglike_'+Catchment_ID+'.png')
+
     pass
 
 

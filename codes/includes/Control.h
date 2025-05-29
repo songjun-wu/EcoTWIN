@@ -11,8 +11,10 @@
 
 * Control.h
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #ifndef CONTROL_H_
@@ -145,6 +147,14 @@ struct Control{
   // 2: Penman equation with constant wind speed
   // 3: Priestley-Taylor equation
   int opt_chanE;
+  // Whether to adjust the d18o compostion in inital storages
+  // 0: NO
+  // 1: YES (the parameter d18o_init_GW needs to be specified)
+  int opt_init_d18o;
+  // The format of fertilization inputs
+  // 1: A raster map showing the potential fertilization amount in g/m2
+  // 2: Specificed for each vegetation type in Crop_info.ini
+  int opt_fert_input;
   /* end of Options */
 
 
@@ -175,6 +185,7 @@ struct Control{
   string fn__bulkdensity1;  // Bulk density of layer 1 [g/cm3]
   string fn__bulkdensity2;  // Bulk density of layer 2 [g/cm3], only needed when opt_depthprofile = 3
   string fn__bulkdensity3;  // Bulk density of layer 3 [g/cm3], only needed when opt_depthprofile = 3
+  string fn__N_fertilization;  // The fertilization amount [g/m2], only needed when opt_fert_input = 1
   /* end of GIS */ 
   string fn__fdir;  // flow direction [d8 method]
   string fn__Gauge_to_Report;  // Gauges that require outputs
@@ -285,7 +296,7 @@ struct Control{
   string fn__nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
-  string fn__d18o_init_GW;  // Initial d18O of GW storage [‰]
+  string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
   string fn__denitrification_river;  // Reference rates of aquatic denitrification [-]
   string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   string fn__degradation_soil;  // Reference rates of soil degradation [kg/ha]

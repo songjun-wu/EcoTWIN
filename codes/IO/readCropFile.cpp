@@ -11,8 +11,10 @@
 
 * readCropFile.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #include "Basin.h"
@@ -46,6 +48,7 @@ int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){
 
     if (ctrl.opt_nitrogen_sim==1){
     /* Nitrogen addition */
+    par.readIntoParam(is_crop, "is_crop", lines);
     par.readIntoParam(fert_add, "fert_add", lines);
     par.readIntoParam(fert_day, "fert_day", lines);
     par.readIntoParam(fert_down, "fert_down", lines);

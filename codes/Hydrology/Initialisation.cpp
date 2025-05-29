@@ -11,8 +11,10 @@
 
 * Initialisation.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #include "Basin.h"
@@ -27,12 +29,17 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
     // Initilisation of old storages
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
       Store_states();  // Store all water storages for mixing
-      _d18o_layer1->equals(*par._d18o_init_GW); // Asign isotopic composition to soil layer1
-      _d18o_layer2->equals(*par._d18o_init_GW); // Asign isotopic composition to soil layer2
-      _d18o_layer3->equals(*par._d18o_init_GW); // Asign isotopic composition to soil layer3
-      _d18o_GW->equals(*par._d18o_init_GW); // Asign isotopic composition to GW
     }
 
+    // Adjust the initial d18o composition if needed
+    if (ctrl.opt_tracking_isotope==1 and ctrl.opt_init_d18o==2){  // todo
+    _d18o_layer1->plus(*par._delta_d18o_init_GW); // Asign isotopic composition to soil layer1
+    _d18o_layer2->plus(*par._delta_d18o_init_GW); // Asign isotopic composition to soil layer2
+    _d18o_layer3->plus(*par._delta_d18o_init_GW); // Asign isotopic composition to soil layer3
+    _d18o_GW->plus(*par._delta_d18o_init_GW); // Asign isotopic composition to GW
+    }
+
+    // Init channel temperature
     if (ctrl.opt_nitrogen_sim==1){
       _TchanS->equals(*atm._Ta);
     }

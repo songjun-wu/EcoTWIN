@@ -11,8 +11,10 @@
 
 * parameterisation.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 29.05.2025
 ***************************************************************/
+
+
 
 
 #include "Param.h"
@@ -348,12 +350,16 @@ int Param::Parameterisation(Control &ctrl){
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _CG_n_soil->val[j] += param_category->val[k][j] * CG_n_soil[k];
      }}}
+
+  }
+
+  if (ctrl.opt_init_d18o == 1){
   
-  _d18o_init_GW->reset();
+  _delta_d18o_init_GW->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (d18o_init_GW[k]!=nodata) {
+      if (delta_d18o_init_GW[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _d18o_init_GW->val[j] += param_category->val[k][j] * d18o_init_GW[k];
+        _delta_d18o_init_GW->val[j] += param_category->val[k][j] * delta_d18o_init_GW[k];
      }}}
 
   }
