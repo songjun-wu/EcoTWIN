@@ -11,8 +11,10 @@
 
 * Solve_soil_profile_nitrogen.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 01.06.2025
 ***************************************************************/
+
+
 
 
 #include "Basin.h"
@@ -56,9 +58,8 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
     double depth1, depth2, depth3;
     double no3_pond, no3_layer1, no3_layer2, no3_layer3;
     double ST1, ST2, ST3;
-    double pond_old, no3_pond_old, no3_layer1_old, nearsurface_mixing, pond_to_mix;
+    double pond_old, no3_pond_old, no3_layer1_old, pond_to_mix;
         
-    
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         depth1 = _depth1->val[j];
@@ -78,12 +79,11 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
         if (pond_old > roundoffERR and ST1 > roundoffERR){
             no3_pond_old = no3_pond;
             no3_layer1_old = _no3_layer1->val[j];
-            nearsurface_mixing =  par._nearsurface_mixing->val[j];
-            pond_to_mix = min(pond_old * nearsurface_mixing, ST1);
-            no3_pond = no3_pond_old * (1 - nearsurface_mixing) + no3_layer1_old * nearsurface_mixing;
+            pond_to_mix = min(pond_old * par._nearsurface_mixing->val[j], ST1);
+            no3_pond = (no3_pond_old * (pond_old - pond_to_mix) + no3_layer1_old * pond_to_mix) / pond_old;
             no3_layer1 = (no3_pond_old * pond_to_mix + no3_layer1_old * (ST1 - pond_to_mix)) / ST1;
         }
-
+        
         // Mixing layer 1
         Mixing_full(ST1, no3_layer1, _infilt->val[j], no3_pond);
         ST1 += (_infilt->val[j] - _Perc1->val[j]);
@@ -99,15 +99,15 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
 
         // Evapotranspiration happens after percolation
         // Layer 1: erichment due to evaporation and transpiration
-        no3_layer1 = ST1 * no3_layer1 / (ST1 - _Es->val[j] - _Tr1->val[j]);
+        no3_layer1 = (ST1 - _Es->val[j] - _Tr1->val[j])>roundoffERR ? ST1 * no3_layer1 / (ST1 - _Es->val[j] - _Tr1->val[j]) : 0;
         //ST1 -= (_Es->val[j] + _Tr1->val[j]);
 
         // Layer 2: erichment due to transpiration
-        no3_layer2 = ST2 * no3_layer2 / (ST2 - _Tr2->val[j]);
+        no3_layer2 = (ST2 - _Tr2->val[j])>roundoffERR ? ST2 * no3_layer2 / (ST2 - _Tr2->val[j]) : 0;
         //ST2 -= (_Tr2->val[j]);
 
         // Layer 3: erichment due to transpiration
-        no3_layer3 = ST3 * no3_layer3 / (ST3 - _Tr3->val[j]);
+        no3_layer3 = (ST3 - _Tr3->val[j])>roundoffERR ? ST3 * no3_layer3 / (ST3 - _Tr3->val[j]) : 0;
         //ST3 -= (_Tr3->val[j]);
 
         // Save outputs
@@ -116,19 +116,16 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
         _no3_layer2->val[j] = no3_layer2;
         _no3_layer3->val[j] = no3_layer3;
     }
-
-
-        /* Nitrogen addtion */
-        Sort_nitrogen_addition(ctrl, par);
-        Nitrogen_addition(ctrl, par);
-
-        /* Plant uptake */
-        Sort_plant_uptake(ctrl, par);
-        Plant_uptake(ctrl, par);
-  
-        /* Nitrogen Transformation */
-        Soil_transformation(ctrl, atm, par);  // Degradation and mineralisation
-        Soil_denitrification(ctrl, atm, par);  // Denitrification
-
+    
+    /* Nitrogen addtion */
+    Sort_nitrogen_addition(ctrl, par);
+    Nitrogen_addition(ctrl, par);
+    /* Plant uptake */
+    Sort_plant_uptake(ctrl, par);
+    Plant_uptake(ctrl, par);
+    /* Nitrogen Transformation */
+    Soil_transformation(ctrl, atm, par);  // Degradation and mineralisation
+    Soil_denitrification(ctrl, atm, par);  // Denitrification
+        
     return EXIT_SUCCESS;
 }

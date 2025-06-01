@@ -11,8 +11,10 @@
 
 * Infiltration.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 31.05.2025
 ***************************************************************/
+
+
 
 
 
@@ -59,7 +61,6 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         }
 
         
-
         // Else estimate infiltration using Green-Ampt method
         else if (input_dt > eff_Ks1){
             double psidtheta = fabs(par._psiAE->val[j]) * dtheta;
@@ -68,8 +69,7 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
             double i = min(input_dt, f);  // Actual infiltration rate at time t (should not exceed the infiltration rate of ponding water)
             double tp = (eff_Ks1 * psidtheta) / (i * (i - eff_Ks1)); // Time of the emergence of ponding water
             // tp is calculated by Green-ampt equation and the assumption of i == f (the water starts to pond when inflitration rate equals to the input rate; Fp = i * tp)
-            
-            
+                      
             if (tp > dt){  // If time of ponding is later then the end of timestep
                 deltaF = i * dt;
             } else{  // Newton's method

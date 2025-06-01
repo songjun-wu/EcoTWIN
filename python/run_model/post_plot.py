@@ -383,48 +383,68 @@ def plot_performance(sim_path, obs_path, output_path, catchment_ID, chainID):
 
     fig.savefig(output_path+'performance_'+catchment_ID+'_'+str(chainID)+'.png', transparent=False)
 
-def plot_performance_all(sim_path, obs_path, output_path, catchment_ID, nchains):
+def plot_performance_all(sim_path, obs_path, output_path, catchment_ID, nchains, plot_each_chain=False):
 
     catchment_idx = np.squeeze(np.argwhere(np.array(Output.Catchment_ID)==catchment_ID))
 
     nrow = 9
     ncol = 4
 
-    fig, ax = plt.subplots(nrow, ncol, figsize=(12,8), dpi=300)
+    
     tindex = pd.date_range('1980-1-1', '2024-12-31')[Info.spin_up:]
 
-    counter = 0
-    
-    for key, value in Output.sim.items():
-        dict = Output.sim[key]
-        N_sites = dict['N_sites'][catchment_idx]
-        sim_idx = dict['sim_idx'][catchment_idx]
-        if len(sim_idx) > 0:
-            obs_all = np.fromfile(obs_path+dict['obs_file']).reshape(len(sim_idx), -1)
-            sim_all = np.fromfile(sim_path+dict['sim_file']).reshape(nchains, -1, N_sites)
-            sim_all = np.mean(sim_all, axis=0).T
+    if plot_each_chain:
+        for chainID in range(nchains):
+            fig, ax = plt.subplots(nrow, ncol, figsize=(12,8), dpi=300)
+            counter = 0
+            for key, value in Output.sim.items():
+                dict = Output.sim[key]
+                N_sites = dict['N_sites'][catchment_idx]
+                sim_idx = dict['sim_idx'][catchment_idx]
+                if len(sim_idx) > 0:
+                    obs_all = np.fromfile(obs_path+dict['obs_file']).reshape(len(sim_idx), -1)
+                    sim_all = np.fromfile(sim_path+dict['sim_file']).reshape(nchains, -1, N_sites)
+                    sim_all = sim_all[chainID, Info.spin_up:,:]
+                    sim_all = sim_all.T           
+                    for kk in range(len(sim_idx)):
+                        sim = sim_all[sim_idx[kk],:] + 1e-5
+                        obs = obs_all[kk, :] + 1e-5
 
-            sim_all = sim_all[:, Info.spin_up:]
+                        tmp = np.full(len(sim), np.nan)
+                        tmp[:len(obs)] = obs
 
-            print(sim_all.shape)
-            
+                        ax[counter//ncol, counter%ncol].plot(tindex, sim, linewidth=0.5, alpha=0.7)
+                        ax[counter//ncol, counter%ncol].scatter(tindex, tmp, c='red', s=0.5, alpha=0.3)
+                        
+                        print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.kge_modified(sim, tmp),2), np.round(np.log(1-GEM_tools.kge_modified(sim, tmp))*-100))
+                        counter += 1
+            fig.savefig(output_path+'performance_'+catchment_ID+'_'+str(chainID)+'.png', transparent=False)
 
-            for kk in range(len(sim_idx)):
+    else:
+        fig, ax = plt.subplots(nrow, ncol, figsize=(12,8), dpi=300)
+        counter = 0
+        for key, value in Output.sim.items():
+            dict = Output.sim[key]
+            N_sites = dict['N_sites'][catchment_idx]
+            sim_idx = dict['sim_idx'][catchment_idx]
+            if len(sim_idx) > 0:
+                obs_all = np.fromfile(obs_path+dict['obs_file']).reshape(len(sim_idx), -1)
+                sim_all = np.fromfile(sim_path+dict['sim_file']).reshape(nchains, -1, N_sites)
+                sim_all = sim_all[:, Info.spin_up:,:]
+                sim_all = np.mean(sim_all, axis=0).T           
+                for kk in range(len(sim_idx)):
+                    sim = sim_all[sim_idx[kk],:] + 1e-5
+                    obs = obs_all[kk, :] + 1e-5
 
-                sim = sim_all[sim_idx[kk],:] + 1e-5
-                obs = obs_all[kk, :] + 1e-5
+                    tmp = np.full(len(sim), np.nan)
+                    tmp[:len(obs)] = obs
 
-                tmp = np.full(len(sim), np.nan)
-                tmp[:len(obs)] = obs
-
-                ax[counter//ncol, counter%ncol].plot(tindex, sim, linewidth=0.5, alpha=0.7)
-                ax[counter//ncol, counter%ncol].scatter(tindex, tmp, c='red', s=0.5, alpha=0.3)
-                
-                print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.kge_modified(sim, tmp),2), np.round(np.log(1-GEM_tools.kge_modified(sim, tmp))*-100))
-
-                counter += 1
-
-    fig.savefig(output_path+'performance_'+catchment_ID+'_all_chains.png', transparent=False)
+                    ax[counter//ncol, counter%ncol].plot(tindex, sim, linewidth=0.5, alpha=0.7)
+                    ax[counter//ncol, counter%ncol].scatter(tindex, tmp, c='red', s=0.5, alpha=0.3)
+                    
+                    print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.kge_modified(sim, tmp),2), np.round(np.log(1-GEM_tools.kge_modified(sim, tmp))*-100))
+                    counter += 1
+        fig.savefig(output_path+'performance_'+catchment_ID+'_all_chains.png', transparent=False)
 
 
 def plot_param_all(param_path, plot_path, nchains, suffix):
@@ -462,7 +482,59 @@ def plot_param_all(param_path, plot_path, nchains, suffix):
     ax.set_yticklabels(param_names, weight='bold')
     fig.savefig(plot_path + 'param_sorted_'+suffix+'.png')
 
+def plot_SA(catchment_list, plot_path):
+    from SA import Morris
 
+    mode = 'SA'
+    param_N = GEM_tools.get_param_N(Info, Param)
+
+    mi_all = np.array([])
+    sigma_all = np.array([])
+    for catchment_ID in catchment_list:
+        
+        param  = np.fromfile(Path.work_path + mode + '/outputs/SA/' + catchment_ID + '/param.bin').reshape(-1, param_N)
+        likeli = np.fromfile(Path.work_path + mode + '/outputs/SA/' + catchment_ID + '/likeli.bin')
+
+        mi, sigma, EE_filtered = Morris.EE_indices(nsample=50, xmins=np.full(param_N, 0.0), xmaxs=np.full(param_N, 1.0), X=param, Y=likeli, design_type='trajectory', filterPercentage=0.1)
+        
+        keys = Param.ref.keys()
+        param_names = []
+        for key in keys:
+            dict = Param.ref[key]
+            if dict['fix_value'] is None:
+                if dict['type'] == 'global':
+                    param_names.append(key)
+                elif dict['type'] == 'soil':
+                    for i in range(Info.N_soil):
+                        param_names.append(key + '_s' + str(i))
+                elif dict['type'] == 'landuse':
+                    for i in range(Info.N_landuse):
+                        param_names.append(key + '_v' + str(i))
+        mi_all = np.append(mi_all, mi)
+        sigma_all = np.append(sigma_all, mi)
+
+    keys = Param.ref.keys()
+    param_names = []
+    for key in keys:
+        dict = Param.ref[key]
+        if dict['fix_value'] is None:
+            if dict['type'] == 'global':
+                param_names.append(key)
+            elif dict['type'] == 'soil':
+                for i in range(Info.N_soil):
+                    param_names.append(key + '_s' + str(i))
+            elif dict['type'] == 'landuse':
+                for i in range(Info.N_landuse):
+                    param_names.append(key + '_v' + str(i))
+    mi_all[mi_all > 0] = np.log10(mi_all[mi_all > 0])
+    mi_all[mi_all==0] = np.nan
+
+    fig, ax = plt.subplots(1,1, figsize=(15,20), dpi=300)
+    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
+    ax.imshow(mi_all.reshape(-1, param_N).T, cmap='Oranges', aspect=0.2, vmin=-2, vmax=1.5)
+    ax.set_yticks(np.arange(param.shape[1]))
+    ax.set_yticklabels(param_names, weight='bold')
+    fig.savefig(plot_path + 'Morris_mi.png')
 
 def plot_param():
     param = np.fromfile('/data/scratch/wusongj/paper4/param.bin').reshape(Cali.nchains, -1).T

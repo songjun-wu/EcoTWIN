@@ -11,8 +11,14 @@
 
 * main.cpp
   * Created  on: 30.02.2025
-  * Modified on: 28.05.2025
+  * Modified on: 01.06.2025
 ***************************************************************/
+
+
+
+
+
+
 
 
 
@@ -59,7 +65,7 @@ int main(){
     oReport->Report_all(*oControl, *oBasin);  // To be re-enabled
 
     // Temporary for faster calibration; todo
-    oBasin->Report_for_cali(*oControl);
+    oBasin->Report_for_cali(*oControl);  // to be disabled
 
     // Update counter
     oControl->current_ts += oControl->Simul_tstep;
@@ -104,11 +110,10 @@ int main(){
       oParam->Parameterisation(*oControl); // Parameterisation
       advance_landuse = 0;
   }
-
   }
 
   // Temporary for faster calibration; todo
-  oBasin->Save_for_cali(*oControl);
+  oBasin->Save_for_cali(*oControl);  // to be disabled
 
   // Deconstructor
   //oAtmosphere->dtor(*oControl);

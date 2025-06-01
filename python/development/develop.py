@@ -332,6 +332,7 @@ Nitrogen_addition = [['is_crop', [Opt.cond['nitrogen_sim_1']], 'Crop flag [], th
                      
 
                      ['plant_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation planting [day]', 'vector', 'vector', None, 0],
+                     ['emerge_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation emeregence [day]', 'vector', 'vector', None, 0],
                      ['harvest_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation harvest [day]', 'vector', 'vector', None, 0],
                     ]
 

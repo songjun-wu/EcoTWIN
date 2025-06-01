@@ -11,8 +11,14 @@
 
 * Initialisation.cpp
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 01.06.2025
 ***************************************************************/
+
+
+
+
+
+
 
 
 
@@ -32,7 +38,7 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
     }
 
     // Adjust the initial d18o composition if needed
-    if (ctrl.opt_tracking_isotope==1 and ctrl.opt_init_d18o==2){  // todo
+    if (ctrl.opt_tracking_isotope==1 and ctrl.opt_init_d18o==1){
     _d18o_layer1->plus(*par._delta_d18o_init_GW); // Asign isotopic composition to soil layer1
     _d18o_layer2->plus(*par._delta_d18o_init_GW); // Asign isotopic composition to soil layer2
     _d18o_layer3->plus(*par._delta_d18o_init_GW); // Asign isotopic composition to soil layer3

@@ -11,8 +11,10 @@
 
 * Basin.h
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 01.06.2025
 ***************************************************************/
+
+
 
 
 
@@ -207,6 +209,7 @@ class Basin {
   vector<double> up3;
   vector<double> upper_uptake;
   vector<double> plant_day;
+  vector<double> emerge_day;
   vector<double> harvest_day;
   /* end of Nitrogen addition */
 

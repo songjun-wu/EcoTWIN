@@ -11,8 +11,10 @@
 
 * Plant_uptake.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 01.06.2025
 ***************************************************************/
+
+
 
 
 #include "Basin.h"
@@ -36,15 +38,17 @@ int Basin::Sort_plant_uptake(Control &ctrl, Param &par){
 
                 if (plant_day[idx] <= harvest_day[idx]){
                     if (day_of_year >= plant_day[idx] and day_of_year < harvest_day[idx]){
-                        uptake_help = up1[idx] - up2[idx] * exp( -up3[idx] * (day_of_year - plant_day[idx]));
+                        uptake_help = (up1[idx] - up2[idx]) * exp( -up3[idx] * (day_of_year - plant_day[idx]));
                         uptake_IN = (up1[idx] * up2[idx] * up3[idx] * uptake_help) / (up2[idx] + uptake_help) / (up2[idx] + uptake_help);
+                    }else {
+                        uptake_IN = 0.0;
                     }
-                }
+                } 
 
                 _potential_uptake_layer1[i].push_back(uptake_IN * upper_uptake[idx]); // * p_cell * root_fraction_1
                 _potential_uptake_layer2[i].push_back(uptake_IN * upper_uptake[idx]);   // * p_cell * (1 - root_fraction_1)
                 _potential_uptake_layer3[i].push_back(uptake_IN * (1 - upper_uptake[idx])); // * p_cell 
-
+                
             }
         }
         par.sort_plant_uptake_OK = 1;

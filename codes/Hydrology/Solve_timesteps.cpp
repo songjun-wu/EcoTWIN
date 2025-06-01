@@ -11,22 +11,25 @@
 
 * Solve_timesteps.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 01.06.2025
 ***************************************************************/
+
+
 
 
 #include "Basin.h"
 
 
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
+    
+    //int j = 791;  // todo
+    //cout<<ctrl.year<<"-"<<ctrl.month<<"-"<<ctrl.day<<"   "<< "   ";  // todo
 
-    // seperate weighting factor for lateral routing and to channel?
-    // Water abstraction from GW?
 
     Solve_canopy(ctrl, par, atm);
 
     Solve_surface(ctrl, par, atm);
-    
+
     Solve_soil_profile(ctrl, par, atm);
 
     Routing(ctrl, par);

@@ -11,8 +11,10 @@
 
 * readCropFile.cpp
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 01.06.2025
 ***************************************************************/
+
+
 
 
 
@@ -69,6 +71,7 @@ int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){
     par.readIntoParam(up3, "up3", lines);
     par.readIntoParam(upper_uptake, "upper_uptake", lines);
     par.readIntoParam(plant_day, "plant_day", lines);
+    par.readIntoParam(emerge_day, "emerge_day", lines);
     par.readIntoParam(harvest_day, "harvest_day", lines);
     /* end of Nitrogen addition */
     }

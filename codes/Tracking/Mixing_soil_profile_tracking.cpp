@@ -11,8 +11,10 @@
 
 * Mixing_soil_profile_tracking.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 01.06.2025
 ***************************************************************/
+
+
 
 
 
@@ -54,7 +56,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     - interflow_toChn   
     */
 
-    double pond_old, ST1, nearsurface_mixing, pond_to_mix, d18o_pond_old, d18o_layer1_old, age_pond_old, age_layer1_old;
+    double pond_old, ST1, pond_to_mix, d18o_pond_old, d18o_layer1_old, age_pond_old, age_layer1_old;
 
     // Isotope tracking
     if (ctrl.opt_tracking_isotope==1) {
@@ -68,8 +70,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
             if (pond_old > roundoffERR and ST1 > roundoffERR){
                 d18o_pond_old = _d18o_pond->val[j];
                 d18o_layer1_old = _d18o_layer1->val[j];
-                nearsurface_mixing =  par._nearsurface_mixing->val[j];
-                pond_to_mix = min(pond_old * nearsurface_mixing, ST1);
+                pond_to_mix = min(pond_old * par._nearsurface_mixing->val[j], ST1);
                 _d18o_pond->val[j] = (d18o_pond_old * (pond_old - pond_to_mix) + d18o_layer1_old * pond_to_mix) / pond_old;
                 _d18o_layer1->val[j] = (d18o_pond_old * pond_to_mix + d18o_layer1_old * (ST1 - pond_to_mix)) / ST1;
             }
@@ -114,8 +115,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
             if (pond_old > roundoffERR and ST1 > roundoffERR){
                 age_pond_old = _age_pond->val[j];
                 age_layer1_old = _age_layer1->val[j];
-                nearsurface_mixing =  par._nearsurface_mixing->val[j];
-                pond_to_mix = min(pond_old * nearsurface_mixing, ST1);
+                pond_to_mix = min(pond_old * par._nearsurface_mixing->val[j], ST1);
                 _age_pond->val[j] = (age_pond_old * (pond_old - pond_to_mix) + age_layer1_old * pond_to_mix) / pond_old;
                 _age_layer1->val[j] = (age_pond_old * pond_to_mix + age_layer1_old * (ST1 - pond_to_mix)) / ST1;
             }

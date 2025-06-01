@@ -60,8 +60,7 @@ def likelihood(param, chainID, modelID):
                 else:
                     _sim += 1e-5
                     _obs += 1e-5
-                
-                
+                             
                 for i in range(_obs.shape[0]):
                     sim = _sim[dict['sim_idx'][kk][i], :]
                     obs = _obs[i,:]

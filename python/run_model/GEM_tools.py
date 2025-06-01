@@ -238,7 +238,10 @@ def set_env(mode, Path, nchains, Output):
             # copy inputs
             #shutil.copytree(Path.data_path+'spatial/', run_path+'spatial/')
             # copy configs
-            shutil.copyfile(Path.config_path+'config_forward.ini',  run_path+'config.ini')
+            if mode == 'SA':
+                shutil.copyfile(Path.config_path+'config_cali.ini',  run_path+'config.ini')
+            else:
+                shutil.copyfile(Path.config_path+'config_forward.ini',  run_path+'config.ini')
 
 
 def set_config(mode, Path, Cali, Output):
@@ -269,6 +272,9 @@ def set_config(mode, Path, Cali, Output):
                 #lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(Output.Catchment_ID[kk])+'/climate/\n', lines)
                 lines = np.append('Maps_Folder = ' + Path.data_path + 'catchment_info/cali/'+str(Output.Catchment_ID[kk])+'/spatial/\n', lines) # todo
                 lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/cali/'+str(Output.Catchment_ID[kk])+'/climate/\n', lines)
+                if mode == 'SA':
+                    seconds_since_1980 = np.loadtxt( Path.data_path + 'catchment_info/cali/'+str(Output.Catchment_ID[kk])+'/obs/seconds_from_1980.txt')
+                    lines = np.append('Simul_end = '+str(int(seconds_since_1980))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n', lines)
             with open(run_path+'config.ini', 'w') as f:
                 f.writelines(lines)  
 
@@ -372,3 +378,5 @@ def gen_no3_addtion(run_path, Info):
     
     with open(run_path+'Crop_info.ini', 'w') as f:
         f.writelines(lines)
+
+
