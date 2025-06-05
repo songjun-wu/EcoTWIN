@@ -11,8 +11,12 @@
 
 * readConfigFile.cpp
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 02.06.2025
 ***************************************************************/
+
+
+
+
 
 
 
@@ -76,6 +80,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_routQ, "opt_routQ", lines);
   readInto(opt_chanE, "opt_chanE", lines);
   readInto(opt_init_d18o, "opt_init_d18o", lines);
+  readInto(opt_init_no3, "opt_init_no3", lines);
   readInto(opt_fert_input, "opt_fert_input", lines);
   /* end of Options */
 
@@ -212,6 +217,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__ratio_to_interf, "ratio_to_interf", lines);
   readInto(fn__CG_n_soil, "CG_n_soil", lines);
   readInto(fn__delta_d18o_init_GW, "delta_d18o_init_GW", lines);
+  readInto(fn__delta_no3_init_GW, "delta_d18o_init_GW", lines);
   readInto(fn__denitrification_river, "denitrification_river", lines);
   readInto(fn__denitrification_soil, "denitrification_soil", lines);
   readInto(fn__degradation_soil, "degradation_soil", lines);

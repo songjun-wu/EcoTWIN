@@ -11,8 +11,12 @@
 
 * parameterisation.cpp
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 02.06.2025
 ***************************************************************/
+
+
+
+
 
 
 
@@ -360,6 +364,17 @@ int Param::Parameterisation(Control &ctrl){
       if (delta_d18o_init_GW[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _delta_d18o_init_GW->val[j] += param_category->val[k][j] * delta_d18o_init_GW[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_init_no3 == 1){
+  
+  _delta_no3_init_GW->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (delta_no3_init_GW[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _delta_no3_init_GW->val[j] += param_category->val[k][j] * delta_no3_init_GW[k];
      }}}
 
   }

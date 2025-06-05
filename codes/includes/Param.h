@@ -11,8 +11,12 @@
 
 * Param.h
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 02.06.2025
 ***************************************************************/
+
+
+
+
 
 
 
@@ -85,6 +89,7 @@ class Param {
   vector<double> ratio_to_interf;
   vector<double> CG_n_soil;
   vector<double> delta_d18o_init_GW;
+  vector<double> delta_no3_init_GW;
   vector<double> denitrification_river;
   vector<double> denitrification_soil;
   vector<double> degradation_soil;
@@ -128,6 +133,7 @@ class Param {
   svector *_irrigation_coeff;  // Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled
   svector *_CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   svector *_delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
+  svector *_delta_no3_init_GW;  // Initial no3 of GW storage [‰]
   svector *_denitrification_river;  // Reference rates of aquatic denitrification [-]
   svector *_denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   svector *_degradation_soil;  // Reference rates of soil degradation [kg/ha]

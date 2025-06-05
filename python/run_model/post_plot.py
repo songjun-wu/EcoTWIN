@@ -48,7 +48,7 @@ def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
     Vars.extend(['overland_flow_toChn', None, 'interflow_toChn', None, 'GWflow_toChn', 'discharge'])
 
     ylims = [[0, 5],[0, 20],[0, 5], None, None, None]
-    ylims.extend([[0, 0.5],[0, 0.5],[0, 0.5],[1e5, 3e5], None, None])
+    ylims.extend([[0, 0.5],[0, 0.5],[0, 0.5],[0, 1e4], None, None])
     ylims.extend([[0, 1e2], [0, 1e3], [0, 1e2], [0, 1e2], None, None])
     ylims.extend([[0, 7e2],[0, 7e2],[0, 7e2],[0, 3e2], None, None])
     ylims.extend([[0, 5e2],[0, 5e2],[0, 5e2],[0, 5e2], [0, 5e2], [0, 5e2]])
@@ -86,7 +86,6 @@ def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
                 try:
 
                     data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
-                    print('************  ',(np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T).shape)
                     
                     data = data[site_idx,:]
                     data[data==nodata] = np.nan
@@ -130,11 +129,11 @@ def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
                     tmp = tmp>0
                     mask[tmp] = 1 
         
-                    data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, mask.shape[0], mask.shape[1]))[:, :, :]
+                    data = (np.fromfile(output_path + Vars[i] + '_map.bin').reshape(-1, mask.shape[0], mask.shape[1]))[2:, :, :] # Skip first two years
                     data[data==nodata] = np.nan
                     data *= weights[i]
                     
-                    #print(Vars[i], np.nanmean(data[:, 1,10]))  # todo
+                    print(Vars[i], data.shape, np.nanmean(data[:]))  # todo
 
                     if ('discharge' in Vars[i]) or ('_toChn' in Vars[i]) or ('chanS' in Vars[i]):
                         for kk in range(data.shape[0]):
@@ -241,9 +240,9 @@ def plot_tracking(output_path, output_name, spatial_path, if_average=False):
     ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
+    ylims.extend([None, None, None, None, None, [0,20]])
+    ylims.extend([[0,100], [0,100], [0,100], [0,100], [0,100], [0,1]])
     ylims.extend([None, None, None, None, None, None])
-    ylims.extend([None, None, None, None, None, None])
-    ylims.extend([[0,120], None, None, None, None, None])
 
     #ylims = np.full(len(ylims), None)
 
@@ -278,8 +277,6 @@ def plot_tracking(output_path, output_name, spatial_path, if_average=False):
                 data *= weights[i]
 
                 ax[i//ncol, i%ncol].plot(data, linewidth=0.3, c='skyblue', zorder=1)
-                if ylims[i] is not None:
-                    ax[i//ncol, i%ncol].set_ylim(ylims[i])
                     
                 title_hgt = 0.9
                 hgt_gradient = 0.11
@@ -319,8 +316,10 @@ def plot_tracking(output_path, output_name, spatial_path, if_average=False):
                 if ('discharge' in Vars[i]) or ('_toChn' in Vars[i]) or ('_chanS' in Vars[i]) or ('river' in Vars[i]):
                     for kk in range(data.shape[0]):
                         data[kk,:,:][ ~chanmask] = np.nan
-                
-                im = ax[i//ncol, i%ncol].imshow(np.nanmean(data, axis=0), cmap='viridis', zorder=1, label='1')
+                if ylims[i] is not None:
+                    im = ax[i//ncol, i%ncol].imshow(np.nanmean(data, axis=0), vmin=ylims[i][0], vmax=ylims[i][1], cmap='viridis', zorder=1, label='1')
+                else:
+                    im = ax[i//ncol, i%ncol].imshow(np.nanmean(data, axis=0), cmap='viridis', zorder=1, label='1')
                 ax[i//ncol, i%ncol].set_frame_on(False)
                 ax[i//ncol, i%ncol].set_xticks([])
                 ax[i//ncol, i%ncol].set_yticks([])
@@ -347,7 +346,7 @@ def plot_performance(sim_path, obs_path, output_path, catchment_ID, chainID):
     catchment_idx = np.squeeze(np.argwhere(np.array(Output.Catchment_ID)==catchment_ID))
 
 
-    nrow = 9
+    nrow = 10
     ncol = 4
 
     fig, ax = plt.subplots(nrow, ncol, figsize=(12,8), dpi=300)
@@ -357,8 +356,8 @@ def plot_performance(sim_path, obs_path, output_path, catchment_ID, chainID):
     
     for key, value in Output.sim.items():
         dict = Output.sim[key]
-        N_sites = dict['N_sites'][catchment_idx]
         sim_idx = dict['sim_idx'][catchment_idx]
+        N_sites = Output.N_sites[catchment_idx]
         if len(sim_idx) > 0:
             obs_all = np.fromfile(obs_path+dict['obs_file']).reshape(len(sim_idx), -1)
             sim_all = np.fromfile(sim_path+dict['sim_file']).reshape(-1, N_sites).T
@@ -376,8 +375,12 @@ def plot_performance(sim_path, obs_path, output_path, catchment_ID, chainID):
 
                 ax[counter//ncol, counter%ncol].plot(tindex, sim, linewidth=0.5, alpha=0.7)
                 ax[counter//ncol, counter%ncol].scatter(tindex, tmp, c='red', s=0.5, alpha=0.3)
+
+                if key=='no3':
+                    ax[counter//ncol, counter%ncol].set_ylim([-0.1,10.1])
+                    ax[counter//ncol, counter%ncol].set_yticks([0,2,4,6,8,10])
                 
-                print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.kge_modified(sim, tmp),2), np.round(np.log(1-GEM_tools.kge_modified(sim, tmp))*-100))
+                print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.nse(sim, tmp),2), np.round(GEM_tools.rsquare(sim, tmp),2), np.round(GEM_tools.pbias(sim, tmp),2), )
 
                 counter += 1
 
@@ -441,6 +444,10 @@ def plot_performance_all(sim_path, obs_path, output_path, catchment_ID, nchains,
 
                     ax[counter//ncol, counter%ncol].plot(tindex, sim, linewidth=0.5, alpha=0.7)
                     ax[counter//ncol, counter%ncol].scatter(tindex, tmp, c='red', s=0.5, alpha=0.3)
+
+                    if key=='no3':
+                        ax[counter//ncol, counter%ncol].set_ylim([-0.1,10.1])
+                        ax[counter//ncol, counter%ncol].set_yticks([0,2,4,6,8,10])
                     
                     print(key, kk, np.round(GEM_tools.kge(sim, tmp),2), np.round(GEM_tools.kge_modified(sim, tmp),2), np.round(np.log(1-GEM_tools.kge_modified(sim, tmp))*-100))
                     counter += 1

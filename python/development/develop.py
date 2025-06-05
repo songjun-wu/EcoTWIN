@@ -265,6 +265,7 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               
 
               # Nitrogen
+              ['_delta_no3_init_GW', [Opt.cond['init_no3_1']], 'Initial no3 of GW storage [‰]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
               ['_denitrification_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic denitrification [-]', 'grid', 'spatial_param', 'denitrification_river', 0],
               #['_autotrophic_uptake_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic autotrophic uptake [-]', 'grid', 'spatial_param', 'autotrophic_uptake_aquatic', 0],
               #['_primary_production_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic primary production [-]', 'grid', 'spatial_param', 'primary_production_aquatic', 0],
@@ -406,7 +407,7 @@ define_variables.includes(fname=path + 'includes/Basin.h', signs=['Irrigation'],
 define_variables.includes(fname=path + 'includes/Basin.h', signs=['Nitrogen addition'], datas=[Nitrogen_addition], max_category=setting.max_category)
 config_build.read_crop_info(fname=path+'IO/readCropFile.cpp', Nitrogen_inputs=Nitrogen_addition, Irrigation_inputs=Irrigation)
 
-config_build.add_header('/home/wusongj/GEM/GEM_generic_ecohydrological_model/codes/')
+#config_build.add_header('/home/wusongj/GEM/GEM_generic_ecohydrological_model/codes/')
 
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)

@@ -11,8 +11,10 @@
 
 * Solve_routing_nitrogen.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 03.06.2025
 ***************************************************************/
+
+
 
 
 #include "Basin.h"
@@ -164,6 +166,8 @@ int Basin::Solve_routing_nitrogen(Control &ctrl, Param &par){
                 _flux_Qupstream_acc->val[from_j] += _no3_chanS->val[j] * _Q->val[j] * m3s_to_m;   
             }
         }
+
+        // if(j==3162) cout <<  _no3_pond->val[j]<<"   "<<_no3_layer3->val[j]<<"   "<<_no3_GW->val[j]<<endl;  // todo
         
 
     }

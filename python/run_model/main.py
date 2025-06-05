@@ -99,13 +99,13 @@ elif mode == 'DREAM_cali':
 elif mode == 'cali_sep':
     import pickle
     #catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
-    catchment_to_cali = ['6_001', '291110_001', '566445_001', '442364_001', '1034751_001', '291111_001', '83811_001', '831616_001']
+    catchment_to_cali = ['6_001', '291110_001', '566445_001', '442364_001', '1034751_001', '291111_001', '83811_001', '831616_001', '129489_001', '566445_002', '566445_003', '4_001']
 
 
     for catchment in catchment_to_cali:
         os.makedirs('/data/scratch/wusongj/paper4/cali_sep/' + catchment, exist_ok=True)
 
-    max_nodes = 10 
+    max_nodes = 12 
     max_nodes = max_nodes if len(catchment_to_cali) > max_nodes else len(catchment_to_cali)
 
     print(max_nodes, Cali.niterations)
@@ -131,7 +131,7 @@ elif mode == 'cali_sep':
     
     for batchID in range(max_nodes):
 
-        # Construct DREAM algorithm  for each catchment
+        # Construct DREAM algorithm for each catchment
         shutil.copyfile('/data/scratch/wusongj/paper4/scripts/likelihood_sep.py', '/data/scratch/wusongj/paper4/scripts/likelihood_sep_'+str(batchID)+'.py')
         with open('/data/scratch/wusongj/paper4/scripts/likelihood_sep_'+str(batchID)+'.py', 'r') as f:
             lines = f.readlines()
@@ -251,14 +251,14 @@ elif mode == 'test':
     os.system('python3 develop.py')  # todo
 
     # set the env
-    GEM_tools.sort_directory(mode, Path, Cali, Output)
-    GEM_tools.set_env(mode, Path, Cali, Output)
-    GEM_tools.set_config(mode, Path, Cali, Output)
+    #GEM_tools.sort_directory(mode, Path, Cali, Output)
+    #GEM_tools.set_env(mode, Path, Cali, Output)
+    #GEM_tools.set_config(mode, Path, Cali, Output)
     
     counter = 0
 
 
-    for gg in [6]:  # Catchment ID
+    for gg in [4]:  # Catchment ID
 
         catchment_ID = Output.Catchment_ID[gg]
         print(catchment_ID)
@@ -269,8 +269,7 @@ elif mode == 'test':
         best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
         param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain.bin').reshape(-1, param_N)[best_likeli_loc,:]
         
-        param = np.fromfile(Path.work_path + 'forward_cross/param_all.bin').reshape(-1, param_N)[6,:]
-
+   
         #param = np.full(300, 0.5)  # todo
         GEM_tools.gen_param(run_path, Info, Param, param)
         GEM_tools.gen_no3_addtion(run_path, Info)
@@ -291,12 +290,12 @@ elif mode == 'test':
                 shutil.copyfile(run_path+'outputs/'+fname, 'plots/'+fname.split('.')[0]+'.png')
         
         #post_plot.IMGtoVideo(os.getcwd()+'/plots/', run_path+'outputs/tmp_plots_for_animation/', output_name='hydrology_' + catchment_ID)
-
+        
         # Plot performance
         post_plot.plot_performance(run_path+'outputs/', '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', current_path+'/plots/', catchment_ID, chainID=0)
 
 
-elif mode == 'forward':
+elif mode == 'forward_sep':
     # Model structure update
     os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
     os.system('python3 develop.py')  # todo
@@ -317,11 +316,11 @@ elif mode == 'forward':
 
         catchment_ID = Output.Catchment_ID[gg]
         run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
-
+        
         param_all = np.array([])
         if os.path.exists(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID):
             shutil.rmtree(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID)
-        """"""
+
         for chainID in range(nchains):
             print(catchment_ID, chainID)
             idx = chainID
@@ -341,7 +340,7 @@ elif mode == 'forward':
             
             # Model run
             os.chdir(run_path)           
-            os.system('./gEcoHydro')
+            #os.system('./gEcoHydro')
             os.chdir(current_path)
 
             # Save outputs for each catchment
@@ -350,7 +349,7 @@ elif mode == 'forward':
 
         param_all.tofile(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/param.bin')
 
-        post_plot.plot_performance_all(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/','/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', Path.work_path+'/plots/', catchment_ID, nchains)
+        #post_plot.plot_performance_all(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/','/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', Path.work_path+'/plots/', catchment_ID, nchains)
         post_plot.plot_param_all(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/', Path.work_path+'plots/', nchains, catchment_ID)
 
 elif mode == 'forward_cross':
@@ -507,24 +506,18 @@ elif mode == 'check_sep':
 
 
 elif mode == 'bbb':
+    import pandas as pd
+    df = pd.read_csv('/data/scratch/wusongj/paper4/test/1034751_001/run/nitrate_obs_all.csv')
+    df.index = df.iloc[:,0]
+    df.index = pd.to_datetime(df.index)
+    print(df)
+    df = df.resample('M').mean()
+    df['avg'] = np.nanmean(df.to_numpy()[:,1:], axis=1)
+    df = df['avg']
+    df = df.groupby(df.index.month).mean()
 
-    import matplotlib.pyplot as plt
-
-    for gg in [0,5,6,7]:
-        Catchment_ID = Output.Catchment_ID[gg]
-
-        nchains = 20
-        likeli = np.array([])
-        for i in range(nchains):
-            likeli = np.append(likeli, np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+Catchment_ID+'/results/sep_cali_logps_chain_'+str(i)+'_'+str(max_nbatches)+'.bin'))
-        likeli = likeli.reshape(nchains, -1)
-        plt.plot(np.mean(likeli, axis=0))
-        plt.plot(np.max(likeli, axis=0))
-        print(Catchment_ID, np.mean(likeli, axis=0)[150], np.max(likeli, axis=0)[150])
-        
-        plt.savefig('/data/scratch/wusongj/paper4/plots/loglike_'+Catchment_ID+'.png')
-
-    pass
+    #df = df.resample
+    print(df)
 
 
 

@@ -11,8 +11,10 @@
 
 * Basin.h
   * Created  on: 30.02.2025
-  * Modified on: 01.06.2025
+  * Modified on: 04.06.2025
 ***************************************************************/
+
+
 
 
 
@@ -355,7 +357,7 @@ class Basin {
   int Sort_nitrogen_addition(Control &ctrl, Param &par);  // Sort 366 days at first iteration
   int Nitrogen_addition(Control &ctrl, Param &par);
   int Sort_plant_uptake(Control &ctrl, Param &par);
-  int Plant_uptake(Control &ctrl, Param &par);
+  int Plant_uptake(Control &ctrl, Param &par, Atmosphere &atm);
   int Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par);
   int Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par);
   int Instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);

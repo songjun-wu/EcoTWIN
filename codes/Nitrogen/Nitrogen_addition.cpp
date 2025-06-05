@@ -15,10 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
 #include "Basin.h"
 
 int Basin::Sort_nitrogen_addition(Control &ctrl, Param &par){

@@ -11,8 +11,12 @@
 
 * readParamFile.cpp
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 02.06.2025
 ***************************************************************/
+
+
+
+
 
 
 
@@ -74,6 +78,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
   readIntoParam(CG_n_soil, "CG_n_soil", lines);
   readIntoParam(delta_d18o_init_GW, "delta_d18o_init_GW", lines);
+  readIntoParam(delta_no3_init_GW, "delta_no3_init_GW", lines);
   readIntoParam(denitrification_river, "denitrification_river", lines);
   readIntoParam(denitrification_soil, "denitrification_soil", lines);
   readIntoParam(degradation_soil, "degradation_soil", lines);

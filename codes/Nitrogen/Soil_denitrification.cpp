@@ -11,8 +11,10 @@
 
 * Soil_denitrification.cpp
   * Created  on: 30.02.2025
-  * Modified on: 01.06.2025
+  * Modified on: 03.06.2025
 ***************************************************************/
+
+
 
 
 
@@ -140,7 +142,7 @@ double Basin::Moist_factor(const double db_theta, const double db_thetaWP, const
     } else {
         //fct_theta = min(1.0, (1 - fct_thetaS) * pow((db_thetaS - db_theta) / (fct_theta_up / 100 * db_depth * 1000), fct_theta_pow)  + fct_thetaS);
         //fct_theta = min(fct_theta, pow((db_theta - db_thetaWP) / (fct_theta_low /100 * db_depth * 1000), fct_theta_pow));
-        fct_theta = min(1.0, 0.4 * (db_thetaS - db_theta) / (1.2 * db_depth) + 0.6);
+        fct_theta = min(0.6, 0.4 * (db_thetaS - db_theta) / (1.2 * db_depth) + 0.6);
         fct_theta = min(fct_theta, (db_theta - db_thetaWP) / (0.8 * db_depth));
     }
 

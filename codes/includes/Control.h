@@ -11,8 +11,12 @@
 
 * Control.h
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 02.06.2025
 ***************************************************************/
+
+
+
+
 
 
 
@@ -151,6 +155,10 @@ struct Control{
   // 0: NO
   // 1: YES (the parameter d18o_init_GW needs to be specified)
   int opt_init_d18o;
+  // Whether to adjust the no3 compostion in inital storages
+  // 0: NO
+  // 1: YES (the parameter no3_init_GW needs to be specified)
+  int opt_init_no3;
   // The format of fertilization inputs
   // 1: A raster map showing the potential fertilization amount in g/m2
   // 2: Specificed for each vegetation type in Crop_info.ini
@@ -297,6 +305,7 @@ struct Control{
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
+  string fn__delta_no3_init_GW;  // Initial no3 of GW storage [‰]
   string fn__denitrification_river;  // Reference rates of aquatic denitrification [-]
   string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   string fn__degradation_soil;  // Reference rates of soil degradation [kg/ha]

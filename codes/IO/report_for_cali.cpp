@@ -11,10 +11,8 @@
 
 * report_for_cali.cpp
   * Created  on: 30.02.2025
-  * Modified on: 01.06.2025
+  * Modified on: 04.06.2025
 ***************************************************************/
-
-
 
 
 #include "Basin.h"
@@ -30,10 +28,8 @@ int Basin::Report_for_cali(Control &ctrl){
       vector_d18o_chanS.push_back(_d18o_chanS->val[idx]);
       vector_no3_chanS.push_back(_no3_chanS->val[idx]);
 
-      //cout << i << "   "<< idx<<"   "<< _sortedGrid.row[idx] << "   "<<_sortedGrid.col[idx] << endl;  // todo
+      //if(ctrl.current_ts/86400 == 1) cout << i << "   "<< idx<<"   "<< _sortedGrid.row[idx] << "   "<<_sortedGrid.col[idx] << "   "<< _no3_layer3->val[idx] << endl;  // todo
   }
-
-  //cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"   "<<_no3_chanS->val[4073]<<"   "<<_no3_GW->val[4073]<<"   "<<_GW->val[4073]<<"   "<<ctrl.opt_init_GW<<endl;  // todo
 
   return EXIT_SUCCESS;
 }

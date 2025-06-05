@@ -11,10 +11,8 @@
 
 * Solve_soil_profile_nitrogen.cpp
   * Created  on: 30.02.2025
-  * Modified on: 01.06.2025
+  * Modified on: 04.06.2025
 ***************************************************************/
-
-
 
 
 #include "Basin.h"
@@ -122,7 +120,7 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
     Nitrogen_addition(ctrl, par);
     /* Plant uptake */
     Sort_plant_uptake(ctrl, par);
-    Plant_uptake(ctrl, par);
+    Plant_uptake(ctrl, par, atm);
     /* Nitrogen Transformation */
     Soil_transformation(ctrl, atm, par);  // Degradation and mineralisation
     Soil_denitrification(ctrl, atm, par);  // Denitrification

@@ -132,6 +132,21 @@ def kge(sim, obs):
 
     return kge
 
+def rsquare(sim, obs):
+    from sklearn.metrics import r2_score
+    validIDX = np.logical_not( np.logical_or.reduce([np.isnan(sim), np.isnan(obs)]) )
+    validIDX[obs==-9999] = False
+    sim = sim[validIDX]
+    obs = obs[validIDX]
+    return r2_score(obs, sim)
+
+def pbias(sim, obs):
+    validIDX = np.logical_not( np.logical_or.reduce([np.isnan(sim), np.isnan(obs), obs==0]) )
+    validIDX[obs==-9999] = False
+    sim = sim[validIDX]
+    obs = obs[validIDX]
+    return np.mean(np.abs((sim - obs)/obs))
+
 def nse(sim, obs):
     validIDX = np.logical_not( np.logical_or( np.isnan(sim), np.isnan(obs) ) )
     validIDX[obs==-9999] = False

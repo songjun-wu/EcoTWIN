@@ -11,10 +11,8 @@
 
 * Solve_timesteps.cpp
   * Created  on: 30.02.2025
-  * Modified on: 01.06.2025
+  * Modified on: 04.06.2025
 ***************************************************************/
-
-
 
 
 #include "Basin.h"
@@ -22,8 +20,14 @@
 
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     
-    //int j = 791;  // todo
-    //cout<<ctrl.year<<"-"<<ctrl.month<<"-"<<ctrl.day<<"   "<< "   ";  // todo
+    // For debug
+    //int j = 2059;  // todo
+    //cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"   ";  // todo
+    //cout <<_no3_layer1->val[j]<<"   "<<_no3_chanS->val[j]<<endl; // todocout <<_Q->val[j]<<"   "<<_theta1->val[j]<<"   "<<_theta3->val[j]<<"   "<<_GW->val[j]<<"   "<<_thetaS1->val[j]<<"   "<<_thetaFC1->val[j]<<endl; // todo
+    //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
+    //  par._mineralisation_soil->val[j] = 0.0001;
+    //  par._deni_soil_moisture_thres->val[j]= 0.24;
+    //}
 
 
     Solve_canopy(ctrl, par, atm);
@@ -35,6 +39,7 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     Routing(ctrl, par);
 
     Solve_channel(ctrl, par, atm);
+
 
     //Check_mass_balance(ctrl, par, atm);
 

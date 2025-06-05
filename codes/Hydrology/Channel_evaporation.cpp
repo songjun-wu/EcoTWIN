@@ -11,8 +11,10 @@
 
 * Channel_evaporation.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 04.06.2025
 ***************************************************************/
+
+
 
 
 
@@ -58,7 +60,7 @@ int Basin::Channel_evaporation_1(Control &ctrl, Atmosphere &atm, Param &par) {
             6430000 * Ea / Lambda);  // [mm]
             Echan *= (_chnwidth->val[j] * _chnlength->val[j]) / dx_square / 1000;  // Corrected with actual channel area; [m]
             Echan = max(par._Echan_alpha->val[j]* Echan, 0.0);
-            Echan = min(Echan, _chanS->val[j]);
+            Echan = min(0.5*Echan, _chanS->val[j]);
                         
             _Echan->val[j] = Echan;     // Correct negative evaporation [m]
             _chanS->val[j] -= Echan;    // Update Channel storage [m]

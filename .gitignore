@@ -4,6 +4,7 @@
 *.png
 *.asc
 *.map
+*.mp4
 __pycache__/
 archive_codes/
 c1_dmc/

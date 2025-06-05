@@ -166,6 +166,10 @@ class Opt:
                         'general_description':'Whether to adjust the d18o compostion in inital storages\n# 0: NO\n# 1: YES (the parameter d18o_init_GW needs to be specified)',
                         'description':'Adjust the initial d18o composition from raster inputs, the parameter d18o_init_GW needs to be specified'}
 
+    cond['init_no3_1']   = {'key':'opt_init_no3', 'value':1, 
+                        'general_description':'Whether to adjust the no3 compostion in inital storages\n# 0: NO\n# 1: YES (the parameter no3_init_GW needs to be specified)',
+                        'description':'Adjust the initial no3 composition from raster inputs, the parameter no3_init_GW needs to be specified'}
+
     cond['fert_input_1']   = {'key':'opt_fert_input', 'value':1, 
                         'general_description':'The format of fertilization inputs\n# 1: A raster map showing the potential fertilization amount in g/m2\n# 2: Specificed for each vegetation type in Crop_info.ini',
                         'description':'The fertilization inputs are from a raster map'}

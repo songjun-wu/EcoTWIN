@@ -11,8 +11,12 @@
 
 * ParamConstruct.cpp
   * Created  on: 30.02.2025
-  * Modified on: 29.05.2025
+  * Modified on: 02.06.2025
 ***************************************************************/
+
+
+
+
 
 
 
@@ -103,6 +107,9 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_init_d18o == 1){
     _delta_d18o_init_GW = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_init_no3 == 1){
+    _delta_no3_init_GW = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_nitrogen_sim == 1){
     _denitrification_river = new svector(_sortedGrid.size);
