@@ -54,7 +54,7 @@ class Info:
     nadd['fert_period'] = {'value':[30, 30, 30, 30, 30, 30]}
     nadd['fert_IN'] = {'value':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7]}
 
-    nadd['manure_add'] = {'value':[0, 2, 1, 0, 0, 2]}
+    nadd['manure_add'] = {'value':[0, 2, 0, 0, 0, 2]}
     nadd['manure_day'] = {'value':[110, 110, 110, 110, 110, 110]}
     nadd['manure_down'] = {'value':[0.4, 0.3, 0.3, 0.3, 0.3, 0.3]}
     nadd['manure_period'] = {'value':[30, 30, 30, 30, 30, 30]}
@@ -66,12 +66,12 @@ class Info:
     nadd['residue_period'] = {'value':[30, 30, 30, 30, 30, 30]}
     nadd['residue_fastN'] = {'value':[0.6, 0.6, 0.6, 0.6, 0.6, 0.6]}
 
-    nadd['up1'] = {'value':[12, 10, 10, 10, 5, 5]}
-    nadd['up2'] = {'value':[0.1, 0.1, 0.1, 0.1, 0.05, 0.05]}
-    nadd['up3'] = {'value':[0.03, 0.025, 0.02, 0.02, 0.02, 0.02]}
-    nadd['upper_uptake'] = {'value':[0.95, 0.95, 0.95, 0.8, 0.8, 0.8]}
-    nadd['plant_day'] = {'value':[85, 55, 25, 25, 25, 25]}  
-    nadd['harvest_day'] = {'value':[260, 280, 300, 300, 300, 300]}
+    nadd['up1'] = {'value':[10, 8, 7, 5, 3, 2]}
+    nadd['up2'] = {'value':[0.6, 0.3, 0.3, 0.6, 0.5, 0.2]}
+    nadd['up3'] = {'value':[0.04, 0.03, 0.03, 0.018, 0.018, 0.018]}
+    nadd['upper_uptake'] = {'value':[0.99, 0.99, 0.99, 0.85, 0.99, 0.95]}
+    nadd['plant_day'] = {'value':[85, 55, 55, 55, 55, 55]}  
+    nadd['harvest_day'] = {'value':[242, 280, 320, 320, 320, 320]}
 
     nadd['irrigation_thres'] = {'value':[0.6,0.4,0,0,0,0]}  # The threshold (soil moisture/field capacity) below which irrigation is needed
 
@@ -152,7 +152,7 @@ class Param:
     ### === parameters to calibrate === 
     ref = {}    
 
-    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[2]*Info.N_soil, 'fix_value':None}
+    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
 
     # === PET seperation and Max canopy storage === 
     ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse, 'fix_value':None}  # Maximum canopy storage = alpha * PET
@@ -170,9 +170,9 @@ class Param:
     ref['ref_thetaS']   = {'type':'soil',   'log':0, 'file':'ref_thetaS',   'min':[0.5]*Info.N_soil, 'max':[0.99]*Info.N_soil, 'fix_value':None}
     ref['PTF_VG_clay']   = {'type':'soil',   'log':1, 'file':'PTF_VG_clay',   'min':[5e-8]*Info.N_soil, 'max':[5e-3]*Info.N_soil, 'fix_value':None}
     ref['PTF_VG_Db']   = {'type':'soil',   'log':1, 'file':'PTF_VG_Db',   'min':[5e-4]*Info.N_soil, 'max':[5e-1]*Info.N_soil, 'fix_value':None}
-    ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-1.2]*Info.N_soil, 'max':[-0.2]*Info.N_soil, 'fix_value':None}
-    ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[1e-4]*Info.N_soil, 'max':[0.026]*Info.N_soil, 'fix_value':None}
-    ref['PTF_Ks_clay']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_clay',   'min':[-1.3e-2]*Info.N_soil, 'max':[-3e-3]*Info.N_soil, 'fix_value':None}
+    ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-3,-1.2,-1.2,-1.2,-1.2,-1.2], 'max':[-2.9,-0.2,-0.2,-0.2,-0.2,-0.2], 'fix_value':None}
+    ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[0.006]*Info.N_soil, 'max':[0.026]*Info.N_soil, 'fix_value':None}
+    ref['PTF_Ks_clay']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_clay',   'min':[0.003]*Info.N_soil, 'max':[0.013]*Info.N_soil, 'fix_value':None}
     ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[1,15,15,15,15,15], 'fix_value':None}  # Low infiltration capacity in urban areas
     
     # Field capacity
@@ -195,6 +195,7 @@ class Param:
     
     # === Evapotranspiration === 
     ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.95, 0.95, 0.95, 0.999, 0.92, 0.81], 'fix_value':None} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
+    ref['ET_reduction'] = {'type':'global',   'log':0, 'file':'ET_reduction',   'min':[0.6], 'max':[1.0], 'fix_value':None} # ET correction weights
 
     # === GW recharge === 
     ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
@@ -202,11 +203,11 @@ class Param:
 
     # === Routing === 
     ref['pOvf_toChn']   = {'type':'landuse',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)
-    ref['Ks_vadose']   = {'type':'landuse',   'log':1, 'file':'Ks_vadose',   'min':[1e-8]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # The reference conductivity of vadose zone for interflow routing [m/s]
-    ref['Ks_GW']   = {'type':'landuse',   'log':1, 'file':'Ks_GW',   'min':[1e-9]*Info.N_landuse, 'max':[1e-2]*Info.N_landuse, 'fix_value':None}  # The reference conductivity of GW zone for interflow routing [m/s]
-    ref['lat_to_Chn_vadose']   = {'type':'landuse',   'log':1, 'file':'lat_to_Chn_vadose',   'min':[1e-3]*Info.N_landuse, 'max':[1e1]*Info.N_landuse, 'fix_value':None} # The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]
+    ref['Ks_vadose']   = {'type':'landuse',   'log':1, 'file':'Ks_vadose',   'min':[1e-3]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # The reference conductivity of vadose zone for interflow routing [m/day]
+    ref['Ks_GW']   = {'type':'landuse',   'log':1, 'file':'Ks_GW',   'min':[1e-9]*Info.N_landuse, 'max':[1e-2]*Info.N_landuse, 'fix_value':None}  # The reference conductivity of GW zone for interflow routing [m/day]
+    ref['lat_to_Chn_vadose']   = {'type':'landuse',   'log':1, 'file':'lat_to_Chn_vadose',   'min':[1e-1]*Info.N_landuse, 'max':[1e1]*Info.N_landuse, 'fix_value':None} # The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]
     ref['lat_to_Chn_GW']   = {'type':'landuse',   'log':1, 'file':'lat_to_Chn_GW',   'min':[1e-3]*Info.N_landuse, 'max':[1e1]*Info.N_landuse, 'fix_value':None} # The ratio between conductivities of lateral flow and channel recharge in GW zone [-]
-    ref['interfExp']   = {'type':'landuse',   'log':1, 'file':'interfExp',   'min':[1e-5]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None}
+    ref['interfExp']   = {'type':'landuse',   'log':1, 'file':'interfExp',   'min':[1e-2]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None}
     ref['GWfExp']   = {'type':'landuse',   'log':1, 'file':'GWfExp',   'min':[1e-5]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}
     ref['Manningn']   = {'type':'landuse',   'log':1, 'file':'Manningn',   'min':[1e-4]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None}
     ref['ratio_to_interf'] = {'type':'landuse',   'log':0, 'file':'ratio_to_interf',   'min':[0]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}

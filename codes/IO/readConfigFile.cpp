@@ -15,12 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
-
-
 #include "Control.h"
 
 int Control::ReadConfigFile(string fname){
@@ -186,7 +180,6 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__deg_day_min, "deg_day_min", lines);
   readInto(fn__deg_day_max, "deg_day_max", lines);
   readInto(fn__deg_day_increase, "deg_day_increase", lines);
-  readInto(fn__froot_coeff, "froot_coeff", lines);
   readInto(fn__ref_thetaS, "ref_thetaS", lines);
   readInto(fn__PTF_VG_clay, "PTF_VG_clay", lines);
   readInto(fn__PTF_VG_Db, "PTF_VG_Db", lines);
@@ -201,6 +194,8 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__Ksat, "Kporos", lines);
   readInto(fn__BClambda, "BClambda", lines);
   readInto(fn__percExp, "percExp", lines);
+  readInto(fn__froot_coeff, "froot_coeff", lines);
+  readInto(fn__ET_reduction, "ET_reduction", lines);
   readInto(fn__init_GW, "init_GW", lines);
   readInto(fn__wRecharge, "wRecharge", lines);
   readInto(fn__pOvf_toChn, "pOvf_toChn", lines);

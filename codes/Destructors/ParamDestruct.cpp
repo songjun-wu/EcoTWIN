@@ -15,12 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
-
-
 #include "Param.h"
 
 Param::~Param(){}
@@ -41,9 +35,6 @@ int Param::dtor(Control &ctrl){
     if(_deg_day_min) delete _deg_day_min;
     if(_deg_day_max) delete _deg_day_max;
     if(_deg_day_increase) delete _deg_day_increase;
-  }
-  if (ctrl.opt_evap == 1){
-    if(_froot_coeff) delete _froot_coeff;
   }
   if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2 or ctrl.opt_pedotransf == 3){
     if(_ref_thetaS) delete _ref_thetaS;
@@ -68,6 +59,10 @@ int Param::dtor(Control &ctrl){
   }
   if (ctrl.opt_percolation == 2){
     if(_percExp) delete _percExp;
+  }
+  if (ctrl.opt_evap == 1){
+    if(_froot_coeff) delete _froot_coeff;
+    if(_ET_reduction) delete _ET_reduction;
   }
   if (ctrl.opt_init_GW == 1){
     if(_init_GW) delete _init_GW;

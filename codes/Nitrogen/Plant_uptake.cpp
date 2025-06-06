@@ -86,9 +86,9 @@ int Basin::Plant_uptake(Control &ctrl, Param &par, Atmosphere &atm){
                 continue;
             }
             if (day_of_year >= plant_day[idx] and day_of_year < harvest_day[idx]) {
-                potential_plant_uptake1 += _potential_uptake_layer1[i][day_of_year-1] * p_cell * root_fraction_1;
-                potential_plant_uptake2 += _potential_uptake_layer2[i][day_of_year-1] * p_cell * (1 - root_fraction_1);
-                potential_plant_uptake3 += _potential_uptake_layer3[i][day_of_year-1] * p_cell; 
+                potential_plant_uptake1 += _potential_uptake_layer1[i][day_of_year-1] * p_cell * root_fraction_1;           // [gN/m2]
+                potential_plant_uptake2 += _potential_uptake_layer2[i][day_of_year-1] * p_cell * (1 - root_fraction_1);     // [gN/m2]
+                potential_plant_uptake3 += _potential_uptake_layer3[i][day_of_year-1] * p_cell;                             // [gN/m2]
             }            
         }
         // Correction based on temperature 
@@ -111,7 +111,7 @@ int Basin::Plant_uptake(Control &ctrl, Param &par, Atmosphere &atm){
         if (theta1 > _thetaWP1->val[j]){
             if (dissIN1 > roundoffERR and potential_plant_uptake1 > roundoffERR){
                 max_uptake = dissIN1 * (theta1 - _thetaWP1->val[j]) / theta1;
-                plant_uptake1 = min(dissIN1 * potential_plant_uptake1, max_uptake);
+                plant_uptake1 = min(potential_plant_uptake1, max_uptake);
                 _no3_layer1->val[j] = (dissIN1 - plant_uptake1) / (theta1 * _depth1->val[j]);
             }
         }
@@ -120,7 +120,7 @@ int Basin::Plant_uptake(Control &ctrl, Param &par, Atmosphere &atm){
         if (theta2 > _thetaWP2->val[j]){
             if (dissIN2 > roundoffERR and potential_plant_uptake2 > roundoffERR){
                 max_uptake = dissIN2 * (theta2 - _thetaWP2->val[j]) / theta2;
-                plant_uptake2 = min(dissIN2 * potential_plant_uptake2, max_uptake);
+                plant_uptake2 = min(potential_plant_uptake2, max_uptake);
                 _no3_layer2->val[j] = (dissIN2 - plant_uptake2) / (theta2 * _depth2->val[j]);
             }
         }
@@ -129,7 +129,7 @@ int Basin::Plant_uptake(Control &ctrl, Param &par, Atmosphere &atm){
         if (theta3 > _thetaWP3->val[j]){
             if (dissIN3 > roundoffERR and potential_plant_uptake3 > roundoffERR){
                 max_uptake = dissIN3 * (theta3 - _thetaWP3->val[j]) / theta3;
-                plant_uptake3 = min(dissIN3 * potential_plant_uptake3, max_uptake);
+                plant_uptake3 = min(potential_plant_uptake3, max_uptake);
                 _no3_layer3->val[j] = (dissIN3 - plant_uptake3) / (theta3 * par._depth3->val[j]);
             }
         }

@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #include "Basin.h"
 
 int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){

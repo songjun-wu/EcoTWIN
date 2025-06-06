@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #ifndef dataType_H_
 #define dataType_H_
 #include <iostream>

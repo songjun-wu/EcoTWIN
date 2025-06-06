@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #include "Control.h"
 
 time_t Control::Set_reference_timestep(){

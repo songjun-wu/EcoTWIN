@@ -15,10 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
 #include "Basin.h"
 
 int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){

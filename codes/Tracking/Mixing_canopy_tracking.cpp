@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #include "Basin.h"
 
 int Basin::Mixing_canopy_tracking(Control &ctrl, Atmosphere &atm){

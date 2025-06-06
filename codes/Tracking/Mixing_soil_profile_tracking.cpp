@@ -15,10 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
 #include "Basin.h"
 
 int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &par){

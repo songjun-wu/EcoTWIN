@@ -15,12 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
-
-
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
@@ -274,7 +268,6 @@ struct Control{
   string fn__deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
   string fn__deg_day_max;  // Maximum Degree-day factor [m-1 degreeC-1]
   string fn__deg_day_increase;  // Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]
-  string fn__froot_coeff;  // Root fraction coefficient [-]
   string fn__ref_thetaS;  // Reference saturated soil moisture [-]
   string fn__PTF_VG_clay;  // Pedotransfer function for parameter estimation of Van Genuchten Model [-]
   string fn__PTF_VG_Db;  // Pedotransfer function for parameter estimation of Van Genuchten Model [-]
@@ -289,6 +282,8 @@ struct Control{
   string fn__Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   string fn__BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
   string fn__percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
+  string fn__froot_coeff;  // Root fraction coefficient [-]
+  string fn__ET_reduction;  // ET reduction (weight) [-]
   string fn__init_GW;  // The initial GW storage [m], only needed when opt_init_GW = 1
   string fn__wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
   string fn__pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]

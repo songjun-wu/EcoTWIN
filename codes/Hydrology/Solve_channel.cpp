@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #include "Basin.h"
 
 int Basin::Solve_channel(Control &ctrl, Param &par, Atmosphere &atm){

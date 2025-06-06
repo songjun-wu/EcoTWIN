@@ -15,14 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
-
-
-
-
 #include "Basin.h"
 
 /*
@@ -75,9 +67,9 @@ int Basin::Pedo_transfer_1(Control &ctrl, Param &par, svector &sv_sand,  svector
         thetaS = max(thetaS, 0.1);   // To avoid negative saturated moisture content  
 
         // Calculate saturated hydraulic conductivity based on Cosby et al., (1984); https://doi.org/10.1029/WR020i006p00682
-        // Additional flexibiltiy was given
-        Ks = par._PTF_Ks_slope->val[j] * exp10((par._PTF_Ks_const->val[j] + par._PTF_Ks_sand->val[j] * sand + par._PTF_Ks_clay->val[j] * clay)) * 1.16e-7;  // cm/day to m/s
-        Ks = max(Ks, 1.3e-7); // Ks > 1 mm/d
+        // Additional flexibiltiy was given 
+        Ks = exp10((par._PTF_Ks_const->val[j] + par._PTF_Ks_sand->val[j] * sand - par._PTF_Ks_clay->val[j] * clay)) * 60.96 * 1.18e-7;  // 60.96: from inch/h to cm/day; 1.18e-7: cm/day to m/s
+        Ks = max(Ks, 1.16e-8); // Ks > 1 mm/d
         sv_Ks.val[j] = Ks;
 
         // Calculate field capacity 
@@ -137,8 +129,8 @@ int Basin::Pedo_transfer_2(Control &ctrl, Param &par, svector &sv_sand,  svector
 
         // Calculate saturated hydraulic conductivity based on Cosby et al., (1984); https://doi.org/10.1029/WR020i006p00682
         // Additional flexibiltiy was given
-        Ks = par._PTF_Ks_slope->val[j] * exp10((par._PTF_Ks_const->val[j] + par._PTF_Ks_sand->val[j] * sand + par._PTF_Ks_clay->val[j] * clay)) * 1.16e-7;  // cm/day to m/s
-        Ks = max(Ks, 1.3e-7); // Ks > 1 mm/d
+        Ks = exp10((par._PTF_Ks_const->val[j] + par._PTF_Ks_sand->val[j] * sand - par._PTF_Ks_clay->val[j] * clay)) * 60.96 * 1.18e-7;  // 60.96: from inch/h to cm/day; 1.18e-7: cm/day to m/s
+        Ks = max(Ks, 1.16e-8); // Ks > 1 mm/d
         sv_Ks.val[j] = Ks;
         
         
@@ -198,8 +190,8 @@ int Basin::Pedo_transfer_3(Control &ctrl, Param &par, svector &sv_sand,  svector
 
         // Calculate saturated hydraulic conductivity based on Cosby et al., (1984); https://doi.org/10.1029/WR020i006p00682
         // Additional flexibiltiy was given
-        Ks = par._PTF_Ks_slope->val[j] * exp10((par._PTF_Ks_const->val[j] + par._PTF_Ks_sand->val[j] * sand + par._PTF_Ks_clay->val[j] * clay)) * 1.16e-7;  // cm/day to m/s
-        Ks = max(Ks, 1.3e-7); // Ks > 1 mm/d
+        Ks = exp10((par._PTF_Ks_const->val[j] + par._PTF_Ks_sand->val[j] * sand - par._PTF_Ks_clay->val[j] * clay)) * 60.96 * 1.18e-7;  // 60.96: from inch/h to cm/day; 1.18e-7: cm/day to m/s
+        Ks = max(Ks, 1.16e-8); // Ks > 1 mm/d
         sv_Ks.val[j] = Ks;
 
         

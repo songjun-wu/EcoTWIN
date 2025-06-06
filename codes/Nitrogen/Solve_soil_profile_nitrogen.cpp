@@ -57,7 +57,7 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
     double no3_pond, no3_layer1, no3_layer2, no3_layer3;
     double ST1, ST2, ST3;
     double pond_old, no3_pond_old, no3_layer1_old, pond_to_mix;
-        
+  
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         depth1 = _depth1->val[j];
@@ -114,7 +114,7 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
         _no3_layer2->val[j] = no3_layer2;
         _no3_layer3->val[j] = no3_layer3;
     }
-    
+
     /* Nitrogen addtion */
     Sort_nitrogen_addition(ctrl, par);
     Nitrogen_addition(ctrl, par);
@@ -124,6 +124,6 @@ int Basin::Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &pa
     /* Nitrogen Transformation */
     Soil_transformation(ctrl, atm, par);  // Degradation and mineralisation
     Soil_denitrification(ctrl, atm, par);  // Denitrification
-        
+
     return EXIT_SUCCESS;
 }

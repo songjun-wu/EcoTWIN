@@ -258,7 +258,7 @@ elif mode == 'test':
     counter = 0
 
 
-    for gg in [4]:  # Catchment ID
+    for gg in [1]:  # Catchment ID
 
         catchment_ID = Output.Catchment_ID[gg]
         print(catchment_ID)
@@ -311,8 +311,6 @@ elif mode == 'forward_sep':
     #for i in range(len(validIdx)):
     #for gg in [0,5,6,7]:  # Catchment ID
     for gg in range(8):  # Catchment ID
-
-        
 
         catchment_ID = Output.Catchment_ID[gg]
         run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
@@ -506,18 +504,18 @@ elif mode == 'check_sep':
 
 
 elif mode == 'bbb':
-    import pandas as pd
-    df = pd.read_csv('/data/scratch/wusongj/paper4/test/1034751_001/run/nitrate_obs_all.csv')
-    df.index = df.iloc[:,0]
-    df.index = pd.to_datetime(df.index)
-    print(df)
-    df = df.resample('M').mean()
-    df['avg'] = np.nanmean(df.to_numpy()[:,1:], axis=1)
-    df = df['avg']
-    df = df.groupby(df.index.month).mean()
+    catchment_ID = '291110_001'
+    ref_asc = '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/dem.asc'
+    output_path = '/data/scratch/wusongj/paper4/test/'+catchment_ID+'/run/outputs/'
+    fnames = [f for f in os.listdir(output_path) if '_map.bin' in f]
 
-    #df = df.resample
-    print(df)
+    ref_data = np.loadtxt(ref_asc, skiprows=6)
+    for fname in fnames:
+        print(fname)
+        data = np.fromfile(output_path + fname).reshape(-1, ref_data.shape[0], ref_data.shape[1])
+        data = np.mean(data[2:,:,:], axis=0)
+        print(output_path+fname.split('.')[0]+'.asc')
+        #GEM_tools.create_asc(data, output_path+fname.split('.')[0]+'.asc', ref_asc)
 
 
 

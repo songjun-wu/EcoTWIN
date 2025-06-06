@@ -15,12 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
-
-
 #ifndef PARAM_H_
 #define PARAM_H_
 
@@ -58,7 +52,6 @@ class Param {
   vector<double> deg_day_min;
   vector<double> deg_day_max;
   vector<double> deg_day_increase;
-  vector<double> froot_coeff;
   vector<double> ref_thetaS;
   vector<double> PTF_VG_clay;
   vector<double> PTF_VG_Db;
@@ -73,6 +66,8 @@ class Param {
   vector<double> Ksat;
   vector<double> BClambda;
   vector<double> percExp;
+  vector<double> froot_coeff;
+  vector<double> ET_reduction;
   vector<double> init_GW;
   vector<double> wRecharge;
   vector<double> pOvf_toChn;
@@ -105,7 +100,6 @@ class Param {
   svector *_deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
   svector *_deg_day_max;  // Maximum Degree-day factor [m-1 degreeC-1]
   svector *_deg_day_increase;  // Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]
-  svector *_froot_coeff;  // Root fraction coefficient [-]
   svector *_ref_thetaS;  // Reference saturated soil moisture [-]
   svector *_PTF_VG_clay;  // Pedotransfer function for parameter estimation of Van Genuchten Model [-]
   svector *_PTF_VG_Db;  // Pedotransfer function for parameter estimation of Van Genuchten Model [-]
@@ -120,6 +114,8 @@ class Param {
   svector *_Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   svector *_BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
   svector *_percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
+  svector *_froot_coeff;  // Root fraction coefficient [-]
+  svector *_ET_reduction;  // ET reduction (weight) [-]
   svector *_init_GW;  // The initial GW storage [m], only needed when opt_init_GW = 1
   svector *_pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
   svector *_Ks_vadose;  // The reference conductivity of vadose zone for interflow routing [m/s]

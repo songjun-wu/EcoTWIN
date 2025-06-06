@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #include "Basin.h"
 
 int Basin::Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par){

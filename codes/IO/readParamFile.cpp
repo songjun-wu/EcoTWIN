@@ -15,12 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
-
-
 #include "Param.h"
 
 int Param::ReadParamFile(Control &ctrl, string fname){
@@ -47,7 +41,6 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(deg_day_min, "deg_day_min", lines);
   readIntoParam(deg_day_max, "deg_day_max", lines);
   readIntoParam(deg_day_increase, "deg_day_increase", lines);
-  readIntoParam(froot_coeff, "froot_coeff", lines);
   readIntoParam(ref_thetaS, "ref_thetaS", lines);
   readIntoParam(PTF_VG_clay, "PTF_VG_clay", lines);
   readIntoParam(PTF_VG_Db, "PTF_VG_Db", lines);
@@ -62,6 +55,8 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(Ksat, "Ksat", lines);
   readIntoParam(BClambda, "BClambda", lines);
   readIntoParam(percExp, "percExp", lines);
+  readIntoParam(froot_coeff, "froot_coeff", lines);
+  readIntoParam(ET_reduction, "ET_reduction", lines);
   readIntoParam(init_GW, "init_GW", lines);
   readIntoParam(wRecharge, "wRecharge", lines);
   readIntoParam(pOvf_toChn, "pOvf_toChn", lines);

@@ -210,7 +210,7 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_deg_day_max', [Opt.cond['snow_1']], 'Maximum Degree-day factor [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_max', 0],
               ['_deg_day_increase', [Opt.cond['snow_1']], 'Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_increase', 0],
               
-              ['_froot_coeff', [Opt.cond['evap_1']], 'Root fraction coefficient [-]', 'grid', 'spatial_param', 'froot_coeff', 0],
+              
               # Pedotransfer function
               ['_ref_thetaS', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Reference saturated soil moisture [-]', 'grid', 'spatial_param', 'ref_thetaS', 0],
               ['_PTF_VG_clay', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_clay', 0],
@@ -231,6 +231,10 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               
               # Percolation
               ['_percExp', [Opt.cond['perc_2']], 'The exponential parameter for percolation [-], only needed when opt_percolation = 2', 'grid', 'spatial_param', 'percExp', 0],
+
+              # Evapotranspiration
+              ['_froot_coeff', [Opt.cond['evap_1']], 'Root fraction coefficient [-]', 'grid', 'spatial_param', 'froot_coeff', 0],
+              ['_ET_reduction', [Opt.cond['evap_1']], 'ET reduction (weight) [-]', 'grid', 'spatial_param', 'ET_reduction', 0],
 
               # GW
               ['_init_GW', [Opt.cond['init_GW_1']], 'The initial GW storage [m], only needed when opt_init_GW = 1', 'grid', 'spatial_param', 'init_GW', 0],
@@ -301,7 +305,6 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
             ['_fastN1',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'fastN1', 0],
             ['_fastN2',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'fastN2', 0],
             ['_fastN3',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'fastN3', 0],
-
             ]
 
 
@@ -371,7 +374,7 @@ datas_control = datas_atmos + datas_groundTs + datas_basin + datas_param
 
 
 
-""""""
+
 define_variables.includes(fname=path + 'includes/Atmosphere.h', signs=signs_atmos, datas=datas_atmos, max_category=setting.max_category)
 define_variables.destructor(fname=path + 'Destructors/AtmosphereDestruct.cpp', signs=signs_atmos, datas=datas_atmos)
 

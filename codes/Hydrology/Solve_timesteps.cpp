@@ -21,12 +21,11 @@
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     
     // For debug
-    //int j = 2059;  // todo
+    //int j = 6096;  // todo
     //cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"   ";  // todo
-    //cout <<_no3_layer1->val[j]<<"   "<<_no3_chanS->val[j]<<endl; // todocout <<_Q->val[j]<<"   "<<_theta1->val[j]<<"   "<<_theta3->val[j]<<"   "<<_GW->val[j]<<"   "<<_thetaS1->val[j]<<"   "<<_thetaFC1->val[j]<<endl; // todo
     //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
-    //  par._mineralisation_soil->val[j] = 0.0001;
-    //  par._deni_soil_moisture_thres->val[j]= 0.24;
+    //  par._Ks_vadose->val[j] = 0.1;
+    //  par._interfExp->val[j]= 1;
     //}
 
 
@@ -39,7 +38,6 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     Routing(ctrl, par);
 
     Solve_channel(ctrl, par, atm);
-
 
     //Check_mass_balance(ctrl, par, atm);
 

@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #include "Control.h"
 
 int Control::getAsciiHeader(string fname){

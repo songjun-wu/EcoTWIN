@@ -48,13 +48,13 @@ def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
     Vars.extend(['overland_flow_toChn', None, 'interflow_toChn', None, 'GWflow_toChn', 'discharge'])
 
     ylims = [[0, 5],[0, 20],[0, 5], None, None, None]
-    ylims.extend([[0, 0.5],[0, 0.5],[0, 0.5],[0, 1e4], None, None])
-    ylims.extend([[0, 1e2], [0, 1e3], [0, 1e2], [0, 1e2], None, None])
-    ylims.extend([[0, 7e2],[0, 7e2],[0, 7e2],[0, 3e2], None, None])
+    ylims.extend([[0, 0.75],[0, 0.75],[0, 0.75],[0, 1e4], None, None])
+    ylims.extend([[0, 1e2], [0, 1.3e3], [0, 1e2], [0, 1e2], None, None])
+    ylims.extend([[0, 1.3e3],[0, 7e2],[0, 7e2],[0, 3e2], None, None])
     ylims.extend([[0, 5e2],[0, 5e2],[0, 5e2],[0, 5e2], [0, 5e2], [0, 5e2]])
-    ylims.extend([[0, 3e2],[0, 3e2],[0, 5e2],[0, 2e2],[0, 1e2], [0, 2e1]])
+    ylims.extend([[0, 3e2],[0, 5e2],[0, 5e2],[0, 2e2],[0, 1e2], [0, 2e1]])
     ylims.extend([[0, 1e3],[0, 1e3],[0, 2e3],[0, 2e3],[0, 4e3],[0, 4e3]])
-    ylims.extend([[0, 1e3],[0, 1e3],[0, 2e3],[0, 2e3],[0, 2e3], [0,2e3]])
+    ylims.extend([[0, 1e3],[0, 1e3],[0, 2e3],[0, 2e3],[0, 2e3], None])
 
     #ylims = np.full(len(ylims), None)
 
@@ -240,7 +240,7 @@ def plot_tracking(output_path, output_name, spatial_path, if_average=False):
     ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
-    ylims.extend([None, None, None, None, None, [0,20]])
+    ylims.extend([[0,15], [0,15], [0,15], [0,15], None, [0,10]])
     ylims.extend([[0,100], [0,100], [0,100], [0,100], [0,100], [0,1]])
     ylims.extend([None, None, None, None, None, None])
 

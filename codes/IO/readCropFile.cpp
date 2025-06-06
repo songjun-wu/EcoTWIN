@@ -15,10 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
 #include "Basin.h"
 
 int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){

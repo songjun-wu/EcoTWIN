@@ -11,7 +11,7 @@
 
 * Evapotranspiration.cpp
   * Created  on: 30.02.2025
-  * Modified on: 27.05.2025
+  * Modified on: 06.06.2025
 ***************************************************************/
 
 
@@ -40,6 +40,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
     double ST1, ST2, ST3;
     double FC1, FC2, FC3;
     double WP1, WP2, WP3;
+    double ET_weight;
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
@@ -53,6 +54,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
         depth1 = _depth1->val[j];
         depth2 = _depth2->val[j];
         depth3 = par._depth3->val[j]; // The lower boundary is included for calibration
+        ET_weight = par._ET_reduction->val[j];  // ET reduction
 
         // Stages and fluxes
         PE = _PE->val[j]; // Remaining potential evaporation;
@@ -73,7 +75,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
 
         // For layer 1
         // Soil evaporation
-        Esoil = min(PE*min(theta1/FC1, 1.0), ST1);
+        Esoil = min(PE*min(theta1/FC1 * ET_weight, 1.0), ST1);
         ST1 -= Esoil;
         // Transpiration
         if (theta1 > FC1){
@@ -84,7 +86,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
             froot_coeff_corrcted = _froot_layer1->val[j] * (theta1 - WP1) / (FC1 - WP1);      
         }
         froot_coeff_corrcted = min(froot_coeff_corrcted, 1.0);
-        Tr1 = min(PT*froot_coeff_corrcted, ST1);
+        Tr1 = min(PT*froot_coeff_corrcted * ET_weight, ST1);
         ST1 -= Tr1;
         PT -= Tr1;
 
@@ -98,7 +100,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
             froot_coeff_corrcted = _froot_layer2->val[j] * (theta2 - WP2) / (FC2 - WP2);      
         }
         froot_coeff_corrcted = min(froot_coeff_corrcted, 1.0);
-        Tr2 = min(PT*froot_coeff_corrcted, ST2);
+        Tr2 = min(PT*froot_coeff_corrcted * ET_weight, ST2);
         ST2 -= Tr2;
         PT -= Tr2;
 
@@ -113,7 +115,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
             froot_coeff_corrcted = _froot_layer3->val[j] * (theta3 - WP3) / (FC3 - WP3);      
         }
         froot_coeff_corrcted = min(froot_coeff_corrcted, 1.0);
-        Tr3 = min(PT*froot_coeff_corrcted, ST3);
+        Tr3 = min(PT*froot_coeff_corrcted * ET_weight, ST3);
         ST3 -= Tr3;
         PT -= Tr3;
 

@@ -15,12 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
-
-
 #include "Param.h"
 
 Param::Param(Control &ctrl){
@@ -52,9 +46,6 @@ Param::Param(Control &ctrl){
     _deg_day_max = new svector(_sortedGrid.size);
     _deg_day_increase = new svector(_sortedGrid.size);
   }
-  if (ctrl.opt_evap == 1){
-    _froot_coeff = new svector(_sortedGrid.size);
-  }
   if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2 or ctrl.opt_pedotransf == 3){
     _ref_thetaS = new svector(_sortedGrid.size);
     _PTF_VG_clay = new svector(_sortedGrid.size);
@@ -78,6 +69,10 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_percolation == 2){
     _percExp = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_evap == 1){
+    _froot_coeff = new svector(_sortedGrid.size);
+    _ET_reduction = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_init_GW == 1){
     _init_GW = new svector(_sortedGrid.size);

@@ -15,12 +15,6 @@
 ***************************************************************/
 
 
-
-
-
-
-
-
 #include "Param.h"
 
 int Param::Parameterisation(Control &ctrl){
@@ -112,17 +106,6 @@ int Param::Parameterisation(Control &ctrl){
       if (deg_day_increase[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _deg_day_increase->val[j] += param_category->val[k][j] * deg_day_increase[k];
-     }}}
-
-  }
-
-  if (ctrl.opt_evap == 1){
-  
-  _froot_coeff->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (froot_coeff[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _froot_coeff->val[j] += param_category->val[k][j] * froot_coeff[k];
      }}}
 
   }
@@ -241,6 +224,24 @@ int Param::Parameterisation(Control &ctrl){
       if (percExp[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _percExp->val[j] += param_category->val[k][j] * percExp[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_evap == 1){
+  
+  _froot_coeff->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (froot_coeff[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _froot_coeff->val[j] += param_category->val[k][j] * froot_coeff[k];
+     }}}
+  
+  _ET_reduction->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (ET_reduction[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _ET_reduction->val[j] += param_category->val[k][j] * ET_reduction[k];
      }}}
 
   }

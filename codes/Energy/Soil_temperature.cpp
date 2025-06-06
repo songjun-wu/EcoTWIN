@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #include "Basin.h"
 
 // Estimation of soil temperature from air temperature and LAI

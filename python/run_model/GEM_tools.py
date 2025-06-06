@@ -3,6 +3,15 @@ import shutil
 import numpy as np
 import subprocess
 
+
+def create_asc(data, asc, ref_asc):
+    with open(ref_asc) as f:
+        header = f.readlines()[:6]
+    with open(asc, 'w') as f:
+        f.writelines(header)
+    with open(asc, 'a') as f:
+        np.savetxt(f, data)
+
 def checkTaskStatus(mode):
     task = subprocess.Popen("squeue -u wusongj", shell=True, stdout=subprocess.PIPE)
     task_return = [a.decode() for a in task.stdout.readlines()]

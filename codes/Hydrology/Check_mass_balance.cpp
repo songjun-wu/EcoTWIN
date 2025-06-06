@@ -15,8 +15,6 @@
 ***************************************************************/
 
 
-
-
 #include "Basin.h"
 
 int Basin::Check_mass_balance(Control &ctrl, Param &par, Atmosphere &atm) {
