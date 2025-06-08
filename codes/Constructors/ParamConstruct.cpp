@@ -53,7 +53,6 @@ Param::Param(Control &ctrl){
     _PTF_Ks_const = new svector(_sortedGrid.size);
     _PTF_Ks_sand = new svector(_sortedGrid.size);
     _PTF_Ks_clay = new svector(_sortedGrid.size);
-    _PTF_Ks_slope = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_fieldcapacity == 1){
     _SWP = new svector(_sortedGrid.size);

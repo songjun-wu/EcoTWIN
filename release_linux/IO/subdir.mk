@@ -4,8 +4,8 @@
 
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
-../codes/IO/IO_function.cpp \
 ../codes/IO/report.cpp \
+../codes/IO/IO_function.cpp \
 ../codes/IO/readConfigFile.cpp \
 ../codes/IO/readCropFile.cpp \
 ../codes/IO/readParamFile.cpp \
@@ -13,8 +13,8 @@ CPP_SRCS += \
 
 
 OBJS += \
-./IO/IO_function.o \
 ./IO/report.o \
+./IO/IO_function.o \
 ./IO/readConfigFile.o \
 ./IO/readCropFile.o \
 ./IO/readParamFile.o \
@@ -22,8 +22,8 @@ OBJS += \
 
 
 CPP_DEPS += \
-./IO/IO_function.d \
 ./IO/report.d \
+./IO/IO_function.d \
 ./IO/readConfigFile.d \
 ./IO/readCropFile.d \
 ./IO/readParamFile.d \

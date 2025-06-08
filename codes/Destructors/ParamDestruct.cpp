@@ -43,7 +43,6 @@ int Param::dtor(Control &ctrl){
     if(_PTF_Ks_const) delete _PTF_Ks_const;
     if(_PTF_Ks_sand) delete _PTF_Ks_sand;
     if(_PTF_Ks_clay) delete _PTF_Ks_clay;
-    if(_PTF_Ks_slope) delete _PTF_Ks_slope;
   }
   if (ctrl.opt_fieldcapacity == 1){
     if(_SWP) delete _SWP;

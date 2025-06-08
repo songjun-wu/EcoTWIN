@@ -47,6 +47,9 @@ int Basin::dtor(Control &ctrl){
   if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2){
     if(_silt1) delete _silt1;
   }
+  if (ctrl.opt_nitrogen_sim == 1){
+    if(_no3_rain) delete _no3_rain;
+  }
   if (ctrl.opt_fert_input == 1){
     if(_N_fertilization) delete _N_fertilization;
   }

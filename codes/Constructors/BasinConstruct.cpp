@@ -53,6 +53,9 @@
   if (ctrl.opt_pedotransf == 1 or ctrl.opt_pedotransf == 2){
     _silt1 = new svector(ctrl.path_BasinFolder + ctrl.fn__silt1, _rowNum, _colNum, _sortedGrid);
   }
+  if (ctrl.opt_nitrogen_sim == 1){
+    _no3_rain = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_rain, _rowNum, _colNum, _sortedGrid);
+  }
   if (ctrl.opt_fert_input == 1){
     _N_fertilization = new svector(ctrl.path_BasinFolder + ctrl.fn__N_fertilization, _rowNum, _colNum, _sortedGrid);
   }

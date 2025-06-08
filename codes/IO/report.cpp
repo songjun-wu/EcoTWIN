@@ -182,7 +182,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__degrad_soil==2) _degrad_soil_acc->plus(*Bsn._degrad_soil);
   if (ctrl.report__deni_river==2) _deni_river_acc->plus(*Bsn._deni_river);
   /* end of Update maps */
-  
+ 
   return EXIT_SUCCESS;
 }
 

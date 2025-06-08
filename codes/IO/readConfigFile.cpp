@@ -100,6 +100,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__bulkdensity1, "bulk_density1", lines);
   readInto(fn__bulkdensity2, "bulk_density2", lines);
   readInto(fn__bulkdensity3, "bulk_density3", lines);
+  readInto(fn__no3_rain, "no3_rain", lines);
   readInto(fn__N_fertilization, "N_fertilization", lines);
   readInto(fn__fdir, "flow_direction", lines);
   readInto(fn__Gauge_to_Report, "Gauge_mask", lines);
@@ -186,7 +187,6 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__PTF_Ks_const, "PTF_Db", lines);
   readInto(fn__PTF_Ks_sand, "PTF_sand", lines);
   readInto(fn__PTF_Ks_clay, "PTF_clay", lines);
-  readInto(fn__PTF_Ks_slope, "PTF_Ks_slope", lines);
   readInto(fn__SWP, "SWP", lines);
   readInto(fn__KvKh, "KvKh", lines);
   readInto(fn__psiAE, "psiAE", lines);

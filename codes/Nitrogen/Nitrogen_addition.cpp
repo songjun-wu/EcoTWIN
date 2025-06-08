@@ -65,8 +65,7 @@ int Basin::Sort_nitrogen_addition(Control &ctrl, Param &par){
                     }
                 }
 
-                
-                
+                                
                 // Manure application to IN and fastN pools
                 if (ctrl.opt_fert_input==1 and is_crop[idx] == 1){}  // Fert and mannure imported from map, assigned to zero here
 
@@ -130,7 +129,7 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
         for (int i = 0; i < num_landuse; i++) {
             idx = landuse_idx[i];
             p_cell = par.param_category->val[idx][j];
-
+            
             if (p_cell > 0){
                 // IN and fastN
                 if (ctrl.opt_fert_input==1 and is_crop[idx] == 1){  // Fertilizer is determined by raster inputs
@@ -143,6 +142,8 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
                     fertN_add_layer1_fastN += _fertN_add_layer1_fastN[i][day_of_year-1] * p_cell;
                     fertN_add_layer2_IN += _fertN_add_layer2_IN[i][day_of_year-1] * p_cell;
                     fertN_add_layer2_fastN += _fertN_add_layer2_fastN[i][day_of_year-1] * p_cell;
+                
+                
                 // humusN
                 resN_add_layer1_fastN += _resN_add_layer1_fastN[i][day_of_year-1] * p_cell;
                 resN_add_layer1_humusN += _resN_add_layer1_humusN[i][day_of_year-1] * p_cell;
@@ -152,7 +153,7 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
             }
         }
 
-        
+       
         // Nitrogen addition to layer 1
         if (ST1 > 0){
             _no3_layer1->val[j] = (ST1 * _no3_layer1->val[j] + fertN_add_layer1_IN) / ST1;

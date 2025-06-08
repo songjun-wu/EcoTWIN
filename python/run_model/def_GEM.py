@@ -48,19 +48,19 @@ class Info:
     # Crop, pasture, grass, forest, sparse/bare soil, urban
     nadd = {}
     nadd['is_crop'] = {'value':[1, 0, 0, 0, 0, 0]}
-    nadd['fert_add'] = {'value':[12, 0.5, 0, 0, 0, 0]}
+    nadd['fert_add'] = {'value':[12, 0, 0, 0, 0, 0]}
     nadd['fert_day'] = {'value':[87, 87, 87, 87, 87, 87]}
     nadd['fert_down'] = {'value':[0.4, 0.4, 0.4, 0.4, 0.4, 0.4]}
     nadd['fert_period'] = {'value':[30, 30, 30, 30, 30, 30]}
     nadd['fert_IN'] = {'value':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7]}
 
-    nadd['manure_add'] = {'value':[0, 2, 0, 0, 0, 2]}
+    nadd['manure_add'] = {'value':[0, 0, 0, 0, 0, 0]}
     nadd['manure_day'] = {'value':[110, 110, 110, 110, 110, 110]}
     nadd['manure_down'] = {'value':[0.4, 0.3, 0.3, 0.3, 0.3, 0.3]}
     nadd['manure_period'] = {'value':[30, 30, 30, 30, 30, 30]}
     nadd['manure_IN'] = {'value':[0.5, 0.5, 0.5, 0.5, 0.5, 0.5]}
 
-    nadd['residue_add'] = {'value':[2, 2, 1, 1, 0, 0]}
+    nadd['residue_add'] = {'value':[1, 1, 1, 1, 0, 0]}
     nadd['residue_day'] = {'value':[242, 260, 260, 290, 290, 290]}
     nadd['residue_down'] = {'value':[0.3, 0.3, 0.3, 0.3, 0.3, 0.3]}
     nadd['residue_period'] = {'value':[30, 30, 30, 30, 30, 30]}
@@ -98,7 +98,7 @@ class Cali:
 
 class Output:
     # WOS-ID of each catchment
-    Catchment_ID    = ['6_001', '291110_001', '566445_001', '442364_001', '1034751_001', '291111_001', '83811_001', '831616_001', '129489_001', '4_001', '566445_002', '566445_003']
+    Catchment_ID    = ['6_001', '291110_001', '566445_001', '442364_001', '1034872_001', '1034754_001', '291111_001', '83811_001', '831616_001', '129489_001', '566445_002', '566445_003', '4_001']
     N_catchments    = len(Catchment_ID)     # Number of catchments
     
 
@@ -108,7 +108,6 @@ class Output:
     sim_no3_idx     = []
     N_sites         = [] # Number of sites in each catchment
 
-    
 
     catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
     discharge_gauge_list = pickle.load(open(Path.data_path+'catchment_info/cali/discharge_gauge_list','rb'))
@@ -159,7 +158,7 @@ class Param:
     ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # PET to PE and PT
 
     # Snow
-    ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2], 'fix_value':None}
+    ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-5], 'max':[2], 'fix_value':None}
     ref['deg_day_min']   =      {'type':'global',   'log':0, 'file':'deg_day_min',   'min':[0], 'max':[2e-3], 'fix_value':None}
     ref['deg_day_max']   =      {'type':'global',   'log':0, 'file':'deg_day_max',   'min':[2e-3], 'max':[1e-2], 'fix_value':None}
     ref['deg_day_increase']   = {'type':'global',   'log':0, 'file':'deg_day_increase',   'min':[0.1], 'max':[0.9], 'fix_value':None}
@@ -230,7 +229,7 @@ class Param:
     ref['denitrification_river']   = {'type':'landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None}
     #ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':None}
     #ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}
-    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4,1e-4,1e-4,1e-5,1e-5,1e-5], 'max':[1.1, 1.1, 0.5, 0.3, 0.1, 0.01], 'fix_value':None}
+    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4,1e-4,1e-4,1e-5,1e-5,1e-5], 'max':[0.8, 0.8, 0.5, 0.3, 0.1, 0.01], 'fix_value':None}
     ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-6]*Info.N_landuse, 'max':[1e-4,1e-4,1e-4,1e-4,1e-5,1e-5], 'fix_value':None}
     ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-5]*Info.N_landuse, 'max':[0.4,0.4,0.3,0.2,0.1,0.01], 'fix_value':None}
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None}

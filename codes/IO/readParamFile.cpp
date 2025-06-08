@@ -47,7 +47,6 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(PTF_Ks_const, "PTF_Ks_const", lines);
   readIntoParam(PTF_Ks_sand, "PTF_Ks_sand", lines);
   readIntoParam(PTF_Ks_clay, "PTF_Ks_clay", lines);
-  readIntoParam(PTF_Ks_slope, "PTF_Ks_slope", lines);
   readIntoParam(SWP, "SWP", lines);
   readIntoParam(KvKh, "KvKh", lines);
   readIntoParam(psiAE, "psiAE", lines);

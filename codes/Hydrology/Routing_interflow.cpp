@@ -69,7 +69,7 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
                 interflow_toChn = min(interflow_toChn, interflow_to_go);  // Cannot exceed water to go
                 interflow_to_go -=  interflow_toChn;    // [m]
             }
-
+            
             // Interflow to downstream grid
             // Linear approximation of Kinematic wave approach
             // Assumption: Q = head * alpha

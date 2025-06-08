@@ -153,13 +153,6 @@ int Param::Parameterisation(Control &ctrl){
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         _PTF_Ks_clay->val[j] += param_category->val[k][j] * PTF_Ks_clay[k];
      }}}
-  
-  _PTF_Ks_slope->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (PTF_Ks_slope[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _PTF_Ks_slope->val[j] += param_category->val[k][j] * PTF_Ks_slope[k];
-     }}}
 
   }
 

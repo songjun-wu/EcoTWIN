@@ -99,7 +99,7 @@ elif mode == 'DREAM_cali':
 elif mode == 'cali_sep':
     import pickle
     #catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
-    catchment_to_cali = ['6_001', '291110_001', '566445_001', '442364_001', '1034751_001', '291111_001', '83811_001', '831616_001', '129489_001', '566445_002', '566445_003', '4_001']
+    catchment_to_cali = ['6_001', '291110_001', '566445_001', '4_001', '1034872_001', '1034754_001', '291111_001', '83811_001', '831616_001', '129489_001', '566445_002', '442364_001', '566445_003']
 
 
     for catchment in catchment_to_cali:
@@ -251,28 +251,35 @@ elif mode == 'test':
     os.system('python3 develop.py')  # todo
 
     # set the env
-    #GEM_tools.sort_directory(mode, Path, Cali, Output)
-    #GEM_tools.set_env(mode, Path, Cali, Output)
-    #GEM_tools.set_config(mode, Path, Cali, Output)
+    GEM_tools.sort_directory(mode, Path, Cali, Output)
+    GEM_tools.set_env(mode, Path, Cali, Output)
+    GEM_tools.set_config(mode, Path, Cali, Output)
     
     counter = 0
 
 
-    for gg in [1]:  # Catchment ID
+    for gg in [0]:  # Catchment ID
 
         catchment_ID = Output.Catchment_ID[gg]
         print(catchment_ID)
         run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
         # Which parameter set to use?
         param_N = GEM_tools.get_param_N(Info, Param)
-        likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain.bin')
-        best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
-        param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain.bin').reshape(-1, param_N)[best_likeli_loc,:]
+
+        
+        try:
+            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain.bin')
+            best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
+            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain.bin').reshape(-1, param_N)[best_likeli_loc,:]
+        except Exception as e:
+            print(e)
+            continue
         
    
         #param = np.full(300, 0.5)  # todo
         GEM_tools.gen_param(run_path, Info, Param, param)
         GEM_tools.gen_no3_addtion(run_path, Info)
+        
         
         # Model run
         os.chdir(run_path)           
@@ -504,7 +511,7 @@ elif mode == 'check_sep':
 
 
 elif mode == 'bbb':
-    catchment_ID = '291110_001'
+    catchment_ID = '6_001'
     ref_asc = '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/dem.asc'
     output_path = '/data/scratch/wusongj/paper4/test/'+catchment_ID+'/run/outputs/'
     fnames = [f for f in os.listdir(output_path) if '_map.bin' in f]
@@ -515,7 +522,7 @@ elif mode == 'bbb':
         data = np.fromfile(output_path + fname).reshape(-1, ref_data.shape[0], ref_data.shape[1])
         data = np.mean(data[2:,:,:], axis=0)
         print(output_path+fname.split('.')[0]+'.asc')
-        #GEM_tools.create_asc(data, output_path+fname.split('.')[0]+'.asc', ref_asc)
+        GEM_tools.create_asc(data, output_path+fname.split('.')[0]+'.asc', ref_asc)
 
 
 

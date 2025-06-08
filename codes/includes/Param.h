@@ -58,7 +58,6 @@ class Param {
   vector<double> PTF_Ks_const;
   vector<double> PTF_Ks_sand;
   vector<double> PTF_Ks_clay;
-  vector<double> PTF_Ks_slope;
   vector<double> SWP;
   vector<double> KvKh;
   vector<double> psiAE;
@@ -106,7 +105,6 @@ class Param {
   svector *_PTF_Ks_const;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
   svector *_PTF_Ks_sand;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
   svector *_PTF_Ks_clay;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
-  svector *_PTF_Ks_slope;  // Slope correction for estimation of saturated hydraulic conductivity [-]
   svector *_SWP;  // Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1
   svector *_KvKh;  // The coefficient to transform Ks to effective Ks [-], only needed when opt_infil = 1
   svector *_psiAE;  // The wetting front potential for Green-Ampt model [mm], only needed when opt_infil = 1

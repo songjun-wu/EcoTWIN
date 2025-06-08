@@ -127,7 +127,7 @@ class Output:
     
 
     # Weight for each site in each catchment; shape = (N_catchments, N_sites)
-    overall_weights_for_each_var = [0.5, 0.2, 0.3]
+    overall_weights_for_each_var = [0.45, 0.2, 0.35]
     sim_q_weights   = []
     sim_iso_weights = []
     sim_no3_weights = []
@@ -161,7 +161,7 @@ class Param:
     ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # PET to PE and PT
 
     # Snow
-    ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-2], 'max':[2], 'fix_value':None}
+    ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-5], 'max':[2], 'fix_value':None}
     ref['deg_day_min']   =      {'type':'global',   'log':0, 'file':'deg_day_min',   'min':[0], 'max':[2e-3], 'fix_value':None}
     ref['deg_day_max']   =      {'type':'global',   'log':0, 'file':'deg_day_max',   'min':[2e-3], 'max':[1e-2], 'fix_value':None}
     ref['deg_day_increase']   = {'type':'global',   'log':0, 'file':'deg_day_increase',   'min':[0.1], 'max':[0.9], 'fix_value':None}
@@ -232,7 +232,7 @@ class Param:
     ref['denitrification_river']   = {'type':'landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None}
     #ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':None}
     #ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}
-    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4,1e-4,1e-4,1e-5,1e-5,1e-5], 'max':[1.1, 1.1, 0.5, 0.3, 0.1, 0.01], 'fix_value':None}
+    ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4,1e-4,1e-4,1e-5,1e-5,1e-5], 'max':[0.8, 0.8, 0.5, 0.3, 0.1, 0.01], 'fix_value':None}
     ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-6]*Info.N_landuse, 'max':[1e-4,1e-4,1e-4,1e-4,1e-5,1e-5], 'fix_value':None}
     ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-5]*Info.N_landuse, 'max':[0.4,0.4,0.3,0.2,0.1,0.01], 'fix_value':None}
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None}

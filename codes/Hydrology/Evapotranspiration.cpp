@@ -35,7 +35,6 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
     double froot_coeff_corrcted;
     double depth1, depth2, depth3;
     double PE, PT;
-    double Throughfall;
     double theta1, theta2, theta3;
     double ST1, ST2, ST3;
     double FC1, FC2, FC3;
@@ -59,7 +58,6 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
         // Stages and fluxes
         PE = _PE->val[j]; // Remaining potential evaporation;
         PT = _PT->val[j]; // Remaining potential transpiration;
-        Throughfall = _Th->val[j]; // Throughfall [m]
         theta1 = _theta1->val[j]; // Soil moisture in layer 1 [-]
         theta2 = _theta2->val[j]; // Soil moisture in layer 2 [-]
         theta3 = _theta3->val[j]; // Soil moisture in layer 3 [-]

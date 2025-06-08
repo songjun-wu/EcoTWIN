@@ -70,6 +70,7 @@ GIS = [ #['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial'
         ['_bulkdensity2', [Opt.cond['depthprofile_3']], 'Bulk density of layer 2 [g/cm3], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'bulk_density2', 0],
         ['_bulkdensity3', [Opt.cond['depthprofile_3']], 'Bulk density of layer 3 [g/cm3], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'bulk_density3', 0],
 
+        ['_no3_rain', [Opt.cond['nitrogen_sim_1']], 'The nitrate concentration in rain water [mgN/L], only needed when nitrogen_sim_1 = 1', 'grid', 'spatial', 'no3_rain', 0],
         ['_N_fertilization', [Opt.cond['fert_input_1']], 'The fertilization amount [g/m2], only needed when opt_fert_input = 1', 'grid', 'spatial', 'N_fertilization', 0],
         ]
 
@@ -219,7 +220,7 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_PTF_Ks_const', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Db', 0],
               ['_PTF_Ks_sand', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_sand', 0],
               ['_PTF_Ks_clay', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_clay', 0],
-              ['_PTF_Ks_slope', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Slope correction for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Ks_slope', 0],
+              #['_PTF_Ks_slope', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Slope correction for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Ks_slope', 0],
 
               ['_SWP', [Opt.cond['fc_1']], 'Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1', 'grid', 'spatial_param', 'SWP', 0],
               # Infiltration

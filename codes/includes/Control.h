@@ -187,6 +187,7 @@ struct Control{
   string fn__bulkdensity1;  // Bulk density of layer 1 [g/cm3]
   string fn__bulkdensity2;  // Bulk density of layer 2 [g/cm3], only needed when opt_depthprofile = 3
   string fn__bulkdensity3;  // Bulk density of layer 3 [g/cm3], only needed when opt_depthprofile = 3
+  string fn__no3_rain;  // The nitrate concentration in rain water [mgN/L], only needed when nitrogen_sim_1 = 1
   string fn__N_fertilization;  // The fertilization amount [g/m2], only needed when opt_fert_input = 1
   /* end of GIS */ 
   string fn__fdir;  // flow direction [d8 method]
@@ -274,7 +275,6 @@ struct Control{
   string fn__PTF_Ks_const;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
   string fn__PTF_Ks_sand;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
   string fn__PTF_Ks_clay;  // Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]
-  string fn__PTF_Ks_slope;  // Slope correction for estimation of saturated hydraulic conductivity [-]
   string fn__SWP;  // Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1
   string fn__KvKh;  // The coefficient to transform Ks to effective Ks [-], only needed when opt_infil = 1
   string fn__psiAE;  // The wetting front potential for Green-Ampt model [mm], only needed when opt_infil = 1

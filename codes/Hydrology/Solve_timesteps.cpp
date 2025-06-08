@@ -21,13 +21,10 @@
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     
     // For debug
-    //int j = 6096;  // todo
+    //int j = 5003;  // todo
     //cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"   ";  // todo
     //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
-    //  par._Ks_vadose->val[j] = 0.1;
-    //  par._interfExp->val[j]= 1;
     //}
-
 
     Solve_canopy(ctrl, par, atm);
 
@@ -38,12 +35,14 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     Routing(ctrl, par);
 
     Solve_channel(ctrl, par, atm);
-
+    
     //Check_mass_balance(ctrl, par, atm);
 
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1 or ctrl.opt_nitrogen_sim==1){
         Store_states();  // Store all water storages for mixing
     }
+
+    
 
     return EXIT_SUCCESS;
 }

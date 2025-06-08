@@ -47,9 +47,11 @@ int Basin::Interception_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
         // Update canopy storage
         _I->val[j] += (precip - Th);
-        _Th->val[j] = Th;   
+        _Th->val[j] = Th; 
+        
     }
 
+    
     
     return EXIT_SUCCESS;
 }
