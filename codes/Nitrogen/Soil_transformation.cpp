@@ -19,7 +19,7 @@
 
 int Basin::Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
-    double Ts, fct_Ts, fct_theta, fct_conc;
+    double Ts, fct_Ts, fct_theta;
     double theta1, theta2, theta3;
     double minerl1, minerl2, minerl3;
     double degrad1, degrad2, degrad3;

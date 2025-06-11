@@ -34,7 +34,7 @@ Param::Param(Control &ctrl){
   /* Parameters */
   _depth3 = new svector(_sortedGrid.size);
   _alpha = new svector(_sortedGrid.size);
-  _wRecharge = new svector(_sortedGrid.size);
+  _perc_vadose_coeff = new svector(_sortedGrid.size);
   _nearsurface_mixing = new svector(_sortedGrid.size);
   _ratio_to_interf = new svector(_sortedGrid.size);
   if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){

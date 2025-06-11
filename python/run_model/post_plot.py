@@ -37,20 +37,20 @@ def IMGtoVideo(save_path, plot_path, output_name):
     cv2.destroyAllWindows()
 
 
-def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
+def plot_hydrology(output_path, output_name, spatial_path, catchment_ID=None, if_average=False):
     Vars = ['canopy_storage', 'snow_depth','pond', None, None, None]
-    Vars.extend(['SMC_layer1', 'SMC_layer2', 'SMC_layer3', 'groundwater_storage', None, None])
+    Vars.extend(['SMC_layer1', 'SMC_layer2', 'SMC_layer3', 'vadose', 'groundwater_storage', None])
     Vars.extend(['snowmelt', 'throufall', 'irrigation_from_GW', 'irrigation_from_river', None, None])
-    Vars.extend(['infiltration', 'perc_layer1', 'perc_layer2', 'perc_layer3', None, None])
-    Vars.extend(['rinfiltration', 'rperc_layer1', 'rperc_layer2', 'rperc_layer3', 'rrperc_layer3', None])
+    Vars.extend(['infiltration', 'perc_layer1', 'perc_layer2', 'perc_layer3', 'perc_vadose', None])
+    Vars.extend(['rinfiltration', 'rperc_layer1', 'rperc_layer2', 'rperc_layer3', None, None])
     Vars.extend(['canopy_evap', 'soil_evap', 'transp_layer1', 'transp_layer2', 'transp_layer3', 'channel_evaporation'])
     Vars.extend(['overland_flow_input','overland_flow_output','interflow_input', 'interflow_output','GWflow_input', 'GWflow_output'])
     Vars.extend(['overland_flow_toChn', None, 'interflow_toChn', None, 'GWflow_toChn', 'discharge'])
 
     ylims = [[0, 5],[0, 20],[0, 5], None, None, None]
-    ylims.extend([[0, 0.75],[0, 0.75],[0, 0.75],[0, 1e4], None, None])
+    ylims.extend([[0, 0.75],[0, 0.75],[0, 0.75],[0,2e2],[0, 1e4], None])
     ylims.extend([[0, 1e2], [0, 1.3e3], [0, 1e2], [0, 1e2], None, None])
-    ylims.extend([[0, 1.3e3],[0, 7e2],[0, 7e2],[0, 3e2], None, None])
+    ylims.extend([[0, 1.3e3],[0, 7e2],[0, 7e2],[0, 3e2], [0,3e2], None])
     ylims.extend([[0, 5e2],[0, 5e2],[0, 5e2],[0, 5e2], [0, 5e2], [0, 5e2]])
     ylims.extend([[0, 3e2],[0, 5e2],[0, 5e2],[0, 2e2],[0, 1e2], [0, 2e1]])
     ylims.extend([[0, 1e3],[0, 1e3],[0, 2e3],[0, 2e3],[0, 4e3],[0, 4e3]])
@@ -76,7 +76,6 @@ def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
     fig, ax = plt.subplots(nrow, ncol, figsize=(30,18), dpi=300)
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.98, top=0.99, wspace=0.2, hspace=0.2)
 
-    site_idx = 1  # Demnitz Millcreek 26
     valid_subplots = 0
     if not if_average:
         for i in range(len(Vars)):
@@ -84,9 +83,9 @@ def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
                 ax[i//ncol, i%ncol].axis('off')
             else:
                 try:
-
-                    data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
-                    
+                    catchment_idx = np.where(Output.catchment_to_cali==catchment_ID)[0][0]
+                    data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites[catchment_idx]).T)[:, Info.spin_up:]
+                    site_idx = Output.sim['no3']['sim_idx'][catchment_idx][-1]
                     data = data[site_idx,:]
                     data[data==nodata] = np.nan
                     data *= weights[i]
@@ -108,7 +107,7 @@ def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
                     valid_subplots += 1
                 except Exception as e:
                     ax[i//ncol, i%ncol].axis('off')
-        if valid_subplots>0:
+        if valid_subplots>2:
             fig.savefig(output_path + output_name + '_Ts.png')
         #print('Plot saved at :  ', output_path + '999_All_in_Ts.png')
 
@@ -225,13 +224,13 @@ def plot_hydrology(output_path, output_name, spatial_path, if_average=False):
                 #print('Plot saved at :  ', output_path + output_name +'_Ts.png')
 
 
-def plot_tracking(output_path, output_name, spatial_path, if_average=False):
+def plot_tracking(output_path, output_name, spatial_path, catchment_ID=None, if_average=False):
     Vars = ['d18o_canopy_storage', 'd18o_snow_depth','d18o_pond', None, None, None]
-    Vars.extend(['d18o_SMC_layer1', 'd18o_SMC_layer2', 'd18o_SMC_layer3', 'd18o_groundwater_storage', None, 'd18o_chanS'])
+    Vars.extend(['d18o_SMC_layer1', 'd18o_SMC_layer2', 'd18o_SMC_layer3', 'd18o_vadose', 'd18o_groundwater_storage', 'd18o_chanS'])
     Vars.extend(['age_canopy_storage', 'age_snow_depth','age_pond', None, None, None])
     Vars.extend(['age_SMC_layer1', 'age_SMC_layer2', 'age_SMC_layer3', 'age_groundwater_storage', None, 'age_chanS'])
     Vars.extend(['no3_canopy_storage', 'no3_snow_depth','no3_pond', None, None, None])
-    Vars.extend(['no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'no3_groundwater_storage', None, 'no3_chanS'])
+    Vars.extend(['no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'no3_vadose', 'no3_groundwater_storage', 'no3_chanS'])
     Vars.extend(['nitrogen_addition', 'plant_uptake', 'deni_soil', 'minerl_soil', 'degrad_soil','deni_river'])
     Vars.extend([None, None, None, None, None, None])
 
@@ -240,7 +239,7 @@ def plot_tracking(output_path, output_name, spatial_path, if_average=False):
     ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
-    ylims.extend([[0,15], [0,15], [0,15], [0,15], None, [0,10]])
+    ylims.extend([[0,15], [0,15], [0,15], [0,15], [0,15], [0,10]])
     ylims.extend([[0,100], [0,100], [0,100], [0,100], [0,100], [0,1]])
     ylims.extend([None, None, None, None, None, None])
 
@@ -270,9 +269,11 @@ def plot_tracking(output_path, output_name, spatial_path, if_average=False):
         else:
             try:
 
-                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites).T)[Output.sim['q']['sim_idx'],:][:, Info.spin_up:]
-
+                catchment_idx = np.where(Output.catchment_to_cali==catchment_ID)[0][0]
+                data = (np.fromfile(output_path + Vars[i] + '_TS.bin').reshape(-1, Output.N_sites[catchment_idx]).T)[:, Info.spin_up:]
+                site_idx = Output.sim['no3']['sim_idx'][catchment_idx][-1]
                 data = data[site_idx,:]
+                
                 data[data==nodata] = np.nan
                 data *= weights[i]
 
@@ -292,8 +293,8 @@ def plot_tracking(output_path, output_name, spatial_path, if_average=False):
                 valid_subplots += 1
             except Exception as e:
                 ax[i//ncol, i%ncol].axis('off')
-    if valid_subplots > 0:
-        fig.savefig(output_path + output_name + '_map.png')
+    if valid_subplots > 2:
+        fig.savefig(output_path + output_name + '_Ts.png')
     #print('Plot saved at :  ', output_path + '999_All_in_Ts_tracking.png')
 
 
@@ -339,7 +340,7 @@ def plot_tracking(output_path, output_name, spatial_path, if_average=False):
                 ax[i//ncol, i%ncol].axis('off')
             
     if valid_subplots > 0:
-        fig.savefig(output_path + output_name + '_Ts.png')
+        fig.savefig(output_path + output_name + '_map.png')
 
 def plot_performance(sim_path, obs_path, output_path, catchment_ID, chainID):
 

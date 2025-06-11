@@ -18,8 +18,6 @@
 #include "Basin.h"
 
 int Basin::Sort_root_fraction(Control &ctrl, Param &par) {
-    double dt = ctrl.Simul_tstep;
-    double travel_time_ratio = 0;   
 
     // Calculate the root fraction
     if (par.sort_root_fraction_OK == 0){

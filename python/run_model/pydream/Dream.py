@@ -240,7 +240,7 @@ class Dream:
                     #Dream_shared_vars.win_history.Unlock(0)
                     Dream_shared_vars.win_history.Fence()
                      
-                    Dream_shared_vars.history_seeded = self.comm.bcast(Dream_shared_vars.history_seeded, root=0)
+                    
                     #Dream_shared_vars.history = self.comm.bcast(Dream_shared_vars.history, root=0)
                     
                     if self.start_random:
@@ -250,9 +250,14 @@ class Dream:
                     if self.save_history:
                         self.len_history = len(np.frombuffer(Dream_shared_vars.history))
 
-                    self.crossover_burnin = self.comm.bcast(self.crossover_burnin, root=0)
+                    
 
                     print('DREAM initialisation done for chain '+str(self.chainID)+' model '+str(self.modelID), flush=True)
+
+                
+                Dream_shared_vars.history_seeded = self.comm.bcast(Dream_shared_vars.history_seeded, root=0)
+                self.crossover_burnin = self.comm.bcast(self.crossover_burnin, root=0)
+
                     
             except Exception as e:
                 print('Error found in the DREAM initialisation :   ', e, flush=True)
@@ -290,7 +295,6 @@ class Dream:
 
             # Broadcast proposed params to all model ranks in this chain
             q0 = self.subcomm.bcast(q0, root=0)
-
             if self.last_logp == None:
                 self.last_prior, self.last_like = self.logp(q0, self.chainID, self.modelID, total_iterations)
                 # Gather results from model ranks

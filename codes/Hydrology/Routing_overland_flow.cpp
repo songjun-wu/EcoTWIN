@@ -40,14 +40,14 @@ int Basin::Routing_ovf_1(Control &ctrl, Param &par){
             }
 
             if (ctrl.opt_percolation == 1){ // Repercolation and Re GW recharge
-                Repercolation_1(ctrl, par, j, _theta1->val[j], _theta2->val[j], _theta3->val[j],  _rPerc1->val[j], _rPerc2->val[j]);
-                ReGWrecharge_1(ctrl, par, j, _theta3->val[j], _GW->val[j], _rPerc3->val[j]);
+                Repercolation_1(ctrl, par, j, _theta1->val[j], _theta2->val[j], _theta3->val[j], _vadose->val[j],  _rPerc1->val[j], _rPerc2->val[j], _rPerc3->val[j]);
+                ReGWrecharge_1(ctrl, par, j, _vadose->val[j], _GW->val[j], _Perc_vadose->val[j]);
             } else if (ctrl.opt_percolation == 2){
-                Repercolation_2(ctrl, par, j, _theta1->val[j], _theta2->val[j], _theta3->val[j],  _rPerc1->val[j], _rPerc2->val[j]);
-                ReGWrecharge_2(ctrl, par, j, _theta3->val[j], _GW->val[j], _rPerc3->val[j]);
+                Repercolation_2(ctrl, par, j, _theta1->val[j], _theta2->val[j], _theta3->val[j], _vadose->val[j],  _rPerc1->val[j], _rPerc2->val[j], _rPerc3->val[j]);
+                ReGWrecharge_2(ctrl, par, j, _vadose->val[j], _GW->val[j], _Perc_vadose->val[j]);
             } else if (ctrl.opt_percolation == 3){
-                Repercolation_3(ctrl, par, j, _theta1->val[j], _theta2->val[j], _theta3->val[j],  _rPerc1->val[j], _rPerc2->val[j]);
-                ReGWrecharge_2(ctrl, par, j, _theta3->val[j], _GW->val[j], _rPerc3->val[j]);  // todo
+                Repercolation_3(ctrl, par, j, _theta1->val[j], _theta2->val[j], _theta3->val[j], _vadose->val[j],  _rPerc1->val[j], _rPerc2->val[j], _rPerc3->val[j]);
+                ReGWrecharge_2(ctrl, par, j, _vadose->val[j], _GW->val[j], _Perc_vadose->val[j]);  // todo
             }
 
         }

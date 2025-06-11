@@ -80,7 +80,8 @@ Storages = [['_I',       [Opt.cond['none']], 'Canopy storage [m]', 'grid', 'spat
             ['_pond',    [Opt.cond['none']], 'Ponding water in [m]', 'grid', 'spatial', 'pond', 1],
             ['_theta1',  [Opt.cond['none']], 'Soil moisture in layer 1 [decimal]', 'grid', 'spatial', 'SMC_layer1', 1],
             ['_theta2',  [Opt.cond['none']], 'Soil moisture in layer 2 [decimal]', 'grid', 'spatial', 'SMC_layer2', 1],
-            ['_theta3',  [Opt.cond['none']], 'Soil moisture in layer 3 [decimal]', 'grid', 'spatial', 'SMC_layer3', 1], 
+            ['_theta3',  [Opt.cond['none']], 'Soil moisture in layer 3 [decimal]', 'grid', 'spatial', 'SMC_layer3', 1],
+            ['_vadose',  [Opt.cond['none']], 'Vadose storage (unsaturated zone) [m]', 'grid', 'spatial', 'vadose', 1],
             ['_GW',  [Opt.cond['none']], 'Groundwater storage [m]', 'grid', 'spatial', 'groundwater_storage', 1],
             ['_chanS',  [Opt.cond['none']], 'Channel storage [m3]', 'grid', 'new', None, 0],
 
@@ -90,6 +91,7 @@ Storages = [['_I',       [Opt.cond['none']], 'Canopy storage [m]', 'grid', 'spat
             ['_theta1_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Soil moisture in layer 1 [decimal]', 'grid', 'new', None, 0],
             ['_theta2_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Soil moisture in layer 2 [decimal]', 'grid', 'new', None, 0],
             ['_theta3_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Soil moisture in layer 3 [decimal]', 'grid', 'new', None, 0], 
+            ['_vadose_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Vadose storage [m]', 'grid', 'new', None, 0],
             ['_GW_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Groundwater storage [m]', 'grid', 'new', None, 0],
             ['_chanS_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Channel storage [m3]', 'grid', 'new', None, 0],                      
             ]
@@ -99,21 +101,21 @@ Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy stor
             ['_d18o_pond',    [Opt.cond['tracking_isotope_1']], 'd18o in Ponding water in [‰]', 'grid', 'spatial', 'd18o_pond', 1],
             ['_d18o_layer1',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 1 [‰]', 'grid', 'spatial', 'd18o_SMC_layer1', 1],
             ['_d18o_layer2',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 2 [‰]', 'grid', 'spatial', 'd18o_SMC_layer2', 1],
-            ['_d18o_layer3',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 3 [‰]', 'grid', 'spatial', 'd18o_SMC_layer3', 1], 
+            ['_d18o_layer3',  [Opt.cond['tracking_isotope_1']], 'd18o in Soil moisture in layer 3 [‰]', 'grid', 'spatial', 'd18o_SMC_layer3', 1],
+            ['_d18o_vadose',  [Opt.cond['tracking_isotope_1']], 'd18o in vadose storage [‰]', 'grid', 'spatial', 'd18o_vadose', 1], 
             ['_d18o_GW',  [Opt.cond['tracking_isotope_1']], 'd18o in Groundwater storage [‰]', 'grid', 'spatial', 'd18o_groundwater_storage', 1],
             ['_d18o_chanS',  [Opt.cond['tracking_isotope_1']], 'd18o in Channel storage [‰]', 'grid', 'spatial', 'd18o_chanS', 1],
 
-            ['_age_I',   [Opt.cond['tracking_age_1']], 'age in Canopy storage [days]', 'grid', 'spatial', 'age_canopy_storage', 1],
-            ['_age_snow',    [Opt.cond['tracking_age_1']], 'age in Snow depth in [days]', 'grid', 'spatial', 'age_snow_depth', 1],
-            ['_age_pond',    [Opt.cond['tracking_age_1']], 'age in Ponding water in [days]', 'grid', 'spatial', 'age_pond', 1],
-            ['_age_layer1',  [Opt.cond['tracking_age_1']], 'age in Soil moisture in layer 1 [days]', 'grid', 'spatial', 'age_SMC_layer1', 1],
-            ['_age_layer2',  [Opt.cond['tracking_age_1']], 'age in Soil moisture in layer 2 [days]', 'grid', 'spatial', 'age_SMC_layer2', 1],
-            ['_age_layer3',  [Opt.cond['tracking_age_1']], 'age in Soil moisture in layer 3 [days]', 'grid', 'spatial', 'age_SMC_layer3', 1], 
-            ['_age_GW',  [Opt.cond['tracking_age_1']], 'age in Groundwater storage [days]', 'grid', 'spatial', 'age_groundwater_storage', 1],
-            ['_age_chanS',  [Opt.cond['tracking_age_1']], 'age in Channel storage [days]', 'grid', 'spatial', 'age_chanS', 1],
-
-
-            
+            ['_age_I',   [Opt.cond['tracking_age_1']], 'Age in Canopy storage [days]', 'grid', 'spatial', 'age_canopy_storage', 1],
+            ['_age_snow',    [Opt.cond['tracking_age_1']], 'Age in Snow depth in [days]', 'grid', 'spatial', 'age_snow_depth', 1],
+            ['_age_pond',    [Opt.cond['tracking_age_1']], 'Age in Ponding water in [days]', 'grid', 'spatial', 'age_pond', 1],
+            ['_age_layer1',  [Opt.cond['tracking_age_1']], 'Age in Soil moisture in layer 1 [days]', 'grid', 'spatial', 'age_SMC_layer1', 1],
+            ['_age_layer2',  [Opt.cond['tracking_age_1']], 'Age in Soil moisture in layer 2 [days]', 'grid', 'spatial', 'age_SMC_layer2', 1],
+            ['_age_layer3',  [Opt.cond['tracking_age_1']], 'Age in Soil moisture in layer 3 [days]', 'grid', 'spatial', 'age_SMC_layer3', 1],
+            ['_age_vadose',  [Opt.cond['tracking_isotope_1']], 'Age in vadose storage [‰]', 'grid', 'spatial', 'age_vadose', 1],  
+            ['_age_GW',  [Opt.cond['tracking_age_1']], 'Age in Groundwater storage [days]', 'grid', 'spatial', 'age_groundwater_storage', 1],
+            ['_age_chanS',  [Opt.cond['tracking_age_1']], 'Age in Channel storage [days]', 'grid', 'spatial', 'age_chanS', 1],
+           
             ]
 
 
@@ -124,13 +126,15 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_infilt', [Opt.cond['none']], 'Inflitration into soil layer 1 [m]', 'grid', 'new', 'infiltration', 1],
             ['_Perc1', [Opt.cond['none']], 'Percolation into layer 2 [m]', 'grid', 'new', 'perc_layer1', 1],
             ['_Perc2', [Opt.cond['none']], 'Percolation into layer 3 [m]', 'grid', 'new', 'perc_layer2', 1],
-            ['_Perc3', [Opt.cond['none']], 'Percolation into gw reservior [m]', 'grid', 'new', 'perc_layer3', 1],
+            ['_Perc3', [Opt.cond['none']], 'Percolation into vadose storage [m]', 'grid', 'new', 'perc_layer3', 1],
+            ['_Perc_vadose', [Opt.cond['none']], 'Percolation from vadose storage into gw reservior [m]', 'grid', 'new', 'perc_vadose', 1],
 
             ['_rinfilt', [Opt.cond['reinfil_1']], 'Reinflitration into soil layer 1 [m]', 'grid', 'new', 'rinfiltration', 1],
             ['_rPerc1', [Opt.cond['reinfil_1']], 'Repercolation into layer 2 due to overland flow routing [m]', 'grid', 'new', 'rperc_layer1', 1],
             ['_rPerc2', [Opt.cond['reinfil_1']], 'Repercolation into layer 3 due to overland flow routing [m]', 'grid', 'new', 'rperc_layer2', 1],
             ['_rPerc3', [Opt.cond['reinfil_1']], 'Repercolation into gw reservior due to overland flow routing [m]', 'grid', 'new', 'rperc_layer3', 1],
-            ['_rrPerc3', [Opt.cond['none']], 'Repercolation into gw reservior due to interflow routing [m]', 'grid', 'new', 'rrperc_layer3', 1],
+            ['_rPerc_vadose', [Opt.cond['none']], 'Repercolation from vadose storage into gw reservior [m]', 'grid', 'new', 'rperc_vadose', 1],
+            #['_rrPerc3', [Opt.cond['none']], 'Repercolation into gw reservior due to interflow routing [m]', 'grid', 'new', 'rrperc_layer3', 1],  # to be delete!
 
 
             
@@ -239,7 +243,7 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
 
               # GW
               ['_init_GW', [Opt.cond['init_GW_1']], 'The initial GW storage [m], only needed when opt_init_GW = 1', 'grid', 'spatial_param', 'init_GW', 0],
-              ['_wRecharge', [Opt.cond['none']], 'The weighting parameter for GW recharge [-], only needed when opt_recharge = 1', 'grid', 'spatial_param', 'wRecharge', 0],
+              ['_perc_vadose_coeff', [Opt.cond['none']], 'The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2', 'grid', 'spatial_param', 'perc_vadose_coeff', 0],
 
               
               # Routing
@@ -286,7 +290,8 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
             ['_no3_pond',    [Opt.cond['nitrogen_sim_1']], 'no3 in Ponding water in [mgN/L]', 'grid', 'spatial', 'no3_pond', 1],
             ['_no3_layer1',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 1 [mgN/L]', 'grid', 'spatial', 'no3_SMC_layer1', 1],
             ['_no3_layer2',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 2 [mgN/L]', 'grid', 'spatial', 'no3_SMC_layer2', 1],
-            ['_no3_layer3',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 3 [mgN/L]', 'grid', 'spatial', 'no3_SMC_layer3', 1], 
+            ['_no3_layer3',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 3 [mgN/L]', 'grid', 'spatial', 'no3_SMC_layer3', 1],
+            ['_no3_vadose',  [Opt.cond['nitrogen_sim_1']], 'no3 in vadose storage [mgN/L]', 'grid', 'spatial', 'no3_vadose', 1],
             ['_no3_GW',  [Opt.cond['nitrogen_sim_1']], 'no3 in Groundwater storage [mgN/L]', 'grid', 'spatial', 'no3_groundwater_storage', 1],
             ['_no3_chanS',  [Opt.cond['nitrogen_sim_1']], 'no3 in Channel storage [mgN/L]', 'grid', 'spatial', 'no3_chanS', 1],
 

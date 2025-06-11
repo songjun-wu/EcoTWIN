@@ -76,6 +76,7 @@ class Basin {
   svector *_theta1;  // Soil moisture in layer 1 [decimal]
   svector *_theta2;  // Soil moisture in layer 2 [decimal]
   svector *_theta3;  // Soil moisture in layer 3 [decimal]
+  svector *_vadose;  // Vadose storage (unsaturated zone) [m]
   svector *_GW;  // Groundwater storage [m]
   svector *_chanS;  // Channel storage [m3]
   svector *_I_old;  // Canopy storage [m]
@@ -84,6 +85,7 @@ class Basin {
   svector *_theta1_old;  // Soil moisture in layer 1 [decimal]
   svector *_theta2_old;  // Soil moisture in layer 2 [decimal]
   svector *_theta3_old;  // Soil moisture in layer 3 [decimal]
+  svector *_vadose_old;  // Vadose storage [m]
   svector *_GW_old;  // Groundwater storage [m]
   svector *_chanS_old;  // Channel storage [m3]
   /* end of Storages */ 
@@ -95,8 +97,9 @@ class Basin {
   svector *_infilt;  // Inflitration into soil layer 1 [m]
   svector *_Perc1;  // Percolation into layer 2 [m]
   svector *_Perc2;  // Percolation into layer 3 [m]
-  svector *_Perc3;  // Percolation into gw reservior [m]
-  svector *_rrPerc3;  // Repercolation into gw reservior due to interflow routing [m]
+  svector *_Perc3;  // Percolation into vadose storage [m]
+  svector *_Perc_vadose;  // Percolation from vadose storage into gw reservior [m]
+  svector *_rPerc_vadose;  // Repercolation from vadose storage into gw reservior [m]
   svector *_Ei;  // Canopy evaporation [m]
   svector *_Es;  // Soil evaporation [m]
   svector *_Tr;  // Total transpiration in three layers [m]
@@ -158,16 +161,18 @@ class Basin {
   svector *_d18o_layer1;  // d18o in Soil moisture in layer 1 [‰]
   svector *_d18o_layer2;  // d18o in Soil moisture in layer 2 [‰]
   svector *_d18o_layer3;  // d18o in Soil moisture in layer 3 [‰]
+  svector *_d18o_vadose;  // d18o in vadose storage [‰]
   svector *_d18o_GW;  // d18o in Groundwater storage [‰]
   svector *_d18o_chanS;  // d18o in Channel storage [‰]
-  svector *_age_I;  // age in Canopy storage [days]
-  svector *_age_snow;  // age in Snow depth in [days]
-  svector *_age_pond;  // age in Ponding water in [days]
-  svector *_age_layer1;  // age in Soil moisture in layer 1 [days]
-  svector *_age_layer2;  // age in Soil moisture in layer 2 [days]
-  svector *_age_layer3;  // age in Soil moisture in layer 3 [days]
-  svector *_age_GW;  // age in Groundwater storage [days]
-  svector *_age_chanS;  // age in Channel storage [days]
+  svector *_age_vadose;  // Age in vadose storage [‰]
+  svector *_age_I;  // Age in Canopy storage [days]
+  svector *_age_snow;  // Age in Snow depth in [days]
+  svector *_age_pond;  // Age in Ponding water in [days]
+  svector *_age_layer1;  // Age in Soil moisture in layer 1 [days]
+  svector *_age_layer2;  // Age in Soil moisture in layer 2 [days]
+  svector *_age_layer3;  // Age in Soil moisture in layer 3 [days]
+  svector *_age_GW;  // Age in Groundwater storage [days]
+  svector *_age_chanS;  // Age in Channel storage [days]
   /* end of Tracking */
 
   // Nitrogen addition and plant uptakes are identical for each year, so they only need to be sorted once (or once after change in parameterisation)
@@ -221,6 +226,7 @@ class Basin {
   svector *_no3_layer1;  // no3 in Soil moisture in layer 1 [mgN/L]
   svector *_no3_layer2;  // no3 in Soil moisture in layer 2 [mgN/L]
   svector *_no3_layer3;  // no3 in Soil moisture in layer 3 [mgN/L]
+  svector *_no3_vadose;  // no3 in vadose storage [mgN/L]
   svector *_no3_GW;  // no3 in Groundwater storage [mgN/L]
   svector *_no3_chanS;  // no3 in Channel storage [mgN/L]
   svector *_nitrogen_add;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
@@ -301,14 +307,14 @@ class Basin {
   int Percolation_1(Control &ctrl, Param &par);
   int Percolation_2(Control &ctrl, Param &par);
   int Percolation_3(Control &ctrl, Param &par);
-  int Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2);
-  int Repercolation_2(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2);
-  int Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2);
+  int Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3, double &db_vadose, double &db_rPerc1, double &db_rPerc2, double &db_rPerc3);
+  int Repercolation_2(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3, double &db_vadose, double &db_rPerc1, double &db_rPerc2, double &db_rPerc3);
+  int Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3, double &db_vadose, double &db_rPerc1, double &db_rPerc2, double &db_rPerc3);
 
   int GWrecharge_1(Control &ctrl, Param &par);
   int GWrecharge_2(Control &ctrl, Param &par);
-  int ReGWrecharge_1(Control &ctrl, Param &par, int j, double &db_theta3, double &db_GW, double &db_rPerc3);
-  int ReGWrecharge_2(Control &ctrl, Param &par, int j, double &db_theta3, double &db_GW, double &db_rPerc3);
+  int ReGWrecharge_1(Control &ctrl, Param &par, int j, double &db_vadose, double &db_GW, double &db_rPerc_vadose);
+  int ReGWrecharge_2(Control &ctrl, Param &par, int j, double &db_vadose, double &db_GW, double &db_rPerc_vadose);
 
 
   /* Soil profiles */
@@ -323,9 +329,11 @@ class Basin {
 
   /* Isotopic and Age tracking */
   int Mixing_full(double storage, double &cstorage, double input, double cinput);  // Full mixing within the timestep
+  int Mixing_baseflow(double storage, double &coutput, double input, double cinput, double output);   // Baseflow mixing for GW storage
   int Mixing_canopy_tracking(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing and fractionaton
   int Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Canopy snowpack and throughfall
   int Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and fractionaton
+  int Mixing_vadose_tracking(Control &ctrl, Atmosphere &atm);  // Vadose storage mixing
   int Mixing_GW_tracking(Control &ctrl, Atmosphere &atm);  // GW storage mixing
   int Mixing_routing_tracking(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
   int Mixing_channel_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Fractionation due to channel evaporation
@@ -345,6 +353,7 @@ class Basin {
   int Solve_canopy_nitrogen(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing with precipitation and erichment due to evaporation
   int Solve_surface_nitrogen(Control &ctrl, Atmosphere &atm, Param &par);  // Ponding water mixing with snow melt
   int Solve_soil_profile_nitrogen(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and transformation
+  int Solve_vadose_nitrogen(Control &ctrl, Atmosphere &atm);  // vadose storage mixing
   int Solve_GW_nitrogen(Control &ctrl, Atmosphere &atm);  // GW storage mixing
   int Solve_routing_nitrogen(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
   int Solve_channel_nitrogen(Control &ctrl, Atmosphere &atm, Param &par);  // Enrichment due to channel evaporation, and instream nutrient transformation

@@ -57,7 +57,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(froot_coeff, "froot_coeff", lines);
   readIntoParam(ET_reduction, "ET_reduction", lines);
   readIntoParam(init_GW, "init_GW", lines);
-  readIntoParam(wRecharge, "wRecharge", lines);
+  readIntoParam(perc_vadose_coeff, "perc_vadose_coeff", lines);
   readIntoParam(pOvf_toChn, "pOvf_toChn", lines);
   readIntoParam(Ks_vadose, "Ks_vadose", lines);
   readIntoParam(Ks_GW, "Ks_GW", lines);

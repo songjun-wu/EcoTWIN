@@ -49,19 +49,19 @@ class Info:
     # Crop, pasture, grass, forest, sparse/bare soil, urban
     nadd = {}
     nadd['is_crop'] = {'value':[1, 0, 0, 0, 0, 0]}
-    nadd['fert_add'] = {'value':[12, 0.5, 0, 0, 0, 0]}
+    nadd['fert_add'] = {'value':[12, 0, 0, 0, 0, 0]}
     nadd['fert_day'] = {'value':[87, 87, 87, 87, 87, 87]}
     nadd['fert_down'] = {'value':[0.4, 0.4, 0.4, 0.4, 0.4, 0.4]}
     nadd['fert_period'] = {'value':[30, 30, 30, 30, 30, 30]}
     nadd['fert_IN'] = {'value':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7]}
 
-    nadd['manure_add'] = {'value':[0, 2, 0, 0, 0, 2]}
+    nadd['manure_add'] = {'value':[0, 0, 0, 0, 0, 0]}
     nadd['manure_day'] = {'value':[110, 110, 110, 110, 110, 110]}
     nadd['manure_down'] = {'value':[0.4, 0.3, 0.3, 0.3, 0.3, 0.3]}
     nadd['manure_period'] = {'value':[30, 30, 30, 30, 30, 30]}
     nadd['manure_IN'] = {'value':[0.5, 0.5, 0.5, 0.5, 0.5, 0.5]}
 
-    nadd['residue_add'] = {'value':[2, 2, 1, 1, 0, 0]}
+    nadd['residue_add'] = {'value':[1, 1, 1, 1, 0, 0]}
     nadd['residue_day'] = {'value':[242, 260, 260, 290, 290, 290]}
     nadd['residue_down'] = {'value':[0.3, 0.3, 0.3, 0.3, 0.3, 0.3]}
     nadd['residue_period'] = {'value':[30, 30, 30, 30, 30, 30]}
@@ -154,11 +154,11 @@ class Param:
     ### === parameters to calibrate === 
     ref = {}    
 
-    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
+    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[2]*Info.N_soil, 'fix_value':None}
 
     # === PET seperation and Max canopy storage === 
     ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse, 'fix_value':None}  # Maximum canopy storage = alpha * PET
-    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # PET to PE and PT
+    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # the negative the more transpiration
 
     # Snow
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-5], 'max':[2], 'fix_value':None}
@@ -175,7 +175,7 @@ class Param:
     ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-3,-1.2,-1.2,-1.2,-1.2,-1.2], 'max':[-2.9,-0.2,-0.2,-0.2,-0.2,-0.2], 'fix_value':None}
     ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[0.006]*Info.N_soil, 'max':[0.026]*Info.N_soil, 'fix_value':None}
     ref['PTF_Ks_clay']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_clay',   'min':[0.003]*Info.N_soil, 'max':[0.013]*Info.N_soil, 'fix_value':None}
-    ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[1,15,15,15,15,15], 'fix_value':None}  # Low infiltration capacity in urban areas
+    #ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[1,15,15,15,15,15], 'fix_value':None}  # Low infiltration capacity in urban areas
     
     # Field capacity
     #ref['SWP']   = {'type':'soil',   'log':0, 'file':'SWP',   'min':[10]*Info.N_soil, 'max':[33]*Info.N_soil, 'fix_value':[33]*Info.N_soil}
@@ -200,8 +200,8 @@ class Param:
     ref['ET_reduction'] = {'type':'global',   'log':0, 'file':'ET_reduction',   'min':[0.6], 'max':[1.0], 'fix_value':None} # ET correction weights
 
     # === GW recharge === 
-    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
-    ref['init_GW'] = {'type':'landuse',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None} # Initial GW storage in m
+    ref['perc_vadose_coeff']   = {'type':'soil',   'log':1, 'file':'perc_vadose_coeff',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Coefficient parameter for GW recharge
+    ref['init_GW'] = {'type':'landuse',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_landuse, 'max':[50]*Info.N_landuse, 'fix_value':None} # Initial GW storage in m
 
     # === Routing === 
     ref['pOvf_toChn']   = {'type':'landuse',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)

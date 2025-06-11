@@ -74,6 +74,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_routQ, "opt_routQ", lines);
   readInto(opt_chanE, "opt_chanE", lines);
   readInto(opt_init_d18o, "opt_init_d18o", lines);
+  readInto(opt_baseflow_mixing, "opt_baseflow_mixing", lines);
   readInto(opt_init_no3, "opt_init_no3", lines);
   readInto(opt_fert_input, "opt_fert_input", lines);
   /* end of Options */
@@ -129,6 +130,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__theta1, "SMC_layer1", lines);
   readInto(fn__theta2, "SMC_layer2", lines);
   readInto(fn__theta3, "SMC_layer3", lines);
+  readInto(fn__vadose, "vadose", lines);
   readInto(fn__GW, "groundwater_storage", lines);
   /* end of Storages */ 
 
@@ -143,6 +145,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__d18o_layer1, "d18o_SMC_layer1", lines);
   readInto(fn__d18o_layer2, "d18o_SMC_layer2", lines);
   readInto(fn__d18o_layer3, "d18o_SMC_layer3", lines);
+  readInto(fn__d18o_vadose, "d18o_vadose", lines);
   readInto(fn__d18o_GW, "d18o_groundwater_storage", lines);
   readInto(fn__d18o_chanS, "d18o_chanS", lines);
   readInto(fn__age_I, "age_canopy_storage", lines);
@@ -151,6 +154,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__age_layer1, "age_SMC_layer1", lines);
   readInto(fn__age_layer2, "age_SMC_layer2", lines);
   readInto(fn__age_layer3, "age_SMC_layer3", lines);
+  readInto(fn__age_vadose, "age_vadose", lines);
   readInto(fn__age_GW, "age_groundwater_storage", lines);
   readInto(fn__age_chanS, "age_chanS", lines);
   /* end of Tracking */
@@ -162,6 +166,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__no3_layer1, "no3_SMC_layer1", lines);
   readInto(fn__no3_layer2, "no3_SMC_layer2", lines);
   readInto(fn__no3_layer3, "no3_SMC_layer3", lines);
+  readInto(fn__no3_vadose, "no3_vadose", lines);
   readInto(fn__no3_GW, "no3_groundwater_storage", lines);
   readInto(fn__no3_chanS, "no3_chanS", lines);
   readInto(fn__humusN1, "humusN1", lines);
@@ -197,7 +202,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__froot_coeff, "froot_coeff", lines);
   readInto(fn__ET_reduction, "ET_reduction", lines);
   readInto(fn__init_GW, "init_GW", lines);
-  readInto(fn__wRecharge, "wRecharge", lines);
+  readInto(fn__perc_vadose_coeff, "perc_vadose_coeff", lines);
   readInto(fn__pOvf_toChn, "pOvf_toChn", lines);
   readInto(fn__Ks_vadose, "Ks_vadose", lines);
   readInto(fn__Ks_GW, "Ks_GW", lines);
@@ -228,6 +233,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__theta1, "report_SMC_layer1", lines);
   readInto(report__theta2, "report_SMC_layer2", lines);
   readInto(report__theta3, "report_SMC_layer3", lines);
+  readInto(report__vadose, "report_vadose", lines);
   readInto(report__GW, "report_groundwater_storage", lines);
   readInto(report__Th, "report_throufall", lines);
   readInto(report__snowmelt, "report_snowmelt", lines);
@@ -235,11 +241,12 @@ int Control::ReadConfigFile(string fname){
   readInto(report__Perc1, "report_perc_layer1", lines);
   readInto(report__Perc2, "report_perc_layer2", lines);
   readInto(report__Perc3, "report_perc_layer3", lines);
+  readInto(report__Perc_vadose, "report_perc_vadose", lines);
   readInto(report__rinfilt, "report_rinfiltration", lines);
   readInto(report__rPerc1, "report_rperc_layer1", lines);
   readInto(report__rPerc2, "report_rperc_layer2", lines);
   readInto(report__rPerc3, "report_rperc_layer3", lines);
-  readInto(report__rrPerc3, "report_rrperc_layer3", lines);
+  readInto(report__rPerc_vadose, "report_rperc_vadose", lines);
   readInto(report__Ei, "report_canopy_evap", lines);
   readInto(report__Es, "report_soil_evap", lines);
   readInto(report__Tr, "report_transp", lines);
@@ -265,6 +272,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__d18o_layer1, "report_d18o_SMC_layer1", lines);
   readInto(report__d18o_layer2, "report_d18o_SMC_layer2", lines);
   readInto(report__d18o_layer3, "report_d18o_SMC_layer3", lines);
+  readInto(report__d18o_vadose, "report_d18o_vadose", lines);
   readInto(report__d18o_GW, "report_d18o_groundwater_storage", lines);
   readInto(report__d18o_chanS, "report_d18o_chanS", lines);
   readInto(report__age_I, "report_age_canopy_storage", lines);
@@ -273,6 +281,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__age_layer1, "report_age_SMC_layer1", lines);
   readInto(report__age_layer2, "report_age_SMC_layer2", lines);
   readInto(report__age_layer3, "report_age_SMC_layer3", lines);
+  readInto(report__age_vadose, "report_age_vadose", lines);
   readInto(report__age_GW, "report_age_groundwater_storage", lines);
   readInto(report__age_chanS, "report_age_chanS", lines);
   readInto(report__no3_I, "report_no3_canopy_storage", lines);
@@ -281,6 +290,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__no3_layer1, "report_no3_SMC_layer1", lines);
   readInto(report__no3_layer2, "report_no3_SMC_layer2", lines);
   readInto(report__no3_layer3, "report_no3_SMC_layer3", lines);
+  readInto(report__no3_vadose, "report_no3_vadose", lines);
   readInto(report__no3_GW, "report_no3_groundwater_storage", lines);
   readInto(report__no3_chanS, "report_no3_chanS", lines);
   readInto(report__nitrogen_add, "report_nitrogen_addition", lines);

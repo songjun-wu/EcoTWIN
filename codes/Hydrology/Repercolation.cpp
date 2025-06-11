@@ -19,12 +19,13 @@
 
 
 
-int Basin::Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2) {
+int Basin::Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_vadose, double &db_rPerc1, double &db_rPerc2, double &db_rPerc3) {
 
 
-    double theta1 = _theta1->val[j];
-    double theta2 = _theta2->val[j];
-    double theta3 = _theta3->val[j];
+    double theta1 = db_theta1;
+    double theta2 = db_theta2;
+    double theta3 = db_theta3;
+    double vadose = db_vadose;
 
     double depth1 = _depth1->val[j];
     double depth2 = _depth2->val[j];
@@ -32,13 +33,13 @@ int Basin::Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, 
 
     double perc1 = 0;
     double perc2 = 0;
+    double perc3 = 0;
 
     // Percolation from layer 1
     if (theta1 > _thetaFC1->val[j]) {
         perc1 = (theta1 - _thetaFC1->val[j]) * depth1 * _p_perc1->val[j];
         theta1 -= perc1 / depth1;
         theta2 += perc1 / depth2;
-
     }
     
     // Percolation from layer 2
@@ -48,22 +49,30 @@ int Basin::Repercolation_1(Control &ctrl, Param &par, int j, double &db_theta1, 
         theta3 += perc2 / depth3;
     }
 
+    // Percolation from layer 3 to vadose storage
+    if (theta3 > _thetaFC3->val[j]){
+        perc3 = (theta3 - _thetaFC3->val[j]) * depth3 * _p_perc3->val[j];
+        theta3 -= perc3 / depth3;
+        vadose += perc3;
+    }
+
     db_theta1 = theta1;
     db_theta2 = theta2;
     db_theta3 = theta3;
+    db_vadose = vadose;
     db_rPerc1 = perc1;
     db_rPerc2 = perc2;
-
+    db_rPerc3 = perc3;
+    
     return EXIT_SUCCESS;
 }
 
-int Basin::Repercolation_2(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2) {
+int Basin::Repercolation_2(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_vadose, double &db_rPerc1, double &db_rPerc2, double &db_rPerc3) {
 
-    double dt = ctrl.Simul_tstep;
-
-    double theta1 = _theta1->val[j];
-    double theta2 = _theta2->val[j];
-    double theta3 = _theta3->val[j];
+    double theta1 = db_theta1;
+    double theta2 = db_theta2;
+    double theta3 = db_theta3;
+    double vadose = db_vadose;
 
     double thetaS1 = _thetaS1->val[j];
     double thetaS2 = _thetaS2->val[j];
@@ -75,6 +84,7 @@ int Basin::Repercolation_2(Control &ctrl, Param &par, int j, double &db_theta1, 
 
     double perc1 = 0;
     double perc2 = 0;
+    double perc3 = 0;
     double perc_in = 0;
     double delta_theta = 0;
 
@@ -91,43 +101,61 @@ int Basin::Repercolation_2(Control &ctrl, Param &par, int j, double &db_theta1, 
         // if saturation is not met then fill the deficit, otherwise all water pass to next layer
         perc_in = perc1;
         if (theta2 < thetaS2){ 
-            delta_theta = perc_in * (1 - exp(par._percExp->val[j] * log(theta2/thetaS2))) / depth2;
-            if ((theta2 + delta_theta) > thetaS2){
-                theta2 = thetaS2;
-                perc_in -= (thetaS2 - theta2) * depth2;
-            } else{
-                theta2 += delta_theta;
+            delta_theta = perc_in * (1 - exp(par._percExp->val[j] * log(max(theta2/thetaS2, 1e-6)))) / depth2;
+            double available_space = (thetaS2 - theta2) * depth2;
+            if (delta_theta * depth2 > available_space) {
+                delta_theta = available_space / depth2;
+                perc_in -= available_space;
+            } else {
                 perc_in -= delta_theta * depth2;
             }
+            theta2 += delta_theta;
         }
         perc2 = perc_in;  // Percolation to next layer
 
-        // Update soil storage in layer 3
-        // Percolation for layer 3 (groundwater recharge is calculated independently)
-        theta3 += perc_in / depth3;
+        // Percolation from layer 3 to vadose storage
+        // if saturation is not met then fill the deficit, otherwise all water pass to next layer
+        if (theta3 < thetaS3){ 
+            delta_theta = perc_in * (1 - exp(par._percExp->val[j] * log(max(theta3/thetaS3, 1e-6)))) / depth3;
+            double available_space = (thetaS3 - theta3) * depth3;
+            if (delta_theta * depth3 > available_space) {
+                delta_theta = available_space / depth3;
+                perc_in -= available_space;
+            } else {
+                perc_in -= delta_theta * depth3;
+            }
+            theta3 += delta_theta;
+        }
+        perc3 = perc_in;  // Percolation to next layer
+
+        // Water percolates to vadose storage
+        vadose += perc_in;
     }
 
     // Local to global
     db_theta1 = theta1;
     db_theta2 = theta2;
     db_theta3 = theta3;
+    db_vadose = vadose;
     db_rPerc1 = perc1;
     db_rPerc2 = perc2;
+    db_rPerc3 = perc3;
     
     return EXIT_SUCCESS;
 }
 
 
-int Basin::Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_rPerc1, double &db_rPerc2) {
+int Basin::Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, double &db_theta2, double &db_theta3,  double &db_vadose, double &db_rPerc1, double &db_rPerc2, double &db_rPerc3) {
 
 
-    double theta1 = _theta1->val[j];
-    double theta2 = _theta2->val[j];
-    double theta3 = _theta3->val[j];
-
-    double thetaS1 = _thetaS1->val[j];
-    double thetaS2 = _thetaS2->val[j];
-    double thetaS3 = _thetaS3->val[j];
+    double theta1 = db_theta1;
+    double theta2 = db_theta2;
+    double theta3 = db_theta3;
+    double vadose = db_vadose;
+    // All water above field capacity will be routed? Or threshold should be saturated content?
+    double thetaS1 = _thetaFC1->val[j];
+    double thetaS2 = _thetaFC2->val[j];
+    double thetaS3 = _thetaFC3->val[j];
 
     double depth1 = _depth1->val[j];
     double depth2 = _depth2->val[j];
@@ -135,6 +163,7 @@ int Basin::Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, 
 
     double perc1 = 0;
     double perc2 = 0;
+    double perc3 = 0;
 
     // Percolation from layer 1
     // if saturation is not met then fill the deficit, otherwise all water pass to next layer
@@ -149,13 +178,21 @@ int Basin::Repercolation_3(Control &ctrl, Param &par, int j, double &db_theta1, 
         theta2 = thetaS2;
         theta3 += perc2 / depth3;
     }
+
+    if (theta3 > thetaS3){
+        perc3 = (theta3 - thetaS3) * depth3;  // Percolation to vadose storage
+        theta3 = thetaS3;
+        vadose += perc3;
+    }
     
     // Local to global
     db_theta1 = theta1;
     db_theta2 = theta2;
     db_theta3 = theta3;
+    db_vadose = vadose;
     db_rPerc1 = perc1;
     db_rPerc2 = perc2;
+    db_rPerc3 = perc3;
 
     return EXIT_SUCCESS;
 }

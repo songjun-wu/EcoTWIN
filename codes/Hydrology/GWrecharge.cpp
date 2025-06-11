@@ -21,42 +21,44 @@
 
 int Basin::GWrecharge_1(Control &ctrl, Param &par) {
 
-    
+    // Percolation from vadose to GW storage
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        double depth3 = par._depth3->val[j];
-        double theta3 = _theta3->val[j];
-        double perc3 = 0;
+        double vadose = _vadose->val[j];
+        double perc_vadose = 0;
 
-        if (theta3 > _thetaFC3->val[j]){
-            perc3 = (theta3 - _thetaFC3->val[j]) * depth3 * _p_perc3->val[j] * par._wRecharge->val[j];
-            theta3 -= perc3 / depth3;
-            _GW->val[j] += perc3;
-        }         
+        if (vadose > roundoffERR){
+            perc_vadose = vadose * par._perc_vadose_coeff->val[j];
+            vadose -= perc_vadose;
+            _GW->val[j] += perc_vadose;           
+        }
 
-        _theta3->val[j] = theta3;
-        _Perc3->val[j] = perc3;
-    }
-    
+        _vadose->val[j] = vadose;
+        _Perc_vadose->val[j] = perc_vadose;
+
+
+    }  
     return EXIT_SUCCESS;
 }
+
 
 int Basin::GWrecharge_2(Control &ctrl, Param &par) {
 
-    
+    // Percolation from vadose to GW storage
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        double depth3 = par._depth3->val[j];
-        double theta3 = _theta3->val[j];
-        double perc3 = 0;
+        double vadose = _vadose->val[j];
+        double perc_vadose = 0;
 
-        if (theta3 > _thetaFC3->val[j]){
-            perc3 = (theta3 - _thetaFC3->val[j]) * depth3 * par._wRecharge->val[j];
-            theta3 -= perc3 / depth3;
-            _GW->val[j] += perc3;
-        }         
+        if (vadose > roundoffERR){
+            perc_vadose = vadose * par._perc_vadose_coeff->val[j] * (_theta3->val[j] / _thetaS3->val[j]);
+            perc_vadose = min(perc_vadose, vadose);
+            vadose -= perc_vadose;
+            _GW->val[j] += perc_vadose;           
+        }
 
-        _theta3->val[j] = theta3;
-        _Perc3->val[j] = perc3;
+        _vadose->val[j] = vadose;
+        _Perc_vadose->val[j] = perc_vadose;
+
     }
-    
     return EXIT_SUCCESS;
 }
+

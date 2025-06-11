@@ -24,7 +24,7 @@ int Param::dtor(Control &ctrl){
   /* Parameters */
   if(_depth3) delete _depth3;
   if(_alpha) delete _alpha;
-  if(_wRecharge) delete _wRecharge;
+  if(_perc_vadose_coeff) delete _perc_vadose_coeff;
   if(_nearsurface_mixing) delete _nearsurface_mixing;
   if(_ratio_to_interf) delete _ratio_to_interf;
   if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){

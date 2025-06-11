@@ -149,6 +149,10 @@ struct Control{
   // 0: NO
   // 1: YES (the parameter d18o_init_GW needs to be specified)
   int opt_init_d18o;
+  // Whether to use baseflow mixing for GW storage
+  // 0: NO, use full mixing
+  // 1: YES, use baseflow mixing with more damped variation
+  int opt_baseflow_mixing;
   // Whether to adjust the no3 compostion in inital storages
   // 0: NO
   // 1: YES (the parameter no3_init_GW needs to be specified)
@@ -218,6 +222,7 @@ struct Control{
   string fn__theta1;  // Soil moisture in layer 1 [decimal]
   string fn__theta2;  // Soil moisture in layer 2 [decimal]
   string fn__theta3;  // Soil moisture in layer 3 [decimal]
+  string fn__vadose;  // Vadose storage (unsaturated zone) [m]
   string fn__GW;  // Groundwater storage [m]
   /* end of Storages */
   
@@ -232,16 +237,18 @@ struct Control{
   string fn__d18o_layer1;  // d18o in Soil moisture in layer 1 [‰]
   string fn__d18o_layer2;  // d18o in Soil moisture in layer 2 [‰]
   string fn__d18o_layer3;  // d18o in Soil moisture in layer 3 [‰]
+  string fn__d18o_vadose;  // d18o in vadose storage [‰]
   string fn__d18o_GW;  // d18o in Groundwater storage [‰]
   string fn__d18o_chanS;  // d18o in Channel storage [‰]
-  string fn__age_I;  // age in Canopy storage [days]
-  string fn__age_snow;  // age in Snow depth in [days]
-  string fn__age_pond;  // age in Ponding water in [days]
-  string fn__age_layer1;  // age in Soil moisture in layer 1 [days]
-  string fn__age_layer2;  // age in Soil moisture in layer 2 [days]
-  string fn__age_layer3;  // age in Soil moisture in layer 3 [days]
-  string fn__age_GW;  // age in Groundwater storage [days]
-  string fn__age_chanS;  // age in Channel storage [days]
+  string fn__age_I;  // Age in Canopy storage [days]
+  string fn__age_snow;  // Age in Snow depth in [days]
+  string fn__age_pond;  // Age in Ponding water in [days]
+  string fn__age_layer1;  // Age in Soil moisture in layer 1 [days]
+  string fn__age_layer2;  // Age in Soil moisture in layer 2 [days]
+  string fn__age_layer3;  // Age in Soil moisture in layer 3 [days]
+  string fn__age_vadose;  // Age in vadose storage [‰]
+  string fn__age_GW;  // Age in Groundwater storage [days]
+  string fn__age_chanS;  // Age in Channel storage [days]
   /* end of Tracking */
 
   /* Nitrogen */
@@ -251,6 +258,7 @@ struct Control{
   string fn__no3_layer1;  // no3 in Soil moisture in layer 1 [mgN/L]
   string fn__no3_layer2;  // no3 in Soil moisture in layer 2 [mgN/L]
   string fn__no3_layer3;  // no3 in Soil moisture in layer 3 [mgN/L]
+  string fn__no3_vadose;  // no3 in vadose storage [mgN/L]
   string fn__no3_GW;  // no3 in Groundwater storage [mgN/L]
   string fn__no3_chanS;  // no3 in Channel storage [mgN/L]
   string fn__humusN1;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
@@ -285,7 +293,7 @@ struct Control{
   string fn__froot_coeff;  // Root fraction coefficient [-]
   string fn__ET_reduction;  // ET reduction (weight) [-]
   string fn__init_GW;  // The initial GW storage [m], only needed when opt_init_GW = 1
-  string fn__wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
+  string fn__perc_vadose_coeff;  // The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2
   string fn__pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
   string fn__Ks_vadose;  // The reference conductivity of vadose zone for interflow routing [m/s]
   string fn__Ks_GW;  // The reference conductivity of GW zone for interflow routing [m/s]
@@ -316,18 +324,20 @@ struct Control{
   int report__theta1;  // report Soil moisture in layer 1 [decimal]
   int report__theta2;  // report Soil moisture in layer 2 [decimal]
   int report__theta3;  // report Soil moisture in layer 3 [decimal]
+  int report__vadose;  // report Vadose storage (unsaturated zone) [m]
   int report__GW;  // report Groundwater storage [m]
   int report__Th;  // report Throughfall [m]
   int report__snowmelt;  // report Snow melt [m]
   int report__infilt;  // report Inflitration into soil layer 1 [m]
   int report__Perc1;  // report Percolation into layer 2 [m]
   int report__Perc2;  // report Percolation into layer 3 [m]
-  int report__Perc3;  // report Percolation into gw reservior [m]
+  int report__Perc3;  // report Percolation into vadose storage [m]
+  int report__Perc_vadose;  // report Percolation from vadose storage into gw reservior [m]
   int report__rinfilt;  // report Reinflitration into soil layer 1 [m]
   int report__rPerc1;  // report Repercolation into layer 2 due to overland flow routing [m]
   int report__rPerc2;  // report Repercolation into layer 3 due to overland flow routing [m]
   int report__rPerc3;  // report Repercolation into gw reservior due to overland flow routing [m]
-  int report__rrPerc3;  // report Repercolation into gw reservior due to interflow routing [m]
+  int report__rPerc_vadose;  // report Repercolation from vadose storage into gw reservior [m]
   int report__Ei;  // report Canopy evaporation [m]
   int report__Es;  // report Soil evaporation [m]
   int report__Tr;  // report Total transpiration in three layers [m]
@@ -353,22 +363,25 @@ struct Control{
   int report__d18o_layer1;  // report d18o in Soil moisture in layer 1 [‰]
   int report__d18o_layer2;  // report d18o in Soil moisture in layer 2 [‰]
   int report__d18o_layer3;  // report d18o in Soil moisture in layer 3 [‰]
+  int report__d18o_vadose;  // report d18o in vadose storage [‰]
   int report__d18o_GW;  // report d18o in Groundwater storage [‰]
   int report__d18o_chanS;  // report d18o in Channel storage [‰]
-  int report__age_I;  // report age in Canopy storage [days]
-  int report__age_snow;  // report age in Snow depth in [days]
-  int report__age_pond;  // report age in Ponding water in [days]
-  int report__age_layer1;  // report age in Soil moisture in layer 1 [days]
-  int report__age_layer2;  // report age in Soil moisture in layer 2 [days]
-  int report__age_layer3;  // report age in Soil moisture in layer 3 [days]
-  int report__age_GW;  // report age in Groundwater storage [days]
-  int report__age_chanS;  // report age in Channel storage [days]
+  int report__age_I;  // report Age in Canopy storage [days]
+  int report__age_snow;  // report Age in Snow depth in [days]
+  int report__age_pond;  // report Age in Ponding water in [days]
+  int report__age_layer1;  // report Age in Soil moisture in layer 1 [days]
+  int report__age_layer2;  // report Age in Soil moisture in layer 2 [days]
+  int report__age_layer3;  // report Age in Soil moisture in layer 3 [days]
+  int report__age_vadose;  // report Age in vadose storage [‰]
+  int report__age_GW;  // report Age in Groundwater storage [days]
+  int report__age_chanS;  // report Age in Channel storage [days]
   int report__no3_I;  // report no3 in Canopy storage [mgN/L]
   int report__no3_snow;  // report no3 in Snow depth in [mgN/L]
   int report__no3_pond;  // report no3 in Ponding water in [mgN/L]
   int report__no3_layer1;  // report no3 in Soil moisture in layer 1 [mgN/L]
   int report__no3_layer2;  // report no3 in Soil moisture in layer 2 [mgN/L]
   int report__no3_layer3;  // report no3 in Soil moisture in layer 3 [mgN/L]
+  int report__no3_vadose;  // report no3 in vadose storage [mgN/L]
   int report__no3_GW;  // report no3 in Groundwater storage [mgN/L]
   int report__no3_chanS;  // report no3 in Channel storage [mgN/L]
   int report__nitrogen_add;  // report Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]

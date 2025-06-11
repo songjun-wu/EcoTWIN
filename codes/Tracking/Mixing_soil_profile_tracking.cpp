@@ -47,9 +47,6 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     (_theta3)          
     + repercolation2
     - repercolation3
-    + interflow_in      
-    - interflow_out
-    - interflow_toChn   
     */
 
     double pond_old, ST1, pond_to_mix, d18o_pond_old, d18o_layer1_old, age_pond_old, age_layer1_old;

@@ -67,6 +67,7 @@ int Basin::dtor(Control &ctrl){
   if(_theta1) delete _theta1;
   if(_theta2) delete _theta2;
   if(_theta3) delete _theta3;
+  if(_vadose) delete _vadose;
   if(_GW) delete _GW;
   if(_chanS) delete _chanS;
   if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
@@ -76,6 +77,7 @@ int Basin::dtor(Control &ctrl){
     if(_theta1_old) delete _theta1_old;
     if(_theta2_old) delete _theta2_old;
     if(_theta3_old) delete _theta3_old;
+    if(_vadose_old) delete _vadose_old;
     if(_GW_old) delete _GW_old;
     if(_chanS_old) delete _chanS_old;
   }
@@ -88,7 +90,8 @@ int Basin::dtor(Control &ctrl){
   if(_Perc1) delete _Perc1;
   if(_Perc2) delete _Perc2;
   if(_Perc3) delete _Perc3;
-  if(_rrPerc3) delete _rrPerc3;
+  if(_Perc_vadose) delete _Perc_vadose;
+  if(_rPerc_vadose) delete _rPerc_vadose;
   if(_Ei) delete _Ei;
   if(_Es) delete _Es;
   if(_Tr) delete _Tr;
@@ -158,8 +161,10 @@ int Basin::dtor(Control &ctrl){
     if(_d18o_layer1) delete _d18o_layer1;
     if(_d18o_layer2) delete _d18o_layer2;
     if(_d18o_layer3) delete _d18o_layer3;
+    if(_d18o_vadose) delete _d18o_vadose;
     if(_d18o_GW) delete _d18o_GW;
     if(_d18o_chanS) delete _d18o_chanS;
+    if(_age_vadose) delete _age_vadose;
   }
   if (ctrl.opt_tracking_age == 1){
     if(_age_I) delete _age_I;
@@ -181,6 +186,7 @@ int Basin::dtor(Control &ctrl){
     if(_no3_layer1) delete _no3_layer1;
     if(_no3_layer2) delete _no3_layer2;
     if(_no3_layer3) delete _no3_layer3;
+    if(_no3_vadose) delete _no3_vadose;
     if(_no3_GW) delete _no3_GW;
     if(_no3_chanS) delete _no3_chanS;
     if(_nitrogen_add) delete _nitrogen_add;

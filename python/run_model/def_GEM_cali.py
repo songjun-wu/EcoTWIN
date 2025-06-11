@@ -3,6 +3,7 @@
 ###########################################
 
 from datetime import datetime
+import pickle
 import numpy as np
 
 class Path:
@@ -48,19 +49,19 @@ class Info:
     # Crop, pasture, grass, forest, sparse/bare soil, urban
     nadd = {}
     nadd['is_crop'] = {'value':[1, 0, 0, 0, 0, 0]}
-    nadd['fert_add'] = {'value':[12, 0.5, 0, 0, 0, 0]}
+    nadd['fert_add'] = {'value':[12, 0, 0, 0, 0, 0]}
     nadd['fert_day'] = {'value':[87, 87, 87, 87, 87, 87]}
     nadd['fert_down'] = {'value':[0.4, 0.4, 0.4, 0.4, 0.4, 0.4]}
     nadd['fert_period'] = {'value':[30, 30, 30, 30, 30, 30]}
     nadd['fert_IN'] = {'value':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7]}
 
-    nadd['manure_add'] = {'value':[0, 2, 0, 0, 0, 2]}
+    nadd['manure_add'] = {'value':[0, 0, 0, 0, 0, 0]}
     nadd['manure_day'] = {'value':[110, 110, 110, 110, 110, 110]}
     nadd['manure_down'] = {'value':[0.4, 0.3, 0.3, 0.3, 0.3, 0.3]}
     nadd['manure_period'] = {'value':[30, 30, 30, 30, 30, 30]}
     nadd['manure_IN'] = {'value':[0.5, 0.5, 0.5, 0.5, 0.5, 0.5]}
 
-    nadd['residue_add'] = {'value':[2, 2, 1, 1, 0, 0]}
+    nadd['residue_add'] = {'value':[1, 1, 1, 1, 0, 0]}
     nadd['residue_day'] = {'value':[242, 260, 260, 290, 290, 290]}
     nadd['residue_down'] = {'value':[0.3, 0.3, 0.3, 0.3, 0.3, 0.3]}
     nadd['residue_period'] = {'value':[30, 30, 30, 30, 30, 30]}
@@ -79,14 +80,14 @@ class Info:
 class Cali:
     # DREAM calibration
     TASK_name = 'DREAM_cali'
-    nchains = 50
-    cores_for_each_chain = 4
+    nchains = 40
+    cores_for_each_chain = 5
 
-    nbatchs = 5  # Number of batches
+    nbatchs = 1  # Number of batches
     niterations = 100  # Number of iterations for each batch
     
 
-    restart = True   # Whether restart?
+    restart = False   # Whether restart?
     restart_niteration = 100 # restart since which iteration?
 
     history_thin = 5
@@ -98,63 +99,55 @@ class Cali:
 
 class Output:
 
-    Catchment_ID    = ['6_001', '291110_001', '566445_001', '442364_001', '1034751_001', '291111_001', '83811_001', '831616_001']              # WOS-ID of each catchment
+    Catchment_ID    = ['6_001','291110_001','566445_001','291111_001','1034754_001','1034872_001','129489_001','4_001','83811_001','831616_001','566445_002']
     N_catchments    = len(Catchment_ID)     # Number of catchments
     
 
     # Site ID in each catchment; shape = (N_catchments, N_sites)
-    sim_q_idx       = [ [0, 2, 3, 7, 9, 11, 12],
-                        [0, 1, 2, 3, 4, 6, 7, 8, 10, 11, 13, 14, 16, 17, 22, 23, 24, 25],
-                        [1, 2, 5, 6, 7, 9, 13, 14, 16, 18, 20, 21, 27],
-                        [2, 3, 4, 6],
-                        [0, 2, 3, 4, 5],
-                        [0, 1, 2, 4, 5, 6, 7, 8, 9, 10],
-                        [0, 1, 2, 3],
-                        [0, 1, 2, 3],
-                        ]
-    
-    sim_iso_idx     = [ [6],
-                        [0, 21, 26, 27, 28, 29, 30],
-                        [10, 11, 19, 22, 24, 26],
-                        [0],
-                        [],
-                        [],
-                        [],
-                        [4, 5],
-                        ]
-    
-    sim_no3_idx     = [ [1, 4, 5, 8, 10],
-                        [5, 9, 12, 15, 18, 19, 20, 21, 24, 26, 27],
-                        [0, 3, 4, 8, 12, 15, 17, 23, 25],
-                        [1, 5, 7],
-                        [1],
-                        [2, 3],
-                        [3],
-                        []
-                        ]
-
+    sim_q_idx       = []
+    sim_iso_idx     = []
+    sim_no3_idx     = []
     N_sites         = [] # Number of sites in each catchment
-    for i in range(N_catchments):
-        N_sites.append(len(np.unique(sim_q_idx[i]+sim_iso_idx[i]+sim_no3_idx[i])))
+
+
+    catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
+    discharge_gauge_list = pickle.load(open(Path.data_path+'catchment_info/cali/discharge_gauge_list','rb'))
+    isotope_gauge_list = pickle.load(open(Path.data_path+'catchment_info/cali/isotope_gauge_list','rb'))
+    nitrate_gauge_list = pickle.load(open(Path.data_path+'catchment_info/cali/nitrate_gauge_list','rb'))
+
     
+
+    for i in range(N_catchments):
+        sim_q_idx.append(discharge_gauge_list[np.where(catchment_to_cali==Catchment_ID[i])[0][0]])
+        sim_iso_idx.append(isotope_gauge_list[np.where(catchment_to_cali==Catchment_ID[i])[0][0]])
+        sim_no3_idx.append(nitrate_gauge_list[np.where(catchment_to_cali==Catchment_ID[i])[0][0]])
+        N_sites.append(len(np.unique(sim_q_idx[i]+sim_iso_idx[i]+sim_no3_idx[i])))
 
     # Weight for each site in each catchment; shape = (N_catchments, N_sites)
+    overall_weights_for_each_var = [0.4, 0.3, 0.3]
     sim_q_weights   = []
     sim_iso_weights = []
     sim_no3_weights = []
 
+    n_q_sites = 0
+    n_iso_sites = 0
+    n_no3_sites = 0
     for i in range(N_catchments):
-        n_valid_varaible = int(len(sim_q_idx[i])>0) + int(len(sim_iso_idx[i])>0) + int(len(sim_no3_idx[i])>0)
-        sim_q_weights.append(np.full(len(sim_q_idx[i]), 1)/len(sim_q_idx[i])/N_catchments/n_valid_varaible)
-        sim_iso_weights.append(np.full(len(sim_iso_idx[i]), 1)/len(sim_iso_idx[i])/N_catchments/n_valid_varaible)
-        sim_no3_weights.append(np.full(len(sim_no3_idx[i]), 1)/len(sim_no3_idx[i])/N_catchments/n_valid_varaible)
+        n_q_sites += len(sim_q_idx[i])
+        n_iso_sites += len(sim_iso_idx[i])
+        n_no3_sites += len(sim_no3_idx[i])
+
+       
+    for i in range(N_catchments):
+        sim_q_weights.append(np.full(len(sim_q_idx[i]), overall_weights_for_each_var[0] / n_q_sites))
+        sim_iso_weights.append(np.full(len(sim_iso_idx[i]), overall_weights_for_each_var[1] / n_iso_sites))
+        sim_no3_weights.append(np.full(len(sim_no3_idx[i]), overall_weights_for_each_var[2] / n_no3_sites))
 
     sim = {}
     sim['q']       = {'sim_file':'discharge_TS.bin' , 'obs_file':'discharge_obs.bin', 'sim_idx':sim_q_idx, 'weights':sim_q_weights, 'type':'Ts'}
     sim['iso_stream']       = {'sim_file':'d18o_chanS_TS.bin' , 'obs_file':'d18o_stream_obs.bin', 'sim_idx':sim_iso_idx, 'weights':sim_iso_weights, 'type':'Ts'}
     sim['no3']      = {'sim_file':'no3_chanS_TS.bin' , 'obs_file':'no3_stream_obs.bin', 'sim_idx':sim_no3_idx, 'weights':sim_no3_weights, 'type':'Ts'}
 
-    
 
 
 
@@ -162,11 +155,11 @@ class Param:
     ### === parameters to calibrate === 
     ref = {}    
 
-    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
+    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[2]*Info.N_soil, 'fix_value':None}
 
     # === PET seperation and Max canopy storage === 
     ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse, 'fix_value':None}  # Maximum canopy storage = alpha * PET
-    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # PET to PE and PT
+    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # the negative the more transpiration
 
     # Snow
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-5], 'max':[2], 'fix_value':None}
@@ -183,7 +176,7 @@ class Param:
     ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-3,-1.2,-1.2,-1.2,-1.2,-1.2], 'max':[-2.9,-0.2,-0.2,-0.2,-0.2,-0.2], 'fix_value':None}
     ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[0.006]*Info.N_soil, 'max':[0.026]*Info.N_soil, 'fix_value':None}
     ref['PTF_Ks_clay']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_clay',   'min':[0.003]*Info.N_soil, 'max':[0.013]*Info.N_soil, 'fix_value':None}
-    ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[1,15,15,15,15,15], 'fix_value':None}  # Low infiltration capacity in urban areas
+    #ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[1,15,15,15,15,15], 'fix_value':None}  # Low infiltration capacity in urban areas
     
     # Field capacity
     #ref['SWP']   = {'type':'soil',   'log':0, 'file':'SWP',   'min':[10]*Info.N_soil, 'max':[33]*Info.N_soil, 'fix_value':[33]*Info.N_soil}
@@ -208,8 +201,8 @@ class Param:
     ref['ET_reduction'] = {'type':'global',   'log':0, 'file':'ET_reduction',   'min':[0.6], 'max':[1.0], 'fix_value':None} # ET correction weights
 
     # === GW recharge === 
-    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
-    ref['init_GW'] = {'type':'landuse',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None} # Initial GW storage in m
+    ref['perc_vadose_coeff']   = {'type':'soil',   'log':1, 'file':'perc_vadose_coeff',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Coefficient parameter for GW recharge
+    ref['init_GW'] = {'type':'landuse',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_landuse, 'max':[50]*Info.N_landuse, 'fix_value':None} # Initial GW storage in m
 
     # === Routing === 
     ref['pOvf_toChn']   = {'type':'landuse',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)
@@ -245,4 +238,3 @@ class Param:
     ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-5]*Info.N_landuse, 'max':[0.4,0.4,0.3,0.2,0.1,0.01], 'fix_value':None}
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None}
     ref['deni_soil_moisture_thres']   = {'type':'landuse',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.2]*Info.N_landuse, 'max':[0.85]*Info.N_landuse, 'fix_value':None}
-    

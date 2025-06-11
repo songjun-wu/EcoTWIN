@@ -258,7 +258,7 @@ elif mode == 'test':
     counter = 0
 
 
-    for gg in [0]:  # Catchment ID
+    for gg in range(12):  # Catchment ID
 
         catchment_ID = Output.Catchment_ID[gg]
         print(catchment_ID)
@@ -266,7 +266,7 @@ elif mode == 'test':
         # Which parameter set to use?
         param_N = GEM_tools.get_param_N(Info, Param)
 
-        
+
         try:
             likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain.bin')
             best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
@@ -274,7 +274,7 @@ elif mode == 'test':
         except Exception as e:
             print(e)
             continue
-        
+
    
         #param = np.full(300, 0.5)  # todo
         GEM_tools.gen_param(run_path, Info, Param, param)
@@ -285,10 +285,10 @@ elif mode == 'test':
         os.chdir(run_path)           
         os.system('./gEcoHydro')
         os.chdir(current_path)
-
+        
         # Plot spatial maps and Ts results
-        post_plot.plot_hydrology(run_path+'outputs/', 'hydro_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', if_average=False)
-        post_plot.plot_tracking(run_path+'outputs/', 'WQ_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', if_average=False)
+        post_plot.plot_hydrology(run_path+'outputs/', 'hydro_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', catchment_ID=catchment_ID, if_average=False)
+        post_plot.plot_tracking(run_path+'outputs/', 'WQ_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', catchment_ID=catchment_ID, if_average=False)
 
         fnames = ['hydro_'+str(catchment_ID)+'_Ts.png', 'hydro_'+str(catchment_ID)+'_map.png',
                     'WQ_'+str(catchment_ID)+'_Ts.png', 'WQ_'+str(catchment_ID)+'_map.png']
@@ -308,8 +308,8 @@ elif mode == 'forward_sep':
     os.system('python3 develop.py')  # todo
 
     # set the env
-    GEM_tools.sort_directory(mode, Path, Cali, Output)
-    GEM_tools.set_env(mode, Path, Cali, Output)
+    #GEM_tools.sort_directory(mode, Path, Cali, Output)
+    #GEM_tools.set_env(mode, Path, Cali, Output)
     GEM_tools.set_config(mode, Path, Cali, Output)
    
     nchains = 20
@@ -317,7 +317,7 @@ elif mode == 'forward_sep':
     counter = 0
     #for i in range(len(validIdx)):
     #for gg in [0,5,6,7]:  # Catchment ID
-    for gg in range(8):  # Catchment ID
+    for gg in [0]:  # Catchment ID
 
         catchment_ID = Output.Catchment_ID[gg]
         run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
@@ -511,6 +511,10 @@ elif mode == 'check_sep':
 
 
 elif mode == 'bbb':
+
+    pass
+
+    """
     catchment_ID = '6_001'
     ref_asc = '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/dem.asc'
     output_path = '/data/scratch/wusongj/paper4/test/'+catchment_ID+'/run/outputs/'
@@ -523,7 +527,7 @@ elif mode == 'bbb':
         data = np.mean(data[2:,:,:], axis=0)
         print(output_path+fname.split('.')[0]+'.asc')
         GEM_tools.create_asc(data, output_path+fname.split('.')[0]+'.asc', ref_asc)
-
+    """
 
 
 elif mode == 'examine_inputs':

@@ -15,6 +15,7 @@ CPP_SRCS += \
 ../codes/Nitrogen/Soil_transformation.cpp \
 ../codes/Nitrogen/Solve_routing_nitrogen.cpp \
 ../codes/Nitrogen/Solve_soil_profile_nitrogen.cpp \
+../codes/Nitrogen/Solve_vadose_nitrogen.cpp \
 
 
 OBJS += \
@@ -29,6 +30,7 @@ OBJS += \
 ./Nitrogen/Soil_transformation.o \
 ./Nitrogen/Solve_routing_nitrogen.o \
 ./Nitrogen/Solve_soil_profile_nitrogen.o \
+./Nitrogen/Solve_vadose_nitrogen.o \
 
 
 CPP_DEPS += \
@@ -43,6 +45,7 @@ CPP_DEPS += \
 ./Nitrogen/Soil_transformation.d \
 ./Nitrogen/Solve_routing_nitrogen.d \
 ./Nitrogen/Solve_soil_profile_nitrogen.d \
+./Nitrogen/Solve_vadose_nitrogen.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

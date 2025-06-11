@@ -22,9 +22,9 @@ int Basin::Solve_GW_nitrogen(Control &ctrl, Atmosphere &atm){
     ### GW:
         - irrigation_from_GW
         (_GW_old)
-        + percolation3      (need to mix)
+        + percolation_vadose      (need to mix)
         (_GW)
-        + repercolation3    
+        + repercolation_vadose    
         + GWf_in
         - GWf_out
         - GWf_toChn         
@@ -33,11 +33,11 @@ int Basin::Solve_GW_nitrogen(Control &ctrl, Atmosphere &atm){
 
     
     // Mixing GW storage with percolation from layer 3
-    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        Mixing_full(_GW_old->val[j], _no3_GW->val[j], _Perc3->val[j], _no3_layer3->val[j]);
+    if (ctrl.opt_baseflow_mixing == 0){
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          Mixing_full(_GW_old->val[j], _no3_GW->val[j], _Perc_vadose->val[j], _no3_vadose->val[j]);
+      }
     }
-
-
-
+    
     return EXIT_SUCCESS;
 }

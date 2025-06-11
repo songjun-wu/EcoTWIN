@@ -46,6 +46,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__theta1==2) _theta1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__theta2==2) _theta2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__theta3==2) _theta3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__vadose==2) _vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__GW==2) _GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Th==2) _Th_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__snowmelt==2) _snowmelt_acc = new svector(ctrl._sortedGrid.size);
@@ -53,11 +54,12 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__Perc1==2) _Perc1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Perc2==2) _Perc2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Perc3==2) _Perc3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__Perc_vadose==2) _Perc_vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__rinfilt==2) _rinfilt_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__rPerc1==2) _rPerc1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__rPerc2==2) _rPerc2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__rPerc3==2) _rPerc3_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__rrPerc3==2) _rrPerc3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__rPerc_vadose==2) _rPerc_vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Ei==2) _Ei_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Es==2) _Es_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Tr==2) _Tr_acc = new svector(ctrl._sortedGrid.size);
@@ -83,6 +85,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__d18o_layer1==2) _d18o_layer1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_layer2==2) _d18o_layer2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_layer3==2) _d18o_layer3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__d18o_vadose==2) _d18o_vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_GW==2) _d18o_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__d18o_chanS==2) _d18o_chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__age_I==2) _age_I_acc = new svector(ctrl._sortedGrid.size);
@@ -91,6 +94,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__age_layer1==2) _age_layer1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__age_layer2==2) _age_layer2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__age_layer3==2) _age_layer3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__age_vadose==2) _age_vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__age_GW==2) _age_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__age_chanS==2) _age_chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_I==2) _no3_I_acc = new svector(ctrl._sortedGrid.size);
@@ -99,6 +103,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__no3_layer1==2) _no3_layer1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_layer2==2) _no3_layer2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_layer3==2) _no3_layer3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__no3_vadose==2) _no3_vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_GW==2) _no3_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_chanS==2) _no3_chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__nitrogen_add==2) _nitrogen_add_acc = new svector(ctrl._sortedGrid.size);
@@ -120,6 +125,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__theta1==2) _theta1_acc->plus(*Bsn._theta1);
   if (ctrl.report__theta2==2) _theta2_acc->plus(*Bsn._theta2);
   if (ctrl.report__theta3==2) _theta3_acc->plus(*Bsn._theta3);
+  if (ctrl.report__vadose==2) _vadose_acc->plus(*Bsn._vadose);
   if (ctrl.report__GW==2) _GW_acc->plus(*Bsn._GW);
   if (ctrl.report__Th==2) _Th_acc->plus(*Bsn._Th);
   if (ctrl.report__snowmelt==2) _snowmelt_acc->plus(*Bsn._snowmelt);
@@ -127,11 +133,12 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Perc1==2) _Perc1_acc->plus(*Bsn._Perc1);
   if (ctrl.report__Perc2==2) _Perc2_acc->plus(*Bsn._Perc2);
   if (ctrl.report__Perc3==2) _Perc3_acc->plus(*Bsn._Perc3);
+  if (ctrl.report__Perc_vadose==2) _Perc_vadose_acc->plus(*Bsn._Perc_vadose);
   if (ctrl.report__rinfilt==2) _rinfilt_acc->plus(*Bsn._rinfilt);
   if (ctrl.report__rPerc1==2) _rPerc1_acc->plus(*Bsn._rPerc1);
   if (ctrl.report__rPerc2==2) _rPerc2_acc->plus(*Bsn._rPerc2);
   if (ctrl.report__rPerc3==2) _rPerc3_acc->plus(*Bsn._rPerc3);
-  if (ctrl.report__rrPerc3==2) _rrPerc3_acc->plus(*Bsn._rrPerc3);
+  if (ctrl.report__rPerc_vadose==2) _rPerc_vadose_acc->plus(*Bsn._rPerc_vadose);
   if (ctrl.report__Ei==2) _Ei_acc->plus(*Bsn._Ei);
   if (ctrl.report__Es==2) _Es_acc->plus(*Bsn._Es);
   if (ctrl.report__Tr==2) _Tr_acc->plus(*Bsn._Tr);
@@ -157,6 +164,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__d18o_layer1==2) _d18o_layer1_acc->plus(*Bsn._d18o_layer1);
   if (ctrl.report__d18o_layer2==2) _d18o_layer2_acc->plus(*Bsn._d18o_layer2);
   if (ctrl.report__d18o_layer3==2) _d18o_layer3_acc->plus(*Bsn._d18o_layer3);
+  if (ctrl.report__d18o_vadose==2) _d18o_vadose_acc->plus(*Bsn._d18o_vadose);
   if (ctrl.report__d18o_GW==2) _d18o_GW_acc->plus(*Bsn._d18o_GW);
   if (ctrl.report__d18o_chanS==2) _d18o_chanS_acc->plus(*Bsn._d18o_chanS);
   if (ctrl.report__age_I==2) _age_I_acc->plus(*Bsn._age_I);
@@ -165,6 +173,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__age_layer1==2) _age_layer1_acc->plus(*Bsn._age_layer1);
   if (ctrl.report__age_layer2==2) _age_layer2_acc->plus(*Bsn._age_layer2);
   if (ctrl.report__age_layer3==2) _age_layer3_acc->plus(*Bsn._age_layer3);
+  if (ctrl.report__age_vadose==2) _age_vadose_acc->plus(*Bsn._age_vadose);
   if (ctrl.report__age_GW==2) _age_GW_acc->plus(*Bsn._age_GW);
   if (ctrl.report__age_chanS==2) _age_chanS_acc->plus(*Bsn._age_chanS);
   if (ctrl.report__no3_I==2) _no3_I_acc->plus(*Bsn._no3_I);
@@ -173,6 +182,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__no3_layer1==2) _no3_layer1_acc->plus(*Bsn._no3_layer1);
   if (ctrl.report__no3_layer2==2) _no3_layer2_acc->plus(*Bsn._no3_layer2);
   if (ctrl.report__no3_layer3==2) _no3_layer3_acc->plus(*Bsn._no3_layer3);
+  if (ctrl.report__no3_vadose==2) _no3_vadose_acc->plus(*Bsn._no3_vadose);
   if (ctrl.report__no3_GW==2) _no3_GW_acc->plus(*Bsn._no3_GW);
   if (ctrl.report__no3_chanS==2) _no3_chanS_acc->plus(*Bsn._no3_chanS);
   if (ctrl.report__nitrogen_add==2) _nitrogen_add_acc->plus(*Bsn._nitrogen_add);
@@ -207,6 +217,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__theta3==1)  report_create(ctrl.path_ResultsFolder+"SMC_layer3_TS.bin", of__theta3);
   else if (ctrl.report__theta3==2)  report_create(ctrl.path_ResultsFolder+"SMC_layer3_map.bin", of__theta3);
 
+  if (ctrl.report__vadose==1)  report_create(ctrl.path_ResultsFolder+"vadose_TS.bin", of__vadose);
+  else if (ctrl.report__vadose==2)  report_create(ctrl.path_ResultsFolder+"vadose_map.bin", of__vadose);
+
   if (ctrl.report__GW==1)  report_create(ctrl.path_ResultsFolder+"groundwater_storage_TS.bin", of__GW);
   else if (ctrl.report__GW==2)  report_create(ctrl.path_ResultsFolder+"groundwater_storage_map.bin", of__GW);
 
@@ -228,6 +241,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__Perc3==1)  report_create(ctrl.path_ResultsFolder+"perc_layer3_TS.bin", of__Perc3);
   else if (ctrl.report__Perc3==2)  report_create(ctrl.path_ResultsFolder+"perc_layer3_map.bin", of__Perc3);
 
+  if (ctrl.report__Perc_vadose==1)  report_create(ctrl.path_ResultsFolder+"perc_vadose_TS.bin", of__Perc_vadose);
+  else if (ctrl.report__Perc_vadose==2)  report_create(ctrl.path_ResultsFolder+"perc_vadose_map.bin", of__Perc_vadose);
+
   if (ctrl.report__rinfilt==1)  report_create(ctrl.path_ResultsFolder+"rinfiltration_TS.bin", of__rinfilt);
   else if (ctrl.report__rinfilt==2)  report_create(ctrl.path_ResultsFolder+"rinfiltration_map.bin", of__rinfilt);
 
@@ -240,8 +256,8 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__rPerc3==1)  report_create(ctrl.path_ResultsFolder+"rperc_layer3_TS.bin", of__rPerc3);
   else if (ctrl.report__rPerc3==2)  report_create(ctrl.path_ResultsFolder+"rperc_layer3_map.bin", of__rPerc3);
 
-  if (ctrl.report__rrPerc3==1)  report_create(ctrl.path_ResultsFolder+"rrperc_layer3_TS.bin", of__rrPerc3);
-  else if (ctrl.report__rrPerc3==2)  report_create(ctrl.path_ResultsFolder+"rrperc_layer3_map.bin", of__rrPerc3);
+  if (ctrl.report__rPerc_vadose==1)  report_create(ctrl.path_ResultsFolder+"rperc_vadose_TS.bin", of__rPerc_vadose);
+  else if (ctrl.report__rPerc_vadose==2)  report_create(ctrl.path_ResultsFolder+"rperc_vadose_map.bin", of__rPerc_vadose);
 
   if (ctrl.report__Ei==1)  report_create(ctrl.path_ResultsFolder+"canopy_evap_TS.bin", of__Ei);
   else if (ctrl.report__Ei==2)  report_create(ctrl.path_ResultsFolder+"canopy_evap_map.bin", of__Ei);
@@ -318,6 +334,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__d18o_layer3==1)  report_create(ctrl.path_ResultsFolder+"d18o_SMC_layer3_TS.bin", of__d18o_layer3);
   else if (ctrl.report__d18o_layer3==2)  report_create(ctrl.path_ResultsFolder+"d18o_SMC_layer3_map.bin", of__d18o_layer3);
 
+  if (ctrl.report__d18o_vadose==1)  report_create(ctrl.path_ResultsFolder+"d18o_vadose_TS.bin", of__d18o_vadose);
+  else if (ctrl.report__d18o_vadose==2)  report_create(ctrl.path_ResultsFolder+"d18o_vadose_map.bin", of__d18o_vadose);
+
   if (ctrl.report__d18o_GW==1)  report_create(ctrl.path_ResultsFolder+"d18o_groundwater_storage_TS.bin", of__d18o_GW);
   else if (ctrl.report__d18o_GW==2)  report_create(ctrl.path_ResultsFolder+"d18o_groundwater_storage_map.bin", of__d18o_GW);
 
@@ -342,6 +361,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__age_layer3==1)  report_create(ctrl.path_ResultsFolder+"age_SMC_layer3_TS.bin", of__age_layer3);
   else if (ctrl.report__age_layer3==2)  report_create(ctrl.path_ResultsFolder+"age_SMC_layer3_map.bin", of__age_layer3);
 
+  if (ctrl.report__age_vadose==1)  report_create(ctrl.path_ResultsFolder+"age_vadose_TS.bin", of__age_vadose);
+  else if (ctrl.report__age_vadose==2)  report_create(ctrl.path_ResultsFolder+"age_vadose_map.bin", of__age_vadose);
+
   if (ctrl.report__age_GW==1)  report_create(ctrl.path_ResultsFolder+"age_groundwater_storage_TS.bin", of__age_GW);
   else if (ctrl.report__age_GW==2)  report_create(ctrl.path_ResultsFolder+"age_groundwater_storage_map.bin", of__age_GW);
 
@@ -365,6 +387,9 @@ int Report::Report_Initialisation(Control &ctrl){
 
   if (ctrl.report__no3_layer3==1)  report_create(ctrl.path_ResultsFolder+"no3_SMC_layer3_TS.bin", of__no3_layer3);
   else if (ctrl.report__no3_layer3==2)  report_create(ctrl.path_ResultsFolder+"no3_SMC_layer3_map.bin", of__no3_layer3);
+
+  if (ctrl.report__no3_vadose==1)  report_create(ctrl.path_ResultsFolder+"no3_vadose_TS.bin", of__no3_vadose);
+  else if (ctrl.report__no3_vadose==2)  report_create(ctrl.path_ResultsFolder+"no3_vadose_map.bin", of__no3_vadose);
 
   if (ctrl.report__no3_GW==1)  report_create(ctrl.path_ResultsFolder+"no3_groundwater_storage_TS.bin", of__no3_GW);
   else if (ctrl.report__no3_GW==2)  report_create(ctrl.path_ResultsFolder+"no3_groundwater_storage_map.bin", of__no3_GW);
@@ -410,6 +435,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__theta1==1) {reportTS(ctrl, Bsn._theta1, of__theta1);}
   if (ctrl.report__theta2==1) {reportTS(ctrl, Bsn._theta2, of__theta2);}
   if (ctrl.report__theta3==1) {reportTS(ctrl, Bsn._theta3, of__theta3);}
+  if (ctrl.report__vadose==1) {reportTS(ctrl, Bsn._vadose, of__vadose);}
   if (ctrl.report__GW==1) {reportTS(ctrl, Bsn._GW, of__GW);}
   if (ctrl.report__Th==1) {reportTS(ctrl, Bsn._Th, of__Th);}
   if (ctrl.report__snowmelt==1) {reportTS(ctrl, Bsn._snowmelt, of__snowmelt);}
@@ -417,11 +443,12 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Perc1==1) {reportTS(ctrl, Bsn._Perc1, of__Perc1);}
   if (ctrl.report__Perc2==1) {reportTS(ctrl, Bsn._Perc2, of__Perc2);}
   if (ctrl.report__Perc3==1) {reportTS(ctrl, Bsn._Perc3, of__Perc3);}
+  if (ctrl.report__Perc_vadose==1) {reportTS(ctrl, Bsn._Perc_vadose, of__Perc_vadose);}
   if (ctrl.report__rinfilt==1) {reportTS(ctrl, Bsn._rinfilt, of__rinfilt);}
   if (ctrl.report__rPerc1==1) {reportTS(ctrl, Bsn._rPerc1, of__rPerc1);}
   if (ctrl.report__rPerc2==1) {reportTS(ctrl, Bsn._rPerc2, of__rPerc2);}
   if (ctrl.report__rPerc3==1) {reportTS(ctrl, Bsn._rPerc3, of__rPerc3);}
-  if (ctrl.report__rrPerc3==1) {reportTS(ctrl, Bsn._rrPerc3, of__rrPerc3);}
+  if (ctrl.report__rPerc_vadose==1) {reportTS(ctrl, Bsn._rPerc_vadose, of__rPerc_vadose);}
   if (ctrl.report__Ei==1) {reportTS(ctrl, Bsn._Ei, of__Ei);}
   if (ctrl.report__Es==1) {reportTS(ctrl, Bsn._Es, of__Es);}
   if (ctrl.report__Tr==1) {reportTS(ctrl, Bsn._Tr, of__Tr);}
@@ -447,6 +474,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__d18o_layer1==1) {reportTS(ctrl, Bsn._d18o_layer1, of__d18o_layer1);}
   if (ctrl.report__d18o_layer2==1) {reportTS(ctrl, Bsn._d18o_layer2, of__d18o_layer2);}
   if (ctrl.report__d18o_layer3==1) {reportTS(ctrl, Bsn._d18o_layer3, of__d18o_layer3);}
+  if (ctrl.report__d18o_vadose==1) {reportTS(ctrl, Bsn._d18o_vadose, of__d18o_vadose);}
   if (ctrl.report__d18o_GW==1) {reportTS(ctrl, Bsn._d18o_GW, of__d18o_GW);}
   if (ctrl.report__d18o_chanS==1) {reportTS(ctrl, Bsn._d18o_chanS, of__d18o_chanS);}
   if (ctrl.report__age_I==1) {reportTS(ctrl, Bsn._age_I, of__age_I);}
@@ -455,6 +483,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__age_layer1==1) {reportTS(ctrl, Bsn._age_layer1, of__age_layer1);}
   if (ctrl.report__age_layer2==1) {reportTS(ctrl, Bsn._age_layer2, of__age_layer2);}
   if (ctrl.report__age_layer3==1) {reportTS(ctrl, Bsn._age_layer3, of__age_layer3);}
+  if (ctrl.report__age_vadose==1) {reportTS(ctrl, Bsn._age_vadose, of__age_vadose);}
   if (ctrl.report__age_GW==1) {reportTS(ctrl, Bsn._age_GW, of__age_GW);}
   if (ctrl.report__age_chanS==1) {reportTS(ctrl, Bsn._age_chanS, of__age_chanS);}
   if (ctrl.report__no3_I==1) {reportTS(ctrl, Bsn._no3_I, of__no3_I);}
@@ -463,6 +492,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__no3_layer1==1) {reportTS(ctrl, Bsn._no3_layer1, of__no3_layer1);}
   if (ctrl.report__no3_layer2==1) {reportTS(ctrl, Bsn._no3_layer2, of__no3_layer2);}
   if (ctrl.report__no3_layer3==1) {reportTS(ctrl, Bsn._no3_layer3, of__no3_layer3);}
+  if (ctrl.report__no3_vadose==1) {reportTS(ctrl, Bsn._no3_vadose, of__no3_vadose);}
   if (ctrl.report__no3_GW==1) {reportTS(ctrl, Bsn._no3_GW, of__no3_GW);}
   if (ctrl.report__no3_chanS==1) {reportTS(ctrl, Bsn._no3_chanS, of__no3_chanS);}
   if (ctrl.report__nitrogen_add==1) {reportTS(ctrl, Bsn._nitrogen_add, of__nitrogen_add);}
@@ -485,6 +515,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__theta1==2) {reportMap(ctrl, _theta1_acc, ctrl._sortedGrid, of__theta1);}
   if (ctrl.report__theta2==2) {reportMap(ctrl, _theta2_acc, ctrl._sortedGrid, of__theta2);}
   if (ctrl.report__theta3==2) {reportMap(ctrl, _theta3_acc, ctrl._sortedGrid, of__theta3);}
+  if (ctrl.report__vadose==2) {reportMap(ctrl, _vadose_acc, ctrl._sortedGrid, of__vadose);}
   if (ctrl.report__GW==2) {reportMap(ctrl, _GW_acc, ctrl._sortedGrid, of__GW);}
   if (ctrl.report__Th==2) {reportMap(ctrl, _Th_acc, ctrl._sortedGrid, of__Th);}
   if (ctrl.report__snowmelt==2) {reportMap(ctrl, _snowmelt_acc, ctrl._sortedGrid, of__snowmelt);}
@@ -492,11 +523,12 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__Perc1==2) {reportMap(ctrl, _Perc1_acc, ctrl._sortedGrid, of__Perc1);}
   if (ctrl.report__Perc2==2) {reportMap(ctrl, _Perc2_acc, ctrl._sortedGrid, of__Perc2);}
   if (ctrl.report__Perc3==2) {reportMap(ctrl, _Perc3_acc, ctrl._sortedGrid, of__Perc3);}
+  if (ctrl.report__Perc_vadose==2) {reportMap(ctrl, _Perc_vadose_acc, ctrl._sortedGrid, of__Perc_vadose);}
   if (ctrl.report__rinfilt==2) {reportMap(ctrl, _rinfilt_acc, ctrl._sortedGrid, of__rinfilt);}
   if (ctrl.report__rPerc1==2) {reportMap(ctrl, _rPerc1_acc, ctrl._sortedGrid, of__rPerc1);}
   if (ctrl.report__rPerc2==2) {reportMap(ctrl, _rPerc2_acc, ctrl._sortedGrid, of__rPerc2);}
   if (ctrl.report__rPerc3==2) {reportMap(ctrl, _rPerc3_acc, ctrl._sortedGrid, of__rPerc3);}
-  if (ctrl.report__rrPerc3==2) {reportMap(ctrl, _rrPerc3_acc, ctrl._sortedGrid, of__rrPerc3);}
+  if (ctrl.report__rPerc_vadose==2) {reportMap(ctrl, _rPerc_vadose_acc, ctrl._sortedGrid, of__rPerc_vadose);}
   if (ctrl.report__Ei==2) {reportMap(ctrl, _Ei_acc, ctrl._sortedGrid, of__Ei);}
   if (ctrl.report__Es==2) {reportMap(ctrl, _Es_acc, ctrl._sortedGrid, of__Es);}
   if (ctrl.report__Tr==2) {reportMap(ctrl, _Tr_acc, ctrl._sortedGrid, of__Tr);}
@@ -522,6 +554,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__d18o_layer1==2) {reportMap(ctrl, _d18o_layer1_acc, ctrl._sortedGrid, of__d18o_layer1);}
   if (ctrl.report__d18o_layer2==2) {reportMap(ctrl, _d18o_layer2_acc, ctrl._sortedGrid, of__d18o_layer2);}
   if (ctrl.report__d18o_layer3==2) {reportMap(ctrl, _d18o_layer3_acc, ctrl._sortedGrid, of__d18o_layer3);}
+  if (ctrl.report__d18o_vadose==2) {reportMap(ctrl, _d18o_vadose_acc, ctrl._sortedGrid, of__d18o_vadose);}
   if (ctrl.report__d18o_GW==2) {reportMap(ctrl, _d18o_GW_acc, ctrl._sortedGrid, of__d18o_GW);}
   if (ctrl.report__d18o_chanS==2) {reportMap(ctrl, _d18o_chanS_acc, ctrl._sortedGrid, of__d18o_chanS);}
   if (ctrl.report__age_I==2) {reportMap(ctrl, _age_I_acc, ctrl._sortedGrid, of__age_I);}
@@ -530,6 +563,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__age_layer1==2) {reportMap(ctrl, _age_layer1_acc, ctrl._sortedGrid, of__age_layer1);}
   if (ctrl.report__age_layer2==2) {reportMap(ctrl, _age_layer2_acc, ctrl._sortedGrid, of__age_layer2);}
   if (ctrl.report__age_layer3==2) {reportMap(ctrl, _age_layer3_acc, ctrl._sortedGrid, of__age_layer3);}
+  if (ctrl.report__age_vadose==2) {reportMap(ctrl, _age_vadose_acc, ctrl._sortedGrid, of__age_vadose);}
   if (ctrl.report__age_GW==2) {reportMap(ctrl, _age_GW_acc, ctrl._sortedGrid, of__age_GW);}
   if (ctrl.report__age_chanS==2) {reportMap(ctrl, _age_chanS_acc, ctrl._sortedGrid, of__age_chanS);}
   if (ctrl.report__no3_I==2) {reportMap(ctrl, _no3_I_acc, ctrl._sortedGrid, of__no3_I);}
@@ -538,6 +572,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__no3_layer1==2) {reportMap(ctrl, _no3_layer1_acc, ctrl._sortedGrid, of__no3_layer1);}
   if (ctrl.report__no3_layer2==2) {reportMap(ctrl, _no3_layer2_acc, ctrl._sortedGrid, of__no3_layer2);}
   if (ctrl.report__no3_layer3==2) {reportMap(ctrl, _no3_layer3_acc, ctrl._sortedGrid, of__no3_layer3);}
+  if (ctrl.report__no3_vadose==2) {reportMap(ctrl, _no3_vadose_acc, ctrl._sortedGrid, of__no3_vadose);}
   if (ctrl.report__no3_GW==2) {reportMap(ctrl, _no3_GW_acc, ctrl._sortedGrid, of__no3_GW);}
   if (ctrl.report__no3_chanS==2) {reportMap(ctrl, _no3_chanS_acc, ctrl._sortedGrid, of__no3_chanS);}
   if (ctrl.report__nitrogen_add==2) {reportMap(ctrl, _nitrogen_add_acc, ctrl._sortedGrid, of__nitrogen_add);}

@@ -9,40 +9,33 @@
 
 * Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)
 
-* Solve_timesteps.cpp
+* Solve_vadose_nitrogen.cpp
   * Created  on: 30.02.2025
-  * Modified on: 04.06.2025
+  * Modified on: 27.05.2025
 ***************************************************************/
 
 
 #include "Basin.h"
 
+int Basin::Solve_vadose_nitrogen(Control &ctrl, Atmosphere &atm){
+    /*
+    ### vadose:
+        (_vadose_old)
+        + percolation3      (need to mix)
+        - percolation_vadose
+        (_vadose)
+        + repercolation3
+        - repercolation_vadose   
+        + interf_in
+        - interf_out
+        - interf_toChn                            
+    */
 
-int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     
-    // For debug
-    //int j = 4073;  // todo; 4073
-    //cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
-    //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
-    //}
-
-    Solve_canopy(ctrl, par, atm);
-
-    Solve_surface(ctrl, par, atm);
-
-    Solve_soil_profile(ctrl, par, atm);
-
-    Routing(ctrl, par);
-
-    Solve_channel(ctrl, par, atm);
-
-    //Check_mass_balance(ctrl, par, atm);
-
-    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1 or ctrl.opt_nitrogen_sim==1){
-        Store_states();  // Store all water storages for mixing
+    // Mixing vadose storage with percolation from layer 3
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        Mixing_full(_vadose_old->val[j], _no3_vadose->val[j], _Perc3->val[j], _no3_layer3->val[j]);
     }
-
-    
 
     return EXIT_SUCCESS;
 }

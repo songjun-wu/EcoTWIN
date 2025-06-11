@@ -72,6 +72,7 @@
   _theta1 = new svector(ctrl.path_BasinFolder + ctrl.fn__theta1, _rowNum, _colNum, _sortedGrid);
   _theta2 = new svector(ctrl.path_BasinFolder + ctrl.fn__theta2, _rowNum, _colNum, _sortedGrid);
   _theta3 = new svector(ctrl.path_BasinFolder + ctrl.fn__theta3, _rowNum, _colNum, _sortedGrid);
+  _vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__vadose, _rowNum, _colNum, _sortedGrid);
   _GW = new svector(ctrl.path_BasinFolder + ctrl.fn__GW, _rowNum, _colNum, _sortedGrid);
   _chanS = new svector(_sortedGrid.size);
   if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
@@ -81,6 +82,7 @@
     _theta1_old = new svector(_sortedGrid.size);
     _theta2_old = new svector(_sortedGrid.size);
     _theta3_old = new svector(_sortedGrid.size);
+    _vadose_old = new svector(_sortedGrid.size);
     _GW_old = new svector(_sortedGrid.size);
     _chanS_old = new svector(_sortedGrid.size);
   }
@@ -93,7 +95,8 @@
   _Perc1 = new svector(_sortedGrid.size);
   _Perc2 = new svector(_sortedGrid.size);
   _Perc3 = new svector(_sortedGrid.size);
-  _rrPerc3 = new svector(_sortedGrid.size);
+  _Perc_vadose = new svector(_sortedGrid.size);
+  _rPerc_vadose = new svector(_sortedGrid.size);
   _Ei = new svector(_sortedGrid.size);
   _Es = new svector(_sortedGrid.size);
   _Tr = new svector(_sortedGrid.size);
@@ -163,8 +166,10 @@
     _d18o_layer1 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer1, _rowNum, _colNum, _sortedGrid);
     _d18o_layer2 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer2, _rowNum, _colNum, _sortedGrid);
     _d18o_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_layer3, _rowNum, _colNum, _sortedGrid);
+    _d18o_vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_vadose, _rowNum, _colNum, _sortedGrid);
     _d18o_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_GW, _rowNum, _colNum, _sortedGrid);
     _d18o_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__d18o_chanS, _rowNum, _colNum, _sortedGrid);
+    _age_vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__age_vadose, _rowNum, _colNum, _sortedGrid);
   }
   if (ctrl.opt_tracking_age == 1){
     _age_I = new svector(ctrl.path_BasinFolder + ctrl.fn__age_I, _rowNum, _colNum, _sortedGrid);
@@ -186,6 +191,7 @@
     _no3_layer1 = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_layer1, _rowNum, _colNum, _sortedGrid);
     _no3_layer2 = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_layer2, _rowNum, _colNum, _sortedGrid);
     _no3_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_layer3, _rowNum, _colNum, _sortedGrid);
+    _no3_vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_vadose, _rowNum, _colNum, _sortedGrid);
     _no3_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_GW, _rowNum, _colNum, _sortedGrid);
     _no3_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_chanS, _rowNum, _colNum, _sortedGrid);
     _nitrogen_add = new svector(_sortedGrid.size);

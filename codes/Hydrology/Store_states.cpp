@@ -26,6 +26,7 @@ int Basin::Store_states() {
     _theta1_old->equals(*_theta1);
     _theta2_old->equals(*_theta2);
     _theta3_old->equals(*_theta3);
+    _vadose_old->equals(*_vadose);
     _GW_old->equals(*_GW);
     _chanS_old->equals(*_chanS);
 

@@ -19,39 +19,40 @@
 
 
 
-int Basin::ReGWrecharge_1(Control &ctrl, Param &par, int j, double &db_theta3, double &db_GW, double &db_rPerc3) {
+int Basin::ReGWrecharge_1(Control &ctrl, Param &par, int j, double &db_vadose, double &db_GW, double &db_rPerc_vadose) {
 
-    double perc3 = 0;
-    double depth3 = par._depth3->val[j];
-    double theta3 = db_theta3;
+    double perc_vadose = 0;
+    double vadose = db_vadose;
 
-    if (theta3 > _thetaFC3->val[j]){
-        perc3 = (theta3 - _thetaFC3->val[j]) * depth3 * _p_perc3->val[j] * par._wRecharge->val[j];
-        theta3 -= perc3 / depth3;
-        db_GW += perc3;
+    if (vadose > roundoffERR){
+      perc_vadose = vadose * par._perc_vadose_coeff->val[j];
+      vadose -= perc_vadose;
+      db_GW += perc_vadose;           
     }
 
-    db_theta3 = theta3;
-    db_rPerc3 = perc3;     
+    db_vadose = vadose;
+    db_rPerc_vadose = perc_vadose;     
 
     return EXIT_SUCCESS;
 }
 
 
-int Basin::ReGWrecharge_2(Control &ctrl, Param &par, int j, double &db_theta3, double &db_GW, double &db_rPerc3) {
 
-    double perc3 = 0;
-    double depth3 = par._depth3->val[j];
-    double theta3 = db_theta3;
+int Basin::ReGWrecharge_2(Control &ctrl, Param &par, int j, double &db_vadose, double &db_GW, double &db_rPerc_vadose) {
 
-    if (theta3 > _thetaFC3->val[j]){
-        perc3 = (theta3 - _thetaFC3->val[j]) * depth3 * par._wRecharge->val[j];
-        theta3 -= perc3 / depth3;
-        db_GW += perc3;
+    double perc_vadose = 0;
+    double vadose = db_vadose;
+
+    if (vadose > roundoffERR){
+      perc_vadose = vadose * par._perc_vadose_coeff->val[j] * (_theta3->val[j] / _thetaS3->val[j]);
+      perc_vadose = min(perc_vadose, vadose);
+      vadose -= perc_vadose;
+      db_GW += perc_vadose;           
     }
 
-    db_theta3 = theta3;
-    db_rPerc3 = perc3;     
+    db_vadose = vadose;
+    db_rPerc_vadose = perc_vadose;     
 
     return EXIT_SUCCESS;
 }
+

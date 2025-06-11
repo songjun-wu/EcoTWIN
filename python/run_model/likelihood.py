@@ -10,30 +10,28 @@ import time
 def likelihood(param, chainID, modelID):
 
     err = 0
-    
 
     if modelID == 0:
-        catchment_list = [0,6,7]
+        catchment_list = [0]
     elif modelID == 1:
         catchment_list = [1]
     elif modelID == 2:
         catchment_list = [2]
     elif modelID == 3:
-        catchment_list = [3,5]
-
+        catchment_list = [3,4,5,6]
+    elif modelID == 4:
+        catchment_list = [7,8,9,10]
+    
     # Loop over each catchment
     for kk in catchment_list:
-
-        stop0 = time.time()
 
         local_path = os.getcwd()
         runpath = Path.work_path + '/chain_' +str(chainID)  + '/' + str(Output.Catchment_ID[kk]) + '/run/'
 
-        
         # Sort env
         GEM_tools.gen_param(runpath, Info, Param, param)
         GEM_tools.gen_no3_addtion(runpath, Info)
-
+        
         # Model run        
         os.chdir(runpath)
         if os.path.exists('outputs'):
@@ -64,15 +62,11 @@ def likelihood(param, chainID, modelID):
                 for i in range(_obs.shape[0]):
                     sim = _sim[dict['sim_idx'][kk][i], :]
                     obs = _obs[i,:]
-                    err += (1 - GEM_tools.kge_modified(sim, obs)) * dict['weights'][kk][i]
+                    err += (1 - GEM_tools.kge(sim, obs)) * dict['weights'][kk][i]
                     # todo
                     #if chainID==0 and modelID==0:
                     #    print('   ', Output.Catchment_ID[kk], key, i, GEM_tools.kge_modified(sim, obs), dict['weights'][kk][i], np.nanmean(sim), np.nanmean(obs) )
                     #    np.savetxt('/data/scratch/wusongj/paper4/cali/chain_0/param.txt', param)
-                
-        stop1 = time.time()
-        if chainID==0:
-            print(chainID, modelID, Output.Catchment_ID[kk], (stop1-stop0)/60, err, flush=True)
 
     
     os.chdir(local_path)
@@ -85,4 +79,5 @@ def likelihood(param, chainID, modelID):
 
 
 if __name__ == '__main__':
+    likelihood(np.full(300, 0.5), 0, 4)
     pass

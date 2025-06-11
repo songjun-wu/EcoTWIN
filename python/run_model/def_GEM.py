@@ -124,18 +124,24 @@ class Output:
         N_sites.append(len(np.unique(sim_q_idx[i]+sim_iso_idx[i]+sim_no3_idx[i])))
 
     # Weight for each site in each catchment; shape = (N_catchments, N_sites)
-    overall_weights_for_each_var = [0.5, 0.2, 0.3]
+    overall_weights_for_each_var = [0.4, 0.3, 0.3]
     sim_q_weights   = []
     sim_iso_weights = []
     sim_no3_weights = []
 
+    n_q_sites = 0
+    n_iso_sites = 0
+    n_no3_sites = 0
     for i in range(N_catchments):
-        n_valid_weights =   int((len(sim_q_idx[i])>0))*overall_weights_for_each_var[0] + \
-                            int((len(sim_iso_idx[i])>0))*overall_weights_for_each_var[1] + \
-                            int((len(sim_no3_idx[i])>0))*overall_weights_for_each_var[2]
-        sim_q_weights.append(np.full(len(sim_q_idx[i]), 1)/len(sim_q_idx[i]) * (overall_weights_for_each_var[0] / n_valid_weights) /N_catchments)
-        sim_iso_weights.append(np.full(len(sim_iso_idx[i]), 1)/len(sim_iso_idx[i]) * (overall_weights_for_each_var[1] / n_valid_weights) /N_catchments)
-        sim_no3_weights.append(np.full(len(sim_no3_idx[i]), 1)/len(sim_no3_idx[i]) * (overall_weights_for_each_var[2] / n_valid_weights) /N_catchments)
+        n_q_sites += len(sim_q_idx[i])
+        n_iso_sites += len(sim_iso_idx[i])
+        n_no3_sites += len(sim_no3_idx[i])
+
+    for i in range(N_catchments):
+
+        sim_q_weights.append(np.full(len(sim_q_idx[i]), overall_weights_for_each_var[0] / n_q_sites))
+        sim_iso_weights.append(np.full(len(sim_q_idx[i]), overall_weights_for_each_var[1] / n_iso_sites))
+        sim_no3_weights.append(np.full(len(sim_q_idx[i]), overall_weights_for_each_var[2] / n_no3_sites))
 
   
     sim = {}
@@ -151,11 +157,11 @@ class Param:
     ### === parameters to calibrate === 
     ref = {}    
 
-    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None}
+    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[2]*Info.N_soil, 'fix_value':None}
 
     # === PET seperation and Max canopy storage === 
     ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse, 'fix_value':None}  # Maximum canopy storage = alpha * PET
-    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # PET to PE and PT
+    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # the negative the more transpiration
 
     # Snow
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-5], 'max':[2], 'fix_value':None}
@@ -172,7 +178,7 @@ class Param:
     ref['PTF_Ks_const']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_const',   'min':[-3,-1.2,-1.2,-1.2,-1.2,-1.2], 'max':[-2.9,-0.2,-0.2,-0.2,-0.2,-0.2], 'fix_value':None}
     ref['PTF_Ks_sand']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_sand',   'min':[0.006]*Info.N_soil, 'max':[0.026]*Info.N_soil, 'fix_value':None}
     ref['PTF_Ks_clay']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_clay',   'min':[0.003]*Info.N_soil, 'max':[0.013]*Info.N_soil, 'fix_value':None}
-    ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[1,15,15,15,15,15], 'fix_value':None}  # Low infiltration capacity in urban areas
+    #ref['PTF_Ks_slope']   = {'type':'soil',   'log':0, 'file':'PTF_Ks_slope',   'min':[0.1]*Info.N_soil, 'max':[1,15,15,15,15,15], 'fix_value':None}  # Low infiltration capacity in urban areas
     
     # Field capacity
     #ref['SWP']   = {'type':'soil',   'log':0, 'file':'SWP',   'min':[10]*Info.N_soil, 'max':[33]*Info.N_soil, 'fix_value':[33]*Info.N_soil}
@@ -197,8 +203,8 @@ class Param:
     ref['ET_reduction'] = {'type':'global',   'log':0, 'file':'ET_reduction',   'min':[0.6], 'max':[1.0], 'fix_value':None} # ET correction weights
 
     # === GW recharge === 
-    ref['wRecharge']   = {'type':'soil',   'log':1, 'file':'wRecharge',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Correction factor for GW recharge
-    ref['init_GW'] = {'type':'landuse',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None} # Initial GW storage in m
+    ref['perc_vadose_coeff']   = {'type':'soil',   'log':1, 'file':'perc_vadose_coeff',   'min':[1e-5]*Info.N_soil, 'max':[1]*Info.N_soil, 'fix_value':None} # Coefficient parameter for GW recharge
+    ref['init_GW'] = {'type':'landuse',   'log':0, 'file':'init_GW',   'min':[1]*Info.N_landuse, 'max':[50]*Info.N_landuse, 'fix_value':None} # Initial GW storage in m
 
     # === Routing === 
     ref['pOvf_toChn']   = {'type':'landuse',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size)

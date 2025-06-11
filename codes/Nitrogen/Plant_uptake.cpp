@@ -23,7 +23,6 @@ int Basin::Sort_plant_uptake(Control &ctrl, Param &par){
     vector<double> potential_uptake_IN_layer1, potential_uptake_IN_layer2, potential_uptake_IN_layer3;
     int idx;
 
-    double DT = ctrl.Simul_tstep / 86400;  // all rates are calculated at daily timesteps
     if (par.sort_plant_uptake_OK==0) {
 
         for (int i = 0; i < num_landuse; i++) {
@@ -41,7 +40,9 @@ int Basin::Sort_plant_uptake(Control &ctrl, Param &par){
                     }else {
                         uptake_IN = 0.0;
                     }
-                } 
+                } else {
+                    uptake_IN = 0.0;
+                }
 
                 _potential_uptake_layer1[i].push_back(uptake_IN * upper_uptake[idx]); // * p_cell * root_fraction_1
                 _potential_uptake_layer2[i].push_back(uptake_IN * upper_uptake[idx]);   // * p_cell * (1 - root_fraction_1)
@@ -69,7 +70,6 @@ int Basin::Plant_uptake(Control &ctrl, Param &par, Atmosphere &atm){
     int idx;
 
     double day_of_year = ctrl.day_of_year;;  // Day of year
-    //double DT = ctrl.Simul_tstep / 86400;  // all rates are calculated at daily timesteps
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 

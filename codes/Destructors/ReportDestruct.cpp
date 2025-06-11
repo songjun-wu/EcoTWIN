@@ -29,6 +29,7 @@ int Report::dtor(Control &ctrl){
   if (of__theta1.is_open())  of__theta1.close();
   if (of__theta2.is_open())  of__theta2.close();
   if (of__theta3.is_open())  of__theta3.close();
+  if (of__vadose.is_open())  of__vadose.close();
   if (of__GW.is_open())  of__GW.close();
   if (of__Th.is_open())  of__Th.close();
   if (of__snowmelt.is_open())  of__snowmelt.close();
@@ -36,11 +37,12 @@ int Report::dtor(Control &ctrl){
   if (of__Perc1.is_open())  of__Perc1.close();
   if (of__Perc2.is_open())  of__Perc2.close();
   if (of__Perc3.is_open())  of__Perc3.close();
+  if (of__Perc_vadose.is_open())  of__Perc_vadose.close();
   if (of__rinfilt.is_open())  of__rinfilt.close();
   if (of__rPerc1.is_open())  of__rPerc1.close();
   if (of__rPerc2.is_open())  of__rPerc2.close();
   if (of__rPerc3.is_open())  of__rPerc3.close();
-  if (of__rrPerc3.is_open())  of__rrPerc3.close();
+  if (of__rPerc_vadose.is_open())  of__rPerc_vadose.close();
   if (of__Ei.is_open())  of__Ei.close();
   if (of__Es.is_open())  of__Es.close();
   if (of__Tr.is_open())  of__Tr.close();
@@ -66,6 +68,7 @@ int Report::dtor(Control &ctrl){
   if (of__d18o_layer1.is_open())  of__d18o_layer1.close();
   if (of__d18o_layer2.is_open())  of__d18o_layer2.close();
   if (of__d18o_layer3.is_open())  of__d18o_layer3.close();
+  if (of__d18o_vadose.is_open())  of__d18o_vadose.close();
   if (of__d18o_GW.is_open())  of__d18o_GW.close();
   if (of__d18o_chanS.is_open())  of__d18o_chanS.close();
   if (of__age_I.is_open())  of__age_I.close();
@@ -74,6 +77,7 @@ int Report::dtor(Control &ctrl){
   if (of__age_layer1.is_open())  of__age_layer1.close();
   if (of__age_layer2.is_open())  of__age_layer2.close();
   if (of__age_layer3.is_open())  of__age_layer3.close();
+  if (of__age_vadose.is_open())  of__age_vadose.close();
   if (of__age_GW.is_open())  of__age_GW.close();
   if (of__age_chanS.is_open())  of__age_chanS.close();
   if (of__no3_I.is_open())  of__no3_I.close();
@@ -82,6 +86,7 @@ int Report::dtor(Control &ctrl){
   if (of__no3_layer1.is_open())  of__no3_layer1.close();
   if (of__no3_layer2.is_open())  of__no3_layer2.close();
   if (of__no3_layer3.is_open())  of__no3_layer3.close();
+  if (of__no3_vadose.is_open())  of__no3_vadose.close();
   if (of__no3_GW.is_open())  of__no3_GW.close();
   if (of__no3_chanS.is_open())  of__no3_chanS.close();
   if (of__nitrogen_add.is_open())  of__nitrogen_add.close();
@@ -96,6 +101,7 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__theta1==2) delete _theta1_acc;
   if (ctrl.report__theta2==2) delete _theta2_acc;
   if (ctrl.report__theta3==2) delete _theta3_acc;
+  if (ctrl.report__vadose==2) delete _vadose_acc;
   if (ctrl.report__GW==2) delete _GW_acc;
   if (ctrl.report__Th==2) delete _Th_acc;
   if (ctrl.report__snowmelt==2) delete _snowmelt_acc;
@@ -103,11 +109,12 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__Perc1==2) delete _Perc1_acc;
   if (ctrl.report__Perc2==2) delete _Perc2_acc;
   if (ctrl.report__Perc3==2) delete _Perc3_acc;
+  if (ctrl.report__Perc_vadose==2) delete _Perc_vadose_acc;
   if (ctrl.report__rinfilt==2) delete _rinfilt_acc;
   if (ctrl.report__rPerc1==2) delete _rPerc1_acc;
   if (ctrl.report__rPerc2==2) delete _rPerc2_acc;
   if (ctrl.report__rPerc3==2) delete _rPerc3_acc;
-  if (ctrl.report__rrPerc3==2) delete _rrPerc3_acc;
+  if (ctrl.report__rPerc_vadose==2) delete _rPerc_vadose_acc;
   if (ctrl.report__Ei==2) delete _Ei_acc;
   if (ctrl.report__Es==2) delete _Es_acc;
   if (ctrl.report__Tr==2) delete _Tr_acc;
@@ -133,6 +140,7 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__d18o_layer1==2) delete _d18o_layer1_acc;
   if (ctrl.report__d18o_layer2==2) delete _d18o_layer2_acc;
   if (ctrl.report__d18o_layer3==2) delete _d18o_layer3_acc;
+  if (ctrl.report__d18o_vadose==2) delete _d18o_vadose_acc;
   if (ctrl.report__d18o_GW==2) delete _d18o_GW_acc;
   if (ctrl.report__d18o_chanS==2) delete _d18o_chanS_acc;
   if (ctrl.report__age_I==2) delete _age_I_acc;
@@ -141,6 +149,7 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__age_layer1==2) delete _age_layer1_acc;
   if (ctrl.report__age_layer2==2) delete _age_layer2_acc;
   if (ctrl.report__age_layer3==2) delete _age_layer3_acc;
+  if (ctrl.report__age_vadose==2) delete _age_vadose_acc;
   if (ctrl.report__age_GW==2) delete _age_GW_acc;
   if (ctrl.report__age_chanS==2) delete _age_chanS_acc;
   if (ctrl.report__no3_I==2) delete _no3_I_acc;
@@ -149,6 +158,7 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__no3_layer1==2) delete _no3_layer1_acc;
   if (ctrl.report__no3_layer2==2) delete _no3_layer2_acc;
   if (ctrl.report__no3_layer3==2) delete _no3_layer3_acc;
+  if (ctrl.report__no3_vadose==2) delete _no3_vadose_acc;
   if (ctrl.report__no3_GW==2) delete _no3_GW_acc;
   if (ctrl.report__no3_chanS==2) delete _no3_chanS_acc;
   if (ctrl.report__nitrogen_add==2) delete _nitrogen_add_acc;

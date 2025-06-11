@@ -68,7 +68,7 @@ class Param {
   vector<double> froot_coeff;
   vector<double> ET_reduction;
   vector<double> init_GW;
-  vector<double> wRecharge;
+  vector<double> perc_vadose_coeff;
   vector<double> pOvf_toChn;
   vector<double> Ks_vadose;
   vector<double> Ks_GW;
@@ -91,7 +91,7 @@ class Param {
   vector<double> deni_soil_moisture_thres;
   svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
-  svector *_wRecharge;  // The weighting parameter for GW recharge [-], only needed when opt_recharge = 1
+  svector *_perc_vadose_coeff;  // The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2
   svector *_nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   svector *_ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   svector *_rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
