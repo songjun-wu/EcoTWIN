@@ -34,6 +34,7 @@ Param::Param(Control &ctrl){
   /* Parameters */
   _depth3 = new svector(_sortedGrid.size);
   _alpha = new svector(_sortedGrid.size);
+  _irrigation_FC_thres = new svector(_sortedGrid.size);
   _perc_vadose_coeff = new svector(_sortedGrid.size);
   _nearsurface_mixing = new svector(_sortedGrid.size);
   _ratio_to_interf = new svector(_sortedGrid.size);

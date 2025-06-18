@@ -11,6 +11,7 @@ def likelihood(param, chainID, modelID):
 
     err = 0
 
+
     if modelID == 0:
         catchment_list = [0]
     elif modelID == 1:
@@ -18,14 +19,15 @@ def likelihood(param, chainID, modelID):
     elif modelID == 2:
         catchment_list = [2]
     elif modelID == 3:
-        catchment_list = [3,4,5,6]
+        catchment_list = [3,4,5,6,11]
     elif modelID == 4:
         catchment_list = [7,8,9,10]
+
+    local_path = os.getcwd()
     
     # Loop over each catchment
     for kk in catchment_list:
-
-        local_path = os.getcwd()
+        
         runpath = Path.work_path + '/chain_' +str(chainID)  + '/' + str(Output.Catchment_ID[kk]) + '/run/'
 
         # Sort env

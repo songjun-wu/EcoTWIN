@@ -39,22 +39,24 @@ int Basin::Irrigation(Control &ctrl, Param &par){
 
         // Calculate the water deficit
         for (int i = 0; i < num_landuse; i++) {
-            
+
             idx = landuse_idx[i];
             p_cell = par.param_category->val[idx][j];  // Area proportion of each land use type
 
-            // Check if there is water demand for irrigation
-            if (ctrl.day_of_year < plant_day[idx] or ctrl.day_of_year > harvest_day[idx]) continue;
-            if (irrigation_thres[idx] <= roundoffERR or p_cell <= roundoffERR) continue;
-       
-            // Determine if irrigation is needed based on the water stress from the first two layers
-            plant_water_demand = ((_thetaFC1->val[j]-_thetaWP1->val[j])*_depth1->val[j] + (_thetaFC2->val[j]-_thetaWP2->val[j])*_depth2->val[j]) * irrigation_thres[idx];
-            available_water_storage = (_theta1->val[j]-_thetaWP1->val[j])*_depth1->val[j] + (_theta2->val[j]-_thetaWP2->val[j])*_depth2->val[j];
-            irrigation_deficit = (plant_water_demand - available_water_storage) * p_cell * par._irrigation_coeff->val[j];  // Deficit scaled by an irrigation coefficient
+            if (is_crop[idx]){
+                // Check if there is water demand for irrigation
+                if (ctrl.day_of_year < plant_day[idx] or ctrl.day_of_year > harvest_day[idx]) continue;
+                if (irrigation_thres[idx] <= roundoffERR or p_cell <= roundoffERR) continue;
+        
+                // Determine if irrigation is needed based on the water stress from the first two layers
+                plant_water_demand = ((_thetaFC1->val[j]-_thetaWP1->val[j])*_depth1->val[j] + (_thetaFC2->val[j]-_thetaWP2->val[j])*_depth2->val[j]) * par._irrigation_FC_thres->val[j]; //* irrigation_thres[idx];
+                available_water_storage = (_theta1->val[j]-_thetaWP1->val[j])*_depth1->val[j] + (_theta2->val[j]-_thetaWP2->val[j])*_depth2->val[j];
+                irrigation_deficit = (plant_water_demand - available_water_storage) * p_cell * par._irrigation_coeff->val[j];  // Deficit scaled by an irrigation coefficient
 
-            if (irrigation_deficit > roundoffERR){
-                acc_irrigation_deficit  += irrigation_deficit;
-            }
+                if (irrigation_deficit > roundoffERR){
+                    acc_irrigation_deficit  += irrigation_deficit;
+                }
+            }   
         }
 
         // Irrigation if needed

@@ -34,7 +34,7 @@ sortedGrid Control::SortGridLDD(){
   for (r=1; r<_rowNum; r++){
     for (c=1; c<_colNum; c++){
       value = temp->matrix[r][c];
-      if (value>0 && value <130){
+      if (value> -2 && value <130){
         counter++;
       }     
     }
@@ -69,6 +69,9 @@ sortedGrid Control::SortGridLDD(){
               
               switch (value) 
               {
+              case -1:  // outlet
+                  rr = -9999;
+                  cc = -9999;
               case 5:  // outlet
                   rr = -9999;
                   cc = -9999;

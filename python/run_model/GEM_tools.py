@@ -197,7 +197,7 @@ def add_edge(arr, ext=1, no_data = -9999.0):
 
 
 
-def sort_directory(mode, Path, Cali, Output):
+def sort_directory(mode, Path, Cali, Output, catchment_list=None):
     if mode == 'DREAM_cali' or mode == 'cali_sep':
         os.makedirs(Path.work_path, exist_ok=True)
         for i in range(Cali.nchains):
@@ -211,6 +211,24 @@ def sort_directory(mode, Path, Cali, Output):
                 os.makedirs(catchment_path, exist_ok=True)
                 os.makedirs(run_path, exist_ok=True)
                 os.makedirs(output_path, exist_ok=True)
+
+
+    elif mode == 'forward_all':
+        os.makedirs(Path.work_path, exist_ok=True)
+        os.makedirs(Path.work_path+'/'+mode+'/run', exist_ok=True)
+        os.makedirs(Path.work_path+'/'+mode+'/outputs', exist_ok=True)  # Output folder
+        # Create sub-directories for each catchment
+        if catchment_list is None:
+            catchment_list = Output.Catchment_ID
+        for catchment_ID in catchment_list:
+            catchment_path = Path.work_path + '/' + mode + '/run/' + str(catchment_ID) + '/'
+            run_path =  catchment_path + '/run/'    # The path for model runs
+            output_path = run_path + 'outputs/'         # The path for output saving
+            if os.path.exists(run_path):  # Clean the run path
+                shutil.rmtree(run_path)
+            os.makedirs(catchment_path, exist_ok=True)
+            os.makedirs(run_path, exist_ok=True)
+            os.makedirs(output_path, exist_ok=True)
     
     else:
         os.makedirs(Path.work_path, exist_ok=True)
@@ -231,7 +249,7 @@ def sort_directory(mode, Path, Cali, Output):
         
  
 
-def set_env(mode, Path, nchains, Output):
+def set_env(mode, Path, nchains, Output, catchment_list=None):
     if mode == 'DREAM_cali' or mode=='cali_sep':
         for i in range(nchains):
             dir_for_each_chain = Path.work_path + '/chain_' +str(i) + '/'    # Working directory for each chain
@@ -252,6 +270,23 @@ def set_env(mode, Path, nchains, Output):
                 # copy configs
                 shutil.copyfile(Path.config_path+'config_cali.ini',  run_path+'config.ini')
     
+    elif mode == 'forward_all':
+        if catchment_list is None:
+            catchment_list = Output.Catchment_ID
+        for catchment_ID in catchment_list:
+            catchment_path = Path.work_path + '/' + mode + '/run/' + str(catchment_ID) + '/'
+            run_path =  catchment_path + '/run/'    # The path for model runs
+            # link the model
+            if not os.path.exists(run_path + Path.path_EXEC):
+                os.symlink(Path.model_path + Path.path_EXEC, run_path + Path.path_EXEC)
+            # copy inputs
+            #shutil.copytree(Path.data_path+'spatial/', run_path+'spatial/')
+            # copy configs
+            if mode == 'SA':
+                shutil.copyfile(Path.config_path+'config_cali.ini',  run_path+'config.ini')
+            else:
+                shutil.copyfile(Path.config_path+'config_forward.ini',  run_path+'config.ini')
+    
     else:
         for kk in range(Output.N_catchments):
             catchment_path = Path.work_path + '/' + mode + '/' + str(Output.Catchment_ID[kk]) + '/'
@@ -268,7 +303,7 @@ def set_env(mode, Path, nchains, Output):
                 shutil.copyfile(Path.config_path+'config_forward.ini',  run_path+'config.ini')
 
 
-def set_config(mode, Path, Cali, Output):
+def set_config(mode, Path, Cali, Output, catchment_list=None):
     if mode == 'DREAM_cali' or mode == 'cali_sep':
         for i in range(Cali.nchains):
             dir_for_each_chain = Path.work_path + '/chain_' +str(i) + '/'    # Working directory for each chain
@@ -284,6 +319,28 @@ def set_config(mode, Path, Cali, Output):
 
                 with open(run_path+'config.ini', 'w') as f:
                     f.writelines(lines)
+    elif mode == 'forward_all':
+        if catchment_list is None:
+            catchment_list = Output.Catchment_ID
+        for catchment_ID in catchment_list:
+            catchment_path = Path.work_path + '/' + mode + '/run/' + str(catchment_ID) + '/'
+            run_path =  catchment_path + '/run/'    # The path for model runs
+            with open(run_path+'config.ini', 'r') as f:
+                lines = np.array(f.readlines())
+
+                #lines = np.append('Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(Output.Catchment_ID[kk])+'/spatial/\n', lines)
+                #lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(Output.Catchment_ID[kk])+'/climate/\n', lines)
+                lines = np.append('Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(catchment_ID)+'/spatial/\n', lines) # todo
+                lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(catchment_ID)+'/climate/\n', lines)
+                for line in lines:
+                    if 'path_EXEC = ' in line:
+                        lines[i] = "    path_EXEC = 'gEcoHydro_forward'\n"
+
+                if mode == 'SA':
+                    seconds_since_1980 = np.loadtxt( Path.data_path + 'catchment_info/cali/'+str(catchment_ID)+'/obs/seconds_from_1980.txt')
+                    lines = np.append('Simul_end = '+str(int(seconds_since_1980))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n', lines)
+            with open(run_path+'config.ini', 'w') as f:
+                f.writelines(lines)
     
     else:
         for kk in range(Output.N_catchments):
@@ -402,5 +459,11 @@ def gen_no3_addtion(run_path, Info):
     
     with open(run_path+'Crop_info.ini', 'w') as f:
         f.writelines(lines)
+
+
+
+
+
+
 
 

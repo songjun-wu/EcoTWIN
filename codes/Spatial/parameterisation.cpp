@@ -46,6 +46,13 @@ int Param::Parameterisation(Control &ctrl){
       _alpha->val[j] += param_category->val[k][j] * alpha[k];
    }}}
 
+  _irrigation_FC_thres->reset();
+  for (int k=0; k<param_category->n_category; k++){
+    if (irrigation_FC_thres[k]!=nodata) {
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _irrigation_FC_thres->val[j] += param_category->val[k][j] * irrigation_FC_thres[k];
+   }}}
+
   _perc_vadose_coeff->reset();
   for (int k=0; k<param_category->n_category; k++){
     if (perc_vadose_coeff[k]!=nodata) {

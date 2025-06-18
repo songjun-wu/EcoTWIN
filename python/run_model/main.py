@@ -6,6 +6,7 @@ from optparse import OptionParser
 import numpy as np
 import time
 import post_plot
+import GIS_tools
 
 
 
@@ -245,7 +246,7 @@ elif mode == 'cali_sep':
         time.sleep(120)
 
 
-elif mode == 'test':
+elif mode == 'test_cali':
     # Model structure update
     os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
     os.system('python3 develop.py')  # todo
@@ -254,19 +255,16 @@ elif mode == 'test':
     GEM_tools.sort_directory(mode, Path, Cali, Output)
     GEM_tools.set_env(mode, Path, Cali, Output)
     GEM_tools.set_config(mode, Path, Cali, Output)
-    
+
     counter = 0
 
-
-    for gg in range(12):  # Catchment ID
-
+    for gg in range(13):  # Catchment ID
         catchment_ID = Output.Catchment_ID[gg]
         print(catchment_ID)
         run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
         # Which parameter set to use?
         param_N = GEM_tools.get_param_N(Info, Param)
-
-
+        """
         try:
             likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain.bin')
             best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
@@ -274,12 +272,14 @@ elif mode == 'test':
         except Exception as e:
             print(e)
             continue
+        """
+        # todo
+        #param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param.bin')
 
-   
-        #param = np.full(300, 0.5)  # todo
+        param = np.full(300, 0.5)  # todo
+        
         GEM_tools.gen_param(run_path, Info, Param, param)
         GEM_tools.gen_no3_addtion(run_path, Info)
-        
         
         # Model run
         os.chdir(run_path)           
@@ -300,6 +300,150 @@ elif mode == 'test':
         
         # Plot performance
         post_plot.plot_performance(run_path+'outputs/', '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', current_path+'/plots/', catchment_ID, chainID=0)
+
+elif mode == 'test_forward':
+
+
+    catchment_ID = 1345871
+
+
+    # Model structure update
+    os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
+    os.system('python3 develop.py')  # todo
+
+    # Set env
+    run_path = '/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/'
+    if os.path.exists(run_path):
+        shutil.rmtree(run_path)
+    shutil.copytree('/data/scratch/wusongj/paper4/forward_all/run/'+str(catchment_ID), run_path)
+    os.remove(run_path+'run/gEcoHydro')
+    os.symlink(Path.model_path+Path.path_EXEC, '/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/gEcoHydro')
+
+    run_path += 'run/'
+    param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param.bin')
+
+    # Model run
+    os.chdir(run_path)           
+    os.system('./gEcoHydro')
+    os.chdir(current_path)
+
+
+
+elif mode == 'forward_cali':
+    # Model structure update
+    os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
+    os.system('python3 develop.py')  # todo
+
+    # set the env
+    GEM_tools.sort_directory(mode, Path, Cali, Output)
+    GEM_tools.set_env(mode, Path, Cali, Output)
+    GEM_tools.set_config(mode, Path, Cali, Output)
+   
+    nchains = 20
+
+    # Get parameter
+    # Which parameter set to use?
+    param_N = GEM_tools.get_param_N(Info, Param)
+
+    param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param.bin')
+
+    """"""
+    for gg in range(13):  # Catchment ID
+
+        catchment_ID = Output.Catchment_ID[gg]
+        run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
+
+        if os.path.exists(Path.work_path + mode +'/outputs/cali/' + catchment_ID):
+            shutil.rmtree(Path.work_path + mode +'/outputs/cali/' + catchment_ID)
+
+        
+        GEM_tools.gen_param(run_path, Info, Param, param)
+        GEM_tools.gen_no3_addtion(run_path, Info)
+        
+        # Model run
+        os.chdir(run_path)           
+        os.system('./gEcoHydro')
+        os.chdir(current_path)
+
+        # Save outputs for each catchment
+        GEM_tools.save_outputs(run_path+'outputs/', Path.work_path + mode +'/outputs/cali/' + catchment_ID + '/')
+
+        # Plot spatial maps and Ts results
+        post_plot.plot_hydrology(run_path+'outputs/', 'hydro_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', catchment_ID=catchment_ID, if_average=False)
+        post_plot.plot_tracking(run_path+'outputs/', 'WQ_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', catchment_ID=catchment_ID, if_average=False)
+
+        fnames = ['hydro_'+str(catchment_ID)+'_Ts.png', 'hydro_'+str(catchment_ID)+'_map.png',
+                    'WQ_'+str(catchment_ID)+'_Ts.png', 'WQ_'+str(catchment_ID)+'_map.png']
+        for fname in fnames:
+            if os.path.exists(run_path+'outputs/'+fname):
+                shutil.copyfile(run_path+'outputs/'+fname, Path.work_path + '/plots/'+ mode + '/' + fname.split('.')[0]+'.png')
+       
+        # Plot performance
+        post_plot.plot_performance(run_path+'outputs/', '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', Path.work_path + '/plots/'+ mode + '/', catchment_ID, chainID=0)
+
+
+elif mode == 'forward_all':
+
+    catchment_list = [f for f in os.listdir('/data/scratch/wusongj/paper4/data/catchment_info/forward')]
+    nchains = 40
+    chainIDs = np.arange(1, 40)
+    replace = True
+    model_run = True
+    model_post = False
+
+    if model_run:
+        # Model structure update
+        os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
+        os.system('python3 develop.py')  # todo
+        # set the env
+        #GEM_tools.sort_directory(mode, Path, Cali, Output, catchment_list=catchment_list)
+        #GEM_tools.set_env(mode, Path, Cali, Output, catchment_list=catchment_list)
+        #GEM_tools.set_config(mode, Path, Cali, Output, catchment_list=catchment_list)  
+        # Get parameter
+        # Which parameter set to use?
+        param_N = GEM_tools.get_param_N(Info, Param)
+        _param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param_all.bin').reshape(nchains,-1)
+        counter = 0
+        for chainID in chainIDs:
+            for catchment_ID in catchment_list:
+                catchment_ID = str(catchment_ID)
+                run_path = Path.work_path + mode + '/run/' + str(catchment_ID) + '/run/'
+                save_path = Path.work_path + mode +'/outputs/cali/' + catchment_ID + '/'+str(chainID)+'/'
+                
+                os.makedirs(save_path, exist_ok=True)
+                if os.path.exists(save_path):
+                    shutil.rmtree(save_path)
+                GEM_tools.gen_param(run_path, Info, Param, param)
+                GEM_tools.gen_no3_addtion(run_path, Info)
+                # Model run
+                os.chdir(run_path)           
+                os.system('./gEcoHydro')
+                os.chdir(current_path)
+                # Save outputs for each catchment
+                GEM_tools.save_outputs(run_path+'outputs/', save_path)
+                counter += 1
+                print(str(counter)+' / '+str(len(catchment_list)) + '  :   ' + str(catchment_ID))
+
+    if model_post:
+        Vars = ['canopy_storage', 'snow_depth']
+        Vars.extend(['SMC_layer1', 'SMC_layer2', 'SMC_layer3', 'vadose', 'groundwater_storage'])
+        Vars.extend(['snowmelt', 'throufall', 'irrigation_from_GW', 'irrigation_from_river'])
+        Vars.extend(['infiltration', 'perc_layer1', 'perc_layer2', 'perc_layer3', 'perc_vadose'])
+        Vars.extend(['rinfiltration', 'rperc_layer1', 'rperc_layer2', 'rperc_layer3'])
+        Vars.extend(['soil_evap', 'transp_layer1', 'transp_layer2', 'transp_layer3', 'channel_evaporation'])
+        Vars.extend(['overland_flow_input','overland_flow_output','interflow_input', 'interflow_output','GWflow_input', 'GWflow_output'])
+        Vars.extend(['overland_flow_toChn', 'interflow_toChn', 'GWflow_toChn', 'discharge'])
+        Vars.extend(['d18o_canopy_storage', 'd18o_snow_depth'])
+        Vars.extend(['d18o_SMC_layer1', 'd18o_SMC_layer2', 'd18o_SMC_layer3', 'd18o_vadose', 'd18o_groundwater_storage', 'd18o_chanS'])
+        Vars.extend(['age_canopy_storage', 'age_snow_depth'])
+        Vars.extend(['age_SMC_layer1', 'age_SMC_layer2', 'age_SMC_layer3', 'age_groundwater_storage', 'age_chanS'])
+        Vars.extend(['no3_canopy_storage', 'no3_snow_depth'])
+        Vars.extend(['no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'no3_vadose', 'no3_groundwater_storage', 'no3_chanS'])
+        Vars.extend(['nitrogen_addition', 'plant_uptake', 'deni_soil', 'minerl_soil', 'degrad_soil','deni_river'])
+        #post_plot.merge_spatial_results_EU(mode, catchment_list, Vars, replace)
+        #post_plot.plot_spatial_results_EU(mode, Vars, replace)
+        post_plot.merge_performance(mode, catchment_list)
+        #post_plot.plot_performance_EU(mode)
 
 
 elif mode == 'forward_sep':
@@ -440,13 +584,15 @@ elif mode == 'check':
     lengths = []
     niterations = []
     n_batch = 0
+    param_all = np.array([])
     for i in range(Cali.nchains):
         flag = True
         for niteration in np.arange(0, 2e5, Cali.niterations)[::-1]:
             if flag:
                 try:
                     loglikes = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
-                    #print(len(loglikes), loglikes[-1], np.max(loglikes))
+                    param = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_sampled_params_chain_'+str(i)+'_'+str(int(niteration))+'.bin').reshape(len(loglikes), -1)
+                    param_all = np.append(param_all, param[np.argwhere(loglikes==np.max(loglikes))[0][0],:])
                     arr.append(np.nanmax(loglikes))
                     lengths.append(len(loglikes))
                     niterations.append(niteration)
@@ -456,6 +602,11 @@ elif mode == 'check':
                     pass
             else:
                 break
+
+    likeli = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_logps_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin')
+    param = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_sampled_params_chain_'+str(np.argwhere(arr==np.max(arr))[0][0])+'_'+str(int(niterations[0]))+'.bin').reshape(len(likeli), -1)
+    param[np.argwhere(likeli==np.max(likeli))[0][0], :].tofile('/data/scratch/wusongj/paper4/cali/best_param.bin')
+    param_all.tofile('/data/scratch/wusongj/paper4/cali/best_param_all.bin')
 
     #print(niterations, lengths)
     print('Chains  :  ', n_batch)
@@ -512,12 +663,10 @@ elif mode == 'check_sep':
 
 elif mode == 'bbb':
 
-    pass
-
-    """
     catchment_ID = '6_001'
     ref_asc = '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/dem.asc'
     output_path = '/data/scratch/wusongj/paper4/test/'+catchment_ID+'/run/outputs/'
+    output_path = '/data/scratch/wusongj/paper4/forward_cali/'+catchment_ID+'/run/outputs/'
     fnames = [f for f in os.listdir(output_path) if '_map.bin' in f]
 
     ref_data = np.loadtxt(ref_asc, skiprows=6)
@@ -527,46 +676,8 @@ elif mode == 'bbb':
         data = np.mean(data[2:,:,:], axis=0)
         print(output_path+fname.split('.')[0]+'.asc')
         GEM_tools.create_asc(data, output_path+fname.split('.')[0]+'.asc', ref_asc)
-    """
 
 
-elif mode == 'examine_inputs':
-    """
-    path1 = '/data/scratch/wusongj/paper4/data/catchment_info/cali/291110/'
-    path2 = '/home/wusongj/GEM/test_dmc1//'
-    vars = os.listdir(path1+'climate')
-    for var in vars:
-        try:
-            data1 = np.fromfile(path1+'climate/'+var, dtype=np.float64)
-            data2 = np.fromfile(path2+'climate/'+var, dtype=np.float64)
-            data1[data1==-9999] = np.nan
-            data2[data2==-9999] = np.nan
-            print(var, np.nanmean(data1), np.nanmean(data2))
-        except:
-            pass
-    
-
-    path1 = '/data/scratch/wusongj/paper4/data/catchment_info/cali/291110/'
-    path2 = '/home/wusongj/GEM/test_dmc1/'
-    vars = sorted(os.listdir(path1+'spatial/'))
-    for var in vars:
-        try:
-            if var.endswith('asc'):
-                data1 = np.loadtxt(path1+'spatial/'+var, skiprows=6)
-                data2 = np.loadtxt(path2+'spatial/'+var, skiprows=6)
-                data1[data1==-9999] = np.nan
-                data2[data2==-9999] = np.nan
-                print(var, np.nanmean(data1), np.nanmean(data2))
-            elif var.endswith('bin'):
-                data1 = np.fromfile(path1+'spatial/'+var, dtype=np.float64)
-                data2 = np.fromfile(path2+'spatial/'+var, dtype=np.float64)
-                data1[data1==-9999] = np.nan
-                data2[data2==-9999] = np.nan
-                print(var, np.nanmean(data1), np.nanmean(data2))
-        except:
-            pass
-
-    cat_0 = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/291110/spatial/category_0.bin')
-    print(cat_0)
-    """
     pass
+
+

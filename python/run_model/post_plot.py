@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from def_GEM import Path, Info, Cali, Param, Output
 import GEM_tools
 import pandas as pd
+import GIS_tools
 
 
 nodata = Info.nodata
@@ -457,7 +458,7 @@ def plot_performance_all(sim_path, obs_path, output_path, catchment_ID, nchains,
 
 def plot_param_all(param_path, plot_path, nchains, suffix):
 
-    param = np.fromfile(param_path + 'param.bin')
+    param = np.fromfile(param_path)
     param = param.reshape(nchains, -1).T
 
     keys = Param.ref.keys()
@@ -613,3 +614,231 @@ def plot_param_valid():
     ax.set_yticklabels(param_names, weight='bold')
     fig.savefig('999_param_valid_sorted.png')
 
+
+def merge_spatial_results_EU(mode, catchment_list, vars, replace=False):
+
+    mask_large = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
+    mask_large = mask_large>0
+
+    os.makedirs(Path.work_path + mode +'/outputs/cali_merged/', exist_ok=True)
+    
+    for var in vars:
+        if os.path.exists(Path.work_path + mode +'/outputs/cali_merged/'+var+'.asc') and not replace:
+            continue
+        data_large = np.full(mask_large.shape, np.nan)
+        #counter = 0
+        for catchment_ID in catchment_list:
+            save_path = Path.work_path + mode +'/outputs/cali/' + str(catchment_ID) + '/'
+            upper_left_coord = (np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/upper_left_coord.txt')).astype(np.int64)
+            mask_small = np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/dem.asc', skiprows=6)
+            mask_small = mask_small!=-9999
+            data_small = np.fromfile(save_path+'/'+var+'_map.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
+            data_small = np.mean(data_small, axis=0)
+            data_large = GIS_tools.from_catchment_to_EU(upper_left_coord, mask_small, data_large, data_small)
+            #print(var, counter, len(catchment_list))
+            #counter += 1
+        GEM_tools.create_asc(data_large, Path.work_path + mode +'/outputs/cali_merged/'+var+'.asc', Path.data_path+'catchment_info/land_mask_3035.asc')
+        print(var + '  merged and saved at : ' + Path.work_path + mode +'/outputs/cali_merged/'+var+'.asc')
+        
+
+
+
+
+def plot_spatial_results_EU(mode, vars, replace=False):
+
+    var_info = {
+                'canopy_storage':[[0,2],1000,False],
+                'snow_depth':[[0,100],1000,False],
+                'SMC_layer1':[[0.2,0.6],1,False],
+                'SMC_layer2':[[0.2,0.6],1,False],
+                'SMC_layer3':[[0.2,0.6],1,False],
+                'vadose':[[0,100],1000,False],
+                'groundwater_storage':[[0,50000],1000,False],
+                'snowmelt':[[0,300],1000*365,False],
+                'throufall':[[0,1200],1000*365,False],
+                'irrigation_from_GW':[[0,200],1000*365,False],
+                'irrigation_from_river':[[0,100],1000*365,True],
+                'infiltration':[[0,1500],1000*365,False],
+                'perc_layer1':[[0,900],1000*365,False],
+                'perc_layer2':[[0,900],1000*365,False],
+                'perc_layer3':[[0,900],1000*365,False],
+                'perc_vadose':[[0,900],1000*365,False],
+                'rinfiltration':[[0,500],1000*365,False],
+                'rperc_layer1':[[0,500],1000*365,False],
+                'rperc_layer2':[[0,500],1000*365,False],
+                'rperc_layer3':[[0,500],1000*365,False],
+                'soil_evap':[[0,600],1000*365,False],
+                'transp_layer1':[[0,200],1000*365,False],
+                'transp_layer2':[[0,100],1000*365,False],
+                'transp_layer3':[[0,100],1000*365,False],
+                'channel_evaporation':[[0,20],1000*365,True],
+
+                'overland_flow_input':[[0,500],1000*365,False],
+                'overland_flow_output':[[0,500],1000*365,False],
+                'interflow_input':[[0,2000],1000*365,False],
+                'interflow_output':[[0,2000],1000*365,False],
+                'GWflow_input':[[0,2000],1000*365,False],
+                'GWflow_output':[[0,2000],1000*365,False],
+                'overland_flow_toChn':[[0,1000],1000*365,True],
+                'interflow_toChn':[[0,2000],1000*365,True],
+                'GWflow_toChn':[[0,2000],1000*365,True],
+                'discharge':[[0,200],1,True],
+                
+                'd18o_canopy_storage':[[-15,0],1,False],
+                'd18o_snow_depth':[[-15,0],1,False],
+                'd18o_SMC_layer1':[[-15,0],1,False],
+                'd18o_SMC_layer2':[[-15,0],1,False],
+                'd18o_SMC_layer3':[[-15,0],1,False],
+                'd18o_vadose':[[-15,0],1,False],
+                'd18o_groundwater_storage':[[-15,0],1,False],
+                'd18o_chanS':[[-15,0],1,True],
+
+                'age_canopy_storage':[[0,10],1,False],
+                'age_snow_depth':[[0,500],1,False],
+                'age_SMC_layer1':[[0,500],1,False],
+                'age_SMC_layer2':[[0,1000],1,False],
+                'age_SMC_layer3':[[0,3500],1,False],
+                'age_groundwater_storage':[[0,4000],1,False],
+                'age_chanS':[[0,3500],1,True],
+
+                'no3_canopy_storage':[[0,4],1,False],
+                'no3_snow_depth':[[0,15],1,False],
+                'no3_SMC_layer1':[[0,100],1,False],
+                'no3_SMC_layer2':[[0,30],1,False],
+                'no3_SMC_layer3':[[0,30],1,False],
+                'no3_vadose':[[0,15],1,False],
+                'no3_groundwater_storage':[[0,15],1,False],
+                'no3_chanS':[[0,10],1,True],
+                'nitrogen_addition':[[0,100],10*365,False],
+                'plant_uptake':[[0,100],10*365,False],
+                'deni_soil':[[0,70],10*365,False],
+                'minerl_soil':[[0,70],10*365,False],
+                'degrad_soil':[[0,50],10*365,False],
+                'deni_river':[[0,0.5],10*365,True],
+                }
+    
+
+    tmp = np.loadtxt(Path.data_path+'catchment_info/channel_length.asc', skiprows=6)
+    chanmask = np.full(tmp.shape, False)
+    chanmask[tmp>0] = True
+    tmp = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
+    mask = np.full(chanmask.shape, np.nan)
+    mask[tmp>0] = 1
+
+    for var in vars:
+        if os.path.exists(Path.work_path+'plots/'+mode+'/'+var+'.png') and not replace:
+            continue
+            
+        try:
+            data = np.loadtxt(Path.work_path + mode +'/outputs/cali_merged/'+var+'.asc', skiprows=6)
+        except:
+            print(var + '  does not exists!')
+            continue
+        data *= var_info[var][1]
+
+        if var_info[var][2]:
+            data[~chanmask] = np.nan
+
+        vmin = var_info[var][0][0]
+        vmax = var_info[var][0][1]
+
+        fig, ax = plt.subplots(1,1, figsize=(15,15), dpi=300)
+        ax.imshow(mask, cmap='Purples_r', alpha=0.1, zorder=0, label='1')
+        sc0 = ax.imshow(data, vmin=vmin, vmax=vmax, cmap='viridis', zorder=1)
+        # Add colorbar
+        cbar_ax = fig.add_axes([0.85, 0.4, 0.03, 0.2])
+        cbar = fig.colorbar(sc0, cax=cbar_ax, pad=0.02, ticks=[vmin, (vmin+vmax)/2, vmax])
+        cbar.ax.tick_params(labelsize=25)
+        ax.axis('off')
+        fig.savefig(Path.work_path+'plots/'+mode+'/'+var+'.png')
+        print(var, np.nanmin(data), np.nanmax(data), np.nanmean(data))
+    
+
+
+def merge_performance(mode, catchment_list):
+    import pickle
+
+    vars = ['discharge', 'isotope', 'nitrate']
+    sim_vars = ['discharge_TS', 'd18o_chanS_TS', 'no3_chanS_TS']
+    obs_vars = ['discharge', 'd18o_stream', 'no3_stream']
+
+    os.makedirs(Path.work_path + mode +'/outputs/cali/performance/', exist_ok=True)
+
+    for kk in range(len(vars)):
+        site_info = pd.read_csv(Path.data_path+'catchment_info/site_info_'+vars[kk]+'.csv', index_col='site')
+        KGEs = []
+        pbias = []
+        site_ids = []
+        site_r = []
+        site_c = []
+        lats = []
+        lons = []
+        df = pd.DataFrame([])
+        for catchment_ID in catchment_list:
+            
+            save_path = Path.work_path + mode +'/outputs/cali/' + str(catchment_ID) + '/'
+            obs_path = Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/obs/'
+
+            if not os.path.exists(save_path+'age_canopy_storage_map.bin'):
+                continue
+
+            keys = pickle.load(open(obs_path+vars[kk]+'_gauge_list', 'rb'))
+            sites = pickle.load(open(obs_path+vars[kk]+'_site_list', 'rb'))
+            
+            if len(keys) > 0:
+                _sim = (np.fromfile(save_path+sim_vars[kk]+'.bin').reshape(16437, -1).T)[:, Info.spin_up:]
+                _obs = np.fromfile(obs_path+obs_vars[kk]+'_obs.bin').reshape(len(keys), -1)
+                _sim += 0.1
+                _obs += 0.1
+                for i in range(len(keys)):
+                    try:
+                        site_r.append(site_info.loc[sites[i],:]['idx_row'])
+                        site_c.append(site_info.loc[sites[i],:]['idx_col'])
+                        lats.append(site_info.loc[sites[i],:]['latitude'])
+                        lons.append(site_info.loc[sites[i],:]['longitude'])
+                        KGEs.append(GEM_tools.kge(_sim[keys[i],:], _obs[i,:]))
+                        pbias.append(GEM_tools.pbias(_sim[keys[i],:], _obs[i,:]))
+                        site_ids.append(sites[i])
+                        #print(keys, i, _sim.shape, _obs.shape)
+                    except:
+                        print(sites[i], '  went wrong!')
+
+        
+        df['site'] = site_ids
+        df['site_r'] = site_r
+        df['site_c'] = site_c
+        df['latitude'] = lats
+        df['longitude'] = lons
+        df['kge'] = KGEs
+        df['pbias'] = pbias
+        df.set_index(df['site'], drop=True)
+        df.to_csv(Path.work_path + mode +'/outputs/cali/performance/performance_'+vars[kk]+'.csv')
+
+
+def plot_performance_EU(mode):
+    vars = ['discharge', 'isotope', 'nitrate']
+    scatter_size = [120, 400, 280]
+    tmp = np.loadtxt(Path.data_path+'catchment_info/channel_length.asc', skiprows=6)
+    chanmask = np.full(tmp.shape, np.nan)
+    chanmask[tmp>0] = 1
+    tmp = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
+    mask = np.full(chanmask.shape, np.nan)
+    mask[tmp>0] = 1
+    for kk in range(len(vars)):
+        df = pd.read_csv(Path.work_path + mode +'/outputs/cali/performance/performance_'+vars[kk]+'.csv')
+        fig, ax = plt.subplots(1,1, figsize=(15,15), dpi=300)
+        ax.imshow(mask, cmap='Purples_r', alpha=0.1, zorder=0)
+        #ax.imshow(chanmask, cmap='bone', alpha=0.1, zorder=1)
+
+        # todo
+        valid_idx = np.where(df['kge']>0)[0]
+        
+        sc0 = ax.scatter(x=df['site_c'][valid_idx], y=df['site_r'][valid_idx], c=df['kge'][valid_idx], s=scatter_size[kk], vmin=0, vmax=0.5, alpha=0.7, cmap='coolwarm_r', zorder=2)
+        # Add colorbar
+        cbar_ax = fig.add_axes([0.85, 0.4, 0.03, 0.2])
+        cbar = fig.colorbar(sc0, cax=cbar_ax, pad=0.02, ticks=[0.0, 0.25, 0.5])
+        cbar.ax.tick_params(labelsize=25)
+        #cbar.set_label('KGE', fontsize=25)
+        ax.axis('off')
+
+        fig.savefig(Path.work_path+'plots/'+mode+'/performance_'+vars[kk]+'.png')

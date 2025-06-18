@@ -52,6 +52,7 @@ class Param {
   vector<double> deg_day_min;
   vector<double> deg_day_max;
   vector<double> deg_day_increase;
+  vector<double> irrigation_FC_thres;
   vector<double> ref_thetaS;
   vector<double> PTF_VG_clay;
   vector<double> PTF_VG_Db;
@@ -91,6 +92,7 @@ class Param {
   vector<double> deni_soil_moisture_thres;
   svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
+  svector *_irrigation_FC_thres;  // The soil moisture threshold for irrigation [-]
   svector *_perc_vadose_coeff;  // The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2
   svector *_nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   svector *_ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]

@@ -42,18 +42,18 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
     // Adjust the initial no3 composition if needed
     if (ctrl.opt_nitrogen_sim==1 and ctrl.opt_init_no3==1){
     _no3_chanS->plus(*par._delta_no3_init_GW); // Asign isotopic composition to channel storage
-    //_no3_layer1->plus(*par._delta_no3_init_GW); // Asign isotopic composition to soil layer1
-    //_no3_layer2->plus(*par._delta_no3_init_GW); // Asign isotopic composition to soil layer2
+    _no3_layer1->plus(*par._delta_no3_init_GW); // Asign isotopic composition to soil layer1
+    _no3_layer2->plus(*par._delta_no3_init_GW); // Asign isotopic composition to soil layer2
     _no3_layer3->plus(*par._delta_no3_init_GW); // Asign isotopic composition to soil layer3
     _no3_GW->plus(*par._delta_no3_init_GW); // Asign isotopic composition to GW
 
     // Avoid negative values
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-      _no3_chanS->val[j] = max(0.2, _no3_chanS->val[j]);
-      //_no3_layer1->val[j] = max(0.2, _no3_layer1->val[j]);
-      //_no3_layer2->val[j] = max(0.2, _no3_layer2->val[j]);
-      _no3_layer3->val[j] = max(0.2, _no3_layer3->val[j]);
-      _no3_GW->val[j] = max(0.2, _no3_GW->val[j]);
+      _no3_chanS->val[j] = max(0.0, _no3_chanS->val[j]);
+      _no3_layer1->val[j] = max(0.0, _no3_layer1->val[j]);
+      _no3_layer2->val[j] = max(0.0, _no3_layer2->val[j]);
+      _no3_layer3->val[j] = max(0.0, _no3_layer3->val[j]);
+      _no3_GW->val[j] = max(0.0, _no3_GW->val[j]);
     }
 
     }

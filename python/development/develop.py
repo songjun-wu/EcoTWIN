@@ -215,6 +215,10 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_deg_day_max', [Opt.cond['snow_1']], 'Maximum Degree-day factor [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_max', 0],
               ['_deg_day_increase', [Opt.cond['snow_1']], 'Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_increase', 0],
               
+              # Irrigation
+              ['_irrigation_FC_thres', [Opt.cond['none']], 'The soil moisture threshold for irrigation [-]', 'grid', 'spatial_param', 'irrigation_FC_thres', 0],
+              
+              
               
               # Pedotransfer function
               ['_ref_thetaS', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Reference saturated soil moisture [-]', 'grid', 'spatial_param', 'ref_thetaS', 0],

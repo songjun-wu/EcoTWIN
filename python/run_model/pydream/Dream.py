@@ -300,9 +300,11 @@ class Dream:
                 # Gather results from model ranks
                 all_likes = self.subcomm.gather(self.last_like, root=0)
                 if self.is_chain_master:
-                    self.last_like = np.log(np.sum(all_likes)) * (-1*100)
+                    self.last_like = np.log(np.sum(all_likes)) * (-1*500)
                 self.last_logp = T*self.last_like + self.last_prior
             
+            
+
             #Evaluate proposed samples(s)
             proposed_pts = proposed_pts if self.is_chain_master else None
             proposed_pts = self.subcomm.bcast(proposed_pts, root=0)
@@ -310,7 +312,7 @@ class Dream:
             # Gather results from model ranks
             all_likes = self.subcomm.gather(q_loglike_noT, root=0)
             if self.is_chain_master:
-                q_loglike_noT = np.log(np.sum(all_likes)) * (-1*100)
+                q_loglike_noT = np.log(np.sum(all_likes)) * (-1*500)
             q_logp_noT = q_prior + q_loglike_noT
             q_logp = T*q_loglike_noT + q_prior
             q = np.squeeze(proposed_pts)
@@ -340,7 +342,7 @@ class Dream:
                     self.global_count = self.record_history(self.nseedchains, self.total_var_dimension, q_new, self.len_history)  
                 if self.iter < self.crossover_burnin+1:
                     self.set_current_position_arr(self.total_var_dimension, q_new)
-                
+
                 #If adapting crossover values, estimate ideal crossover probabilities for each dimension during burn-in.
                 #Don't do this for the first 10 iterations to give all chains a chance to fill in the shared current position array
                 #Don't count iterations where gamma was set to 1 in crossover adaptation calculations
@@ -361,6 +363,8 @@ class Dream:
                     
                     self.master_comm.Barrier()
                     self.local_burn_in = 1
+
+                    
                     
                     total_burn_in = self.master_comm.allreduce(self.local_burn_in, op=MPI.SUM)
                     
@@ -378,17 +382,19 @@ class Dream:
                         else:
                             self.CR_probabilities = self.estimate_crossover_probabilities(self.total_var_dimension, q0, q_new, CR=1)
                     
+
                     while total_burn_in != self.nchains:
                         time.sleep(3)
                         total_burn_in = self.comm.allreduce(self.local_burn_in, op=MPI.SUM)  
                     time.sleep(5)
 
                     if self.adapt_gamma:
-                        self.gamma_probabilities = self.comm.bcast(self.gamma_probabilities, root=0)
+                        self.gamma_probabilities = self.master_comm.bcast(self.gamma_probabilities, root=0)
+
                         
                     if self.adapt_crossover:
-                        self.CR_probabilities = self.comm.bcast(self.CR_probabilities, root=0)
-
+                        self.CR_probabilities = self.master_comm.bcast(self.CR_probabilities, root=0)
+                    
             
             q_new = q_new if self.is_chain_master else None
                                 

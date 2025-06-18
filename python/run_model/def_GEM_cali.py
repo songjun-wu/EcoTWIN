@@ -83,12 +83,12 @@ class Cali:
     nchains = 40
     cores_for_each_chain = 5
 
-    nbatchs = 1  # Number of batches
+    nbatchs = 10  # Number of batches
     niterations = 100  # Number of iterations for each batch
     
 
-    restart = False   # Whether restart?
-    restart_niteration = 100 # restart since which iteration?
+    restart = True   # Whether restart?
+    restart_niteration = 500 # restart since which iteration?
 
     history_thin = 5
 
@@ -99,7 +99,7 @@ class Cali:
 
 class Output:
 
-    Catchment_ID    = ['6_001','291110_001','566445_001','291111_001','1034754_001','1034872_001','129489_001','4_001','83811_001','831616_001','566445_002']
+    Catchment_ID    = ['6_001','291110_001','566445_001','291111_001','1034754_001','1034872_001','129489_001','4_001','83811_001','831616_001','566445_002','84063_001']
     N_catchments    = len(Catchment_ID)     # Number of catchments
     
 
@@ -124,7 +124,7 @@ class Output:
         N_sites.append(len(np.unique(sim_q_idx[i]+sim_iso_idx[i]+sim_no3_idx[i])))
 
     # Weight for each site in each catchment; shape = (N_catchments, N_sites)
-    overall_weights_for_each_var = [0.4, 0.3, 0.3]
+    overall_weights_for_each_var = [0.333, 0.333, 0.333]
     sim_q_weights   = []
     sim_iso_weights = []
     sim_no3_weights = []
@@ -155,11 +155,11 @@ class Param:
     ### === parameters to calibrate === 
     ref = {}    
 
-    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2]*Info.N_soil, 'max':[2]*Info.N_soil, 'fix_value':None}
+    ref['depth3']   =           {'type':'global',  'log':0, 'file':'depth3',   'min':[0.2], 'max':[5], 'fix_value':None}
 
     # === PET seperation and Max canopy storage === 
-    ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5]*Info.N_landuse, 'max':[5e-2]*Info.N_landuse, 'fix_value':None}  # Maximum canopy storage = alpha * PET
-    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3]*Info.N_landuse, 'max':[-0.1]*Info.N_landuse, 'fix_value':None}  # the negative the more transpiration
+    ref['alpha']   =            {'type':'global',  'log':1, 'file':'alpha',   'min':[1e-5], 'max':[5e-2], 'fix_value':None}  # Maximum canopy storage = alpha * PET
+    ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-3], 'max':[-0.5], 'fix_value':None}  # the negative the more transpiration
 
     # Snow
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-5], 'max':[2], 'fix_value':None}

@@ -277,6 +277,7 @@ struct Control{
   string fn__deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
   string fn__deg_day_max;  // Maximum Degree-day factor [m-1 degreeC-1]
   string fn__deg_day_increase;  // Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]
+  string fn__irrigation_FC_thres;  // The soil moisture threshold for irrigation [-]
   string fn__ref_thetaS;  // Reference saturated soil moisture [-]
   string fn__PTF_VG_clay;  // Pedotransfer function for parameter estimation of Van Genuchten Model [-]
   string fn__PTF_VG_Db;  // Pedotransfer function for parameter estimation of Van Genuchten Model [-]

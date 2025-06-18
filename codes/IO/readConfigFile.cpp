@@ -186,6 +186,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__deg_day_min, "deg_day_min", lines);
   readInto(fn__deg_day_max, "deg_day_max", lines);
   readInto(fn__deg_day_increase, "deg_day_increase", lines);
+  readInto(fn__irrigation_FC_thres, "irrigation_FC_thres", lines);
   readInto(fn__ref_thetaS, "ref_thetaS", lines);
   readInto(fn__PTF_VG_clay, "PTF_VG_clay", lines);
   readInto(fn__PTF_VG_Db, "PTF_VG_Db", lines);

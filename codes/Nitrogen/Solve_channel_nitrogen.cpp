@@ -36,9 +36,8 @@ int Basin::Solve_channel_nitrogen(Control &ctrl, Atmosphere &atm, Param &par){
     // ********* Mixing reinfiltration and percolation ********
     
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-
-       
-        if (_chnlength > 0){    // If this is a channel cell    
+     
+        if (_chnlength->val[j] > 0){    // If this is a channel cell 
             if (_Echan->val[j] > roundoffERR){
                 if (_chanS->val[j] > roundoffERR){
                     _no3_chanS->val[j] *= (_chanS->val[j] + _Echan->val[j]) / _chanS->val[j];  // Enrichment due to channel evaporation

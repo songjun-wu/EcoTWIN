@@ -21,10 +21,12 @@
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     
     // For debug
-    //int j = 4073;  // todo; 4073
+    //int j = 7;  // todo; 6806, 13
     //cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
     //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
     //}
+
+    
 
     Solve_canopy(ctrl, par, atm);
 

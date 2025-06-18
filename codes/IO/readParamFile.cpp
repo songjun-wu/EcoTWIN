@@ -41,6 +41,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(deg_day_min, "deg_day_min", lines);
   readIntoParam(deg_day_max, "deg_day_max", lines);
   readIntoParam(deg_day_increase, "deg_day_increase", lines);
+  readIntoParam(irrigation_FC_thres, "irrigation_FC_thres", lines);
   readIntoParam(ref_thetaS, "ref_thetaS", lines);
   readIntoParam(PTF_VG_clay, "PTF_VG_clay", lines);
   readIntoParam(PTF_VG_Db, "PTF_VG_Db", lines);
