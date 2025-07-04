@@ -41,12 +41,22 @@ int Basin::Mixing_GW_tracking(Control &ctrl, Atmosphere &atm){
         }
     }
 
-    // Age mixing
+    // Cumulative age mixing
     if (ctrl.opt_tracking_age==1) {
         if (ctrl.opt_baseflow_mixing == 0){
             // Mixing GW storage with percolation from vadose zone
             for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
                 Mixing_full(_GW_old->val[j], _age_GW->val[j], _Perc_vadose->val[j], _age_vadose->val[j]);
+            }
+        }
+    }
+
+    // Transient age mixing
+    if (ctrl.opt_tracking_trans_age==1) {
+        if (ctrl.opt_baseflow_mixing == 0){
+            // Mixing GW storage with percolation from vadose zone
+            for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+                Mixing_full(_GW_old->val[j], _trans_age_GW->val[j], _Perc_vadose->val[j], 0.0);
             }
         }
     }

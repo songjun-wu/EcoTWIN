@@ -55,6 +55,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_groundTs_input_format, "opt_groundTs_input_format", lines);
   readInto(opt_tracking_isotope, "opt_tracking_isotope", lines);
   readInto(opt_tracking_age, "opt_tracking_age", lines);
+  readInto(opt_tracking_trans_age, "opt_tracking_trans_age", lines);
   readInto(opt_nitrogen_sim, "opt_nitrogen_sim", lines);
   readInto(opt_irrigation, "opt_irrigation", lines);
   readInto(opt_reinfil, "opt_reinfil", lines);
@@ -157,6 +158,15 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__age_vadose, "age_vadose", lines);
   readInto(fn__age_GW, "age_groundwater_storage", lines);
   readInto(fn__age_chanS, "age_chanS", lines);
+  readInto(fn__trans_age_I, "trans_age_canopy_storage", lines);
+  readInto(fn__trans_age_snow, "trans_age_snow_depth", lines);
+  readInto(fn__trans_age_pond, "trans_age_pond", lines);
+  readInto(fn__trans_age_layer1, "trans_age_SMC_layer1", lines);
+  readInto(fn__trans_age_layer2, "trans_age_SMC_layer2", lines);
+  readInto(fn__trans_age_layer3, "trans_age_SMC_layer3", lines);
+  readInto(fn__trans_age_vadose, "trans_age_vadose", lines);
+  readInto(fn__trans_age_GW, "trans_age_groundwater_storage", lines);
+  readInto(fn__trans_age_chanS, "trans_age_chanS", lines);
   /* end of Tracking */
 
   /* Nitrogen */
@@ -285,6 +295,15 @@ int Control::ReadConfigFile(string fname){
   readInto(report__age_vadose, "report_age_vadose", lines);
   readInto(report__age_GW, "report_age_groundwater_storage", lines);
   readInto(report__age_chanS, "report_age_chanS", lines);
+  readInto(report__trans_age_I, "report_trans_age_canopy_storage", lines);
+  readInto(report__trans_age_snow, "report_trans_age_snow_depth", lines);
+  readInto(report__trans_age_pond, "report_trans_age_pond", lines);
+  readInto(report__trans_age_layer1, "report_trans_age_SMC_layer1", lines);
+  readInto(report__trans_age_layer2, "report_trans_age_SMC_layer2", lines);
+  readInto(report__trans_age_layer3, "report_trans_age_SMC_layer3", lines);
+  readInto(report__trans_age_vadose, "report_trans_age_vadose", lines);
+  readInto(report__trans_age_GW, "report_trans_age_groundwater_storage", lines);
+  readInto(report__trans_age_chanS, "report_trans_age_chanS", lines);
   readInto(report__no3_I, "report_no3_canopy_storage", lines);
   readInto(report__no3_snow, "report_no3_snow_depth", lines);
   readInto(report__no3_pond, "report_no3_pond", lines);

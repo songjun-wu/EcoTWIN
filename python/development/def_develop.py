@@ -22,7 +22,10 @@ class Opt:
                                   'general_description':'Enable isotopic tracking?\n# 0: disabled\n# 1: enabled',
                                   'description':'Isotopic tracking'}
     cond['tracking_age_1'] = {'key':'opt_tracking_age', 'value':1,
-                                  'general_description':'Enable water age tracking?\n# 0: disabled\n# 1: enabled',
+                                  'general_description':'Enable cumulative water age tracking?\n# 0: disabled\n# 1: enabled',
+                                  'description':'Water age tracking'}
+    cond['tracking_trans_age_1'] = {'key':'opt_tracking_trans_age', 'value':1,
+                                  'general_description':'Enable water transient age tracking?\n# 0: disabled\n# 1: enabled',
                                   'description':'Water age tracking'}
     cond['nitrogen_sim_1'] = {'key':'opt_nitrogen_sim', 'value':1,
                                   'general_description':'Enable nitrogen simulation?\n# 0: disabled\n# 1: enabled',

@@ -28,11 +28,32 @@ int Basin::Advance_age(){
         _age_layer1->val[j] += 1;
         _age_layer2->val[j] += 1;
         _age_layer3->val[j] += 1;
+        _age_vadose->val[j] += 1;
         //_age_GW->val[j] += 1;
         _age_chanS->val[j] += 1;
         
     }
 
+    return EXIT_SUCCESS;
+}
+
+
+int Basin::Advance_trans_age(){
+
+
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+
+        _trans_age_I->val[j] += 1;
+        _trans_age_snow->val[j] += 1;
+        _trans_age_pond->val[j] += 1;
+        _trans_age_layer1->val[j] += 1;
+        _trans_age_layer2->val[j] += 1;
+        _trans_age_layer3->val[j] += 1;
+        _trans_age_vadose->val[j] += 1;
+        //_trans_age_GW->val[j] += 1;
+        _trans_age_chanS->val[j] += 1;
+        
+    }
 
     return EXIT_SUCCESS;
 }

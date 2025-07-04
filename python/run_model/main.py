@@ -258,25 +258,17 @@ elif mode == 'test_cali':
 
     counter = 0
 
-    for gg in range(13):  # Catchment ID
+    for gg in [8]:  # Catchment ID
         catchment_ID = Output.Catchment_ID[gg]
         print(catchment_ID)
         run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
         # Which parameter set to use?
         param_N = GEM_tools.get_param_N(Info, Param)
-        """
-        try:
-            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_logps_chain.bin')
-            best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
-            param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+str(catchment_ID)+'_sep_cali_sampled_params_chain.bin').reshape(-1, param_N)[best_likeli_loc,:]
-        except Exception as e:
-            print(e)
-            continue
-        """
+                
         # todo
-        #param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param.bin')
+        param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param.bin')
 
-        param = np.full(300, 0.5)  # todo
+        #param = np.full(300, 0.5)  # todo
         
         GEM_tools.gen_param(run_path, Info, Param, param)
         GEM_tools.gen_no3_addtion(run_path, Info)
@@ -285,7 +277,8 @@ elif mode == 'test_cali':
         os.chdir(run_path)           
         os.system('./gEcoHydro')
         os.chdir(current_path)
-        
+
+
         # Plot spatial maps and Ts results
         post_plot.plot_hydrology(run_path+'outputs/', 'hydro_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', catchment_ID=catchment_ID, if_average=False)
         post_plot.plot_tracking(run_path+'outputs/', 'WQ_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/', catchment_ID=catchment_ID, if_average=False)
@@ -300,24 +293,25 @@ elif mode == 'test_cali':
         
         # Plot performance
         post_plot.plot_performance(run_path+'outputs/', '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', current_path+'/plots/', catchment_ID, chainID=0)
-
+        
 elif mode == 'test_forward':
-
-
-    catchment_ID = 1345871
-
-
+    catchment_ID = 442581
+    set_env_flag = False
+    
     # Model structure update
     os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
     os.system('python3 develop.py')  # todo
+    run_path = '/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/'
 
     # Set env
-    run_path = '/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/'
-    if os.path.exists(run_path):
-        shutil.rmtree(run_path)
-    shutil.copytree('/data/scratch/wusongj/paper4/forward_all/run/'+str(catchment_ID), run_path)
-    os.remove(run_path+'run/gEcoHydro')
-    os.symlink(Path.model_path+Path.path_EXEC, '/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/gEcoHydro')
+    if set_env_flag:
+        if os.path.exists(run_path):
+            shutil.rmtree(run_path)
+        shutil.copytree('/data/scratch/wusongj/paper4/forward_all/run/'+str(catchment_ID), run_path)
+        os.remove(run_path+'run/gEcoHydro')
+        os.symlink(Path.model_path+Path.path_EXEC, '/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/gEcoHydro')
+        #os.symlink('/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/gEcoHydro', '/data/scratch/wusongj/paper4/test/'+str(catchment_ID)+'/run/gEcoHydro')
+    
 
     run_path += 'run/'
     param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param.bin')
@@ -327,6 +321,19 @@ elif mode == 'test_forward':
     os.system('./gEcoHydro')
     os.chdir(current_path)
 
+
+    # Plot spatial maps and Ts results
+    post_plot.plot_hydrology(run_path+'outputs/', 'hydro_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/forward/'+str(catchment_ID)+'/spatial/', catchment_ID=catchment_ID, if_average=False)
+    post_plot.plot_tracking(run_path+'outputs/', 'WQ_'+str(catchment_ID), spatial_path='/data/scratch/wusongj/paper4/data/catchment_info/forward/'+str(catchment_ID)+'/spatial/', catchment_ID=catchment_ID, if_average=False)
+
+    fnames = ['hydro_'+str(catchment_ID)+'_Ts.png', 'hydro_'+str(catchment_ID)+'_map.png',
+                'WQ_'+str(catchment_ID)+'_Ts.png', 'WQ_'+str(catchment_ID)+'_map.png']
+    for fname in fnames:
+        if os.path.exists(run_path+'outputs/'+fname):
+            shutil.copyfile(run_path+'outputs/'+fname, 'plots/'+fname.split('.')[0]+'.png')
+    
+    # Plot performance
+    #post_plot.plot_performance(run_path+'outputs/', '/data/scratch/wusongj/paper4/data/catchment_info/forward/'+str(catchment_ID)+'/obs/', current_path+'/plots/', catchment_ID, chainID=0)
 
 
 elif mode == 'forward_cali':
@@ -501,82 +508,6 @@ elif mode == 'forward_sep':
         #post_plot.plot_performance_all(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/','/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/', Path.work_path+'/plots/', catchment_ID, nchains)
         post_plot.plot_param_all(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/', Path.work_path+'plots/', nchains, catchment_ID)
 
-elif mode == 'forward_cross':
-
-    nparam_per_catchment = 1
-
-    # Model structure update
-    os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
-    os.system('python3 develop.py')  # todo
-
-    # set the env
-    GEM_tools.sort_directory(mode, Path, Cali, Output)
-    GEM_tools.set_env(mode, Path, Cali, Output)
-    GEM_tools.set_config(mode, Path, Cali, Output)
-    param_N = GEM_tools.get_param_N(Info, Param)
-
-    """
-    # Summary the best parameters from each catchment
-    nchains = 20
-    best_likeli_catchmentID = np.array([])
-    best_likeli_chainID = np.array([])
-    best_likeli_locs = np.array([])
-    for gg in range(8):  # Catchment ID
-        catchment_ID = Output.Catchment_ID[gg]
-        best_likelis_per_catchment = []
-        best_likeli_locs_per_catchment = []
-        for chainID in range(nchains):
-            # Which parameter set to use?
-            
-            completed_nbatches = [f.split('.')[0].split('_')[-1] for f in os.listdir('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/')]
-            max_nbatches = np.max(np.array(completed_nbatches).astype(np.int16))
-            likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_logps_chain_'+str(chainID)+'_'+str(max_nbatches)+'.bin')
-            best_likeli_loc = np.argwhere(likeli==np.max(likeli))[0][0]
-            best_likelis_per_catchment.append(likeli[best_likeli_loc])
-            best_likeli_locs_per_catchment.append(best_likeli_loc)
-        best_likeli_catchmentID = np.append(best_likeli_catchmentID, np.full(nparam_per_catchment, catchment_ID))
-        best_likeli_chainID = np.append(best_likeli_chainID, np.argsort(best_likelis_per_catchment)[-1*nparam_per_catchment:])
-        best_likeli_locs = np.append(best_likeli_locs, np.array(best_likeli_locs_per_catchment)[np.argsort(best_likelis_per_catchment)[-1*nparam_per_catchment:]])
-
-    param_all = np.array([])
-    for kk in range(len(best_likeli_chainID)):
-        catchment_ID = best_likeli_catchmentID[kk]
-        chainID = int(best_likeli_chainID[kk])
-        best_likeli_loc = int(best_likeli_locs[kk])
-        completed_nbatches = [f.split('.')[0].split('_')[-1] for f in os.listdir('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/')]
-        max_nbatches = np.max(np.array(completed_nbatches).astype(np.int16))
-        likeli = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_logps_chain_'+str(chainID)+'_'+str(max_nbatches)+'.bin')[best_likeli_loc]
-        param = np.fromfile('/data/scratch/wusongj/paper4/cali_sep/'+catchment_ID+'/results/sep_cali_sampled_params_chain_'+str(chainID)+'_'+str(max_nbatches)+'.bin').reshape(-1, param_N)[best_likeli_loc,:]
-        param_all = np.append(param_all, param)
-    param_all.tofile(Path.work_path+mode+'/param_all.bin')
-    """
-
-    # Loop the parameters for each catchment
-    param_all = np.fromfile(Path.work_path+mode+'/param_all.bin').reshape(-1, param_N)
-    for gg in [6]:  # Catchment ID
-        catchment_ID = Output.Catchment_ID[gg]
-        run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
-        """
-        if os.path.exists(Path.work_path + mode +'/outputs/cali_sep_cross/' + catchment_ID):
-            shutil.rmtree(Path.work_path + mode +'/outputs/cali_sep_cross/' + catchment_ID)
-
-        for kk in range(param_all.shape[0]):
-            param = param_all[kk]
-            
-            GEM_tools.gen_param(run_path, Info, Param, param)
-            GEM_tools.gen_no3_addtion(run_path, Info)
-
-            # Model run
-            os.chdir(run_path)           
-            os.system('./gEcoHydro')
-            os.chdir(current_path)
-
-            # Save outputs for each catchment
-            GEM_tools.save_outputs(run_path+'outputs/', Path.work_path + mode +'/outputs/cali_sep_cross/' + catchment_ID + '/')
-        """
-        post_plot.plot_performance_all(Path.work_path + mode +'/outputs/cali_sep_cross/' + catchment_ID + '/','/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/obs/',
-                                       Path.work_path+'/plots/', catchment_ID, param_all.shape[0], plot_each_chain=True)
-
 
 
 elif mode == 'check':
@@ -663,21 +594,17 @@ elif mode == 'check_sep':
 
 elif mode == 'bbb':
 
-    catchment_ID = '6_001'
-    ref_asc = '/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/dem.asc'
-    output_path = '/data/scratch/wusongj/paper4/test/'+catchment_ID+'/run/outputs/'
-    output_path = '/data/scratch/wusongj/paper4/forward_cali/'+catchment_ID+'/run/outputs/'
-    fnames = [f for f in os.listdir(output_path) if '_map.bin' in f]
+    catchment_ID = '442581'
+    ref_asc = '/data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/spatial/dem.asc'
+    mask = np.loadtxt(ref_asc, skiprows=6)
 
-    ref_data = np.loadtxt(ref_asc, skiprows=6)
-    for fname in fnames:
-        print(fname)
-        data = np.fromfile(output_path + fname).reshape(-1, ref_data.shape[0], ref_data.shape[1])
-        data = np.mean(data[2:,:,:], axis=0)
-        print(output_path+fname.split('.')[0]+'.asc')
-        GEM_tools.create_asc(data, output_path+fname.split('.')[0]+'.asc', ref_asc)
-
-
-    pass
+    Vars = ['trans_age_chanS', 'trans_age_I', 'trans_age_layer1', 'trans_age_layer2', 'trans_age_layer3', 'trans_age_pond', 'trans_age_snow', 'trans_age_vadose', 'trans_age_GW']
+    values = [0,0,0,0,0,0,0,0,3000]
+    for xx, var in enumerate(Vars):
+        output_asc = '/data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/spatial/'+var+'.asc'
+        data = np.full(mask.shape, values[xx])
+        data[mask==-9999] = -9999
+        GEM_tools.create_asc(data, output_asc, ref_asc)
+    
 
 

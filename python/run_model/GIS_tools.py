@@ -10,5 +10,10 @@ def from_catchment_to_EU(upper_left_coord, mask_small, arr_large, arr_small):
     for r in range(mask_small.shape[0]):
         for c in range(mask_small.shape[1]):
             if mask_small[r,c]:
-                arr_large[r + upper_left_coord[0], c + upper_left_coord[1]] = arr_small[r,c]
+                if arr_large.ndim == 2:
+                    arr_large[r + upper_left_coord[0], c + upper_left_coord[1]] = arr_small[r,c]
+                elif arr_large.ndim == 3:
+                    arr_large[:, r + upper_left_coord[0], c + upper_left_coord[1]] = arr_small[:,r,c]
     return arr_large
+
+

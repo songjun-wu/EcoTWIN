@@ -72,10 +72,14 @@ struct Control{
   // 0: disabled
   // 1: enabled
   int opt_tracking_isotope;
-  // Enable water age tracking?
+  // Enable cumulative water age tracking?
   // 0: disabled
   // 1: enabled
   int opt_tracking_age;
+  // Enable water transient age tracking?
+  // 0: disabled
+  // 1: enabled
+  int opt_tracking_trans_age;
   // Enable nitrogen simulation?
   // 0: disabled
   // 1: enabled
@@ -240,15 +244,24 @@ struct Control{
   string fn__d18o_vadose;  // d18o in vadose storage [‰]
   string fn__d18o_GW;  // d18o in Groundwater storage [‰]
   string fn__d18o_chanS;  // d18o in Channel storage [‰]
-  string fn__age_I;  // Age in Canopy storage [days]
-  string fn__age_snow;  // Age in Snow depth in [days]
-  string fn__age_pond;  // Age in Ponding water in [days]
-  string fn__age_layer1;  // Age in Soil moisture in layer 1 [days]
-  string fn__age_layer2;  // Age in Soil moisture in layer 2 [days]
-  string fn__age_layer3;  // Age in Soil moisture in layer 3 [days]
-  string fn__age_vadose;  // Age in vadose storage [‰]
-  string fn__age_GW;  // Age in Groundwater storage [days]
-  string fn__age_chanS;  // Age in Channel storage [days]
+  string fn__age_I;  // Cumulative age in Canopy storage [days]
+  string fn__age_snow;  // Cumulative age in Snow depth in [days]
+  string fn__age_pond;  // Cumulative age in Ponding water in [days]
+  string fn__age_layer1;  // Cumulative age in Soil moisture in layer 1 [days]
+  string fn__age_layer2;  // Cumulative age in Soil moisture in layer 2 [days]
+  string fn__age_layer3;  // Cumulative age in Soil moisture in layer 3 [days]
+  string fn__age_vadose;  // Cumulative age in vadose storage [‰]
+  string fn__age_GW;  // Cumulative age in Groundwater storage [days]
+  string fn__age_chanS;  // Cumulative age in Channel storage [days]
+  string fn__trans_age_I;  // Transient age in Canopy storage [days]
+  string fn__trans_age_snow;  // Transient age in Snow depth in [days]
+  string fn__trans_age_pond;  // Transient age in Ponding water in [days]
+  string fn__trans_age_layer1;  // Transient age in Soil moisture in layer 1 [days]
+  string fn__trans_age_layer2;  // Transient age in Soil moisture in layer 2 [days]
+  string fn__trans_age_layer3;  // Transient age in Soil moisture in layer 3 [days]
+  string fn__trans_age_vadose;  // Transient age in vadose storage [‰]
+  string fn__trans_age_GW;  // Transient age in Groundwater storage [days]
+  string fn__trans_age_chanS;  // Transient age in Channel storage [days]
   /* end of Tracking */
 
   /* Nitrogen */
@@ -367,15 +380,24 @@ struct Control{
   int report__d18o_vadose;  // report d18o in vadose storage [‰]
   int report__d18o_GW;  // report d18o in Groundwater storage [‰]
   int report__d18o_chanS;  // report d18o in Channel storage [‰]
-  int report__age_I;  // report Age in Canopy storage [days]
-  int report__age_snow;  // report Age in Snow depth in [days]
-  int report__age_pond;  // report Age in Ponding water in [days]
-  int report__age_layer1;  // report Age in Soil moisture in layer 1 [days]
-  int report__age_layer2;  // report Age in Soil moisture in layer 2 [days]
-  int report__age_layer3;  // report Age in Soil moisture in layer 3 [days]
-  int report__age_vadose;  // report Age in vadose storage [‰]
-  int report__age_GW;  // report Age in Groundwater storage [days]
-  int report__age_chanS;  // report Age in Channel storage [days]
+  int report__age_I;  // report Cumulative age in Canopy storage [days]
+  int report__age_snow;  // report Cumulative age in Snow depth in [days]
+  int report__age_pond;  // report Cumulative age in Ponding water in [days]
+  int report__age_layer1;  // report Cumulative age in Soil moisture in layer 1 [days]
+  int report__age_layer2;  // report Cumulative age in Soil moisture in layer 2 [days]
+  int report__age_layer3;  // report Cumulative age in Soil moisture in layer 3 [days]
+  int report__age_vadose;  // report Cumulative age in vadose storage [‰]
+  int report__age_GW;  // report Cumulative age in Groundwater storage [days]
+  int report__age_chanS;  // report Cumulative age in Channel storage [days]
+  int report__trans_age_I;  // report Transient age in Canopy storage [days]
+  int report__trans_age_snow;  // report Transient age in Snow depth in [days]
+  int report__trans_age_pond;  // report Transient age in Ponding water in [days]
+  int report__trans_age_layer1;  // report Transient age in Soil moisture in layer 1 [days]
+  int report__trans_age_layer2;  // report Transient age in Soil moisture in layer 2 [days]
+  int report__trans_age_layer3;  // report Transient age in Soil moisture in layer 3 [days]
+  int report__trans_age_vadose;  // report Transient age in vadose storage [‰]
+  int report__trans_age_GW;  // report Transient age in Groundwater storage [days]
+  int report__trans_age_chanS;  // report Transient age in Channel storage [days]
   int report__no3_I;  // report no3 in Canopy storage [mgN/L]
   int report__no3_snow;  // report no3 in Snow depth in [mgN/L]
   int report__no3_pond;  // report no3 in Ponding water in [mgN/L]

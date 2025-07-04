@@ -176,6 +176,17 @@ int Basin::dtor(Control &ctrl){
     if(_age_GW) delete _age_GW;
     if(_age_chanS) delete _age_chanS;
   }
+  if (ctrl.opt_tracking_trans_age == 1){
+    if(_trans_age_I) delete _trans_age_I;
+    if(_trans_age_snow) delete _trans_age_snow;
+    if(_trans_age_pond) delete _trans_age_pond;
+    if(_trans_age_layer1) delete _trans_age_layer1;
+    if(_trans_age_layer2) delete _trans_age_layer2;
+    if(_trans_age_layer3) delete _trans_age_layer3;
+    if(_trans_age_vadose) delete _trans_age_vadose;
+    if(_trans_age_GW) delete _trans_age_GW;
+    if(_trans_age_chanS) delete _trans_age_chanS;
+  }
   /* end of Tracking */
 
   /* Nitrogen */

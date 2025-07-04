@@ -106,15 +106,28 @@ Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy stor
             ['_d18o_GW',  [Opt.cond['tracking_isotope_1']], 'd18o in Groundwater storage [‰]', 'grid', 'spatial', 'd18o_groundwater_storage', 1],
             ['_d18o_chanS',  [Opt.cond['tracking_isotope_1']], 'd18o in Channel storage [‰]', 'grid', 'spatial', 'd18o_chanS', 1],
 
-            ['_age_I',   [Opt.cond['tracking_age_1']], 'Age in Canopy storage [days]', 'grid', 'spatial', 'age_canopy_storage', 1],
-            ['_age_snow',    [Opt.cond['tracking_age_1']], 'Age in Snow depth in [days]', 'grid', 'spatial', 'age_snow_depth', 1],
-            ['_age_pond',    [Opt.cond['tracking_age_1']], 'Age in Ponding water in [days]', 'grid', 'spatial', 'age_pond', 1],
-            ['_age_layer1',  [Opt.cond['tracking_age_1']], 'Age in Soil moisture in layer 1 [days]', 'grid', 'spatial', 'age_SMC_layer1', 1],
-            ['_age_layer2',  [Opt.cond['tracking_age_1']], 'Age in Soil moisture in layer 2 [days]', 'grid', 'spatial', 'age_SMC_layer2', 1],
-            ['_age_layer3',  [Opt.cond['tracking_age_1']], 'Age in Soil moisture in layer 3 [days]', 'grid', 'spatial', 'age_SMC_layer3', 1],
-            ['_age_vadose',  [Opt.cond['tracking_isotope_1']], 'Age in vadose storage [‰]', 'grid', 'spatial', 'age_vadose', 1],  
-            ['_age_GW',  [Opt.cond['tracking_age_1']], 'Age in Groundwater storage [days]', 'grid', 'spatial', 'age_groundwater_storage', 1],
-            ['_age_chanS',  [Opt.cond['tracking_age_1']], 'Age in Channel storage [days]', 'grid', 'spatial', 'age_chanS', 1],
+            ['_age_I',   [Opt.cond['tracking_age_1']], 'Cumulative age in Canopy storage [days]', 'grid', 'spatial', 'age_canopy_storage', 1],
+            ['_age_snow',    [Opt.cond['tracking_age_1']], 'Cumulative age in Snow depth in [days]', 'grid', 'spatial', 'age_snow_depth', 1],
+            ['_age_pond',    [Opt.cond['tracking_age_1']], 'Cumulative age in Ponding water in [days]', 'grid', 'spatial', 'age_pond', 1],
+            ['_age_layer1',  [Opt.cond['tracking_age_1']], 'Cumulative age in Soil moisture in layer 1 [days]', 'grid', 'spatial', 'age_SMC_layer1', 1],
+            ['_age_layer2',  [Opt.cond['tracking_age_1']], 'Cumulative age in Soil moisture in layer 2 [days]', 'grid', 'spatial', 'age_SMC_layer2', 1],
+            ['_age_layer3',  [Opt.cond['tracking_age_1']], 'Cumulative age in Soil moisture in layer 3 [days]', 'grid', 'spatial', 'age_SMC_layer3', 1],
+            ['_age_vadose',  [Opt.cond['tracking_isotope_1']], 'Cumulative age in vadose storage [‰]', 'grid', 'spatial', 'age_vadose', 1],  
+            ['_age_GW',  [Opt.cond['tracking_age_1']], 'Cumulative age in Groundwater storage [days]', 'grid', 'spatial', 'age_groundwater_storage', 1],
+            ['_age_chanS',  [Opt.cond['tracking_age_1']], 'Cumulative age in Channel storage [days]', 'grid', 'spatial', 'age_chanS', 1],
+
+
+            ['_trans_age_I',   [Opt.cond['tracking_trans_age_1']], 'Transient age in Canopy storage [days]', 'grid', 'spatial', 'trans_age_canopy_storage', 1],
+            ['_trans_age_snow',    [Opt.cond['tracking_trans_age_1']], 'Transient age in Snow depth in [days]', 'grid', 'spatial', 'trans_age_snow_depth', 1],
+            ['_trans_age_pond',    [Opt.cond['tracking_trans_age_1']], 'Transient age in Ponding water in [days]', 'grid', 'spatial', 'trans_age_pond', 1],
+            ['_trans_age_layer1',  [Opt.cond['tracking_trans_age_1']], 'Transient age in Soil moisture in layer 1 [days]', 'grid', 'spatial', 'trans_age_SMC_layer1', 1],
+            ['_trans_age_layer2',  [Opt.cond['tracking_trans_age_1']], 'Transient age in Soil moisture in layer 2 [days]', 'grid', 'spatial', 'trans_age_SMC_layer2', 1],
+            ['_trans_age_layer3',  [Opt.cond['tracking_trans_age_1']], 'Transient age in Soil moisture in layer 3 [days]', 'grid', 'spatial', 'trans_age_SMC_layer3', 1],
+            ['_trans_age_vadose',  [Opt.cond['tracking_trans_age_1']], 'Transient age in vadose storage [‰]', 'grid', 'spatial', 'trans_age_vadose', 1],  
+            ['_trans_age_GW',  [Opt.cond['tracking_trans_age_1']], 'Transient age in Groundwater storage [days]', 'grid', 'spatial', 'trans_age_groundwater_storage', 1],
+            ['_trans_age_chanS',  [Opt.cond['tracking_trans_age_1']], 'Transient age in Channel storage [days]', 'grid', 'spatial', 'trans_age_chanS', 1],
+
+
            
             ]
 

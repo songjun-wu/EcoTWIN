@@ -264,7 +264,7 @@ def set_env(mode, Path, nchains, Output, catchment_list=None):
 
                 # link the model
                 if not os.path.exists(run_path + Path.path_EXEC):
-                    os.symlink(Path.model_path + Path.path_EXEC, run_path + Path.path_EXEC)
+                    os.symlink(Path.model_path + Path.path_EXEC, run_path + 'gEcoHydro')
                 # copy inputs
                 #shutil.copytree(Path.data_path+'catchment_info/'+str(Output.Catchment_ID[kk])+'/spatial/', run_path+'spatial/')
                 # copy configs
@@ -278,7 +278,7 @@ def set_env(mode, Path, nchains, Output, catchment_list=None):
             run_path =  catchment_path + '/run/'    # The path for model runs
             # link the model
             if not os.path.exists(run_path + Path.path_EXEC):
-                os.symlink(Path.model_path + Path.path_EXEC, run_path + Path.path_EXEC)
+                os.symlink(Path.model_path + Path.path_EXEC, run_path + 'gEcoHydro')
             # copy inputs
             #shutil.copytree(Path.data_path+'spatial/', run_path+'spatial/')
             # copy configs

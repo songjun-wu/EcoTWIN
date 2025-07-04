@@ -181,6 +181,17 @@
     _age_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__age_GW, _rowNum, _colNum, _sortedGrid);
     _age_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__age_chanS, _rowNum, _colNum, _sortedGrid);
   }
+  if (ctrl.opt_tracking_trans_age == 1){
+    _trans_age_I = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_I, _rowNum, _colNum, _sortedGrid);
+    _trans_age_snow = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_snow, _rowNum, _colNum, _sortedGrid);
+    _trans_age_pond = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_pond, _rowNum, _colNum, _sortedGrid);
+    _trans_age_layer1 = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_layer1, _rowNum, _colNum, _sortedGrid);
+    _trans_age_layer2 = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_layer2, _rowNum, _colNum, _sortedGrid);
+    _trans_age_layer3 = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_layer3, _rowNum, _colNum, _sortedGrid);
+    _trans_age_vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_vadose, _rowNum, _colNum, _sortedGrid);
+    _trans_age_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_GW, _rowNum, _colNum, _sortedGrid);
+    _trans_age_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__trans_age_chanS, _rowNum, _colNum, _sortedGrid);
+  }
   /* end of Tracking */
 
   /* Nitrogen */

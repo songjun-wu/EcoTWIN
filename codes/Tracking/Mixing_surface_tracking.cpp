@@ -64,7 +64,7 @@ int Basin::Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par){
     }
 
 
-    // Ages
+    // Cumulative Ages
     if (ctrl.opt_tracking_age==1) {
         // Mixing snow and irrigation
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -75,6 +75,10 @@ int Basin::Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par){
             } else{  // Else throughfall mixes with snow melt
                 Mixing_full(_Th->val[j], _age_pond->val[j], _snowmelt->val[j], _age_snow->val[j]);
             }
+            
+            // Reset to avoid constant age increase when snow == 0
+            if ((_snow_old->val[j]+_snowacc->val[j])<=0) _age_snow->val[j] = 0;
+
 
             // Mixing with irrigation
             irrigation_amount = _irrigation_from_river->val[j] + _irrigation_from_GW->val[j];
@@ -84,6 +88,33 @@ int Basin::Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par){
             }
         }
     }
+
+
+    // Transient Ages
+    if (ctrl.opt_tracking_trans_age==1) {
+        // Mixing snow and irrigation
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+
+            // Mixing snow with throughfall if temperature is below snow rain threshold
+            if (atm._Ta->val[j] < par._snow_rain_thre->val[j]){
+                Mixing_full(_snow_old->val[j], _trans_age_snow->val[j], _snowacc->val[j], 0.0);
+            } else{  // Else throughfall mixes with snow melt
+                Mixing_full(_Th->val[j], _trans_age_pond->val[j], _snowmelt->val[j], 0.0);
+            }
+
+            // Reset to avoid constant age increase when snow == 0
+            if ((_snow_old->val[j]+_snowacc->val[j])<=0) _trans_age_snow->val[j] = 0;
+
+            // Mixing with irrigation
+            irrigation_amount = _irrigation_from_river->val[j] + _irrigation_from_GW->val[j];
+            if (irrigation_amount > roundoffERR){
+                Mixing_full(_pond->val[j], _trans_age_pond->val[j], irrigation_amount, 0.0);
+            }
+        }
+    }
+
+
+
 
     return EXIT_SUCCESS;
 }

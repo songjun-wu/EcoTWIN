@@ -68,11 +68,14 @@ int main(){
 
 
     // Advance water age
-    if (oControl->opt_tracking_age==1){
-      if (advance_age >= 86400){
-        oBasin->Advance_age();
-        advance_age = 0;
-      }       
+    if (advance_age >= 86400){
+      if (oControl->opt_tracking_age==1){
+          oBasin->Advance_age();
+      }
+      if (oControl->opt_tracking_trans_age==1){
+          oBasin->Advance_trans_age();
+      }
+      advance_age = 0;
     }
 
 

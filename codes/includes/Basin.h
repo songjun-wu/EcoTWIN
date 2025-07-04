@@ -164,15 +164,24 @@ class Basin {
   svector *_d18o_vadose;  // d18o in vadose storage [‰]
   svector *_d18o_GW;  // d18o in Groundwater storage [‰]
   svector *_d18o_chanS;  // d18o in Channel storage [‰]
-  svector *_age_vadose;  // Age in vadose storage [‰]
-  svector *_age_I;  // Age in Canopy storage [days]
-  svector *_age_snow;  // Age in Snow depth in [days]
-  svector *_age_pond;  // Age in Ponding water in [days]
-  svector *_age_layer1;  // Age in Soil moisture in layer 1 [days]
-  svector *_age_layer2;  // Age in Soil moisture in layer 2 [days]
-  svector *_age_layer3;  // Age in Soil moisture in layer 3 [days]
-  svector *_age_GW;  // Age in Groundwater storage [days]
-  svector *_age_chanS;  // Age in Channel storage [days]
+  svector *_age_vadose;  // Cumulative age in vadose storage [‰]
+  svector *_age_I;  // Cumulative age in Canopy storage [days]
+  svector *_age_snow;  // Cumulative age in Snow depth in [days]
+  svector *_age_pond;  // Cumulative age in Ponding water in [days]
+  svector *_age_layer1;  // Cumulative age in Soil moisture in layer 1 [days]
+  svector *_age_layer2;  // Cumulative age in Soil moisture in layer 2 [days]
+  svector *_age_layer3;  // Cumulative age in Soil moisture in layer 3 [days]
+  svector *_age_GW;  // Cumulative age in Groundwater storage [days]
+  svector *_age_chanS;  // Cumulative age in Channel storage [days]
+  svector *_trans_age_I;  // Transient age in Canopy storage [days]
+  svector *_trans_age_snow;  // Transient age in Snow depth in [days]
+  svector *_trans_age_pond;  // Transient age in Ponding water in [days]
+  svector *_trans_age_layer1;  // Transient age in Soil moisture in layer 1 [days]
+  svector *_trans_age_layer2;  // Transient age in Soil moisture in layer 2 [days]
+  svector *_trans_age_layer3;  // Transient age in Soil moisture in layer 3 [days]
+  svector *_trans_age_vadose;  // Transient age in vadose storage [‰]
+  svector *_trans_age_GW;  // Transient age in Groundwater storage [days]
+  svector *_trans_age_chanS;  // Transient age in Channel storage [days]
   /* end of Tracking */
 
   // Nitrogen addition and plant uptakes are identical for each year, so they only need to be sorted once (or once after change in parameterisation)
@@ -339,6 +348,7 @@ class Basin {
   int Mixing_channel_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Fractionation due to channel evaporation
   int Fractionation(Atmosphere &atm, Param &par, svector &sv_evap, svector &sv_V_new, svector &sv_di_old, svector &sv_di_new, svector &sv_di_evap, int issoil);  // Fractionation due to canopy or soil evaporation
   int Advance_age(); // Advance water ages by 1
+  int Advance_trans_age(); // Advance transient water ages by 1
 
 
   /* Channel */

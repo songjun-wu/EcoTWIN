@@ -38,17 +38,24 @@ int Basin::Mixing_vadose_tracking(Control &ctrl, Atmosphere &atm){
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
             Mixing_full(_vadose_old->val[j], _d18o_vadose->val[j], _Perc3->val[j], _d18o_layer3->val[j]);
         }
-
     }
 
-    // Age
+    // Cumulative age
     if (ctrl.opt_tracking_age==1) {
 
         // Mixing vadose storage with percolation from layer 3
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
             Mixing_full(_vadose_old->val[j], _age_vadose->val[j], _Perc3->val[j], _age_layer3->val[j]);
         }
+    }
 
+    // Transient age
+    if (ctrl.opt_tracking_trans_age==1) {
+
+        // Mixing vadose storage with percolation from layer 3
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+            Mixing_full(_vadose_old->val[j], _trans_age_vadose->val[j], _Perc3->val[j], 0.0);
+        }
     }
 
     return EXIT_SUCCESS;

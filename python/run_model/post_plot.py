@@ -226,17 +226,23 @@ def plot_hydrology(output_path, output_name, spatial_path, catchment_ID=None, if
 
 
 def plot_tracking(output_path, output_name, spatial_path, catchment_ID=None, if_average=False):
-    Vars = ['d18o_canopy_storage', 'd18o_snow_depth','d18o_pond', None, None, None]
-    Vars.extend(['d18o_SMC_layer1', 'd18o_SMC_layer2', 'd18o_SMC_layer3', 'd18o_vadose', 'd18o_groundwater_storage', 'd18o_chanS'])
+    #Vars = ['d18o_canopy_storage', 'd18o_snow_depth','d18o_pond', None, None, None]
+    #Vars.extend(['d18o_SMC_layer1', 'd18o_SMC_layer2', 'd18o_SMC_layer3', 'd18o_vadose', 'd18o_groundwater_storage', 'd18o_chanS'])
+    Vars = ['trans_age_canopy_storage', 'trans_age_snow_depth','trans_age_pond', None, None, None]
+    Vars.extend(['trans_age_SMC_layer1', 'trans_age_SMC_layer2', 'trans_age_SMC_layer3', 'trans_age_vadose', 'trans_age_groundwater_storage', 'trans_age_chanS'])
     Vars.extend(['age_canopy_storage', 'age_snow_depth','age_pond', None, None, None])
-    Vars.extend(['age_SMC_layer1', 'age_SMC_layer2', 'age_SMC_layer3', 'age_groundwater_storage', None, 'age_chanS'])
+    Vars.extend(['age_SMC_layer1', 'age_SMC_layer2', 'age_SMC_layer3', 'age_vadose', 'age_groundwater_storage', 'age_chanS'])
     Vars.extend(['no3_canopy_storage', 'no3_snow_depth','no3_pond', None, None, None])
     Vars.extend(['no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'no3_vadose', 'no3_groundwater_storage', 'no3_chanS'])
     Vars.extend(['nitrogen_addition', 'plant_uptake', 'deni_soil', 'minerl_soil', 'degrad_soil','deni_river'])
     Vars.extend([None, None, None, None, None, None])
 
+    print(Vars)
+
+    #ylims = [None, None, None, None, None, None]
+    #ylims.extend([[-15,0],[-15,0],[-15,0],None, None,[-10,0]])
     ylims = [None, None, None, None, None, None]
-    ylims.extend([[-15,0],[-15,0],[-15,0],None, None,[-10,0]])
+    ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
     ylims.extend([None, None, None, None, None, None])
@@ -338,6 +344,7 @@ def plot_tracking(output_path, output_name, spatial_path, catchment_ID=None, if_
                 #ax[i//ncol, i%ncol].text(0.05, title_hgt - hgt_gradient * 2,'Max :' + f"{np.max(data):.1e}", fontsize=12, horizontalalignment='left', verticalalignment='center', transform=ax[i//ncol, i%ncol].transAxes)
                 valid_subplots += 1
             except Exception as e:
+                print(e)
                 ax[i//ncol, i%ncol].axis('off')
             
     if valid_subplots > 0:
@@ -615,39 +622,101 @@ def plot_param_valid():
     fig.savefig('999_param_valid_sorted.png')
 
 
-def merge_spatial_results_EU(mode, catchment_list, vars, replace=False):
+def merge_spatial_results_EU(mode, catchment_list, chainID, vars, temp_res, replace=False):
 
     mask_large = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
     mask_large = mask_large>0
 
     os.makedirs(Path.work_path + mode +'/outputs/cali_merged/', exist_ok=True)
+    os.makedirs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+str(chainID), exist_ok=True)
     
     for var in vars:
-        if os.path.exists(Path.work_path + mode +'/outputs/cali_merged/'+var+'.asc') and not replace:
-            continue
-        data_large = np.full(mask_large.shape, np.nan)
-        #counter = 0
-        for catchment_ID in catchment_list:
-            save_path = Path.work_path + mode +'/outputs/cali/' + str(catchment_ID) + '/'
-            upper_left_coord = (np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/upper_left_coord.txt')).astype(np.int64)
-            mask_small = np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/dem.asc', skiprows=6)
-            mask_small = mask_small!=-9999
-            data_small = np.fromfile(save_path+'/'+var+'_map.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
-            data_small = np.mean(data_small, axis=0)
-            data_large = GIS_tools.from_catchment_to_EU(upper_left_coord, mask_small, data_large, data_small)
-            #print(var, counter, len(catchment_list))
-            #counter += 1
-        GEM_tools.create_asc(data_large, Path.work_path + mode +'/outputs/cali_merged/'+var+'.asc', Path.data_path+'catchment_info/land_mask_3035.asc')
-        print(var + '  merged and saved at : ' + Path.work_path + mode +'/outputs/cali_merged/'+var+'.asc')
+        try:
+            if temp_res=='monthly':
+                if os.path.exists(Path.work_path+mode+'/outputs/cali_merged/'+temp_res+'/'+str(chainID)+'/'+var+'.bin') and not replace:
+                    continue
+            
+            elif temp_res=='yearly':
+                if os.path.exists(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+str(chainID)+'/'+var+'.asc') and not replace:
+                    continue       
+            
+            if temp_res == 'yearly':
+                data_large = np.full(mask_large.shape, np.nan)
+                for xx, catchment_ID in enumerate(catchment_list):
+                    save_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/' + str(chainID) + '/'
+
+                    if not os.path.exists(save_path):
+                        print(catchment_ID, '  NOT FOUND!!')
+                        continue
+                    
+                    upper_left_coord = (np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/upper_left_coord.txt')).astype(np.int64)
+                    mask_small = np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/dem.asc', skiprows=6)
+                    mask_small = mask_small!=-9999
+                    data_small = np.fromfile(save_path+'/'+var+'_map.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
+                    data_small = np.mean(data_small, axis=0)
+                    data_large = GIS_tools.from_catchment_to_EU(upper_left_coord, mask_small, data_large, data_small)
+                    #print(var, counter, len(catchment_list))
+                    #counter += 1
+                GEM_tools.create_asc(data_large, Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+str(chainID)+'/'+var+'.asc', Path.data_path+'catchment_info/land_mask_3035.asc')
+                print(var + '  merged and saved at : ' + Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+str(chainID)+'/'+var+'.asc')
+                
+            elif temp_res == 'monthly':
+                
+                for xx, catchment_ID in enumerate(catchment_list):
+
+                    save_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/' + str(chainID) + '/'
+                    if not os.path.exists(save_path):
+                        print(catchment_ID, '  NOT FOUND!!', flush=True)
+                        continue
+
+                    upper_left_coord = (np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/upper_left_coord.txt')).astype(np.int64)
+                    mask_small = np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/dem.asc', skiprows=6)
+                    mask_small = mask_small!=-9999
+                    try:
+                        data_small = np.fromfile(save_path+'/'+var+'_map.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
+                    except:  # todo
+                        data_small = np.fromfile(save_path+'/'+var+'.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
+                    
+                    if xx == 0:
+                        data_large = np.full((data_small.shape[0], mask_large.shape[0], mask_large.shape[1]), np.nan)
+
+                    data_large = GIS_tools.from_catchment_to_EU(upper_left_coord, mask_small, data_large, data_small)
+
+                    
+                    
+                data_large.tofile(Path.work_path+mode+'/outputs/cali_merged/'+temp_res+'/'+str(chainID)+'/'+var+'.bin')
+                print(var + '  merged and saved at : ' + Path.work_path+mode+'/outputs/cali_merged/'+temp_res+'/'+str(chainID)+'/'+var+'.bin', flush=True)
+        
+        except:
+            print(var + '   sorting failed!!')
         
 
+def get_overall_ET(path):
+    data = np.fromfile(path+'soil_evap_map.bin') + np.fromfile(path+'transp_map.bin')
+    data.tofile(path+'ET.bin')
+    os.remove(path+'soil_evap_map.bin')
+    os.remove(path+'transp_map.bin')
+
+def get_overall_storage(path, layer3_depth):
+    data =  np.fromfile(path+'snow_depth_map.bin') + \
+            np.fromfile(path+'SMC_layer1_map.bin') * 0.2 +  \
+            np.fromfile(path+'SMC_layer2_map.bin') * 0.2 +  \
+            np.fromfile(path+'SMC_layer3_map.bin') * layer3_depth + \
+            np.fromfile(path+'vadose_map.bin')
+    data.tofile(path+'unsat_storage.bin')
+
+    data += np.fromfile(path+'groundwater_storage_map.bin')
+    data.tofile(path+'overall_storage.bin')
+
+    for file in ['SMC_layer1_map.bin','SMC_layer2_map.bin','SMC_layer3_map.bin','vadose_map.bin','groundwater_storage_map.bin']:
+        os.remove(path+file)
+    
 
 
-
-def plot_spatial_results_EU(mode, vars, replace=False):
+def plot_spatial_results_EU(mode, chainID, chainID_list, vars, temp_res, replace=False):
 
     var_info = {
-                'canopy_storage':[[0,2],1000,False],
+                'canopy_storage':[[0,5],1000,False],
                 'snow_depth':[[0,100],1000,False],
                 'SMC_layer1':[[0.2,0.6],1,False],
                 'SMC_layer2':[[0.2,0.6],1,False],
@@ -667,19 +736,19 @@ def plot_spatial_results_EU(mode, vars, replace=False):
                 'rperc_layer1':[[0,500],1000*365,False],
                 'rperc_layer2':[[0,500],1000*365,False],
                 'rperc_layer3':[[0,500],1000*365,False],
-                'soil_evap':[[0,600],1000*365,False],
-                'transp_layer1':[[0,200],1000*365,False],
+                'soil_evap':[[0,300],1000*365,False],
+                'transp_layer1':[[0,300],1000*365,False],
                 'transp_layer2':[[0,100],1000*365,False],
                 'transp_layer3':[[0,100],1000*365,False],
                 'channel_evaporation':[[0,20],1000*365,True],
 
-                'overland_flow_input':[[0,500],1000*365,False],
-                'overland_flow_output':[[0,500],1000*365,False],
+                'overland_flow_input':[[0,2000],1000*365,False],
+                'overland_flow_output':[[0,2000],1000*365,False],
                 'interflow_input':[[0,2000],1000*365,False],
                 'interflow_output':[[0,2000],1000*365,False],
                 'GWflow_input':[[0,2000],1000*365,False],
                 'GWflow_output':[[0,2000],1000*365,False],
-                'overland_flow_toChn':[[0,1000],1000*365,True],
+                'overland_flow_toChn':[[0,2000],1000*365,True],
                 'interflow_toChn':[[0,2000],1000*365,True],
                 'GWflow_toChn':[[0,2000],1000*365,True],
                 'discharge':[[0,200],1,True],
@@ -726,14 +795,21 @@ def plot_spatial_results_EU(mode, vars, replace=False):
     mask[tmp>0] = 1
 
     for var in vars:
-        if os.path.exists(Path.work_path+'plots/'+mode+'/'+var+'.png') and not replace:
-            continue
-            
-        try:
-            data = np.loadtxt(Path.work_path + mode +'/outputs/cali_merged/'+var+'.asc', skiprows=6)
-        except:
-            print(var + '  does not exists!')
-            continue
+         
+        if chainID is None:
+            for xx, chainID_tmp in enumerate(chainID_list):
+                if xx==0:
+                    data = np.loadtxt(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+str(chainID_tmp)+'/'+var+'.asc', skiprows=6)
+                else:
+                    data += np.loadtxt(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+str(chainID_tmp)+'/'+var+'.asc', skiprows=6)
+            data /= len(chainID_list)
+        else:
+            try:
+                data = np.loadtxt(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+str(chainID)+'/'+var+'.asc', skiprows=6)
+            except:
+                print(var + '  does not exists!')
+                continue
+
         data *= var_info[var][1]
 
         if var_info[var][2]:
@@ -750,19 +826,22 @@ def plot_spatial_results_EU(mode, vars, replace=False):
         cbar = fig.colorbar(sc0, cax=cbar_ax, pad=0.02, ticks=[vmin, (vmin+vmax)/2, vmax])
         cbar.ax.tick_params(labelsize=25)
         ax.axis('off')
-        fig.savefig(Path.work_path+'plots/'+mode+'/'+var+'.png')
+        if chainID is None:
+            fig.savefig(Path.work_path+'plots/'+mode+'/'+var+'_all.png')
+        else:
+            fig.savefig(Path.work_path+'plots/'+mode+'/'+var+'_'+str(chainID)+'.png')
         print(var, np.nanmin(data), np.nanmax(data), np.nanmean(data))
     
 
 
-def merge_performance(mode, catchment_list):
+def merge_performance_EU(mode, catchment_list, chainID=None, chainID_list=None, temp_res='yearly'):
     import pickle
 
     vars = ['discharge', 'isotope', 'nitrate']
     sim_vars = ['discharge_TS', 'd18o_chanS_TS', 'no3_chanS_TS']
     obs_vars = ['discharge', 'd18o_stream', 'no3_stream']
 
-    os.makedirs(Path.work_path + mode +'/outputs/cali/performance/', exist_ok=True)
+    os.makedirs(Path.work_path + mode +'/outputs/cali_merged/performance/', exist_ok=True)
 
     for kk in range(len(vars)):
         site_info = pd.read_csv(Path.data_path+'catchment_info/site_info_'+vars[kk]+'.csv', index_col='site')
@@ -774,19 +853,31 @@ def merge_performance(mode, catchment_list):
         lats = []
         lons = []
         df = pd.DataFrame([])
-        for catchment_ID in catchment_list:
-            
-            save_path = Path.work_path + mode +'/outputs/cali/' + str(catchment_ID) + '/'
+
+        for xx, catchment_ID in enumerate(catchment_list):
+
+            print(xx)  # todo
+             
             obs_path = Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/obs/'
-
-            if not os.path.exists(save_path+'age_canopy_storage_map.bin'):
-                continue
-
             keys = pickle.load(open(obs_path+vars[kk]+'_gauge_list', 'rb'))
             sites = pickle.load(open(obs_path+vars[kk]+'_site_list', 'rb'))
             
             if len(keys) > 0:
-                _sim = (np.fromfile(save_path+sim_vars[kk]+'.bin').reshape(16437, -1).T)[:, Info.spin_up:]
+                if chainID is None:
+                    for xx, chainID_tmp in enumerate(chainID_list):
+                        save_path = Path.work_path + mode +'/outputs/cali/' + temp_res + '/' + str(catchment_ID) + '/' + str(chainID_tmp) + '/'
+                        if xx == 0:
+                            _sim = np.fromfile(save_path+sim_vars[kk]+'.bin')
+                        else:
+                            _sim += np.fromfile(save_path+sim_vars[kk]+'.bin')
+                    _sim = (_sim.reshape(16437, -1).T)[:, Info.spin_up:] / len(chainID_list)
+                    
+                        
+                else:
+                    save_path = Path.work_path + mode +'/outputs/cali/' + temp_res + '/' + str(catchment_ID) + '/' + str(chainID_tmp) + '/'
+                    _sim = (np.fromfile(save_path+sim_vars[kk]+'.bin').reshape(16437, -1).T)[:, Info.spin_up:]
+
+
                 _obs = np.fromfile(obs_path+obs_vars[kk]+'_obs.bin').reshape(len(keys), -1)
                 _sim += 0.1
                 _obs += 0.1
@@ -803,7 +894,6 @@ def merge_performance(mode, catchment_list):
                     except:
                         print(sites[i], '  went wrong!')
 
-        
         df['site'] = site_ids
         df['site_r'] = site_r
         df['site_c'] = site_c
@@ -812,10 +902,13 @@ def merge_performance(mode, catchment_list):
         df['kge'] = KGEs
         df['pbias'] = pbias
         df.set_index(df['site'], drop=True)
-        df.to_csv(Path.work_path + mode +'/outputs/cali/performance/performance_'+vars[kk]+'.csv')
+        if chainID is None:
+            df.to_csv(Path.work_path + mode +'/outputs/cali_merged/performance/performance_'+vars[kk]+'_all.csv')
+        else:
+            df.to_csv(Path.work_path + mode +'/outputs/cali_merged/performance/performance_'+vars[kk]+'_'+str(chainID)+'.csv')
 
 
-def plot_performance_EU(mode):
+def plot_performance_EU(mode, chainID=None):
     vars = ['discharge', 'isotope', 'nitrate']
     scatter_size = [120, 400, 280]
     tmp = np.loadtxt(Path.data_path+'catchment_info/channel_length.asc', skiprows=6)
@@ -825,7 +918,10 @@ def plot_performance_EU(mode):
     mask = np.full(chanmask.shape, np.nan)
     mask[tmp>0] = 1
     for kk in range(len(vars)):
-        df = pd.read_csv(Path.work_path + mode +'/outputs/cali/performance/performance_'+vars[kk]+'.csv')
+        if chainID is None:
+            df = pd.read_csv(Path.work_path + mode +'/outputs/cali_merged/performance/performance_'+vars[kk]+'_all.csv')
+        else:
+            df = pd.read_csv(Path.work_path + mode +'/outputs/cali_merged/performance/performance_'+vars[kk]+'_'+str(chainID)+'.csv')
         fig, ax = plt.subplots(1,1, figsize=(15,15), dpi=300)
         ax.imshow(mask, cmap='Purples_r', alpha=0.1, zorder=0)
         #ax.imshow(chanmask, cmap='bone', alpha=0.1, zorder=1)
@@ -840,5 +936,7 @@ def plot_performance_EU(mode):
         cbar.ax.tick_params(labelsize=25)
         #cbar.set_label('KGE', fontsize=25)
         ax.axis('off')
-
-        fig.savefig(Path.work_path+'plots/'+mode+'/performance_'+vars[kk]+'.png')
+        if chainID is None:
+            fig.savefig(Path.work_path+'plots/'+mode+'/performance_'+vars[kk]+'_all.png')
+        else:
+            fig.savefig(Path.work_path+'plots/'+mode+'/performance_'+vars[kk]+'_'+str(chainID)+'.png')

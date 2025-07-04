@@ -52,6 +52,10 @@ int Control::Get_year_month_day(){
 bool Control::is_next_month(){
     tm next_day = *current_time;
     next_day.tm_mday += 1;
+    next_day.tm_hour = 0;
+    next_day.tm_min  = 0;
+    next_day.tm_sec  = 0;
+    next_day.tm_isdst = -1;
     mktime(&next_day);
     return (next_day.tm_mon != current_time->tm_mon);
 }
@@ -59,6 +63,10 @@ bool Control::is_next_month(){
 bool Control::is_next_year(){
     tm next_day = *current_time;
     next_day.tm_mday += 1;
+    next_day.tm_hour = 0;
+    next_day.tm_min  = 0;
+    next_day.tm_sec  = 0;
+    next_day.tm_isdst = -1;
     mktime(&next_day);
     return (next_day.tm_year != current_time->tm_year);
 }

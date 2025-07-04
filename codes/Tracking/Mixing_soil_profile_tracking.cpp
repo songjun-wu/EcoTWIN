@@ -49,7 +49,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     - repercolation3
     */
 
-    double pond_old, ST1, pond_to_mix, d18o_pond_old, d18o_layer1_old, age_pond_old, age_layer1_old;
+    double pond_old, ST1, pond_to_mix, d18o_pond_old, d18o_layer1_old, age_pond_old, age_layer1_old, trans_age_pond_old, trans_age_layer1_old;
 
     // Isotope tracking
     if (ctrl.opt_tracking_isotope==1) {
@@ -96,7 +96,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
 
 
 
-    // Age tracking
+    // Cumulative age tracking
     if (ctrl.opt_tracking_age==1) {
         
         // Mixing layer 1
@@ -126,6 +126,29 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         // Mixing layer 3
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
             Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _age_layer3->val[j], _Perc2->val[j], _age_layer2->val[j]);
+        }
+
+    }
+
+
+    // Transient age tracking
+    if (ctrl.opt_tracking_trans_age==1) {
+        
+        // Mixing layer 1
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+            // Mix infiltration with top layer storage
+            Mixing_full(_theta1_old->val[j] * _depth1->val[j], _trans_age_layer1->val[j], _infilt->val[j], 0.0);
+        }
+        
+        // Mixing layer 2
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+            Mixing_full(_theta2_old->val[j] * _depth2->val[j], _trans_age_layer2->val[j], _Perc1->val[j], 0.0);
+        }
+
+
+        // Mixing layer 3
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+            Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _trans_age_layer3->val[j], _Perc2->val[j], 0.0);
         }
 
     }
