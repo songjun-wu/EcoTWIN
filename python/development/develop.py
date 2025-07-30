@@ -26,7 +26,7 @@ from def_GEM import Cali
 
 
 colNum = 5
-                #var_name, if_relies_on_setting, comments, datatype, data source,
+            #var_name, if_relies_on_setting, comments,     datatype, data source,  name in config, 
 Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS', 'Precipitation', 0],
             ['_Ta', [Opt.cond['none']], 'Air temperature [degree C]', 'grid', 'spatial_TS', 'Air_temperature', 0],
             #['_Tmin', [Opt.cond['none']], 'Minimum air temperature [degree C]', 'grid', 'spatial_TS', 'Minimal_air_temperature', 0],
@@ -83,7 +83,7 @@ Storages = [['_I',       [Opt.cond['none']], 'Canopy storage [m]', 'grid', 'spat
             ['_theta3',  [Opt.cond['none']], 'Soil moisture in layer 3 [decimal]', 'grid', 'spatial', 'SMC_layer3', 1],
             ['_vadose',  [Opt.cond['none']], 'Vadose storage (unsaturated zone) [m]', 'grid', 'spatial', 'vadose', 1],
             ['_GW',  [Opt.cond['none']], 'Groundwater storage [m]', 'grid', 'spatial', 'groundwater_storage', 1],
-            ['_chanS',  [Opt.cond['none']], 'Channel storage [m3]', 'grid', 'new', None, 0],
+            ['_chanS',  [Opt.cond['none']], 'Channel storage [m]', 'grid', 'new', 'channel_storage', 1],
 
             ['_I_old',       [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Canopy storage [m]', 'grid', 'new', None, 0], 
             ['_snow_old',    [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Snow depth in [m]', 'grid', 'new', None, 0],
@@ -368,7 +368,7 @@ Irrigation  = [
               ]
 
 
-Reports = [Storages[j] for j in (np.squeeze(np.argwhere([i[4]=='spatial' for i in Storages])))]
+Reports = [Storages[j] for j in (np.squeeze(np.argwhere([i[6]==1 for i in Storages])))]
 Reports.extend(Fluxes)
 Reports.extend(Tracking)
 Reports.extend(Nitrogen)

@@ -31,6 +31,7 @@ int Report::dtor(Control &ctrl){
   if (of__theta3.is_open())  of__theta3.close();
   if (of__vadose.is_open())  of__vadose.close();
   if (of__GW.is_open())  of__GW.close();
+  if (of__chanS.is_open())  of__chanS.close();
   if (of__Th.is_open())  of__Th.close();
   if (of__snowmelt.is_open())  of__snowmelt.close();
   if (of__infilt.is_open())  of__infilt.close();
@@ -112,6 +113,7 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__theta3==2) delete _theta3_acc;
   if (ctrl.report__vadose==2) delete _vadose_acc;
   if (ctrl.report__GW==2) delete _GW_acc;
+  if (ctrl.report__chanS==2) delete _chanS_acc;
   if (ctrl.report__Th==2) delete _Th_acc;
   if (ctrl.report__snowmelt==2) delete _snowmelt_acc;
   if (ctrl.report__infilt==2) delete _infilt_acc;

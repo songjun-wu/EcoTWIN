@@ -340,6 +340,7 @@ struct Control{
   int report__theta3;  // report Soil moisture in layer 3 [decimal]
   int report__vadose;  // report Vadose storage (unsaturated zone) [m]
   int report__GW;  // report Groundwater storage [m]
+  int report__chanS;  // report Channel storage [m]
   int report__Th;  // report Throughfall [m]
   int report__snowmelt;  // report Snow melt [m]
   int report__infilt;  // report Inflitration into soil layer 1 [m]

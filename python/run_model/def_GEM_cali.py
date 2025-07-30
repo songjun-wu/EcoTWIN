@@ -87,8 +87,8 @@ class Cali:
     niterations = 100  # Number of iterations for each batch
     
 
-    restart = False   # Whether restart?
-    restart_niteration = 1200 # restart since which iteration?
+    restart = True   # Whether restart?
+    restart_niteration = 4900 # restart since which iteration?
 
     history_thin = 5
 

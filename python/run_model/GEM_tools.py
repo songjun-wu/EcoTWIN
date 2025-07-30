@@ -2,9 +2,14 @@ import os
 import shutil
 import numpy as np
 import subprocess
+import time
+from scipy.stats import norm
 
 
-def create_asc(data, asc, ref_asc):
+def create_asc(data, asc, ref_asc, nodata=-9999):
+
+    data[np.isnan(data)] = nodata
+
     with open(ref_asc) as f:
         header = f.readlines()[:6]
     with open(asc, 'w') as f:
@@ -45,8 +50,45 @@ def save_outputs(output_path, save_path):
         else:
             with open(save_path + fname, 'w') as f:
                 data.tofile(f)
+        os.remove(output_path + fname)
 
+def mann_kendall_test(x):
+    n = len(x)
+    s = 0
+    for k in range(n - 1):
+        for j in range(k + 1, n):
+            s += np.sign(x[j] - x[k])
 
+    # Calculate variance under H0
+    var_s = (n * (n - 1) * (2 * n + 5)) / 18
+
+    # Compute Z
+    if s > 0:
+        z = (s - 1) / np.sqrt(var_s)
+    elif s < 0:
+        z = (s + 1) / np.sqrt(var_s)
+    else:
+        z = 0
+
+    # Two-tailed p-value from Z
+    p = 2 * (1 - norm.cdf(abs(z)))
+
+    # Kendall's Tau
+    tau = s / (0.5 * n * (n - 1))
+
+    # Trend direction
+    if p < 0.05:
+        trend = 'increasing' if s > 0 else 'decreasing'
+    else:
+        trend = 'no trend'
+
+    return {
+        's': s,
+        'z': z,
+        'p': p,
+        'tau': tau,
+        'trend': trend
+    }
 
 def kge11(sim, obs):
     """
@@ -285,7 +327,13 @@ def set_env(mode, Path, nchains, Output, catchment_list=None):
             if mode == 'SA':
                 shutil.copyfile(Path.config_path+'config_cali.ini',  run_path+'config.ini')
             else:
-                shutil.copyfile(Path.config_path+'config_forward.ini',  run_path+'config.ini')
+                config_flag = False
+                while not config_flag:
+                    try:
+                        shutil.copyfile(Path.config_path+'config_forward.ini',  run_path+'config.ini')
+                        config_flag = True
+                    except:
+                        time.sleep(5)
     
     else:
         for kk in range(Output.N_catchments):

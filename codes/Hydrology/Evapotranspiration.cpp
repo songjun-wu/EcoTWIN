@@ -72,9 +72,6 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
         FC3 = _thetaFC3->val[j];
 
         // For layer 1
-        // Soil evaporation
-        Esoil = min(PE*min(theta1/FC1 * ET_weight, 1.0), ST1);
-        ST1 -= Esoil;
         // Transpiration
         if (theta1 > FC1){
             froot_coeff_corrcted = _froot_layer1->val[j];
@@ -87,6 +84,9 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
         Tr1 = min(PT*froot_coeff_corrcted * ET_weight, ST1);
         ST1 -= Tr1;
         PT -= Tr1;
+        // Soil evaporation
+        Esoil = min(PE*min(ST1/depth1/FC1, 1.0), ST1) * ET_weight;
+        ST1 -= Esoil;
 
         // For layer 2
         // Transpiration

@@ -48,6 +48,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__theta3==2) _theta3_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__vadose==2) _vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__GW==2) _GW_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__chanS==2) _chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Th==2) _Th_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__snowmelt==2) _snowmelt_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__infilt==2) _infilt_acc = new svector(ctrl._sortedGrid.size);
@@ -136,6 +137,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__theta3==2) _theta3_acc->plus(*Bsn._theta3);
   if (ctrl.report__vadose==2) _vadose_acc->plus(*Bsn._vadose);
   if (ctrl.report__GW==2) _GW_acc->plus(*Bsn._GW);
+  if (ctrl.report__chanS==2) _chanS_acc->plus(*Bsn._chanS);
   if (ctrl.report__Th==2) _Th_acc->plus(*Bsn._Th);
   if (ctrl.report__snowmelt==2) _snowmelt_acc->plus(*Bsn._snowmelt);
   if (ctrl.report__infilt==2) _infilt_acc->plus(*Bsn._infilt);
@@ -240,6 +242,9 @@ int Report::Report_Initialisation(Control &ctrl){
 
   if (ctrl.report__GW==1)  report_create(ctrl.path_ResultsFolder+"groundwater_storage_TS.bin", of__GW);
   else if (ctrl.report__GW==2)  report_create(ctrl.path_ResultsFolder+"groundwater_storage_map.bin", of__GW);
+
+  if (ctrl.report__chanS==1)  report_create(ctrl.path_ResultsFolder+"channel_storage_TS.bin", of__chanS);
+  else if (ctrl.report__chanS==2)  report_create(ctrl.path_ResultsFolder+"channel_storage_map.bin", of__chanS);
 
   if (ctrl.report__Th==1)  report_create(ctrl.path_ResultsFolder+"throufall_TS.bin", of__Th);
   else if (ctrl.report__Th==2)  report_create(ctrl.path_ResultsFolder+"throufall_map.bin", of__Th);
@@ -482,6 +487,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__theta3==1) {reportTS(ctrl, Bsn._theta3, of__theta3);}
   if (ctrl.report__vadose==1) {reportTS(ctrl, Bsn._vadose, of__vadose);}
   if (ctrl.report__GW==1) {reportTS(ctrl, Bsn._GW, of__GW);}
+  if (ctrl.report__chanS==1) {reportTS(ctrl, Bsn._chanS, of__chanS);}
   if (ctrl.report__Th==1) {reportTS(ctrl, Bsn._Th, of__Th);}
   if (ctrl.report__snowmelt==1) {reportTS(ctrl, Bsn._snowmelt, of__snowmelt);}
   if (ctrl.report__infilt==1) {reportTS(ctrl, Bsn._infilt, of__infilt);}
@@ -571,6 +577,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__theta3==2) {reportMap(ctrl, _theta3_acc, ctrl._sortedGrid, of__theta3);}
   if (ctrl.report__vadose==2) {reportMap(ctrl, _vadose_acc, ctrl._sortedGrid, of__vadose);}
   if (ctrl.report__GW==2) {reportMap(ctrl, _GW_acc, ctrl._sortedGrid, of__GW);}
+  if (ctrl.report__chanS==2) {reportMap(ctrl, _chanS_acc, ctrl._sortedGrid, of__chanS);}
   if (ctrl.report__Th==2) {reportMap(ctrl, _Th_acc, ctrl._sortedGrid, of__Th);}
   if (ctrl.report__snowmelt==2) {reportMap(ctrl, _snowmelt_acc, ctrl._sortedGrid, of__snowmelt);}
   if (ctrl.report__infilt==2) {reportMap(ctrl, _infilt_acc, ctrl._sortedGrid, of__infilt);}

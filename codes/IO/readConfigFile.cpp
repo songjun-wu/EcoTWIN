@@ -246,6 +246,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__theta3, "report_SMC_layer3", lines);
   readInto(report__vadose, "report_vadose", lines);
   readInto(report__GW, "report_groundwater_storage", lines);
+  readInto(report__chanS, "report_channel_storage", lines);
   readInto(report__Th, "report_throufall", lines);
   readInto(report__snowmelt, "report_snowmelt", lines);
   readInto(report__infilt, "report_infiltration", lines);

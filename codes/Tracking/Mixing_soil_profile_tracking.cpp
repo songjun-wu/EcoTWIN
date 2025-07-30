@@ -89,6 +89,8 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         _tmp->multiply(*_depth1);
         _tmp->plus(*_infilt);
         _tmp->minus(*_Perc1);
+        _tmp->minus(*_Tr1);
+        _tmp->minus(*_Es);
         Fractionation(atm, par, *_Es, *_tmp, *_d18o_layer1, *_d18o_layer1, *_tmp, 1);  // issoil = 1; todo
 
     }

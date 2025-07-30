@@ -87,7 +87,7 @@ class Cali:
     
 
     restart = True   # Whether restart?
-    restart_niteration = 1000 # restart since which iteration?
+    restart_niteration = 2300 # restart since which iteration?
 
     history_thin = 5
 

@@ -78,7 +78,7 @@ class Basin {
   svector *_theta3;  // Soil moisture in layer 3 [decimal]
   svector *_vadose;  // Vadose storage (unsaturated zone) [m]
   svector *_GW;  // Groundwater storage [m]
-  svector *_chanS;  // Channel storage [m3]
+  svector *_chanS;  // Channel storage [m]
   svector *_I_old;  // Canopy storage [m]
   svector *_snow_old;  // Snow depth in [m]
   svector *_pond_old;  // Ponding water in [m]

@@ -296,7 +296,7 @@ elif mode == 'test_cali':
         
 elif mode == 'test_forward':
     catchment_ID = 442581
-    set_env_flag = False
+    set_env_flag = True
     
     # Model structure update
     os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/python/development')
