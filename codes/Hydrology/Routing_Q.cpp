@@ -88,6 +88,8 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
                     _Qupstream->val[from_j] += Qk1;  // Discharge inflow [m3/s]
                 }
 
+                
+
                 // cout << _chanS->val[j] * dx_square / (_chnlength->val[j] * _chnwidth->val[j]) << "    "<< _chnlength->val[j] << "     " << _chnwidth->val[j] << "     " << _Q->val[j] << endl;
             }
         }    

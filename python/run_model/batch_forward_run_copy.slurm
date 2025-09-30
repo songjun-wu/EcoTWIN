@@ -1,7 +1,8 @@
 #!/bin/sh
 
 
-#SBATCH --job-name="EU2"#SBATCH --qos=short
+#SBATCH --job-name="EU_forward"
+#SBATCH --qos=short
 #SBATCH --account=vewa
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
@@ -9,4 +10,4 @@
 #SBATCH --partition=compute
 
 export OMP_NUM_THREADS=20
-srun --exclusive --cpu-bind=cores python3 forward_run.py --batch_ID 2 --chain_start 4 --chain_end 6
+srun --exclusive --cpu-bind=cores python3 forward_run.py --batch_ID 5

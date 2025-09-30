@@ -1,0 +1,135 @@
+/***************************************************************
+* Generic Ecohydrological Model (GEM), a spatial-distributed module-based ecohydrological models
+* for multiscale hydrological, isotopic, and water quality simulations
+
+* Copyright (c) 2025   Songjun Wu <songjun.wu@igb-berlin.de / songjun-wu@outlook.com>
+
+  * GEM is a free software under the terms of GNU GEneral Public License version 3,
+  * Resitributon and modification are allowed under proper aknowledgement.
+
+* Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)
+
+* Solve_timesteps.cpp
+  * Created  on: 30.02.2025
+  * Modified on: 04.06.2025
+***************************************************************/
+
+
+#include "Basin.h"
+
+
+int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
+    
+    // For debug
+    int j = 3395;  // todo; 6806, 13
+    //cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
+    //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
+    //}
+
+  
+    Solve_canopy(ctrl, par, atm);
+
+    Solve_surface(ctrl, par, atm);
+
+    Solve_soil_profile(ctrl, par, atm);
+
+    Routing(ctrl, par);
+
+    Solve_channel(ctrl, par, atm);
+
+    //Check_mass_balance(ctrl, par, atm);
+
+    
+
+    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1 or ctrl.opt_nitrogen_sim==1){
+        Store_states();  // Store all water storages for mixing
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    static double storage_1980, old_storage, current_storage, cumulative_storage, input, output, counter;
+    static double no3_leaching, miner_soil, deni_soil, plant_uptake, no3_add, wet_deposit;
+    static double cumulative_ST1,cumulative_ST2,cumulative_ST3, cumulative_no31, cumulative_no32, cumulative_no33, cumulative_no33_1980;
+    static double averge_cumulative_storage, averge_cumulative_storage_1980;
+    
+
+    
+
+    current_storage = _theta1->val[j]*_no3_layer1->val[j]*_depth1->val[j] + _theta2->val[j]*_no3_layer2->val[j]*_depth2->val[j] + _theta3->val[j]*_no3_layer3->val[j]*par._depth3->val[j];
+    cumulative_storage += current_storage;
+    cumulative_ST1 += _theta1->val[j]*_depth1->val[j];
+    cumulative_ST2 += _theta2->val[j]*_depth2->val[j];
+    cumulative_ST3 += _theta3->val[j]*par._depth3->val[j];
+    cumulative_no31 += _no3_layer1->val[j];
+    cumulative_no32 += _no3_layer2->val[j];
+    cumulative_no33 += _no3_layer3->val[j];
+
+
+    wet_deposit += _infilt->val[j]*_no3_rain->val[j];
+    no3_add += _nitrogen_add->val[j];
+    miner_soil += _minerl_soil->val[j];
+
+    plant_uptake += _plant_uptake->val[j];
+    deni_soil +=  _deni_soil->val[j];
+    no3_leaching += _Perc3->val[j]*_no3_layer3->val[j];
+    counter += 1;
+
+    if ((ctrl.year==1980 and ctrl.month==1 and ctrl.day==1) or (ctrl.year==2024 and ctrl.month==12 and ctrl.day==31)) {
+      cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     "<<_no3_layer3->val[j]<<"   "<<endl;
+    }
+
+
+    if (ctrl.is_next_year()){
+      cumulative_storage /= counter;
+
+      averge_cumulative_storage = cumulative_ST1*cumulative_no31 + cumulative_ST2*cumulative_no32 + cumulative_ST3*cumulative_no33;
+      averge_cumulative_storage /= counter * counter;
+
+      if (ctrl.year==1982) {
+        storage_1980 = cumulative_storage;
+        averge_cumulative_storage_1980 = averge_cumulative_storage;
+        cumulative_no33_1980 = cumulative_no33;
+      }
+
+      input = wet_deposit + no3_add + miner_soil;
+      output = plant_uptake + deni_soil + no3_leaching;
+
+      
+
+      cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     "<<_no3_layer3->val[j]<<"        "<<cumulative_storage - storage_1980<<"     "<<(cumulative_no33-cumulative_no33_1980)/counter<<"        "<<averge_cumulative_storage-averge_cumulative_storage_1980<<"                "<<current_storage-old_storage<<"     "<<input-output<<endl;
+      cout <<"                                           "<<wet_deposit<<"     "<<no3_add<<"     "<<miner_soil<<endl;
+      cout <<"                                           "<<plant_uptake<<"     "<<deni_soil<<"     "<<no3_leaching<<endl;
+      
+
+      old_storage = current_storage;
+      cumulative_storage = 0;
+      wet_deposit = 0;
+      no3_add = 0;
+      miner_soil = 0;
+      plant_uptake = 0;
+      deni_soil = 0;
+      no3_leaching = 0;
+
+      cumulative_ST1 = 0;
+      cumulative_ST2 = 0;
+      cumulative_ST3 = 0;
+      cumulative_no31 = 0;
+      cumulative_no32 = 0;
+      cumulative_no33 = 0;
+
+      counter = 0;
+    }
+
+
+    return EXIT_SUCCESS;
+}

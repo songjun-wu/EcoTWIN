@@ -176,9 +176,10 @@ def kge(sim, obs):
 
 
     #pearson_r = np.corrcoef(sim, obs)[0,1]
-    alpha = (np.std(sim) / sim_mean) / (np.std(obs) / obs_mean)
+    alpha = (np.std(sim) / sim_mean) / (np.std(obs) / obs_mean)  # Improved version by Kling et al., 2012 
     beta = sim_mean / obs_mean
-    
+
+
     kge = 1 - np.sqrt((pearson_r-1)**2 + (alpha-1)**2 + (beta-1)**2)
 
     return kge
@@ -351,7 +352,7 @@ def set_env(mode, Path, nchains, Output, catchment_list=None):
                 shutil.copyfile(Path.config_path+'config_forward.ini',  run_path+'config.ini')
 
 
-def set_config(mode, Path, Cali, Output, catchment_list=None):
+def set_config(mode, Path, Cali, Output, catchment_list=None, experiment=None):
     if mode == 'DREAM_cali' or mode == 'cali_sep':
         for i in range(Cali.nchains):
             dir_for_each_chain = Path.work_path + '/chain_' +str(i) + '/'    # Working directory for each chain
@@ -379,7 +380,10 @@ def set_config(mode, Path, Cali, Output, catchment_list=None):
                 #lines = np.append('Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(Output.Catchment_ID[kk])+'/spatial/\n', lines)
                 #lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(Output.Catchment_ID[kk])+'/climate/\n', lines)
                 lines = np.append('Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(catchment_ID)+'/spatial/\n', lines) # todo
-                lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(catchment_ID)+'/climate/\n', lines)
+                if experiment is None:
+                    lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(catchment_ID)+'/climate/\n', lines)
+                else:
+                    lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(catchment_ID)+'/climate/'+experiment+'/\n', lines)
                 for line in lines:
                     if 'path_EXEC = ' in line:
                         lines[i] = "    path_EXEC = 'gEcoHydro_forward'\n"

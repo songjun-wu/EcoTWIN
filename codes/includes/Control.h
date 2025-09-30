@@ -42,7 +42,7 @@ struct Control{
 
   /* Settings */ 
   long Simul_start;
-  int Simul_end;
+  long Simul_end;
   int Simul_tstep;
   int Clim_input_tstep;
   int Ground_input_tstep;
@@ -169,7 +169,7 @@ struct Control{
 
 
   /* Internal varaibles */
-  int current_ts;
+  long current_ts;
   string fn__climzones;
   /* end of Internal varaibles */
 

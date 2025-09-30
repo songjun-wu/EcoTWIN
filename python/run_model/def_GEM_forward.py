@@ -9,6 +9,13 @@ import numpy as np
 class Path:
     model_path = '/home/wusongj/GEM/stable_release/' # The path for model executable file
     path_EXEC = 'gEcoHydro_forward'
+
+
+    #model_path = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/' # The path for model executable file
+    #path_EXEC = 'gEcoHydro'
+
+
+
     data_path = '/data/scratch/wusongj/paper4/data/'                   # The path with spatial and climate data
     config_path = '/data/scratch/wusongj/paper4/data/config/'                 # The path with configuration files (.ini)
     work_path = '/data/scratch/wusongj/paper4/'            # Working directory
