@@ -10,6 +10,9 @@ import subprocess
 from def_GEM_forward import *
 from post_plot import var_info
 import GIS_tools
+import post_plot
+
+from datetime import datetime
 
 
 """
@@ -118,7 +121,7 @@ def check_climate_experiments():
     save_vars = ['Precipitation_npfloat32', 'Potential_evapotranspiration_npfloat32', 'Mean_air_temperature_npfloat32', 'Surface_net_radiation_npfloat32']
     experiments = ['ssp126', 'ssp585']
 
-    catchment_list = ['291110', '566445','1', '6', '4']
+    catchment_list = ['566445']
 
 
     for xx, var in enumerate(vars):
@@ -172,6 +175,8 @@ def check_climate_experiments():
 
 def save_cumulative_outputs_memmap(output_path, save_path, save_all_flag=False, lock=None):
 
+    
+
     os.makedirs(save_path, exist_ok=True)
     os.makedirs(save_path + '/finish_counter/', exist_ok=True)
 
@@ -179,8 +184,11 @@ def save_cumulative_outputs_memmap(output_path, save_path, save_all_flag=False, 
         fnames = [f for f in os.listdir(output_path) if '.bin' in f]
     else:
         fnames = [f for f in os.listdir(output_path) if '_TS' in f]
+
     
-    fnames = np.random.shuffle(fnames)
+    #fnames = np.random.shuffle(fnames)
+
+
 
     for fname in fnames:
         if lock is None:
@@ -380,16 +388,29 @@ def foward_run_debug(catchment_ID, chainID, nn, save_output_flag=False, experime
         shutil.rmtree(chain_path)
     shutil.copytree('/data/scratch/wusongj/paper4/forward_all/run/'+catchment_ID, chain_path, ignore=shutil.ignore_patterns('*.bin'))
 
+    
+
     run_path = chain_path + 'run/'
 
-    """
-    os.remove(run_path + 'config.ini')
-    shutil.copyfile('/data/scratch/wusongj/paper4/data/config/config_forward_monthly.ini', run_path + 'config.ini')   
-    """
-    """
-    newlines = ['Clim_Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/climate/\n' + \
-                    'Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/spatial_'+str(chainID)+'/\n']
+    if not os.path.exists(run_path+'Crop_info.ini'):
+        shutil.copyfile('/data/scratch/wusongj/paper4/forward_all/run/1/run/Crop_info.ini', run_path+'Crop_info.ini')
 
+
+    if experiment is None:
+        newlines = [    'opt_init_no3 = 0\n' + \
+                        'Clim_Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/climate/\n' + \
+                        'Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/spatial_'+str(chainID)+'/\n']
+    else:
+        newlines = [    'opt_init_no3 = 0\n' + \
+                        'Clim_Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/climate/'+experiment+'/\n' + \
+                        'Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/spatial_'+str(chainID)+'/\n']
+    with open(run_path + 'config.ini', 'r') as f:
+        lines = f.readlines()
+    newlines.extend(lines)
+    with open(run_path + 'config.ini', 'w') as f:
+        f.writelines(newlines)
+
+    
     with open(run_path + 'config.ini', 'r') as f:
         lines = f.readlines()
     newlines.extend(lines)
@@ -399,12 +420,12 @@ def foward_run_debug(catchment_ID, chainID, nn, save_output_flag=False, experime
 
 
     GEM_tools.gen_param(run_path, Info, Param, param)
-    """
+
     
         
 
-    os.remove(run_path + 'gEcoHydro')
-    os.symlink('/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/gEcoHydro', run_path + 'gEcoHydro')
+    #os.remove(run_path + 'gEcoHydro')
+    #os.symlink('/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/gEcoHydro', run_path + 'gEcoHydro')
 
        
     
@@ -418,12 +439,20 @@ def foward_run_debug(catchment_ID, chainID, nn, save_output_flag=False, experime
     
     #print(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc', os.path.exists(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc'))
     mask = np.loadtxt(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc', skiprows=6)
-    data = np.fromfile('/data/scratch/wusongj/paper4/test/outputs/'+catchment_ID+'/no3_SMC_layer1_map.bin').reshape(-1, mask.shape[0], mask.shape[1])
+    data = np.fromfile('/data/scratch/wusongj/paper4/test/outputs/'+catchment_ID+'/perc_layer1_map.bin').reshape(-1, mask.shape[0], mask.shape[1])
     data[:,mask==-9999] = np.nan
-    fig, ax = plt.subplots(1,3)
+    fig, ax = plt.subplots(1,4)
+
+    
+    data0 = np.mean(data[35*12:45*12], axis=0)*1000*365
+    data1 = np.mean(data[110*12:120*12], axis=0)*1000*365
+    diff = data1 - data0
+
     ax[0].imshow(np.mean(data, axis=0))
-    ax[1].imshow(np.mean(data[0:540], axis=0))
-    ax[2].imshow(np.mean(data[-120:-1], axis=0))
+    ax[1].imshow(data0, vmin=0, vmax=1000)
+    ax[2].imshow(data1, vmin=0, vmax=100)
+    print(np.nanmean(data0),np.nanmean(data1),np.nanmean(diff))
+    ax[3].imshow(diff, vmin=-100, vmax=100, cmap='coolwarm')
     fig.savefig(Path.work_path+'plots/test.png')
     #print(data.shape, data[538:543, 1,13])
     
@@ -464,29 +493,70 @@ def test0():
     fig.savefig('/data/scratch/wusongj/paper4/plots/forward_all/test_da.png')
 
 
-def test1_examine_experiment_inputs(experiment):
+def test1_examine_experiment_inputs(experiments):
 
     vars = ['LAI', 'P', 'Ta', 'PET']
+    #experiments = [None, 'ssp126', 'ssp585']
+
+    vars = ['P']
+    catchment_list = ['291110', '566445']
+
     for var in vars:
-        for experiment in [None, 'ssp126', 'ssp585']:
-            if var == 'LAI':
-                freq='7D'
-            else:
-                freq='D'
-            if experiment is None:
-                end_date = '2024-12-31'
-            else:
-                end_date = '2100-12-31'
+        for experiment in experiments:
+            for catchment_ID in catchment_list:
+                if var == 'LAI':
+                    freq='7D'
+                else:
+                    freq='D'
+                if experiment is None:
+                    end_date = '2024-12-31'
+                else:
+                    end_date = '2100-12-31'
 
-            tindex = pd.date_range('1980-1-1', end_date, freq=freq)
+                tindex = pd.date_range('1980-1-1', end_date, freq=freq)
 
-            if experiment is None:
-                _data = np.fromfile(Path.data_path+'catchment_info/forward/291110/climate/'+var+'.bin').reshape(len(tindex), -1)
-            else:
-                _data = np.fromfile(Path.data_path+'catchment_info/forward/291110/climate/'+experiment+'/'+var+'.bin').reshape(len(tindex), -1)
+                if experiment is None:
+                    _data = np.fromfile(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/climate/'+var+'.bin').reshape(len(tindex), -1)
+                else:
+                    _data = np.fromfile(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/climate/'+experiment+'/'+var+'.bin').reshape(len(tindex), -1)
 
-            print(var, experiment, np.mean(_data[:540]), np.mean(_data[540:]))
-            data = np.mean(_data, axis=1)
+                
+
+
+                #print(var, experiment, np.mean(_data[:540]), np.mean(_data[540:]))
+                data = np.mean(_data, axis=1)
+                df = pd.DataFrame(data, index=tindex)
+                df = df.resample('Y').mean()
+                fig, ax = plt.subplots(1,1, dpi=300)
+                ax.plot(tindex, data)
+                ax.plot(df.index, df.values)
+                fig.savefig(Path.work_path + 'plots/tmp/'+var+'_'+catchment_ID+'_'+experiment+'.png')
+
+
+
+
+                climate_zone = np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/climate_zones.asc', skiprows=6)
+                
+                _data_pre = np.fromfile(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/climate/'+var+'.bin').reshape(len(pd.date_range('1980-1-1', '2024-12-31', freq=freq)), -1)
+                data_pre_2d = np.full((_data_pre.shape[0], climate_zone.shape[0], climate_zone.shape[1]), np.nan)
+                data_2d = np.full((_data.shape[0], climate_zone.shape[0], climate_zone.shape[1]), np.nan)
+                for r in range(climate_zone.shape[0]):
+                    for c in range(climate_zone.shape[1]):
+                        if climate_zone[r,c]>0:
+                            data_pre_2d[:,r,c] = _data_pre[:,int(climate_zone[r,c])-1]
+                            data_2d[:,r,c] = _data[:,int(climate_zone[r,c])-1]
+
+                avg_data_pre = np.mean(data_pre_2d[35*365:45*365, :, :], axis=0)
+
+                fig, ax = plt.subplots(3,3, dpi=300)
+                for counter, i in enumerate(range(35, 110, 10)):
+                    print(data_pre_2d.shape, data_2d.shape, np.mean(data_2d[i*365:(i+10)*365], axis=0).shape, avg_data_pre.shape)
+                    ax[counter//3, counter%3].imshow((np.mean(data_2d[i*365:(i+10)*365], axis=0) - avg_data_pre) * 1000 * 365, vmin=-500, vmax=500, cmap='coolwarm')
+                                            
+
+                avg_data_pre = np.mean(_data_pre, axis=0)
+
+                fig.savefig(Path.work_path + 'plots/tmp/'+var+'_'+catchment_ID+'_'+experiment+'_spatial_diff.png')
 
         """
         df = pd.DataFrame(data, index=tindex)
@@ -616,16 +686,23 @@ def result_transfer_second_post_run():
             shutil.copyfile(src_dir+var+'.bin', dst_dir+var+'.bin')
             shutil.copyfile(src_dir+'finish_counter/finish_counter_'+var+'.bin.txt', dst_dir+'finish_counter/finish_counter_'+var+'.bin.txt')
         print(catchment_ID, '   done!')
-        
-def plot_forward_results(experiment):
 
-    catchment_list = ['291110', '566445', '83811', '291111', '129487', '748037']
+
+def read_file(fpath, fname):
+    data = np.fromfile(fpath+fname)
+    data /= np.loadtxt(fpath+'finish_counter/finish_counter_'+fname+'.txt')
+    return data
+
+def plot_forward_results(catchment_list, experiment):
+
+    #catchment_list = ['291110', '566445', '83811', '291111', '129487', '748037']
     vars = ['trans_age_SMC_soil_all_depths', 'no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'nitrogen_storage', 'deni_soil', 'plant_uptake', 'processing_time']
 
 
-    catchment_list = ['291110', '83811', '291111', '129487', '748037']
-    vars = ['damkholer_num', 'infiltration', 'trans_age_SMC_soil_all_depths', 'SMC_layer3', 'processing_time', 'no3_SMC_layer3']
-
+    #catchment_list = []
+    #catchment_list = ['566445', '748037','748077','291110','291111', '6']
+    #catchment_list = ['291110']
+    vars = ['SMC_layer1', 'SMC_layer2', 'SMC_layer3', 'infiltration', 'perc_layer1', 'perc_layer2', 'trans_age_SMC_layer1', 'trans_age_SMC_layer2', 'trans_age_SMC_layer3', 'trans_age_SMC_soil_all_depths', 'soil_evap', 'transp']
 
     #vars = ['damkholer_num']
     #weights = [1]
@@ -644,56 +721,53 @@ def plot_forward_results(experiment):
             print(catchment_ID, var)
 
             if var == 'processing_time':
-                data =  np.fromfile(save_path + 'no3_SMC_layer1' + '_map.bin') * np.fromfile(save_path + 'SMC_layer1' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'no3_SMC_layer2' + '_map.bin') * np.fromfile(save_path + 'SMC_layer2' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'no3_SMC_layer3' + '_map.bin') * np.fromfile(save_path + 'SMC_layer3' + '_map.bin') * 1.9
-                data /= np.fromfile(save_path + 'deni_soil' + '_map.bin') + np.fromfile(save_path + 'plant_uptake' + '_map.bin')
-                data /= np.loadtxt(save_path+'finish_counter/finish_counter_no3_SMC_layer1_map.bin.txt')
+                data =  read_file(save_path, 'no3_SMC_layer1' + '_map.bin') * read_file(save_path, 'SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer2' + '_map.bin') * read_file(save_path, 'SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer3' + '_map.bin') * read_file(save_path, 'SMC_layer3' + '_map.bin') * 1.9
+                data /= read_file(save_path,  'deni_soil' + '_map.bin') + read_file(save_path, 'plant_uptake' + '_map.bin')
                 data[data>1e4] = 1e4
                 data[np.isnan(data)] = 1e4
                 print(np.where(np.isnan(data)))
                 data = data.reshape(-1, mask.shape[0], mask.shape[1])
             elif var == 'trans_age_SMC_soil_all_depths':
-                data =  (np.fromfile(save_path + 'trans_age_SMC_layer1' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'trans_age_SMC_layer2' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'trans_age_SMC_layer3' + '_map.bin') * 1.9) / \
+                data =  (read_file(save_path, 'trans_age_SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'trans_age_SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'trans_age_SMC_layer3' + '_map.bin') * 1.9) / \
                         (0.2 + 0.2 + 1.9)
-                data /= np.loadtxt(save_path+'finish_counter/finish_counter_trans_age_SMC_layer1_map.bin.txt')
+
                 data = data.reshape(-1, mask.shape[0], mask.shape[1])
             elif var == 'nitrogen_storage':
-                data =  np.fromfile(save_path + 'no3_SMC_layer1' + '_map.bin') * np.fromfile(save_path + 'SMC_layer1' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'no3_SMC_layer2' + '_map.bin') * np.fromfile(save_path + 'SMC_layer2' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'no3_SMC_layer3' + '_map.bin') * np.fromfile(save_path + 'SMC_layer3' + '_map.bin') * 1.9
-                data /= np.loadtxt(save_path+'finish_counter/finish_counter_no3_SMC_layer1_map.bin.txt')
+                data =  read_file(save_path, 'no3_SMC_layer1' + '_map.bin') * read_file(save_path, 'SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer2' + '_map.bin') * read_file(save_path, 'SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer3' + '_map.bin') * read_file(save_path, 'SMC_layer3' + '_map.bin') * 1.9
                 data = data.reshape(-1, mask.shape[0], mask.shape[1])
             elif var == 'damkholer_num':
 
-                pt =  np.fromfile(save_path + 'no3_SMC_layer1' + '_map.bin') * np.fromfile(save_path + 'SMC_layer1' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'no3_SMC_layer2' + '_map.bin') * np.fromfile(save_path + 'SMC_layer2' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'no3_SMC_layer3' + '_map.bin') * np.fromfile(save_path + 'SMC_layer3' + '_map.bin') * 1.9
-                pt /= np.fromfile(save_path + 'deni_soil' + '_map.bin') + np.fromfile(save_path + 'plant_uptake' + '_map.bin')
+                pt =  read_file(save_path, 'no3_SMC_layer1' + '_map.bin') * read_file(save_path, 'SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer2' + '_map.bin') * read_file(save_path, 'SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer3' + '_map.bin') * read_file(save_path, 'SMC_layer3' + '_map.bin') * 1.9
+                pt /= read_file(save_path, 'deni_soil' + '_map.bin') + read_file(save_path, 'plant_uptake' + '_map.bin')
 
-                pt[pt>1e4] = 1e4
-                pt[np.isnan(pt)] = 1e4
+                pt[pt>1e4] = 1e5
+                pt[np.isnan(pt)] = 1e5
                 
 
-                age =  (np.fromfile(save_path + 'trans_age_SMC_layer1' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'trans_age_SMC_layer2' + '_map.bin') * 0.2 + \
-                        np.fromfile(save_path + 'trans_age_SMC_layer3' + '_map.bin') * 1.9) / \
+                age =  (read_file(save_path, 'trans_age_SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'trans_age_SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'trans_age_SMC_layer3' + '_map.bin') * 1.9) / \
                         (0.2 + 0.2 + 1.9)
                 
                 
                 data = age / pt
 
-                data /= np.loadtxt(save_path+'finish_counter/finish_counter_no3_SMC_layer1_map.bin.txt')
+
 
                 data = data.reshape(-1, mask.shape[0], mask.shape[1])
                 data = np.log10(data)
                 
 
             else:
-                data = np.fromfile(save_path + var + '_map.bin').reshape(-1, mask.shape[0], mask.shape[1])
-                data /= np.loadtxt(save_path+'finish_counter/finish_counter_'+var+'_map.bin.txt')
+                data = read_file(save_path, var + '_map.bin').reshape(-1, mask.shape[0], mask.shape[1])
 
             data[:,mask==-9999] = np.nan
             data[data==-9999] = np.nan
@@ -722,8 +796,12 @@ def plot_forward_results(experiment):
             vmax = var_info[var][0][1]
 
             if len(var_info[var]) > 3:
-                vmin_diff = var_info[var][3][0]
-                vmax_diff = var_info[var][3][1]
+                try:
+                    vmin_diff = var_info[var][3][0]
+                    vmax_diff = var_info[var][3][1]
+                except:
+                    vmin_diff = -var_info[var][3]
+                    vmax_diff = var_info[var][3]
             else:
                 vmin_diff = -vmax/8
                 vmax_diff = vmax/8
@@ -737,17 +815,169 @@ def plot_forward_results(experiment):
             ax[0,1].imshow(data1 - data0, vmin=vmin_diff, vmax=vmax_diff, cmap='coolwarm')
             ax[1,0].imshow(data0, vmin=vmin, vmax=vmax, cmap='coolwarm')
             ax[1,1].imshow(data1, vmin=vmin, vmax=vmax, cmap='coolwarm')
-            fig.savefig(Path.work_path + 'plots/'+var+'_'+catchment_ID+'_tmp.png')
+            fig.savefig(Path.work_path + 'plots/'+var+'_'+catchment_ID+'_'+experiment+'.png')
 
 
-def plot_forward_results_tmp(experiment):
 
-    catchment_list = ['291110', '566445', '83811', '291111', '129487', '748037']
+def month_diff(d1):
+    d2 = datetime(1980, 1, 1)
+    return (d1.year - d2.year) * 12 + (d1.month - d2.month)
+
+def days_diff(d1):
+    d2 = datetime(1980, 1, 1)
+    return (d1-d2).days
+
+
+def plot_forward_results_details(catchment_list, experiment):
+
+    #catchment_list = ['291110', '566445', '83811', '291111', '129487', '748037']
+    vars = ['trans_age_SMC_soil_all_depths', 'no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'nitrogen_storage', 'deni_soil', 'plant_uptake', 'processing_time']
+
+
+    #catchment_list = []
+    #catchment_list = ['566445', '748037','748077','291110','291111', '6']
+    #catchment_list = ['291110']
+    vars = ['SMC_layer1', 'SMC_layer2', 'SMC_layer3', 'soil_evap', 'transp']
+    vars = ['P', 'PET', 'Ta']
+    vars = ['P']
+    periods = [[month_diff(datetime(2024,1,1)), month_diff(datetime(2024,12,31))+1], [month_diff(datetime(2025,1,1)), month_diff(datetime(2025,12,31))+1]]
+
+    #vars = ['damkholer_num']
+    #weights = [1]
+    #vmaxs = [None]
+
+    for catchment_ID in catchment_list:
+        mask = np.loadtxt(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc', skiprows=6)
+        save_path = '/data/scratch/wusongj/paper4/forward_all/outputs/cali/monthly/'+catchment_ID+'/all_'+experiment+'/'
+        #save_path = '/data/scratch/wusongj/paper4/test/outputs/'+catchment_ID+'/'
+        catchment_path = ''
+        
+        for xx, var in enumerate(vars):
+
+            fig, ax = plt.subplots(2,2, figsize=(6,6))
+
+            print(catchment_ID, var)
+
+            if var in ['P', 'PET', 'Ta']:
+                climate_zones = np.loadtxt('/data/scratch/wusongj/paper4/data/catchment_info/forward/'+str(catchment_ID)+'/spatial/climate_zones.asc', skiprows=6)
+                data_1d = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/forward/'+str(catchment_ID)+'/climate/'+experiment+'/'+var+'.bin', dtype=np.float64).reshape(-1, len(np.unique(climate_zones))-1)
+                data = np.full((data_1d.shape[0], climate_zones.shape[0], climate_zones.shape[1]), np.nan)
+                for r in range(climate_zones.shape[0]):
+                    for c in range(climate_zones.shape[1]):
+                        if climate_zones[r,c]>0:
+                            data[:,r,c] = data_1d[:, int(climate_zones[r,c]-1)]
+                periods = [[days_diff(datetime(2024,1,1)), days_diff(datetime(2024,12,31))+1], [days_diff(datetime(2025,1,1)), days_diff(datetime(2025,12,31))+1]]
+
+            elif var == 'processing_time':
+                data =  read_file(save_path, 'no3_SMC_layer1' + '_map.bin') * read_file(save_path, 'SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer2' + '_map.bin') * read_file(save_path, 'SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer3' + '_map.bin') * read_file(save_path, 'SMC_layer3' + '_map.bin') * 1.9
+                data /= read_file(save_path,  'deni_soil' + '_map.bin') + read_file(save_path, 'plant_uptake' + '_map.bin')
+                data[data>1e4] = 1e4
+                data[np.isnan(data)] = 1e4
+                print(np.where(np.isnan(data)))
+                data = data.reshape(-1, mask.shape[0], mask.shape[1])
+            elif var == 'trans_age_SMC_soil_all_depths':
+                data =  (read_file(save_path, 'trans_age_SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'trans_age_SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'trans_age_SMC_layer3' + '_map.bin') * 1.9) / \
+                        (0.2 + 0.2 + 1.9)
+
+                data = data.reshape(-1, mask.shape[0], mask.shape[1])
+            elif var == 'nitrogen_storage':
+                data =  read_file(save_path, 'no3_SMC_layer1' + '_map.bin') * read_file(save_path, 'SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer2' + '_map.bin') * read_file(save_path, 'SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer3' + '_map.bin') * read_file(save_path, 'SMC_layer3' + '_map.bin') * 1.9
+                data = data.reshape(-1, mask.shape[0], mask.shape[1])
+            elif var == 'damkholer_num':
+
+                pt =  read_file(save_path, 'no3_SMC_layer1' + '_map.bin') * read_file(save_path, 'SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer2' + '_map.bin') * read_file(save_path, 'SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'no3_SMC_layer3' + '_map.bin') * read_file(save_path, 'SMC_layer3' + '_map.bin') * 1.9
+                pt /= read_file(save_path, 'deni_soil' + '_map.bin') + read_file(save_path, 'plant_uptake' + '_map.bin')
+
+                pt[pt>1e4] = 1e5
+                pt[np.isnan(pt)] = 1e5
+                
+
+                age =  (read_file(save_path, 'trans_age_SMC_layer1' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'trans_age_SMC_layer2' + '_map.bin') * 0.2 + \
+                        read_file(save_path, 'trans_age_SMC_layer3' + '_map.bin') * 1.9) / \
+                        (0.2 + 0.2 + 1.9)
+                
+                
+                data = age / pt
+
+
+
+                data = data.reshape(-1, mask.shape[0], mask.shape[1])
+                data = np.log10(data)
+                
+
+            else:
+                data = read_file(save_path, var + '_map.bin').reshape(-1, mask.shape[0], mask.shape[1])
+
+            data[:,mask==-9999] = np.nan
+            data[data==-9999] = np.nan
+
+            
+
+            #data[data>2e5] = 2e5
+
+            # Examine results?
+            
+            #data[data>300] = 300
+            data0 = np.nanmean(data[periods[0][0]:periods[0][1],:,:], axis=(1,2))
+            data1 = np.nanmean(data[periods[1][0]:periods[1][1],:,:], axis=(1,2))
+          
+
+            """
+            r = 50 
+            c = 50
+            print(data0[r,c])
+            print(data1[r,c])
+            print(data[35*12:45*12,r,c])
+            """
+
+            try:
+                data *= var_info[var][1]  # weight
+
+                vmin = var_info[var][0][0]
+                vmax = var_info[var][0][1]
+
+                if len(var_info[var]) > 3:
+                    try:
+                        vmin_diff = var_info[var][3][0]
+                        vmax_diff = var_info[var][3][1]
+                    except:
+                        vmin_diff = -var_info[var][3]
+                        vmax_diff = var_info[var][3]
+                else:
+                    vmin_diff = -vmax/8
+                    vmax_diff = vmax/8
+            except:
+                pass
+            
+
+            ax[0,0].plot(data0)
+            #ax[0,1].imshow(data1 - data0, vmin=vmin_diff, vmax=vmax_diff, cmap='coolwarm')
+            ax[0,0].plot(data1)
+
+            ax[0,1].plot(data0)
+            #ax[0,1].imshow(data1 - data0, vmin=vmin_diff, vmax=vmax_diff, cmap='coolwarm')
+            ax[1,1].plot(data1)
+            print(np.mean(data0), np.mean(data1))
+            #ax[1,1].imshow(data1, vmin=vmin, vmax=vmax, cmap='coolwarm')
+            fig.savefig(Path.work_path + 'plots/tmp/'+var+'_'+catchment_ID+'_'+experiment+'_details.png')
+
+def plot_forward_results_tmp(catchment_list, experiment):
+
+    #catchment_list = ['291110', '566445', '83811', '291111', '129487', '748037']
     vars = ['trans_age_SMC_soil_all_depths', 'no3_SMC_layer1', 'no3_SMC_layer2', 'no3_SMC_layer3', 'nitrogen_storage', 'deni_soil', 'plant_uptake', 'processing_time']
     
     vmaxs = [3000, 80, 50, 30, 100, 0.005, 0.05, 1e4]
 
-    catchment_list = ['566445']
+    #catchment_list = ['566445']
     vars = ['no3_SMC_layer1']
     vmaxs = [80]
 
@@ -830,6 +1060,95 @@ def plot_forward_results_tmp(experiment):
                 ax[1,1].imshow(data1, vmin=0, vmax=vmaxs[xx])
                 fig.savefig(Path.work_path + 'plots/tmp_'+var+'_'+catchment_ID+'_'+str(chainID)+'.png')
 
+
+def calculate_monthly_Damkohler_test(catchment_ID, experiment=None):
+    import matplotlib.cm as cm
+    from matplotlib.colors import ListedColormap 
+
+    depth3 = post_plot.get_avg_depth()
+    work_path = Path.work_path
+
+    output_path = work_path + 'forward_all/outputs/cali/monthly/'+str(catchment_ID)+'/all_'+experiment+'/'
+    #output_path = work_path + 'test/outputs/'+str(catchment_ID)+'/'
+
+    mask = np.loadtxt(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc', skiprows=6)
+
+    # 打开 memmap 而不是一次性读入
+    no3_SMC1 = read_file(output_path, 'no3_SMC_layer1_map.bin').reshape(1452, mask.shape[0], mask.shape[1])
+    no3_SMC2 = read_file(output_path, 'no3_SMC_layer2_map.bin').reshape(1452, mask.shape[0], mask.shape[1])
+    no3_SMC3 = read_file(output_path, 'no3_SMC_layer3_map.bin').reshape(1452, mask.shape[0], mask.shape[1])
+
+    SMC1 = read_file(output_path, 'SMC_layer1_map.bin').reshape(1452, mask.shape[0], mask.shape[1])
+    SMC2 = read_file(output_path, 'SMC_layer2_map.bin').reshape(1452, mask.shape[0], mask.shape[1])
+    SMC3 = read_file(output_path, 'SMC_layer3_map.bin').reshape(1452, mask.shape[0], mask.shape[1])
+
+    plant_uptake = read_file(output_path, 'plant_uptake_map.bin').reshape(1452, mask.shape[0], mask.shape[1])
+    deni_soil = read_file(output_path, 'deni_soil_map.bin').reshape(1452, mask.shape[0], mask.shape[1])
+
+    travel = (read_file(output_path, 'trans_age_SMC_layer1_map.bin')*0.2 + read_file(output_path, 'trans_age_SMC_layer2_map.bin')*0.2 + read_file(output_path, 'trans_age_SMC_layer3_map.bin')*depth3)/(0.2+0.2+depth3)
+
+
+    n = len(SMC1)
+    soil_deni_thres = 1 / 10 / 365
+    processing_time_thres = 1e5
+
+    # NO3 storage
+    no3_storage = (no3_SMC1 * SMC1 * 0.2 +
+                    no3_SMC2 * SMC2 * 0.2 +
+                    no3_SMC3 * SMC3 * depth3)
+    
+    shape_annual_3d = (121, mask.shape[0], mask.shape[1])
+    no3_storage_annual = np.mean((no3_storage).reshape(shape_annual_3d[0],12,mask.shape[0],mask.shape[1]), axis=1)
+    uptake_annual = np.mean(((plant_uptake+deni_soil)).reshape(shape_annual_3d[0],12,mask.shape[0],mask.shape[1]), axis=1)
+    travel_time_annual = np.mean((travel).reshape(shape_annual_3d[0],12,mask.shape[0],mask.shape[1]), axis=1)
+
+    processing_time = np.full(shape_annual_3d, np.nan)
+    damkholer_num = np.full(shape_annual_3d, np.nan)
+    #travel_time = np.full(shape_annual_3d, np.nan)
+
+
+    for r in range(mask.shape[0]):
+        for c in range(mask.shape[1]):
+            if mask[r,c]!=-9999:
+                uptake = uptake_annual[:,r,c]
+                pt = no3_storage_annual[:,r,c] / uptake
+                damkholer_num[:,r,c] = travel_time_annual[:,r,c] /pt
+                processing_time[:,r,c] = pt
+
+                """
+                if r==29 and c==29:
+                    print(no3_storage_annual[35:45,r,c], no3_storage_annual[110:120,r,c])
+                    print(uptake[35:45], uptake[110:120])
+                    print(pt[35:45], pt[110:120])
+                    print(damkholer_num[35:45,r,c], damkholer_num[110:120,r,c])
+
+                """
+                
+
+    pt_diff = np.mean(processing_time[110:120], axis=0) - np.mean(processing_time[45:55], axis=0)
+    dn_diff = np.mean(damkholer_num[110:120], axis=0) - np.mean(damkholer_num[45:55], axis=0)
+    travel_diff = np.mean(travel_time_annual[110:120], axis=0) - np.mean(travel_time_annual[45:55], axis=0)
+
+    no3_storage_diff = np.mean(no3_storage_annual[110:120], axis=0) - np.mean(no3_storage_annual[45:55], axis=0)
+    uptake_diff = np.mean(uptake_annual[110:120], axis=0) - np.mean(uptake_annual[45:55], axis=0)
+
+    fig, ax = plt.subplots(2,3, figsize=(20,20), dpi=300)
+    #ax[0].imshow(dn_diff, vmin=-10, vmax=10, cmap='coolwarm')
+    ax[0,0].imshow(np.log10(dn_diff), vmin=-2, vmax=2, cmap=ListedColormap(cm.coolwarm(np.linspace(0.5, 1, 256))), zorder=1)
+    ax[0,0].imshow(np.log10(-dn_diff), vmin=-2, vmax=2, cmap=ListedColormap(cm.coolwarm(np.linspace(0.5, 0, 256))), zorder=1)
+    ax[0,1].imshow(np.log10(travel_diff), vmin=1, vmax=5, cmap=ListedColormap(cm.coolwarm(np.linspace(0.5, 1, 256))), zorder=1)
+    ax[0,1].imshow(np.log10(-travel_diff), vmin=1, vmax=5, cmap=ListedColormap(cm.coolwarm(np.linspace(0.5, 0, 256))), zorder=1)
+    ax[0,2].imshow(np.log10(pt_diff), vmin=1, vmax=5, cmap=ListedColormap(cm.coolwarm(np.linspace(0.5, 1, 256))), zorder=1)
+    ax[0,2].imshow(np.log10(-pt_diff), vmin=1, vmax=5, cmap=ListedColormap(cm.coolwarm(np.linspace(0.5, 0, 256))), zorder=1)
+
+    ax[1,0].imshow(no3_storage_diff, vmin=-0.5, vmax=0.5, cmap='coolwarm', zorder=1)
+    ax[1,1].imshow(uptake_diff, vmin=-0.001, vmax=0.001, cmap='coolwarm', zorder=1)
+    uptake_annual
+    fig.savefig(Path.work_path + 'plots/DA_'+catchment_ID+'_'+experiment+'.png', transparent=True)
+
+
+
+
 if __name__ == "__main__":
     # 1214576, 748037, 1034738
     catchment_ID = '6'
@@ -906,19 +1225,22 @@ if __name__ == "__main__":
     # Post run for all failed catchments
     #boardcast_from_root_spatial_path()
     #forward_run_again()
-    forward_run_again_all_chain_parallel(experiment='ssp126')
+    #forward_run_again_all_chain_parallel(experiment='ssp126')
 
     #result_transfer_second_post_run()
 
-    experiment='ssp126'
+    experiments = ['ssp126']
     #experiment=''
-    #test1_examine_experiment_inputs(experiment)
+    #test1_examine_experiment_inputs(experiments)
     #check_climate_experiments()
-    #plot_forward_results(experiment)
+    for experiment in experiments:
+        plot_forward_results(['291110'], experiment)
+        plot_forward_results_details(['291110'], experiment)
+        calculate_monthly_Damkohler_test(catchment_ID='291110', experiment=experiment)
 
     #plot_forward_results_tmp(experiment)
 
-    #foward_run_debug(catchment_ID='566445', chainID=1, nn=0, save_output_flag=True, experiment=experiment)
+    #foward_run_debug(catchment_ID='566445', chainID=0, nn=0, save_output_flag=True, experiment='ssp585')
 
     #shutil.copytree('/data/scratch/wusongj/paper4/test/outputs/566445', '/data/scratch/wusongj/paper4/forward_all/outputs/cali/monthly/566445/all_ssp126')
 
@@ -930,6 +1252,9 @@ if __name__ == "__main__":
     
     GEM_tools.create_asc(data, 'young_water_fraction_soil_all_depths.asc', '/data/scratch/wusongj/paper4/data/catchment_info/land_mask_3035.asc')
     """
+
+    #data = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/forward/748077/climate/ssp126/LAI.bin')
+    #print(data.shape, data[:5])
 
 
 

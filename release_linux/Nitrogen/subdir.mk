@@ -7,7 +7,6 @@ CPP_SRCS += \
 ../codes/Nitrogen/Solve_surface_nitrogen.cpp \
 ../codes/Nitrogen/Soil_denitrification.cpp \
 ../codes/Nitrogen/Solve_soil_profile_nitrogen.cpp \
-../codes/Nitrogen/Nitrogen_addition.cpp \
 ../codes/Nitrogen/Plant_uptake.cpp \
 ../codes/Nitrogen/Soil_transformation.cpp \
 ../codes/Nitrogen/Solve_GW_nitrogen.cpp \
@@ -16,13 +15,13 @@ CPP_SRCS += \
 ../codes/Nitrogen/Solve_vadose_nitrogen.cpp \
 ../codes/Nitrogen/Instream_transformation.cpp \
 ../codes/Nitrogen/Solve_channel_nitrogen.cpp \
+../codes/Nitrogen/Nitrogen_addition.cpp \
 
 
 OBJS += \
 ./Nitrogen/Solve_surface_nitrogen.o \
 ./Nitrogen/Soil_denitrification.o \
 ./Nitrogen/Solve_soil_profile_nitrogen.o \
-./Nitrogen/Nitrogen_addition.o \
 ./Nitrogen/Plant_uptake.o \
 ./Nitrogen/Soil_transformation.o \
 ./Nitrogen/Solve_GW_nitrogen.o \
@@ -31,13 +30,13 @@ OBJS += \
 ./Nitrogen/Solve_vadose_nitrogen.o \
 ./Nitrogen/Instream_transformation.o \
 ./Nitrogen/Solve_channel_nitrogen.o \
+./Nitrogen/Nitrogen_addition.o \
 
 
 CPP_DEPS += \
 ./Nitrogen/Solve_surface_nitrogen.d \
 ./Nitrogen/Soil_denitrification.d \
 ./Nitrogen/Solve_soil_profile_nitrogen.d \
-./Nitrogen/Nitrogen_addition.d \
 ./Nitrogen/Plant_uptake.d \
 ./Nitrogen/Soil_transformation.d \
 ./Nitrogen/Solve_GW_nitrogen.d \
@@ -46,6 +45,7 @@ CPP_DEPS += \
 ./Nitrogen/Solve_vadose_nitrogen.d \
 ./Nitrogen/Instream_transformation.d \
 ./Nitrogen/Solve_channel_nitrogen.d \
+./Nitrogen/Nitrogen_addition.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

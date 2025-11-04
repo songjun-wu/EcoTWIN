@@ -145,7 +145,7 @@ var_info = {
                 'degrad_soil':[[0,50],10*365,False, 15],
                 'deni_river':[[0,0.5],10*365,True],
 
-                'nitrogen_storage':[[0,80],10,False, 10],
+                'nitrogen_storage':[[0,800],10,False,800],
                 'nitrogen_input':[[0,200],10*365,False, 15],
                 'nitrogen_uptake':[[0,100],10*365,False, 15],
                 'nitrogen_leaching':[[0,100],10*365,False, 15],
@@ -163,7 +163,7 @@ var_info = {
 
                 'damkholer_num':[[-1, 1],1,False, [-2,2]],
 
-                'processing_time':[[0, 1e4],1,False, [1,3]],
+                'processing_time':[[0, 1e4],1,False, [1,5]],
 
                 'interflow_length':[[0, 1],1,False],
 
@@ -173,6 +173,8 @@ var_info = {
 
                 'trans_age_SMC_soil_all_depths':[[0,3500],1,False, [1,3]],
                 'age_SMC_soil_all_depths':[[0,3500],1,False],
+                
+                'total_water_storage':[[0,500],1000,False, [-200,200]],
 
                 }
 
@@ -921,63 +923,71 @@ def merge_spatial_results_EU(mode, temp_res, catchment_list, vars, chainID=None,
     os.makedirs(save_path, exist_ok=True)
     
     for var in vars:
-        try:
 
-            if os.path.exists(save_path+var+'.bin') and np.logical_not(replace):
-                print(var, ' of chain ', chainID, 'has been sorted!', flush=True)
-                continue
 
-            for xx, catchment_ID in enumerate(catchment_list):
-                if experiment is None:
-                    output_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/all/'
-                else:
-                    output_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/all_'+experiment+'/'
+        if os.path.exists(save_path+var+'.bin') and np.logical_not(replace):
+            print(var, ' of chain ', chainID, 'has been sorted!', flush=True)
+            continue
 
-                if not os.path.exists(output_path):
-                    print(catchment_ID, '  NOT FOUND!!', flush=True)
-                    continue
-
-                upper_left_coord = (np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/upper_left_coord.txt')).astype(np.int64)
-                mask_small = np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/dem.asc', skiprows=6)
-                mask_small = mask_small!=-9999
+        for xx, catchment_ID in enumerate(catchment_list):
+            run_done_flag = False
+            while not run_done_flag:
                 try:
-                    data_small = np.fromfile(output_path+'/'+var+'_map.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
-                    if os.path.exists(output_path+'/finish_counter/finish_counter_'+var+'_map.bin.txt'):
-                        finish_counter = np.loadtxt(output_path+'/finish_counter/finish_counter_'+var+'_map.bin.txt')
+                    if experiment is None:
+                        output_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/all/'
                     else:
-                        finish_counter = 1
-                except:  # todo
-                    data_small = np.fromfile(output_path+'/'+var+'.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
-                    if os.path.exists(output_path+'/finish_counter/finish_counter_'+var+'_map.bin.txt'):
-                        finish_counter = np.loadtxt(output_path+'/finish_counter/finish_counter_'+var+'_map.bin.txt')
-                    else:
-                        finish_counter = 1
-                
-                data_small /= int(finish_counter)                
-                
-                if xx == 0:
-                    data_large = np.full((data_small.shape[0], mask_large.shape[0], mask_large.shape[1]), np.nan)
+                        output_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/all_'+experiment+'/'
 
-                data_large = GIS_tools.from_catchment_to_EU(upper_left_coord, mask_small, data_large, data_small)
-                
-            data_large.tofile(save_path+var+'.bin')
-            print(var + '  merged and saved at : ' + save_path+var+'.bin', flush=True)
+                    if not os.path.exists(output_path):
+                        print(catchment_ID, '  NOT FOUND!!', flush=True)
+                        continue
+
+                    upper_left_coord = (np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/upper_left_coord.txt')).astype(np.int64)
+                    mask_small = np.loadtxt(Path.data_path+'catchment_info/forward/'+str(catchment_ID)+'/spatial/dem.asc', skiprows=6)
+                    mask_small = mask_small!=-9999
+                    try:
+                        data_small = np.fromfile(output_path+'/'+var+'_map.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
+                        if os.path.exists(output_path+'/finish_counter/finish_counter_'+var+'_map.bin.txt'):
+                            finish_counter = np.loadtxt(output_path+'/finish_counter/finish_counter_'+var+'_map.bin.txt')
+                        else:
+                            finish_counter = 1
+                    except:  # todo
+                        data_small = np.fromfile(output_path+'/'+var+'.bin').reshape(-1, mask_small.shape[0], mask_small.shape[1])
+                        if os.path.exists(output_path+'/finish_counter/finish_counter_'+var+'_map.bin.txt'):
+                            finish_counter = np.loadtxt(output_path+'/finish_counter/finish_counter_'+var+'_map.bin.txt')
+                        else:
+                            finish_counter = 1
+                    
+                    data_small /= int(finish_counter)                
+                    
+                    if xx == 0:
+                        data_large = np.full((data_small.shape[0], mask_large.shape[0], mask_large.shape[1]), np.nan)
+
+                    data_large = GIS_tools.from_catchment_to_EU(upper_left_coord, mask_small, data_large, data_small)
+
+                    run_done_flag = True
+
+                except Exception as e:
+                    print(catchment_ID, var + '   sorting failed!!  Try again', e, flush=True)
+                    time.sleep(20)
+            
+        data_large.tofile(save_path+var+'.bin')
+        print(var + '  merged and saved at : ' + save_path+var+'.bin', flush=True)
 
 
-            """
-            for xx, catchment_ID in enumerate(catchment_list):
-                if experiment is None:
-                    output_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/all/'
-                else:
-                    output_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/all_'+experiment+'/'
-                if os.path.exists(output_path+'/'+var+'.bin'):
-                    os.remove(output_path+'/'+var+'.bin')
-                elif os.path.exists(output_path+'/'+var+'_map.bin'):
-                    os.remove(output_path+'/'+var+'_map.bin')
-            """
+        """
+        for xx, catchment_ID in enumerate(catchment_list):
+            if experiment is None:
+                output_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/all/'
+            else:
+                output_path = Path.work_path + mode +'/outputs/cali/' +temp_res+ '/' + str(catchment_ID) + '/all_'+experiment+'/'
+            if os.path.exists(output_path+'/'+var+'.bin'):
+                os.remove(output_path+'/'+var+'.bin')
+            elif os.path.exists(output_path+'/'+var+'_map.bin'):
+                os.remove(output_path+'/'+var+'_map.bin')
+        """
 
-        except Exception as e:
-            print(catchment_ID, var + '   sorting failed!!', e, flush=True)
+        
         
 
 def get_overall_ET(path):
@@ -1147,10 +1157,9 @@ def plot_risky_region(mode):
     ax.axis('off')
     fig.savefig(Path.work_path+'plots/'+mode+'/risky_region_both.png', transparent=True)
 
-def plot_risky_regions(mode):
+def plot_risky_regions(mode, experiments):
 
-    #experiments = [None, 'ssp126', 'ssp585']
-    experiments = [None]
+
 
     tmp = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
     mask = np.full(tmp.shape, np.nan)
@@ -1172,10 +1181,14 @@ def plot_risky_regions(mode):
         #data[(ywf_diff>0) & (damkohler_diff<0)] = 3
         #data[(ywf_diff<0) & (damkohler_diff>0)] = 2
         #data[(ywf_diff>0) & (damkohler_diff>0)] = 1
+        
+        damkohler_diff_log = np.log10(-damkohler_diff) # Slightly negative?
+        damkohler_diff[damkohler_diff_log<-1] = 0.0
+
         data[(tranage_diff>0) & (damkohler_diff<0)] = 4    
         data[(tranage_diff<0) & (damkohler_diff<0)] = 3
-        data[(tranage_diff>0) & (damkohler_diff>0)] = 2
-        data[(tranage_diff<0) & (damkohler_diff>0)] = 1
+        data[(tranage_diff>0) & (damkohler_diff>=0)] = 2
+        data[(tranage_diff<0) & (damkohler_diff>=0)] = 1
         
         data[mask!=1] = np.nan
 
@@ -1199,9 +1212,10 @@ def plot_risky_regions(mode):
         #cbar = fig.colorbar(sc0, cax=cbar_ax, pad=0.02, ticks=[1, 2, 3])
         #cbar.ax.tick_params(labelsize=25)
         ax.axis('off')
+        GEM_tools.create_asc(data, Path.work_path+'plots/'+mode+'/asc/risky_regions'+exp_suffix+'.asc', '/data/scratch/wusongj/paper4/data/catchment_info/land_mask_3035.asc')
         fig.savefig(Path.work_path+'plots/'+mode+'/analysis/analysis_corr_damkohler_age'+exp_suffix+'.png', transparent=True)
 
-
+        """
         if experiment is None:
             addition_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/nitrogen_addition_diff.asc', skiprows=6)
 
@@ -1230,15 +1244,14 @@ def plot_risky_regions(mode):
             ax.imshow(mask, cmap='Purples_r', alpha=0.1, zorder=0, label='1')
             sc0 = ax.imshow(data_new, vmin=1, vmax=4, cmap=custom_cmap, alpha=1, zorder=1)
             ax.axis('off')
+            #GEM_tools.create_asc(data, Path.work_path+'plots/'+mode+'/asc/risky_regions.asc', '/data/scratch/wusongj/paper4/data/catchment_info/land_mask_3035.asc')
             fig.savefig(Path.work_path+'plots/'+mode+'/analysis/analysis_corr_damkohler_age'+exp_suffix+'_addition_nochange.png', transparent=True)
+        """
 
-
-def plot_risky_regions_scatter(mode):
+def plot_risky_regions_scatter(mode, experiments):
 
     import matplotlib.cm as cm
 
-    experiments = [None]
-    #experiments = [None]
 
     tmp = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
     mask = np.full(tmp.shape, np.nan)
@@ -1316,7 +1329,399 @@ def plot_risky_regions_scatter(mode):
 
         fig.savefig(Path.work_path+'plots/'+mode+'/analysis/risky_region_scatter.png', transparent=True)
 
+
+
+def plot_risky_regions_scatter_linear_fit(mode, experiments):
+
+    from scipy.stats import linregress
+    import matplotlib.cm as cm
+    from sklearn.linear_model import LinearRegression
+
+    
+
+    dominant_landuse = np.loadtxt(Path.data_path+'catchment_info/dominant_landuse.asc', skiprows=6)
+    invalid_region = np.loadtxt(Path.data_path+'catchment_info/typical_regions/invalid_region_eastern_europe.asc', skiprows=6)
+    
+    dict_xlims = {None:[-0.1, 4],
+                  'ssp126':[-0.1,2],
+                  'ssp585':[2,8]}
+    dict_ylims = {None:[-0.42, 0.52],
+                  'ssp126':[-0.42, 0.65],
+                  'ssp585':[-0.8, 0.65]}
+    
+    dict_ylims = {None:[-0.42, 0.52],
+                  'ssp126':[-0.42, 0.65],
+                  'ssp585':[-0.8, 0.65]}
+
+    dict_alpha_list = {None:[0.06, 0.06, 0.06, 0.15],
+                  'ssp126':[0.06, 0.06, 0.06, 0.06],
+                  'ssp585':[0.06, 0.06, 0.06, 0.06]}
+    
+    
+    
+
+    for experiment in experiments:
+
         
+        
+        if experiment is None:
+            exp_suffix = ''
+            periods = [[2*12, 12*12], [12*12, 44*12]]
+        else:
+            exp_suffix = '_' + experiment
+            periods = [[45*12, 65*12], [65*12, 120*12]]
+
+        mask = np.loadtxt(Path.work_path+'plots/'+mode+'/asc/risky_regions'+exp_suffix+'.asc', skiprows=6)
+
+        output_path = '/data/scratch/wusongj/paper4/forward_all/outputs/cali_merged/monthly/all'+exp_suffix+'/'
+
+        #_total_water_storage = np.fromfile(output_path+'total_water_storage.bin').reshape(-1, mask.shape[0], mask.shape[1])
+        #_total_water_storage = np.mean(_total_water_storage, axis=0) * var_info['total_water_storage'][1]
+
+
+        #_Infil_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/infiltration_diff'+exp_suffix+'.asc', skiprows=6)
+        #_Infil = np.fromfile(output_path+'infiltration.bin').reshape(-1, mask.shape[0], mask.shape[1])
+        _Infil = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/climate_3035_tmp/Precipitation_npfloat32_3035'+exp_suffix+'.bin', dtype=np.float32).reshape(-1, mask.shape[0], mask.shape[1])
+        _Infil_diff = (np.mean(_Infil[periods[1][0]:periods[1][1],:,:], axis=0) - np.mean(_Infil[periods[0][0]:periods[0][1],:,:], axis=0)) * var_info['infiltration'][1]
+        _Infil = np.mean(_Infil[periods[0][0]:periods[1][1],:,:], axis=0) * var_info['infiltration'][1]
+        _Infil_diff /= _Infil
+        print(periods[1][0], periods[1][1], "   ", periods[0][0], periods[0][1] )
+
+        #_Infil_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/Precipitation_npfloat32_diff'+exp_suffix+'.asc', skiprows=6)
+
+        #print(np.nanmin(_Infil_diff), np.nanmin(_Infil), _Infil.shape)
+
+        #_Infil_diff[_Infil_diff<-1] = -1
+        #_Infil_diff[_Infil_diff>1] = 1
+
+        _temp_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/Mean_air_temperature_npfloat32_diff'+exp_suffix+'.asc', skiprows=6)
+        #_pet_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/Potential_evapotranspiration_npfloat32_diff'+exp_suffix+'.asc', skiprows=6)
+        
+        if experiment is None:
+            addition_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/nitrogen_addition_diff.asc', skiprows=6)
+        else:
+            addition_diff = np.full(_Infil_diff.shape, 0)
+
+        
+        #ywf_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/young_water_fraction_soil_all_depths_diff'+exp_suffix+'.asc', skiprows=6)
+        _tranage_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/trans_age_SMC_soil_all_depths_diff'+exp_suffix+'.asc', skiprows=6)
+        _damkohler_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/damkholer_num_diff'+exp_suffix+'.asc', skiprows=6)
+
+        #addition = np.fromfile('/data/scratch/wusongj/paper4/forward_all/outputs/cali_merged/monthly/all/nitrogen_addition.bin').reshape(-1, mask.shape[0], mask.shape[1])
+        #addition = np.mean(addition, axis=0)
+
+        
+        operators = [1, -1, 1, -1]
+        DA_operators = [1, 1, -1, -1]
+        age_operators = [-1, 1, -1, 1]
+
+
+        
+
+
+
+        for xx, id in enumerate([1,2,3,4]):
+            if id in [3,4]:
+                valid_idx = np.where(np.logical_and.reduce([np.abs(_tranage_diff)>200, mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1]))
+            else:  
+                valid_idx = np.where(np.logical_and.reduce([mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1]))
+            Infil_diff = _Infil_diff[valid_idx]
+            temp_diff = _temp_diff[valid_idx]
+
+
+            damkohler_diff = _damkohler_diff[valid_idx]
+            damkohler_diff = np.log10(damkohler_diff * DA_operators[xx])
+            color_list = cm.coolwarm((damkohler_diff + 3) / (1 + 3))
+
+            maximum_size = 60
+            tranage_diff = _tranage_diff[valid_idx]
+            tranage_diff = np.log10(tranage_diff * age_operators[xx])
+            size_list = ((tranage_diff - 1) / (3 + 1)) * maximum_size
+            size_list[size_list<1] = 1
+            size_list[size_list>maximum_size] = maximum_size
+
+            
+            #custom_cmap_3((id-1)/4)
+
+            #fig, ax = plt.subplots(1,1, figsize=(3,3), dpi=300)
+            #ax.imshow(np.logical_and(operators[xx]*_Infil_diff<0, np.logical_and.reduce([mask==id, dominant_landuse==1, np.abs(addition_diff)<1, invalid_region!=1])))
+            #fig.savefig(Path.work_path+'plots/'+mode+'/analysis/risky_region_scatter_linear_fit_'+exp_suffix+'_'+str(id)+'_conflicts_area.png', transparent=True)
+            
+            fig, ax = plt.subplots(1,1, figsize=(3,3), dpi=300)
+
+            
+
+            
+            ax.scatter(temp_diff, Infil_diff, facecolors='none', edgecolors=color_list, s=size_list, linewidths=0.5, alpha=dict_alpha_list[experiment][xx])
+
+            if experiment is None:
+                if id in [3,4]:
+                    #fitting_mask = np.logical_and.reduce([operators[xx]*_Infil_diff>0, mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1])
+                    #fitting_mask = np.logical_and.reduce([operators[xx]*_Infil_diff>-0.1, mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1])
+                    fitting_mask = np.logical_and.reduce([operators[xx]*_Infil_diff>-0.1, mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1])
+                    
+                    #fitting_mask = np.logical_and.reduce([operators[xx]*_Infil_diff>-0.00, mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1])
+                    slope, intercept, r_value, p_value, std_err = linregress(_temp_diff[fitting_mask], _Infil_diff[fitting_mask])
+                    np.savetxt(Path.work_path+'plots/'+mode+'/asc/linear_fit_'+str(id)+'.txt', np.array([slope, intercept, r_value*r_value, p_value]))
+                    print(slope, intercept, r_value*r_value, p_value)
+
+
+                    X = np.column_stack((_temp_diff[fitting_mask], addition_diff[fitting_mask]))
+
+                    # 因变量
+                    y = _Infil_diff[fitting_mask]
+
+                    # 建模
+                    model = LinearRegression()
+                    model.fit(X, y)
+                    a, b = model.coef_
+                    c = model.intercept_
+                    print(a, b, c)
+                
+            for id_tmp in [3,4]:
+                slope, intercept, r_value, p_value = np.loadtxt(Path.work_path+'plots/'+mode+'/asc/linear_fit_'+str(id_tmp)+'.txt')
+                X = np.arange(-1000,1000)
+                Y = intercept + X*slope
+                ax.plot(X, Y, linestyle='--')
+                
+
+
+            ax.set_xlim(dict_xlims[experiment])
+            #ax.set_xlim([-300, 300])
+            ax.set_ylim(dict_ylims[experiment])
+            #ax.set_ylim([-300, 300])
+
+            #print(np.nanmean(Infil_diff), np.nanpercentile(Infil_diff, 90), np.nanpercentile(Infil_diff, 10), np.nanmean(_Infil[valid_idx]),  '\n')
+            #print(np.nanmean(temp_diff), np.nanpercentile(temp_diff, 90), np.nanpercentile(temp_diff, 10))
+            
+
+            fig.savefig(Path.work_path+'plots/'+mode+'/analysis/risky_region_scatter_linear_fit_'+exp_suffix+'_'+str(id)+'.png', transparent=True)
+            
+        print('')
+
+    
+
+
+def plot_risky_regions_scatter_linear_fit_3d(mode, experiments):
+
+    from scipy.stats import linregress
+    import matplotlib.cm as cm
+    from sklearn.linear_model import LinearRegression
+
+    
+
+    dominant_landuse = np.loadtxt(Path.data_path+'catchment_info/dominant_landuse.asc', skiprows=6)
+    invalid_region = np.loadtxt(Path.data_path+'catchment_info/typical_regions/invalid_region_eastern_europe.asc', skiprows=6)
+    
+    dict_xlims = {None:[0,4],
+                  'ssp126':[0,2],
+                  'ssp585':[2,6]}
+    dict_xticks = {None:[0,2,4],
+                  'ssp126':[0,1,2],
+                  'ssp585':[2,4,6]}
+    
+    dict_ylims = {None:[-30, 30],
+                  'ssp126':[-5, 5],
+                  'ssp585':[-5, 5]}
+    
+    dict_yticks = {None:[-30,0,30],
+                  'ssp126':[-5, 0, 5],
+                  'ssp585':[-5, 0, 5]}
+    
+    dict_zlims = {None:[-0.45, 0.45],
+                  'ssp126':[-0.45, 0.45],
+                  'ssp585':[-0.65, 0.65]}
+
+    dict_zticks = {None:[-0.4,0,0.4],
+                  'ssp126':[-0.4,0,0.4],
+                  'ssp585':[-0.6,0,0.6]}
+
+    dict_alpha_list = {None:[0.08, 0.08, 0.25, 0.4],
+                  'ssp126':[0.08, 0.08, 0.08, 0.3],
+                  'ssp585':[0.08, 0.08, 0.08, 0.3]}
+    
+    
+    
+
+    for experiment in experiments:
+
+        
+        
+        if experiment is None:
+            exp_suffix = ''
+            periods = [[2*12, 12*12], [12*12, 44*12]]
+        else:
+            exp_suffix = '_' + experiment
+            periods = [[45*12, 65*12], [65*12, 120*12]]
+
+        mask = np.loadtxt(Path.work_path+'plots/'+mode+'/asc/risky_regions'+exp_suffix+'.asc', skiprows=6)
+
+        output_path = '/data/scratch/wusongj/paper4/forward_all/outputs/cali_merged/monthly/all'+exp_suffix+'/'
+
+        #_total_water_storage = np.fromfile(output_path+'total_water_storage.bin').reshape(-1, mask.shape[0], mask.shape[1])
+        #_total_water_storage = np.mean(_total_water_storage, axis=0) * var_info['total_water_storage'][1]
+
+
+        #_Infil_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/infiltration_diff'+exp_suffix+'.asc', skiprows=6)
+        #_Infil = np.fromfile(output_path+'infiltration.bin').reshape(-1, mask.shape[0], mask.shape[1])
+        _Infil = np.fromfile('/data/scratch/wusongj/paper4/data/catchment_info/climate_3035_tmp/Precipitation_npfloat32_3035'+exp_suffix+'.bin', dtype=np.float32).reshape(-1, mask.shape[0], mask.shape[1])
+        _Infil_diff = (np.mean(_Infil[periods[1][0]:periods[1][1],:,:], axis=0) - np.mean(_Infil[periods[0][0]:periods[0][1],:,:], axis=0)) * var_info['infiltration'][1]
+        _Infil = np.mean(_Infil[periods[0][0]:periods[1][1],:,:], axis=0) * var_info['infiltration'][1]
+        _Infil_diff /= _Infil
+        print(periods[1][0], periods[1][1], "   ", periods[0][0], periods[0][1] )
+
+        #_Infil_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/Precipitation_npfloat32_diff'+exp_suffix+'.asc', skiprows=6)
+
+        #print(np.nanmin(_Infil_diff), np.nanmin(_Infil), _Infil.shape)
+
+        #_Infil_diff[_Infil_diff<-1] = -1
+        #_Infil_diff[_Infil_diff>1] = 1
+
+        _temp_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/Mean_air_temperature_npfloat32_diff'+exp_suffix+'.asc', skiprows=6)
+        #_pet_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/Potential_evapotranspiration_npfloat32_diff'+exp_suffix+'.asc', skiprows=6)
+        
+        if experiment is None:
+            _addition_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/nitrogen_addition_diff.asc', skiprows=6)
+        else:
+            _addition_diff = np.full(_Infil_diff.shape, 0)
+
+        
+        #ywf_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/young_water_fraction_soil_all_depths_diff'+exp_suffix+'.asc', skiprows=6)
+        _tranage_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/trans_age_SMC_soil_all_depths_diff'+exp_suffix+'.asc', skiprows=6)
+        _damkohler_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/damkholer_num_diff'+exp_suffix+'.asc', skiprows=6)
+
+        #addition = np.fromfile('/data/scratch/wusongj/paper4/forward_all/outputs/cali_merged/monthly/all/nitrogen_addition.bin').reshape(-1, mask.shape[0], mask.shape[1])
+        #addition = np.mean(addition, axis=0)
+
+        
+        operators = [1, -1, 1, -1]
+        DA_operators = [1, 1, -1, -1]
+        age_operators = [-1, 1, -1, 1]
+
+
+        
+
+
+
+        for xx, id in enumerate([1,2,3,4]):
+            if id in [3,4]:
+                valid_idx = np.where(np.logical_and.reduce([np.abs(_tranage_diff)>200, mask==id, dominant_landuse==1, np.abs(_addition_diff)<5, invalid_region!=1]))
+            else:  
+                valid_idx = np.where(np.logical_and.reduce([mask==id, dominant_landuse==1, np.abs(_addition_diff)<5, invalid_region!=1]))
+            Infil_diff = _Infil_diff[valid_idx]
+            temp_diff = _temp_diff[valid_idx]
+            addition_diff = _addition_diff[valid_idx]
+
+
+            damkohler_diff = _damkohler_diff[valid_idx]
+            damkohler_diff = np.log10(damkohler_diff * DA_operators[xx])
+            damkohler_diff[np.isnan(damkohler_diff)] = -3
+            color_list = cm.coolwarm((damkohler_diff + 3) / (1 + 3)) # [-3, 1]
+            
+            
+
+            maximum_size = 80
+            tranage_diff = _tranage_diff[valid_idx]
+            tranage_diff = np.log10(tranage_diff * age_operators[xx])
+            size_list = ((tranage_diff - 1) / (3 + 1)) * maximum_size
+            size_list[size_list<1] = 1
+            size_list[size_list>maximum_size] = maximum_size
+
+            
+            #custom_cmap_3((id-1)/4)
+
+            #fig, ax = plt.subplots(1,1, figsize=(3,3), dpi=300)
+            #ax.imshow(np.logical_and(operators[xx]*_Infil_diff<0, np.logical_and.reduce([mask==id, dominant_landuse==1, np.abs(addition_diff)<1, invalid_region!=1])))
+            #fig.savefig(Path.work_path+'plots/'+mode+'/analysis/risky_region_scatter_linear_fit_'+exp_suffix+'_'+str(id)+'_conflicts_area.png', transparent=True)
+            
+            fig = plt.figure(figsize=(3.3, 2.7), dpi=300)
+            plt.subplots_adjust(left=0.16, bottom=0.1, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
+            ax = fig.add_subplot(111, projection='3d')
+
+            
+            
+
+            if experiment is None:
+                if id in [3,4]:
+                    #fitting_mask = np.logical_and.reduce([operators[xx]*_Infil_diff>0, mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1])
+                    #fitting_mask = np.logical_and.reduce([operators[xx]*_Infil_diff>-0.1, mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1])
+                    fitting_mask = np.logical_and.reduce([operators[xx]*_Infil_diff>-0.05, mask==id, dominant_landuse==1, np.abs(_addition_diff)<30, invalid_region!=1])
+                    
+                    #fitting_mask = np.logical_and.reduce([operators[xx]*_Infil_diff>-0.00, mask==id, dominant_landuse==1, np.abs(addition_diff)<5, invalid_region!=1])
+
+                    X = np.column_stack((_temp_diff[fitting_mask], _addition_diff[fitting_mask]))
+                    y = _Infil_diff[fitting_mask]
+                    model = LinearRegression()
+                    model.fit(X, y)
+                    a, b = model.coef_
+                    c = model.intercept_
+                    print(a, b, c)
+                    np.savetxt(Path.work_path+'plots/'+mode+'/asc/linear_fit_'+str(id)+'_3d.txt', np.array([a, b, c]))
+                
+            for id_tmp in [3,4]:
+
+                temp_surf, addition_surface = np.meshgrid(
+                    np.linspace(dict_xlims[experiment][0], dict_xlims[experiment][1], 20),
+                    np.linspace(dict_ylims[experiment][0], dict_ylims[experiment][1], 20)
+                )
+
+                try:
+                    a, b, c = np.loadtxt(Path.work_path+'plots/'+mode+'/asc/linear_fit_'+str(id_tmp)+'_3d.txt')
+
+                    infil_surf = a * temp_surf + b * addition_surface + c
+
+                    #colors_surface = ['yellow', 'greenyellow']
+                    ax.plot_surface(temp_surf, addition_surface, infil_surf, color=custom_cmap_3(355*(id_tmp-3)), alpha=0.2, label='Fit')
+                except Exception as e:
+                    print(e)
+                    pass
+            
+
+            ax.scatter(temp_diff, addition_diff, Infil_diff, facecolors='none', edgecolors=color_list, s=size_list, linewidths=0.5, alpha=dict_alpha_list[experiment][xx], depthshade=False)
+            
+            
+
+            ax.set_xlim(dict_xlims[experiment])
+            ax.set_ylim(dict_ylims[experiment])
+            ax.set_zlim(dict_zlims[experiment])
+
+            ax.set_xticks(dict_xticks[experiment])
+            ax.set_yticks(dict_yticks[experiment])
+            ax.set_zticks(dict_zticks[experiment])
+
+            ax.view_init(elev=5, azim=55)
+            fig.patch.set_facecolor('white')
+            ax.set_facecolor('white')
+
+            
+
+
+            ax.set_xlabel('ΔTemperature (°C)', labelpad=1, ha='center')
+            ax.set_ylabel('ΔAddition (kg/hayr) ', labelpad=1, ha='center')
+            ax.set_zlabel('ΔPrecipitation (%)', labelpad=5, ha='center')
+            #ax.zaxis._axinfo['label']['direction'] = np.array([-1, 1, 0])
+
+            ax.tick_params(axis='x', pad=-2)
+            ax.tick_params(axis='y', pad=-2)
+            ax.tick_params(axis='z', pad=2)
+            
+                
+
+
+            #ax.set_xlim(dict_xlims[experiment])
+            #ax.set_xlim([-300, 300])
+            #ax.set_ylim(dict_ylims[experiment])
+            #ax.set_ylim([-300, 300])
+
+            #print(np.nanmean(Infil_diff), np.nanpercentile(Infil_diff, 90), np.nanpercentile(Infil_diff, 10), np.nanmean(_Infil[valid_idx]),  '\n')
+            #print(np.nanmean(temp_diff), np.nanpercentile(temp_diff, 90), np.nanpercentile(temp_diff, 10))
+            
+
+            fig.savefig(Path.work_path+'plots/'+mode+'/analysis/3d_risky_region_scatter_linear_fit_'+exp_suffix+'_'+str(id)+'.png', transparent=True)
+            
+        print('')
+
+      
 
 def analysis(mode):
     tmp = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
@@ -1329,9 +1734,12 @@ def analysis(mode):
 
     dominant_landuse = np.loadtxt('/data/scratch/wusongj/paper4/data/catchment_info/dominant_landuse.asc', skiprows=6)
 
+    risky_region_ssp585 = np.loadtxt(asc_path+'risky_regions_ssp585.asc', skiprows=6)
 
-    data = np.mean(np.fromfile(spatial_path + 'young_water_fraction_soil_all_depths.bin').reshape(-1, mask.shape[0], mask.shape[1])[:24,:,:], axis=0)   
-    #data = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/'+'young_water_fraction_soil_all_depths'+'_diff.asc', skiprows=6)
+
+    #data = np.mean(np.fromfile(spatial_path + 'young_water_fraction_soil_all_depths.bin').reshape(-1, mask.shape[0], mask.shape[1])[:24,:,:], axis=0)   
+    #data = np.mean(np.fromfile(spatial_path + 'young_water_fraction_soil_all_depths.bin').reshape(-1, mask.shape[0], mask.shape[1])[-10:,:,:], axis=0)
+    data = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/'+'young_water_fraction_soil_all_depths'+'_diff.asc', skiprows=6)
     data[data==-9999] = np.nan
 
     # trans_age_SMC_soil_all_depths
@@ -1344,10 +1752,15 @@ def analysis(mode):
     # damkholer_num
     #data[data>100] = 100
     #data = np.log10(data)
-    region_mask = np.logical_and.reduce([
-                                         #np.loadtxt(typical_region_path+'typical_regions_Ts_southern_europe.asc', skiprows=6)==1,
-                                         np.loadtxt(typical_region_path+'typical_regions_mountains.asc', skiprows=6)==1,
+    region_mask = np.logical_and.reduce([#risky_region_ssp585==4,
+                                         np.loadtxt(typical_region_path+'typical_regions_Ts_eastern_europe.asc', skiprows=6)==1,
+                                         data < 0,
+                                         #np.loadtxt(typical_region_path+'typical_regions_mountains.asc', skiprows=6)==1,
+                                         #dominant_landuse==1,
+                                         mask
                                         ])
+    
+
     
 
     data = trimmed_mean_2d(data, low=10, high=90, axis=0, mask=(region_mask), warming_period=0)
@@ -1425,6 +1838,7 @@ def plot_risky_regions_TS(mode):
 
     custom_cmap = custom_cmap_2
 
+
     """
     fig, ax = plt.subplots(1,1, figsize=(15,15), dpi=300)
     plt.subplots_adjust(left=0.01, bottom=0.01, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
@@ -1444,9 +1858,9 @@ def plot_risky_regions_TS(mode):
 
     mask_1 = data.copy()
     #vars = ['nitrogen_inputs', 'plant_uptake', 'deni_soil', 'deni_fraction', 'plant_uptake_fraction', 'leaching_fraction', 'trans_age_SMC_soil_all_depths', 'damkholer_num']
-    #vars = ['infiltration', 'Evapotranspiration_fraction', 'SMC_soil_all_depths', 'deni_fraction', 'plant_uptake_fraction', 'nitrogen_storage', 'trans_age_SMC_soil_all_depths', 'damkholer_num']
+    vars = ['infiltration', 'Evapotranspiration_fraction', 'SMC_soil_all_depths', 'deni_fraction', 'plant_uptake_fraction', 'nitrogen_storage', 'trans_age_SMC_soil_all_depths', 'damkholer_num']
     #vars = ['SMC_soil_all_depths']
-    vars = ['damkholer_num']
+    #vars = ['damkholer_num']
     ylim_dict = {'infiltration':[[450,750],[500,600,700]],
                  'Evapotranspiration_fraction':[[58, 82], [60,70,80]],
                  'SMC_soil_all_depths':[[0.23,0.31],[0.24, 0.27, 0.30]],
@@ -1752,11 +2166,16 @@ def plot_spatial_results_EU_diff(mode, chainID, chainID_list, vars, temp_res, re
             var = var[:-4]
 
         if experiment is not None and var in ['Precipitation_npfloat32', 'Potential_evapotranspiration_npfloat32', 'Mean_air_temperature_npfloat32', 'Surface_net_radiation_npfloat32']:
-            data = read_outputs('/data/scratch/wusongj/paper4/data/catchment_info/climate_3035_tmp/difference_'+var+'_'+experiment+'.asc', mask)
+            pet_diff = read_outputs('/data/scratch/wusongj/paper4/data/catchment_info/climate_3035_tmp/diff_Potential_evapotranspiration_npfloat32_ssp585.asc', mask)
+            data = read_outputs('/data/scratch/wusongj/paper4/data/catchment_info/climate_3035_tmp/diff_'+var+'_'+experiment+'.asc', mask)
+            data[pet_diff<0] = np.nan
             data *= var_info[var][1]  # weight
+        
+
             
 
         else:
+
             if var=='damkholer_num' or var=='processing_time':
 
                 _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+path_flag+'/'+var+'_annually.'+extension, mask)
@@ -1785,6 +2204,7 @@ def plot_spatial_results_EU_diff(mode, chainID, chainID_list, vars, temp_res, re
                         _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/'+path_flag+'/'+var+'.'+extension, mask)
                     except Exception as e:
                         _data = read_outputs(Path.data_path+'catchment_info/climate_3035_tmp/'+var+'_3035.'+extension, mask, dtype=np.float32)
+                        print(_data.shape)
 
                 #if var=='damkholer_num' or var=='trans_age_SMC_soil_all_depths' or var=='processing_time':
                 #    _data = np.log10(_data)
@@ -1897,7 +2317,7 @@ def plot_spatial_results_EU_diff(mode, chainID, chainID_list, vars, temp_res, re
     
         """
         #for yy, data in enumerate([baseline, np.mean(_data[periods[-1][0] : periods[-1][1], :, :], axis=0)]):
-        for yy, data in enumerate([_data[0, :, :], _data[-1, :, :]]):
+        for yy, data in enumerate([baseline, np.mean(_data[periods[-1][0] : periods[-1][1], :, :], axis=0)]):
 
             if var=='damkholer_num':
                 data = np.log10(data)
@@ -1918,7 +2338,7 @@ def plot_spatial_results_EU_diff(mode, chainID, chainID_list, vars, temp_res, re
                 #GEM_tools.create_asc(data, Path.work_path+'plots/'+mode+'/asc/'+var+'_diff_diagnose_'+str(yy)+'.asc', '/data/scratch/wusongj/paper4/data/catchment_info/land_mask_3035.asc')
                 fig.savefig(Path.work_path+'plots/'+mode+'/diff/'+var+'_diff_diagnose_'+str(yy)+'.png')
             else:
-                GEM_tools.create_asc(data, Path.work_path+'plots/'+mode+'/diff/'+var+'_diff_diagnose_'+str(yy)+'_'+experiment+'.asc', '/data/scratch/wusongj/paper4/data/catchment_info/land_mask_3035.asc')
+                #GEM_tools.create_asc(data, Path.work_path+'plots/'+mode+'/diff/'+var+'_diff_diagnose_'+str(yy)+'_'+experiment+'.asc', '/data/scratch/wusongj/paper4/data/catchment_info/land_mask_3035.asc')
                 fig.savefig(Path.work_path+'plots/'+mode+'/diff/'+var+'_diff_diagnose_'+str(yy)+'_'+experiment+'.png')
         """
         
@@ -2294,15 +2714,15 @@ def plot_TS_results_EU_experiments(mode, chainID, chainID_list, vars, temp_res, 
 
     vars = ['trans_age_SMC_soil_all_depths', 'damkholer_num', 'young_water_fraction_soil_all_depths']
     ymins = [0, -1, 0, 1]
-    ymaxs = [3000, 3, 30, 5]
-    ylims = [[-100, 3100], [-1.1, 2.1], [-1,32]]
-    yticks = [[0,1500,3000], [-1,0,1,2], [0,15,30]]
+    ymaxs = [3000, 3, 20, 5]
+    ylims = [[-100, 3100], [-1.1, 2.1], [-1,21]]
+    yticks = [[0,1500,3000], [-1,0,1,2], [0,10,20]]
     xticks =[datetime(1985,1,1), datetime(2020,1,1), datetime(2060,1,1), datetime(2100,1,1)]
     xticklabels =[str(x) for x in [1985,2020,2060,2100]]
 
     for yy, var in enumerate(vars):
 
-        if yy!=2:
+        if yy!=0:
             continue
 
         fig, ax = plt.subplots(1,1, figsize=(4,2), dpi=300)
@@ -2342,7 +2762,9 @@ def plot_TS_results_EU_experiments(mode, chainID, chainID_list, vars, temp_res, 
             
             data_yearly = np.nanmedian(_data_yearly[:,mask>0], axis=1)[2:]
 
-            
+            print(data_yearly.shape, np.mean(data_yearly[35:45]), np.mean(data_yearly[110:120]), np.mean(data_yearly[110:120])-np.mean(data_yearly[35:45]))
+
+
             np.random.seed(0)
             data_tmp = _data_yearly[:,mask>0][2:]
             
@@ -2406,6 +2828,7 @@ def plot_TS_results_EU_experiments(mode, chainID, chainID_list, vars, temp_res, 
             save_file_path = Path.work_path+'plots/'+mode+'/'+var+'_TS_'+experiment+'.png'
         fig.savefig(save_file_path)
         print('Figure saved at :   ' + save_file_path)
+
 
 def plot_spatial_TS_trend_results_EU(mode, chainID, chainID_list, vars, temp_res, replace=False, yearly_flag=False):
 
@@ -3551,28 +3974,36 @@ def calculate_additional_parameters(mode, temp_res, experiment=None):
     A = np.memmap(save_path+'trans_age_SMC_layer1.bin', dtype=np.float64, mode="r")
     B = np.memmap(save_path+'trans_age_SMC_layer2.bin', dtype=np.float64, mode="r")
     C = np.memmap(save_path+'trans_age_SMC_layer3.bin', dtype=np.float64, mode="r")
-    D = np.memmap(save_path+'trans_age_SMC_soil_all_depths.bin', dtype=np.float64, mode="w+", shape=A.shape)
+    D = np.memmap(save_path+'SMC_layer1.bin', dtype=np.float64, mode="r")
+    E = np.memmap(save_path+'SMC_layer2.bin', dtype=np.float64, mode="r")
+    F = np.memmap(save_path+'SMC_layer3.bin', dtype=np.float64, mode="r")
+    G = np.memmap(save_path+'trans_age_SMC_soil_all_depths.bin', dtype=np.float64, mode="w+", shape=A.shape)
+
     n = len(A)
     chunk_size = n//10
     for i in range(0, n, chunk_size):
         j = min(i+chunk_size, n)
-        D[i:j] = (A[i:j] * 0.2 + B[i:j] * 0.2 + C[i:j] * depth3) / (0.2+0.2+depth3)
-    D.flush()
-    del A, B, C, D
-
-
+        G[i:j] = (A[i:j]*D[i:j]*0.2 + B[i:j]*E[i:j]*0.2 + C[i:j]*F[i:j]*depth3) / (D[i:j]*0.2+E[i:j]*0.2+F[i:j]*depth3)
+    G.flush()
+    del A, B, C, D, E, F
+  
+  
     # Soil water age
     A = np.memmap(save_path+'age_SMC_layer1.bin', dtype=np.float64, mode="r")
     B = np.memmap(save_path+'age_SMC_layer2.bin', dtype=np.float64, mode="r")
     C = np.memmap(save_path+'age_SMC_layer3.bin', dtype=np.float64, mode="r")
-    D = np.memmap(save_path+'age_SMC_soil_all_depths.bin', dtype=np.float64, mode="w+", shape=A.shape)
+    D = np.memmap(save_path+'SMC_layer1.bin', dtype=np.float64, mode="r")
+    E = np.memmap(save_path+'SMC_layer2.bin', dtype=np.float64, mode="r")
+    F = np.memmap(save_path+'SMC_layer3.bin', dtype=np.float64, mode="r")
+    G = np.memmap(save_path+'age_SMC_soil_all_depths.bin', dtype=np.float64, mode="w+", shape=A.shape)
+
     n = len(A)
     chunk_size = n//10
     for i in range(0, n, chunk_size):
         j = min(i+chunk_size, n)
-        D[i:j] = (A[i:j] * 0.2 + B[i:j] * 0.2 + C[i:j] * depth3) / (0.2+0.2+depth3)
-    D.flush()
-    del A, B, C, D
+        G[i:j] = (A[i:j]*D[i:j]*0.2 + B[i:j]*E[i:j]*0.2 + C[i:j]*F[i:j]*depth3) / (D[i:j]*0.2+E[i:j]*0.2+F[i:j]*depth3)
+    G.flush()
+    del A, B, C, D, E, F
 
 
 
@@ -3580,14 +4011,18 @@ def calculate_additional_parameters(mode, temp_res, experiment=None):
     A = np.memmap(save_path+'young_water_fraction_sm1.bin', dtype=np.float64, mode="r")
     B = np.memmap(save_path+'young_water_fraction_sm2.bin', dtype=np.float64, mode="r")
     C = np.memmap(save_path+'young_water_fraction_sm3.bin', dtype=np.float64, mode="r")
-    D = np.memmap(save_path+'young_water_fraction_soil_all_depths.bin', dtype=np.float64, mode="w+", shape=A.shape)
+    D = np.memmap(save_path+'SMC_layer1.bin', dtype=np.float64, mode="r")
+    E = np.memmap(save_path+'SMC_layer2.bin', dtype=np.float64, mode="r")
+    F = np.memmap(save_path+'SMC_layer3.bin', dtype=np.float64, mode="r")
+    G = np.memmap(save_path+'young_water_fraction_soil_all_depths.bin', dtype=np.float64, mode="w+", shape=A.shape)
+
     n = len(A)
     chunk_size = n//10
     for i in range(0, n, chunk_size):
         j = min(i+chunk_size, n)
-        D[i:j] = (A[i:j] * 0.2 + B[i:j] * 0.2 + C[i:j] * depth3) / (0.2+0.2+depth3)
-    D.flush()
-    del A, B, C, D
+        G[i:j] = (A[i:j]*D[i:j]*0.2 + B[i:j]*E[i:j]*0.2 + C[i:j]*F[i:j]*depth3) / (D[i:j]*0.2+E[i:j]*0.2+F[i:j]*depth3)
+    G.flush()
+    del A, B, C, D, E, F
 
 
 
@@ -3696,9 +4131,11 @@ def plot_typical_regions_Ts(mode, temp_res):
 
     dominant_landuse = np.loadtxt(Path.data_path+'catchment_info/dominant_landuse.asc', skiprows=6)
 
-    mask_tmp = np.loadtxt('/data/scratch/wusongj/paper4/data/catchment_info/typical_regions/typical_regions_Ts_'+'central_west_europe_with_lower_age'+'.asc', skiprows=6)
-    ywf_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/young_water_fraction_soil_all_depths_diff.asc', skiprows=6)
-    mask_tmp = np.logical_and(mask_tmp>0, ywf_diff<0)
+    #mask_tmp = np.loadtxt('/data/scratch/wusongj/paper4/data/catchment_info/typical_regions/typical_regions_Ts_'+'central_west_europe_with_lower_age'+'.asc', skiprows=6)
+    mask_tmp = np.loadtxt('/data/scratch/wusongj/paper4/data/catchment_info/typical_regions/typical_regions_Ts_'+'western_europe'+'.asc', skiprows=6)
+    mask_tmp = mask_tmp > 0
+    #ywf_diff = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/young_water_fraction_soil_all_depths_diff.asc', skiprows=6)
+    #mask_tmp = np.logical_and(mask_tmp>0, ywf_diff<0)
     region_masks.append(mask_tmp)
     #region_masks.append(np.logical_and(mask_tmp, dominant_landuse==1))
     #region_masks.append(np.logical_and(mask_tmp, dominant_landuse!=1))

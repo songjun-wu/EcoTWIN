@@ -216,9 +216,9 @@ if __name__ == "__main__":
     chainID_list = np.arange(40)
     temp_res = 'monthly'
 
-    #experiment = None
+    experiment = None
     #experiment = 'ssp585'
-    experiment = 'ssp126'
+    #experiment = 'ssp126'
 
 
     multiprocessing.set_start_method("spawn", force=True)
@@ -240,9 +240,11 @@ if __name__ == "__main__":
 
     # === Merge and average chain-specific results ===
     #forward_post_spatial_merge(mode, catchment_list, chainID_list, temp_res, Vars=None, replace=True, batch_num=batch_num, batch_ID=batch_ID, experiment=experiment)
+    #forward_post_spatial_merge(mode, catchment_list, chainID_list, temp_res, Vars=['trans_age_SMC_layer3', 'no3_SMC_layer1', 'no3_SMC_layer3', 'SMC_layer1'], replace=True, batch_num=batch_num, batch_ID=batch_ID, experiment=experiment)
+    
 
 
-
+    
 
     
 
@@ -288,7 +290,13 @@ if __name__ == "__main__":
     Vars = ['infiltration',  'Evapotranspiration_fraction', 'young_water_fraction_soil_all_depths', 
             'nitrogen_addition', 'damkholer_num', 'nitrogen_surplus', 'nitrogen_storage']
     Vars = ['trans_age_SMC_soil_all_depths', 'damkholer_num', 'processing_time', 'nitrogen_storage', 'infiltration', 'Evapotranspiration', 'nitrogen_uptake', 'nitrogen_leaching']
-    Vars = ['Precipitation_npfloat32', 'infiltration','trans_age_SMC_layer1', 'trans_age_SMC_layer2', 'trans_age_SMC_layer3']
+    Vars = ['infiltration',  'Evapotranspiration', 'plant_uptake', 'deni_soil']
+    Vars = ['SMC_layer3', 'nitrogen_storage', 'nitrogen_leaching', ]
+    Vars = ['perc_layer3', 'no3_SMC_layer3']
+    Vars = ['perc_layer1']
+    Vars = ['deni_soil', 'plant_uptake', ]
+    #Vars = ['Precipitation_npfloat32', 'Potential_evapotranspiration_npfloat32', 'Mean_air_temperature_npfloat32', 'Surface_net_radiation_npfloat32']
+    #Vars = ['infiltration']
     Vars = [var+'.bin' for var in Vars]
 
 
@@ -304,12 +312,12 @@ if __name__ == "__main__":
 
     # === Plot increasing/decreasing values  ===
     
-    #for experiment in ['ssp126']:
+    #for experiment in [None]:
     #    post_plot.plot_spatial_results_EU_diff(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False, experiment=experiment)
     
     #post_plot.plot_TS_results_EU(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False, experiment=experiment)
     #post_plot.plot_TS_results_EU_by_regions(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False)
-    ['trans_age_SMC_soil_all_depths', 'damkholer_num']
+    ['trans_age_SMC_soil_all_depths']
     #post_plot.plot_TS_results_EU_experiments(mode, chainID=None, chainID_list=chainID_list, vars=['trans_age_SMC_soil_all_depths'], temp_res=temp_res, replace=True, yearly_flag=False)
 
 
@@ -327,7 +335,7 @@ if __name__ == "__main__":
 
     # == Plot by typical regions
     #post_plot.plot_typical_regions(mode, temp_res)
-    #post_plot.plot_typical_regions_Ts(mode, temp_res)
+    post_plot.plot_typical_regions_Ts(mode, temp_res)
     #post_plot.plot_pdf_by_typical_regions(mode, temp_res)
 
     
@@ -336,10 +344,14 @@ if __name__ == "__main__":
     #post_plot.plot_risky_region(mode)
 
     #post_plot.plot_risky_regions_TS(mode)
-    #post_plot.plot_risky_regions(mode)
-    #post_plot.plot_risky_regions_scatter(mode)
+    #post_plot.plot_risky_regions(mode, experiments=['ssp126','ssp585'])
+    #post_plot.plot_risky_regions_scatter(mode, experiments=['ssp126','ssp585'])
 
-    post_plot.analysis(mode)
+    #post_plot.plot_risky_regions_scatter_linear_fit(mode, experiments=[None])
+    #post_plot.plot_risky_regions_scatter_linear_fit_3d(mode, experiments=[None, 'ssp126','ssp585'])
+    
+
+    #post_plot.analysis(mode)
     
    
     # === EXPERIEMTNS ===

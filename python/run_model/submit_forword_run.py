@@ -12,9 +12,9 @@ def submit_job(batch_ID, chain_start, chain_end):
         lines = f.readlines()
         for xx, line in enumerate(lines):
             if '#SBATCH --job-name' in line:
-                lines[xx] = '#SBATCH --job-name="EU'+str(batch_ID)+'"'
+                lines[xx] = '#SBATCH --job-name="EU'+str(batch_ID)+'"\n'
             elif 'srun --exclusive --cpu-bind=cores' in line:
-                lines[xx] = 'srun --exclusive --cpu-bind=cores python3 forward_run.py --batch_ID ' + str(batch_ID) + ' --chain_start ' + str(chain_start) + ' --chain_end ' + str(chain_end)
+                lines[xx] = 'srun --exclusive --cpu-bind=cores python3 forward_run.py --batch_ID ' + str(batch_ID) + ' --chain_start ' + str(chain_start) + ' --chain_end ' + str(chain_end) + '\n'
     with open('batch_forward_run.slurm', 'w') as f:
         f.writelines(lines)
         
@@ -37,6 +37,9 @@ def is_job_done(batch_ID):
 
 if __name__ == "__main__":
 
+    max_N_jobs = 200
+    N_jobs = 0
+
     batch_ID_list = [2,3,4,5,6,7,8,9]
 
 
@@ -57,6 +60,8 @@ if __name__ == "__main__":
             chain_start = chain_start_list[completed_runs[batch_ID]]
             chain_end = chain_end_list[completed_runs[batch_ID]]
             submit_job(batch_ID, chain_start, chain_end)
+            N_jobs += 1
+
 
 
 
@@ -72,6 +77,11 @@ if __name__ == "__main__":
                     chain_start = chain_start_list[completed_runs[batch_ID]]
                     chain_end = chain_end_list[completed_runs[batch_ID]]
                     submit_job(batch_ID, chain_start, chain_end)
+                    N_jobs += 1
+        
+        if N_jobs > max_N_jobs:
+            print('Number of job submission exceeds ', str(max_N_jobs))
+            break
 
         # Break if all runs are completed
         if all(count == n_runs for count in completed_runs.values()):

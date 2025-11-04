@@ -109,8 +109,8 @@ def foward_run_parallel(catchment_ID, nn, chainID, run_path, save_path, param, t
 
             # Save outputs for each catchment
 
-            if experiment is None:
-                save_last_timestep_for_spinup(run_path, catchment_ID, chainID)
+            #if experiment is None:
+            #    save_last_timestep_for_spinup(run_path, catchment_ID, chainID)
                 
             save_cumulative_outputs_memmap(run_path+'outputs/', save_path)
             #save_cumulative_outputs(run_path+'outputs/', save_path)
@@ -119,6 +119,7 @@ def foward_run_parallel(catchment_ID, nn, chainID, run_path, save_path, param, t
             run_times += 1
             print(catchment_ID, chainID, '   failed!!!! try for the ', run_times, ' times')
             print('Error messasge   :   ', e)
+            time.sleep(60)
 
 
     
@@ -418,8 +419,8 @@ if __name__ == "__main__":
     second_run = False
 
 
-    #experiments = ['ssp585']
-    experiments = ['ssp126']
+    experiments = ['ssp585']
+    #experiments = ['ssp126']
 
     current_path = os.getcwd()
     catchment_list = [f for f in os.listdir('/data/scratch/wusongj/paper4/data/catchment_info/forward')]
