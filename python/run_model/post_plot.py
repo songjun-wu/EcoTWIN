@@ -1736,10 +1736,12 @@ def analysis(mode):
 
     risky_region_ssp585 = np.loadtxt(asc_path+'risky_regions_ssp585.asc', skiprows=6)
 
+    # typical_regions_west_coast
+    # typical_regions_mountains
 
-    #data = np.mean(np.fromfile(spatial_path + 'young_water_fraction_soil_all_depths.bin').reshape(-1, mask.shape[0], mask.shape[1])[:24,:,:], axis=0)   
+    data = np.mean(np.fromfile(spatial_path + 'trans_age_SMC_soil_all_depths.bin').reshape(-1, mask.shape[0], mask.shape[1])[:24,:,:], axis=0)   
     #data = np.mean(np.fromfile(spatial_path + 'young_water_fraction_soil_all_depths.bin').reshape(-1, mask.shape[0], mask.shape[1])[-10:,:,:], axis=0)
-    data = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/'+'young_water_fraction_soil_all_depths'+'_diff.asc', skiprows=6)
+    #data = np.loadtxt('/data/scratch/wusongj/paper4/plots/forward_all/asc/'+'young_water_fraction_soil_all_depths'+'_diff.asc', skiprows=6)
     data[data==-9999] = np.nan
 
     # trans_age_SMC_soil_all_depths
@@ -1752,10 +1754,11 @@ def analysis(mode):
     # damkholer_num
     #data[data>100] = 100
     #data = np.log10(data)
+
     region_mask = np.logical_and.reduce([#risky_region_ssp585==4,
-                                         np.loadtxt(typical_region_path+'typical_regions_Ts_eastern_europe.asc', skiprows=6)==1,
-                                         data < 0,
-                                         #np.loadtxt(typical_region_path+'typical_regions_mountains.asc', skiprows=6)==1,
+                                         ~(np.loadtxt(typical_region_path+'typical_regions_mountains.asc', skiprows=6)==1),
+                                         #data < 0,
+                                         ~(np.loadtxt(typical_region_path+'typical_regions_west_coast.asc', skiprows=6)==1),
                                          #dominant_landuse==1,
                                          mask
                                         ])
@@ -1859,6 +1862,7 @@ def plot_risky_regions_TS(mode):
     mask_1 = data.copy()
     #vars = ['nitrogen_inputs', 'plant_uptake', 'deni_soil', 'deni_fraction', 'plant_uptake_fraction', 'leaching_fraction', 'trans_age_SMC_soil_all_depths', 'damkholer_num']
     vars = ['infiltration', 'Evapotranspiration_fraction', 'SMC_soil_all_depths', 'deni_fraction', 'plant_uptake_fraction', 'nitrogen_storage', 'trans_age_SMC_soil_all_depths', 'damkholer_num']
+    vars = ['nitrogen_leaching']
     #vars = ['SMC_soil_all_depths']
     #vars = ['damkholer_num']
     ylim_dict = {'infiltration':[[450,750],[500,600,700]],
@@ -1867,6 +1871,7 @@ def plot_risky_regions_TS(mode):
                  'deni_fraction':[[3,11],[4,7,10]],
                  'plant_uptake_fraction':[[23,39], [24,30,36]],
                  'nitrogen_storage':[[180,520], [200,350,500]],
+                 'nitrogen_leaching':[[20,90], [30,55,80]],
                  'trans_age_SMC_soil_all_depths':[[1400, 4600], [1500, 3000, 4500]],
                  'damkholer_num':[[-0.92, -0.27], [-0.9, -0.6, -0.3]]}
     #vars = []
@@ -2140,6 +2145,373 @@ def plot_spatial_results_EU(mode, chainID, chainID_list, vars, temp_res, replace
             fig.savefig(Path.work_path+'plots/'+mode+'/'+var+'_all.png', transparent=True)
 
 
+def plot_spatial_by_lati_longi(mode, chainID, chainID_list, vars, temp_res, replace=False, yearly_flag=False):
+
+    from matplotlib import cm, colors
+  
+    tmp = np.loadtxt(Path.data_path+'catchment_info/channel_length.asc', skiprows=6)
+    chanmask = np.full(tmp.shape, False)
+    chanmask[tmp>0] = True
+    tmp = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
+    mask = np.full(chanmask.shape, np.nan)
+    mask[tmp>0] = 1
+
+    for var in vars:
+
+        extension = var.split('.')[-1]
+        var = var.split('.')[0]
+
+        if '_map' in var:
+            var = var[:-4]
+        
+        if var == 'Evapotranspiration_fraction':
+            _data = np.mean(read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/Evapotranspiration.'+extension, mask)[24:,:,:], axis=0) /  \
+                    np.mean(read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/infiltration.'+extension, mask)[24:,:,:], axis=0)
+        elif var == 'nitrogen_uptake':
+            _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/deni_soil.'+extension, mask) +  \
+                    read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/plant_uptake.'+extension, mask)
+        elif var == 'nitrogen_input':
+            _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/nitrogen_addition.'+extension, mask) +  \
+                    read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/minerl_soil.'+extension, mask) +  \
+                    read_outputs(Path.data_path + 'catchment_info/others/wet_deposition_monthly.bin', mask)
+        elif var == 'wet_deposition':
+            _data = read_outputs('/data/scratch/wusongj/paper4/data/catchment_info/others/wet_deposition_monthly.bin', mask)
+        elif var == 'damkholer_num':
+            _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/'+var+'_annually.'+extension, mask)
+        else:
+            try:
+                _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/'+var+'.'+extension, mask)
+            except Exception as e:
+                _data = read_outputs(Path.data_path+'catchment_info/climate_3035_tmp/'+var+'_3035.'+extension, mask, dtype=np.float32)
+
+
+        _data *= var_info[var][1]  # weight
+        vmin = var_info[var][0][0]
+        vmax = var_info[var][0][1]
+
+        if extension=='bin':
+
+            alpha = 1
+
+
+            if var == 'Evapotranspiration_fraction':
+                data = _data
+            else:
+                if temp_res=='monthly':
+                    data = np.mean(_data[24:,:,:], axis=0)
+                else:
+                    data = np.mean(_data[2:,:,:], axis=0)
+            
+
+            
+            if var=='damkholer_num':
+                data = np.log10(data)
+                cmap = 'coolwarm'
+                alpha = 1
+            elif var=='infiltration':
+                cmap = 'Blues'
+            elif 'Evapotranspiration' in var:
+                cmap = 'Oranges'
+            elif 'nitrogen' in var or var=='deni_soil':
+                cmap = get_cmcrameri_cmap('lipari', start=0.2, end=0.99, alpha=1)
+            else:
+                cmap = get_cmcrameri_cmap('batlowW', start=0.1, end=0.95, alpha=1)
+            
+
+            if var_info[var][2]:
+                data[~chanmask] = np.nan
+            else:
+                data[mask!=1] = np.nan
+
+            
+
+            if var=='young_water_fraction_soil_all_depths':
+                ylims = [0, 70]
+                ydiff = ylims[1] - ylims[0]
+                yticks = [5, 35, 65]
+                yticklabels = ['5','35', '65']
+            elif var=='damkholer_num':
+                ylims = [-2.2,2.8]
+                ydiff = ylims[1] - ylims[0]
+                yticks = [-2,0,2]
+                yticklabels = ['0.01', '1', '100']
+            elif var=='Mean_air_temperature_npfloat32':
+                ylims = [0,20]
+                ydiff = ylims[1] - ylims[0]
+                yticks = [0,10,20]
+                yticklabels = ['0','20', '40']
+            elif var=='Precipitation_npfloat32':
+                ylims = [0,1000]
+                ydiff = ylims[1] - ylims[0]
+                yticks = [0,500,1000]
+                yticklabels = ['0','500', '1000']
+            
+
+
+            lat_4326 = np.loadtxt('/data/scratch/wusongj/paper4/data/catchment_info/others/lat_4326_2darray.txt')
+            lon_4326 = np.loadtxt('/data/scratch/wusongj/paper4/data/catchment_info/others/lon_4326_2darray.txt')
+
+            print(lat_4326.min(), lat_4326.max(), lon_4326.min(), lon_4326.max())
+
+            targets = [35, 45, 55, 65]
+            nearest_rows = {}
+            for t in targets:
+                # 每一行的平均纬度（也可以用第一列、最后一列，只要一致即可）
+                row_lat = lat_4326[:, -1]
+                # 找到最接近目标纬度 t 的行号
+                nearest_row = np.argmin(np.abs(row_lat - t))
+                nearest_rows[t] = nearest_row
+            print(nearest_rows)
+            
+
+            targets = [-20, 0, 20, 40, 60]
+            nearest_cols = {}
+            for t in targets:
+                col_lon = lon_4326[0,:]
+                nearest_col = np.argmin(np.abs(col_lon - t))
+                nearest_cols[t] = nearest_col
+            print(nearest_cols)
+
+
+            
+            # Latitude
+
+            dem = np.loadtxt('/data/scratch/wusongj/paper4/data/catchment_info/dem_5km_interpolated.asc', skiprows=6)
+            dem[dem==-9999] = np.nan
+
+            X, Y = np.where(~np.isnan(data))
+
+            #print(np.nanmean(data, axis=1), data.shape)
+
+            base_cmap = cm.get_cmap('binary')
+            new_cmap = colors.LinearSegmentedColormap.from_list(
+                'coolwarm_trimmed',
+                base_cmap(np.linspace(0.15, 0.85, 256))
+            )
+
+            norm = plt.Normalize(vmin=50, vmax=500)
+            colors_lat = new_cmap(norm(np.nanmean(dem, axis=1)))
+            colors_lon = new_cmap(norm(np.nanmean(dem, axis=0)))
+
+
+            # Latitude analysis
+            data_list = [data[i, ~np.isnan(data[i, :])] for i in range(data.shape[0])]
+
+            fig, ax = plt.subplots(1,1, figsize=(3,15), dpi=300)
+            plt.subplots_adjust(left=0.01, bottom=0.01, right=0.98, top=0.98, wspace=0.2, hspace=0.2)
+            
+            
+            bp = ax.boxplot(data_list,
+                            positions=np.arange(data.shape[0]),       # 纬度对应在 y 轴上
+                            vert=False,          # 横向箱型图（x是数值，y是纬度）
+                            widths=1,          # 箱体高度
+                            patch_artist=True,   # 允许填充颜色
+                            showfliers=False)    # 不画异常点（可设为True）
+                            
+            linewidths = [0, 0.4, 0.4, 3]
+            for gg, element in enumerate(['boxes', 'whiskers', 'caps', 'medians']):
+                if element=='boxes':
+                    for patch, color in zip(bp['boxes'], colors_lat):
+                        patch.set(facecolor=color, edgecolor='k', alpha=1, linewidth=linewidths[gg])
+                elif element=='whiskers' or element=='caps':
+                    plt.setp(bp[element], color='dimgray', alpha=0.6, linewidth=linewidths[gg])
+                elif element=='medians':
+                    plt.setp(bp[element], color='dimgray', alpha=0.5, linewidth=linewidths[gg])
+                else:
+                    plt.setp(bp[element], linewidth=linewidths[gg])
+            
+            ax.set_ylim([-25, data.shape[0]+25])
+            ax.set_yticks([t for t in nearest_rows.values()])
+            ax.set_xlim(ylims)
+            ax.set_xticks(yticks)
+            ax.set_xticklabels([])
+            for spine in ax.spines.values():
+                spine.set_linewidth(1.5)
+            ax.tick_params(axis='both', which='major', width=1.5, length=7)
+            ax.tick_params(axis='both', which='minor', width=1.5, length=7)
+
+            ax.yaxis.tick_right() 
+            
+            ax.spines['left'].set_visible(False)
+            ax.invert_yaxis()
+            fig.savefig(Path.work_path+'plots/'+mode+'/'+var+'_all_latitude.png', transparent=True)
+
+
+            # Longitude analysis
+            
+            data_list = [data[~np.isnan(data[:,i]), i] for i in range(data.shape[1])]
+
+            fig, ax = plt.subplots(1,1, figsize=(15,3), dpi=300)
+            plt.subplots_adjust(left=0.01, bottom=0.01, right=0.98, top=0.98, wspace=0.2, hspace=0.2)
+            
+            
+            bp = ax.boxplot(data_list,
+                            positions=np.arange(data.shape[1]),       # 纬度对应在 y 轴上
+                            vert=True,          # 横向箱型图（x是数值，y是纬度）
+                            widths=1,          # 箱体高度
+                            patch_artist=True,   # 允许填充颜色
+                            showfliers=False)    # 不画异常点（可设为True）
+                              
+            linewidths = [0, 0.4, 0.4, 3]
+            for gg, element in enumerate(['boxes', 'whiskers', 'caps', 'medians']):
+                if element=='boxes':
+                    for patch, color in zip(bp['boxes'], colors_lon):
+                        patch.set(facecolor=color, edgecolor='k', alpha=1, linewidth=linewidths[gg])
+                elif element=='whiskers' or element=='caps':
+                    plt.setp(bp[element], color='dimgray', alpha=0.6, linewidth=linewidths[gg])
+                elif element=='medians':
+                    plt.setp(bp[element], color='dimgray', alpha=0.5, linewidth=linewidths[gg])
+                else:
+                    plt.setp(bp[element], linewidth=linewidths[gg])
+
+            ax.set_xlim([-25, data.shape[1]+25])
+            ax.set_xticks([t for t in nearest_cols.values()])
+            ax.set_ylim(ylims)
+            ax.set_yticks(yticks)
+            ax.set_yticklabels([])
+
+            for spine in ax.spines.values():
+                spine.set_linewidth(1.5)
+            ax.tick_params(axis='both', which='major', width=1.5, length=7)
+            ax.tick_params(axis='both', which='minor', width=1.5, length=7)
+            ax.xaxis.tick_top() 
+            ax.spines['bottom'].set_visible(False)
+            fig.savefig(Path.work_path+'plots/'+mode+'/'+var+'_all_longitude.png', transparent=True)
+            
+
+
+            """
+            ax.scatter(data[X,Y], X, c=dem[X,Y], cmap=new_cmap, vmin=50, vmax=500, facecolors='none', edgecolors='k', alpha=0.01)
+            ax.plot(np.nanmean(data, axis=1), np.arange(data.shape[0]), c='black', linewidth=3)
+
+            ax.set_ylim([-5, data.shape[0]+5])
+            ax.set_xlim([ylims[0]-0.05*ydiff, ylims[1]+0.05*ydiff])
+            ax.set_xticks([ylims[0], (ylims[0]+ylims[1])/2, ylims[1]])
+            
+            ax.invert_yaxis() # Inverse Y axis for latitude
+            fig.savefig(Path.work_path+'plots/'+mode+'/'+var+'_all_latitude.png')
+
+            fig, ax = plt.subplots(1,1, figsize=(15,3), dpi=300)
+            plt.subplots_adjust(left=0.01, bottom=0.01, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
+            ax.scatter(Y, data[X,Y], c=dem[X,Y], cmap=new_cmap, vmin=50, vmax=500, facecolors='none', edgecolors='k', alpha=0.01)
+            ax.plot(np.arange(data.shape[1]), np.nanmean(data, axis=0), c='black', linewidth=3)
+            ax.set_xlim([-5, data.shape[1]+5])
+            ax.set_ylim([ylims[0]-0.05*ydiff, ylims[1]+0.05*ydiff])
+            ax.set_yticks([ylims[0], (ylims[0]+ylims[1])/2, ylims[1]])
+            """
+            
+
+def plot_correlation_YWF_DA(mode, temp_res):
+    from matplotlib import cm, colors
+    from scipy.stats import binned_statistic_2d
+  
+    tmp = np.loadtxt(Path.data_path+'catchment_info/channel_length.asc', skiprows=6)
+    chanmask = np.full(tmp.shape, False)
+    chanmask[tmp>0] = True
+    tmp = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
+    mask = np.full(chanmask.shape, np.nan)
+    mask[tmp>0] = 1
+
+    dominant_landuse = np.loadtxt(Path.data_path+'catchment_info/dominant_landuse.asc', skiprows=6)
+
+    DA = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/damkholer_num_annually.bin', mask)
+    DA = np.log10(DA)
+    YWF = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/young_water_fraction_soil_all_depths.bin', mask)
+    nitrogen_addition = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/nitrogen_addition.bin', mask)
+
+    DA = np.nanmean(DA[2:], axis=0)
+    YWF = np.nanmean(YWF[12*5:], axis=0)
+    nitrogen_addition = np.nanmean(nitrogen_addition[12*5:], axis=0) * 10 * 365
+
+    
+
+    print(DA.shape, YWF.shape)
+
+    DA[mask!=1] = np.nan
+    YWF[mask!=1] = np.nan
+
+    YWF[YWF>0.3] = 0.3+(YWF[YWF>0.3]-0.3)/2
+
+    
+
+    agri_index = np.where(np.logical_and(~np.isnan(YWF), dominant_landuse==1))
+    nonagri_index = np.where(np.logical_and(~np.isnan(YWF), dominant_landuse!=1))
+
+    colors_agri = plt.cm.coolwarm((nitrogen_addition[agri_index] - 0) / 120)
+    colors_nonagri = plt.cm.coolwarm((nitrogen_addition[nonagri_index] - 0) / 120)
+
+    fig, ax = plt.subplots(1,2, figsize=(8,5), dpi=300)
+    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.05, hspace=0.1)
+
+
+
+
+    
+    for xx, index in enumerate([agri_index, nonagri_index]):
+        # Step 1: 用 hexbin 得到格网结构
+
+        hb = ax[xx].hexbin(
+            YWF[index], DA[index],
+            C=nitrogen_addition[index],
+            reduce_C_function=np.nanmean,
+            gridsize=60,
+            cmap='coolwarm',
+            vmin=0, vmax=120,
+            mincnt=10
+        )
+        ax[xx].set_xlim(0.02,0.52)
+        ax[xx].set_ylim(-1.53,3.03)
+
+        ax[xx].set_xticks([0.1,0.2, 0.3, 0.4, 0.5])
+        ax[xx].set_yticks([-1, 0, 1, 2])
+        
+        ax[xx].set_xticklabels([])
+        ax[xx].set_yticklabels([])
+
+        for spine in ax[xx].spines.values():
+            spine.set_linewidth(1)
+        ax[xx].tick_params(axis='both', which='major', width=1, length=5)
+        ax[xx].tick_params(axis='both', which='minor', width=1, length=5)
+
+
+
+
+        """
+        hb = ax[xx].hexbin(YWF[index], DA[index], C=nitrogen_addition[index], cmap='coolwarm', gridsize=60, vmin=0, vmax=120)
+
+        hb_count = ax[xx].hexbin(YWF[index], DA[index], gridsize=60, mincnt=1)
+        counts = hb_count.get_array()
+        hb_count.remove()
+
+        alphas = counts / 200
+        alphas = 0.5 + 0.5 * alphas
+        alphas[alphas<0] = 0
+        alphas[alphas>1] = 1
+
+        
+
+        ax[xx].figure.canvas.draw()
+
+        fcolors = hb.get_facecolors()
+        fcolors[:,-1] = 1
+        print(fcolors)
+        #fcolors[5:50] = [1., 0., 0., 1.]
+        hb.set(array=None, facecolors=fcolors)
+        """
+        pass
+
+    ax[0].spines['right'].set_visible(False)
+    ax[1].spines['left'].set_visible(False)
+    ax[1].set_yticks([])
+
+    fig.savefig(Path.work_path+'plots/'+mode+'/correlation_YWF_DA.png', transparent=True)
+
+
+
+
+        
+
+
 def plot_spatial_results_EU_diff(mode, chainID, chainID_list, vars, temp_res, replace=False, yearly_flag=False, experiment=None):
 
     import matplotlib.cm as cm
@@ -2212,12 +2584,13 @@ def plot_spatial_results_EU_diff(mode, chainID, chainID_list, vars, temp_res, re
                 if experiment is None:
                     periods = [[5*12,15*12], [15*12,25*12], [25*12,35*12], [35*12,45*12]]    
                 else:
-                    periods = [[45*12,55*12], [110*12, 120*12]]
-            
+                
+                    if var in ['nitrogen_leaching', 'nitrogen_storage']:
+                        periods = [[35*12,45*12], [100*12, 110*12]]  # TODO: nitrogen leaching and storage (the last 10 years are abruptly high?)  
+                    else:
+                        periods = [[45*12,55*12], [110*12, 120*12]]
             
             _data *= var_info[var][1]  # weight
-            
-
             baseline = np.mean(_data[periods[0][0] : periods[0][1], :, :], axis=0)
 
             """
@@ -2289,6 +2662,11 @@ def plot_spatial_results_EU_diff(mode, chainID, chainID_list, vars, temp_res, re
                 diff_upper_cap = var_info[var][3]
             else:
                 diff_upper_cap = vmax / 8
+            
+            #if var == 'nitrogen_leaching':
+            #    diff_upper_cap = 3
+            #elif var == 'nitrogen_storage':
+            #    diff_upper_cap = 100
 
         
             if var_info[var][2]:
@@ -2441,11 +2819,11 @@ def plot_TS_results_EU(mode, chainID, chainID_list, vars, temp_res, replace=Fals
         
 
         fig, ax = plt.subplots(1,1, figsize=(5,2), dpi=300)
-        ax.plot(tindex, data)
-        ax1 = ax.twinx()
-        ax1.plot(df.index,df.value, c='red')
-        ax.set_ylim(vmin, vmax)
-        ax1.set_ylim(vmin, vmax)
+        #ax.plot(tindex, data)
+        #ax1 = ax.twinx()
+        ax.plot(df.index,df.value, c='red')
+        #ax.set_ylim(vmin, vmax)
+        #ax1.set_ylim(vmin, vmax)
 
         # Add colorbar
         #cbar_ax = fig.add_axes([0.85, 0.4, 0.03, 0.2])
@@ -2463,7 +2841,7 @@ def plot_TS_results_EU(mode, chainID, chainID_list, vars, temp_res, replace=Fals
 def plot_TS_results_EU_by_regions(mode, chainID, chainID_list, vars, temp_res, replace=False, yearly_flag=False, experiment=None):
     
     from datetime import datetime
-    from scipy.stats import linregress
+    from scipy.stats import linregress, kendalltau
     #from mpl_toolkits.axes_grid1.inset_locator import inset_axes
     
     tmp = np.loadtxt(Path.data_path+'catchment_info/channel_length.asc', skiprows=6)
@@ -2538,7 +2916,10 @@ def plot_TS_results_EU_by_regions(mode, chainID, chainID_list, vars, temp_res, r
                             read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/minerl_soil.'+extension, mask) +  \
                             read_outputs(Path.data_path + 'catchment_info/others/wet_deposition_monthly.bin', mask)) -\
                             (read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/deni_soil.'+extension, mask) +  \
-                            read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/plant_uptake.'+extension, mask)) \
+                            read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/plant_uptake.'+extension, mask))
+                
+                #elif var == 'damkholer_num':
+                #    _data = read_outputs(output_path+var+'_annually.'+extension, mask)
 
                             
 
@@ -2547,7 +2928,7 @@ def plot_TS_results_EU_by_regions(mode, chainID, chainID_list, vars, temp_res, r
                     _data = read_outputs(output_path+var+'.'+extension, mask)
                 
             except Exception as e:
-                _data = read_outputs(Path.data_path+'catchment_info/climate_3035_tmp/'+var+'.'+extension, mask, dtype=np.float32)               
+                _data = read_outputs(Path.data_path+'catchment_info/climate_3035_tmp/'+var+'_3035.'+extension, mask, dtype=np.float32)               
         except:
             continue
 
@@ -2571,7 +2952,6 @@ def plot_TS_results_EU_by_regions(mode, chainID, chainID_list, vars, temp_res, r
         #ax_inset = inset_axes(ax, width="10%", height="40%", loc="upper right")
         
         for xx, region_mask in enumerate(region_masks):
-
             
 
             if var_info[var][2]:
@@ -2606,45 +2986,57 @@ def plot_TS_results_EU_by_regions(mode, chainID, chainID_list, vars, temp_res, r
 
             slope, intercept, r_value, p_value, std_err = linregress(np.arange(len(df.index)), df['mean'])
 
+            # Crop: - ; Non-crop: --
             styles = ['-', '--']
-            custom_cmap = custom_cmap_1
+            style = styles[xx%2]
+            
+            # Color for each European region
+            colors_list = ['#1b4f72', '#1abc9c', "#da3d25", '#8e44ad']
+            color = colors_list[xx//2]
+
+            #custom_cmap = custom_cmap_1
             #custom_cmap = plt.cm.Spectral_r
             #custom_cmap = get_cmcrameri_cmap('batlowW', start=0.1, end=0.95, alpha=1)
-            color = custom_cmap((xx//2)/(len(region_masks)/2-1))
-            style = styles[xx%2]
+            #color = custom_cmap((xx//2)/(len(region_masks)/2-1))
+            
+            
 
-            ylims_0_dict = {'Precipitation_npfloat32_3035':[-30,2000], 
-                            'infiltration':[-100, 2000],
-                            'Evapotranspiration_fraction':[-5, 180],
-                            'young_water_fraction_soil_all_depths':[2, 36],
+            ylims_0_dict = {'Precipitation_npfloat32':[400,1500], 
+                            'infiltration':[400, 1500],
+                            'Evapotranspiration_fraction':[50, 125],
+                            'young_water_fraction_soil_all_depths':[5, 32],
                             'nitrogen_addition':[-10,220],
-                            'damkholer_num':[-2,4],
+                            'damkholer_num':[-1.5,2.2],
                             'nitrogen_storage':[-50,800],
-                            'nitrogen_surplus':[-15,200]}
-            ylims_1_dict = {'Precipitation_npfloat32_3035':[250,1100], 
+                            'nitrogen_surplus':[-15,200],
+                            'nitrogen_leaching':[-10,140]}
+            ylims_1_dict = {'Precipitation_npfloat32':[250,1100], 
                             'infiltration':[460,940],
                             'Evapotranspiration_fraction':[60, 90],
                             'young_water_fraction_soil_all_depths':[4,20],
                             'nitrogen_addition':[-5,150],
                             'damkholer_num':[-0.8, 0.8],
                             'nitrogen_storage':[-20,450],
-                            'nitrogen_surplus':[-3,125]}
-            yticks_0_dict = {'Precipitation_npfloat32_3035':[0,600,1200], 
-                            'infiltration':[0, 600, 1200],
-                            'Evapotranspiration_fraction':[0, 70, 140],
+                            'nitrogen_surplus':[-3,125],
+                            'nitrogen_leaching':[-5,85]}
+            yticks_0_dict = {'Precipitation_npfloat32':[500,750,1000], 
+                            'infiltration':[500,750,1000],
+                            'Evapotranspiration_fraction':[60, 80, 100],
                             'young_water_fraction_soil_all_depths':[5,15,25],
                             'nitrogen_addition':[0,60,120],
                             'damkholer_num':[-1,0,1],
                             'nitrogen_storage':[0,200,400],
-                            'nitrogen_surplus':[0,60,120]}
-            yticks_1_dict = {'Precipitation_npfloat32_3035':[300,650,1000], 
+                            'nitrogen_surplus':[0,60,120],
+                            'nitrogen_leaching':[0,60,120]}
+            yticks_1_dict = {'Precipitation_npfloat32':[300,650,1000], 
                             'infiltration':[500, 700, 900],
-                            'Evapotranspiration_fraction':[0,60,120],
+                            'Evapotranspiration_fraction':[65,75,85],
                             'young_water_fraction_soil_all_depths':[6,12,18],
                             'nitrogen_addition':[0,60,120],
                             'damkholer_num':[-0.5, 0, 0.5],
                             'nitrogen_storage':[0,200,400],
-                            'nitrogen_surplus':[0,50,100]}
+                            'nitrogen_surplus':[0,50,100],
+                            'nitrogen_leaching':[0,35,70]}
             
 
             print(var, xx, slope, r_value, p_value)
@@ -2653,7 +3045,7 @@ def plot_TS_results_EU_by_regions(mode, chainID, chainID_list, vars, temp_res, r
             
 
             #ax.scatter(tindex, data, s=5, color=color, alpha=0.2)
-            ax[0].plot(tindex, data, linewidth=3, linestyle=style, color=color, alpha=0.1, zorder=0)
+            #ax[0].plot(tindex, data, linewidth=3, linestyle=style, color=color, alpha=0.1, zorder=0)
             ax[0].plot(df.index, df['mean'], linewidth=3, linestyle=style, color=color, alpha=1, zorder=2)
             
             #X = tindex[10*12:-10*12]
@@ -2673,10 +3065,16 @@ def plot_TS_results_EU_by_regions(mode, chainID, chainID_list, vars, temp_res, r
             ax[0].set_xticklabels([])
             ax[1].set_xticklabels([])
 
-            ax[0].set_ylim(ylims_0_dict[var])
-            ax[1].set_ylim(ylims_1_dict[var])
             ax[0].set_yticks(yticks_0_dict[var])
             ax[1].set_yticks(yticks_1_dict[var])
+            ax[0].set_ylim(ylims_0_dict[var])
+            ax[1].set_ylim(ylims_1_dict[var])
+
+            tau, p_value = kendalltau(df.index, df['mean'])
+            print('YES!  ' if p_value<0.05 else 'NO!  ', f"Kendall's tau = {tau:.3f}, p = {p_value:.3f}")
+            
+
+            print(var, ylims_0_dict[var], ylims_1_dict[var])
 
             if var == 'damkholer_num':
                 ax[0].set_yticklabels(['0.1', '1', '10'])
@@ -4241,7 +4639,7 @@ def plot_pdf_by_typical_regions(mode, temp_res):
         ylim_max = 0.2
         ylim_min = -0.05
 
-        fig, ax = plt.subplots(len(typical_regions), 1, figsize=(2.7, 10), dpi=300)
+        fig, ax = plt.subplots(len(typical_regions), 1, figsize=(4, 10), dpi=300)
         plt.subplots_adjust(left=0.04, bottom=0.04, right=0.98, top=0.98, wspace=0.15, hspace=0.15)
 
         for yy, typical_region in enumerate(typical_regions):

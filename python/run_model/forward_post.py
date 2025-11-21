@@ -293,15 +293,23 @@ if __name__ == "__main__":
     Vars = ['infiltration',  'Evapotranspiration', 'plant_uptake', 'deni_soil']
     Vars = ['SMC_layer3', 'nitrogen_storage', 'nitrogen_leaching', ]
     Vars = ['perc_layer3', 'no3_SMC_layer3']
-    Vars = ['perc_layer1']
-    Vars = ['deni_soil', 'plant_uptake', ]
+    
+    Vars = ['young_water_fraction_soil_all_depths', 'damkholer_num' ]
     #Vars = ['Precipitation_npfloat32', 'Potential_evapotranspiration_npfloat32', 'Mean_air_temperature_npfloat32', 'Surface_net_radiation_npfloat32']
-    #Vars = ['infiltration']
+    Vars = [
+            'Precipitation_npfloat32', 'infiltration',  'Evapotranspiration_fraction', 'young_water_fraction_soil_all_depths', 
+            'nitrogen_addition', 'damkholer_num', 'nitrogen_leaching', 'nitrogen_storage']
+    
+    Vars = ['Precipitation_npfloat32', 'infiltration',  'Evapotranspiration_fraction', 'young_water_fraction_soil_all_depths', 
+            'nitrogen_addition', 'damkholer_num', 'nitrogen_leaching', 'nitrogen_storage']
+    
     Vars = [var+'.bin' for var in Vars]
 
 
     # === Plot aggregated spatial maps spatial maps ===
     #post_plot.plot_spatial_results_EU(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False)
+
+    #post_plot.plot_spatial_by_lati_longi(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False)
 
     # === Plot monthly and annual average of EU  ===
     #post_plot.plot_TS_results_EU(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False)
@@ -312,11 +320,11 @@ if __name__ == "__main__":
 
     # === Plot increasing/decreasing values  ===
     
-    #for experiment in [None]:
+    #for experiment in ['ssp126', 'ssp585']:
     #    post_plot.plot_spatial_results_EU_diff(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False, experiment=experiment)
-    
+
     #post_plot.plot_TS_results_EU(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False, experiment=experiment)
-    #post_plot.plot_TS_results_EU_by_regions(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False)
+    post_plot.plot_TS_results_EU_by_regions(mode, chainID=None, chainID_list=chainID_list, vars=Vars, temp_res=temp_res, replace=True, yearly_flag=False)
     ['trans_age_SMC_soil_all_depths']
     #post_plot.plot_TS_results_EU_experiments(mode, chainID=None, chainID_list=chainID_list, vars=['trans_age_SMC_soil_all_depths'], temp_res=temp_res, replace=True, yearly_flag=False)
 
@@ -335,8 +343,9 @@ if __name__ == "__main__":
 
     # == Plot by typical regions
     #post_plot.plot_typical_regions(mode, temp_res)
-    post_plot.plot_typical_regions_Ts(mode, temp_res)
+    #post_plot.plot_typical_regions_Ts(mode, temp_res)
     #post_plot.plot_pdf_by_typical_regions(mode, temp_res)
+    #post_plot.plot_correlation_YWF_DA(mode, temp_res)
 
     
     # === Analysis
