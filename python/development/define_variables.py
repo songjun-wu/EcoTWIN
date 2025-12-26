@@ -178,6 +178,78 @@ def basin_read_groundTs_maps(fname, signs, datas):
             with open(fname, 'w') as f:
                 f.writelines(content)
 
+
+def basin_read_ManagementTs_maps(fname, signs, datas):
+
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Basin::open_managementTs(Control &ctrl)', 'int Basin::read_managementTs(Control &ctrl)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  open_groundTs_maps(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] + ', if_' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+                content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+    
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Basin::read_managementTs(Control &ctrl)', 'int Basin::init_managementTs(Control &ctrl)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  read_groundTs_maps(if_' + grouped_data[key][i][0] + ', *' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+                content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+    
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Basin::init_managementTs(Control &ctrl)', 'int Basin::update_managementTs(Control &ctrl, Param &par)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  init_groundTs_maps(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] + ', if_' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+                content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Basin::update_managementTs(Control &ctrl, Param &par)', '// End of file')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  update_groundTs_maps(if_' + grouped_data[key][i][0] + ', par, *' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+                content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+
+
 def basin_includes(fname, signs, datas):
     for j in range(len(signs)):
         sign = signs[j]

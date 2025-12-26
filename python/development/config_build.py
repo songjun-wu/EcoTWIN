@@ -57,7 +57,7 @@ def read_configs(fname, options, signs, datas, reports, static_config):
         sign = signs[j]
         Contents = []
         for data in (datas[j]):
-            if 'spatial' in data[4]:
+            if 'spatial' in data[4] and (data[4]!='spatial_param'):
                 Contents.append(data)
 
         with open(fname, 'r') as f:
@@ -106,7 +106,7 @@ def read_param(fname, parameters):
 def gen_config_template(path, options, signs, datas, reports, parameters, max_category):
     text = []
     text.append('#############################################\n')
-    text.append('# Generic Ecohydrological model\n')
+    text.append('# EcoTWIN: an Ecohydrological model tracking Water, Isotopes, and Nutrients (carbon and nitrogen) cycles\n')
     text.append('# Configuration file\n')
     text.append('###########################################\n\n\n')
 
@@ -116,10 +116,11 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
     text.append('Output_Folder = ./outputs/\n\n')
     text.append('# Model configuration\n')
     text.append('Simul_start = 2524608000 # Seconds since 1900-1-1 00:00:00\n')
-    text.append('Simul_end = 1420156800 # in second  # Seconds from 1980-1-1 to 2024-12-31\n')
+    text.append('Simul_end = 818035200 # in second  # Seconds from 1980-1-1 to 2024-12-31\n')
     text.append('Simul_tstep = 86400 # seconds (daily)\n')
     text.append('Clim_input_tstep = 86400 # seconds (daily)\n')
     text.append('Ground_input_tstep = 604800 # seconds (every 7 days)\n')
+    text.append('Management_input_tstep = 31536000 # seconds (every 365 days)\n')
     text.append('Report_interval = -3 # The interval of map reports in seconds; or daily (-1), monthly (-2), or annually (-3) \n')
     text.append('Update_interval = 315619200  # seconds (every 10 years); the interval for land use / soil type update \n\n')
 
@@ -134,8 +135,6 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
             text.append('# ' + item['general_description'] + '\n')
             text.append(item['key'] + ' = '+str(item['value'])+ '\n')
         
-    
-    
 
     for i in range(len(datas)):
         counter = 0
@@ -145,7 +144,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                 if counter == 0:
                     text.append('\n### '+signs[i]+'\n')
                     if signs[i] == 'Parameters':
-                        text.append('num_category = 13 # The number of categories for parameterisation ...\n' + \
+                        text.append('num_category = 14 # The number of categories for parameterisation ...\n' + \
                                     '#The categories should include the land use types, soil types, or any other types for parameterisation ...\n' + \
                                     '#The distribution of each category (in decimal proportion) should be specified in cat_id.asc ...\n' + \
                                     '#The first category (column) represents global parameter (i.e., cat_0.bin should be filled with 1)\n' )

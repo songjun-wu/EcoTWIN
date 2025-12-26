@@ -24,14 +24,17 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-Destructors \
-Spatial \
 Atmosphere \
 Constructors \
+Destructors \
+Energy \
+Functions \
 Hydrology \
 IO \
-Energy \
-Tracking \
 Nitrogen \
-Functions \
+Spatial \
+Tracking \
+Carbon \
+Transport \
+Interface \
 . \

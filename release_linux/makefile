@@ -9,16 +9,19 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include Destructors/subdir.mk
--include Spatial/subdir.mk
 -include Atmosphere/subdir.mk
 -include Constructors/subdir.mk
+-include Destructors/subdir.mk
+-include Energy/subdir.mk
+-include Functions/subdir.mk
 -include Hydrology/subdir.mk
 -include IO/subdir.mk
--include Energy/subdir.mk
--include Tracking/subdir.mk
 -include Nitrogen/subdir.mk
--include Functions/subdir.mk
+-include Spatial/subdir.mk
+-include Tracking/subdir.mk
+-include Carbon/subdir.mk
+-include Transport/subdir.mk
+-include Interface/subdir.mk
 -include subdir.mk
 -include objects.mk
 

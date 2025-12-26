@@ -37,13 +37,21 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             ['_airpressure', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Air pressure [Pa]', 'grid', 'spatial_TS', 'Air_pressure', 0],
             ['_windspeed', [Opt.cond['chanE_1']], 'Wind speed at 2 m [m/s]', 'grid', 'spatial_TS', 'Wind_speed', 0],
             ['_Rnet', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Net radiation [W/m2]', 'grid', 'spatial_TS', 'Net_radiation', 0],
+            ['_Rswd', [Opt.cond['carbon_sim_1'], Opt.cond['nitrogen_sim_1']], 'Shortwave downward radiation [W/m2]', 'grid', 'spatial_TS', 'Shortwave_downward_radiation', 0],
+
             ['_d18o_P', [Opt.cond['tracking_isotope_1']], 'd18O in precipitation [‰]', 'grid', 'spatial_TS', 'd18O_Precipitation', 0],
+
+
             
         ]
 
 GroundTs = [
-            ['_LAI', [Opt.cond['none']], 'Leaf area index [decimal]', 'grid', 'spatial_TS', 'Leaf_area_index', 0],
+            ['_LAI', [Opt.cond['none']], 'Leaf area index [-]', 'grid', 'spatial_TS', 'Leaf_area_index', 0],
         ]
+
+ManagementTs = [
+                ['_drainage_depth', [Opt.cond['drainage_1']], 'The depth of drainage [m]', 'grid', 'spatial_TS', 'drainage_depth', 0],
+                ]
         
 GIS = [ #['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial', 'Ground_elevation', 0],
         #['_fdir', [Opt.cond['none']], 'Flow direction [d8 method]', 'grid', 'spatial', 'flow_direction', 0],
@@ -94,6 +102,8 @@ Storages = [['_I',       [Opt.cond['none']], 'Canopy storage [m]', 'grid', 'spat
             ['_vadose_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Vadose storage [m]', 'grid', 'new', None, 0],
             ['_GW_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Groundwater storage [m]', 'grid', 'new', None, 0],
             ['_chanS_old',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Channel storage [m3]', 'grid', 'new', None, 0],                      
+            ['_LAI_old',  [Opt.cond['carbon_sim_1'], Opt.cond['nitrogen_sim_1']], 'Leaf area index [-]', 'grid', 'new', None, 0],                      
+            
             ]
 
 Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy storage [‰]', 'grid', 'spatial', 'd18o_canopy_storage', 1],
@@ -126,8 +136,6 @@ Tracking = [['_d18o_I',   [Opt.cond['tracking_isotope_1']], 'd18o in Canopy stor
             ['_trans_age_vadose',  [Opt.cond['tracking_trans_age_1']], 'Transient age in vadose storage [‰]', 'grid', 'spatial', 'trans_age_vadose', 1],  
             ['_trans_age_GW',  [Opt.cond['tracking_trans_age_1']], 'Transient age in Groundwater storage [days]', 'grid', 'spatial', 'trans_age_groundwater_storage', 1],
             ['_trans_age_chanS',  [Opt.cond['tracking_trans_age_1']], 'Transient age in Channel storage [days]', 'grid', 'spatial', 'trans_age_chanS', 1],
-
-
            
             ]
 
@@ -158,9 +166,13 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_Tr2', [Opt.cond['none']], 'Transpiration in layer 2 [m]', 'grid', 'new', 'transp_layer2', 1],
             ['_Tr3', [Opt.cond['none']], 'Transpiration in layer 3 [m]', 'grid', 'new', 'transp_layer3', 1],
 
-            # Irrigation
+            # Management
             ['_irrigation_from_river', [Opt.cond['none']], 'Water extraction from river [m]', 'grid', 'new', 'irrigation_from_river', 1],
             ['_irrigation_from_GW', [Opt.cond['none']], 'Water extraction from GW [m]', 'grid', 'new', 'irrigation_from_GW', 1],
+            ['_drainage_from_soil', [Opt.cond['drainage_1']], 'Total drainage from all soil layers [m]', 'grid', 'new', 'drainage_from_soil', 1],
+            ['_drainage_from_layer1', [Opt.cond['drainage_1']], 'Drainage from layer 1 [m]', 'grid', 'new', 'drainage_from_layer1', 1],
+            ['_drainage_from_layer2', [Opt.cond['drainage_1']], 'Drainage from layer 2 [m]', 'grid', 'new', 'drainage_from_layer2', 1],
+            ['_drainage_from_layer3', [Opt.cond['drainage_1']], 'Drainage from layer 3 [m]', 'grid', 'new', 'drainage_from_layer3', 1],
 
             # Other internal variables
             ['_froot_layer1', [Opt.cond['evap_1']], 'froot coefficient for all soil profile', 'grid', 'new', None, 0],
@@ -220,29 +232,22 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
 
 
 
-Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid', 'spatial_param', 'Soil_depth3', 0],
+Parameters = [# ======= Hydrology =======
+              ['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid', 'spatial_param', 'Soil_depth3', 0],
               ['_alpha', [Opt.cond['none']], 'The weighting parameter that links LAI and maximum canopy storage [-]', 'grid', 'spatial_param', 'alpha', 0],
               ['_rE', [Opt.cond['intecept_2'], Opt.cond['evap_1']], 'Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)', 'grid', 'spatial_param', 'rE', 0],
               ['_snow_rain_thre', [Opt.cond['snow_1']], 'The temperature for snow melt  [m]', 'grid', 'spatial_param', 'snow_rain_threshold', 0],
               ['_deg_day_min', [Opt.cond['snow_1']], 'Degree-day factor with no precipitation [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_min', 0],
               ['_deg_day_max', [Opt.cond['snow_1']], 'Maximum Degree-day factor [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_max', 0],
-              ['_deg_day_increase', [Opt.cond['snow_1']], 'Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_increase', 0],
-              
-              # Irrigation
-              ['_irrigation_FC_thres', [Opt.cond['none']], 'The soil moisture threshold for irrigation [-]', 'grid', 'spatial_param', 'irrigation_FC_thres', 0],
-              
-              
-              
-              # Pedotransfer function
+              ['_deg_day_increase', [Opt.cond['snow_1']], 'Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_increase', 0],             
+              # Soil proporties (Pedotransfer function)
               ['_ref_thetaS', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Reference saturated soil moisture [-]', 'grid', 'spatial_param', 'ref_thetaS', 0],
               ['_PTF_VG_clay', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_clay', 0],
               ['_PTF_VG_Db', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer function for parameter estimation of Van Genuchten Model [-]', 'grid', 'spatial_param', 'PTF_VG_Db', 0],
-              
               ['_PTF_Ks_const', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Db', 0],
               ['_PTF_Ks_sand', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_sand', 0],
               ['_PTF_Ks_clay', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Pedotransfer parameter for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_clay', 0],
               #['_PTF_Ks_slope', [Opt.cond['pedotransf_1'],Opt.cond['pedotransf_2'],Opt.cond['pedotransf_3']], 'Slope correction for estimation of saturated hydraulic conductivity [-]', 'grid', 'spatial_param', 'PTF_Ks_slope', 0],
-
               ['_SWP', [Opt.cond['fc_1']], 'Soil water potentail for field capacity estimation [-], only needed when opt_fieldcapacity = 1', 'grid', 'spatial_param', 'SWP', 0],
               # Infiltration
               ['_KvKh', [Opt.cond['infil_1'], Opt.cond['depthprofile_2']], 'The coefficient to transform Ks to effective Ks [-], only needed when opt_infil = 1', 'grid', 'spatial_param', 'KvKh', 0],
@@ -250,19 +255,14 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_KKs', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'Ksat', 0],
               ['_Ksat', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'Kporos', 0],
               ['_BClambda', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'BClambda', 0],
-              
               # Percolation
               ['_percExp', [Opt.cond['perc_2']], 'The exponential parameter for percolation [-], only needed when opt_percolation = 2', 'grid', 'spatial_param', 'percExp', 0],
-
               # Evapotranspiration
               ['_froot_coeff', [Opt.cond['evap_1']], 'Root fraction coefficient [-]', 'grid', 'spatial_param', 'froot_coeff', 0],
               ['_ET_reduction', [Opt.cond['evap_1']], 'ET reduction (weight) [-]', 'grid', 'spatial_param', 'ET_reduction', 0],
-
               # GW
               ['_init_GW', [Opt.cond['init_GW_1']], 'The initial GW storage [m], only needed when opt_init_GW = 1', 'grid', 'spatial_param', 'init_GW', 0],
               ['_perc_vadose_coeff', [Opt.cond['none']], 'The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2', 'grid', 'spatial_param', 'perc_vadose_coeff', 0],
-
-              
               # Routing
               ['_pOvf_toChn', [Opt.cond['routinterf_1']], 'The weighting linear parameter for overland flow routing towards channel  [-]', 'grid', 'spatial_param', 'pOvf_toChn', 0],
               ['_Ks_vadose', [Opt.cond['routinterf_1']], 'The reference conductivity of vadose zone for interflow routing [m/s]', 'grid', 'spatial_param', 'Ks_vadose', 0],
@@ -272,35 +272,125 @@ Parameters = [['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid
               ['_interfExp', [Opt.cond['routinterf_1']], 'The exponetial weighting parameter for interflow flow routing towards channel  [-]', 'grid', 'spatial_param', 'interfExp', 0],
               ['_GWfExp', [Opt.cond['routGWf_1']], 'The exponetial weighting parameter for GW flow routing towards channel  [-]', 'grid', 'spatial_param', 'GWfExp', 0],
               ['_Manningn', [Opt.cond['routQ_1']], 'Manning N for stream routing [-], only needed when opt_routQ = 1', 'grid', 'spatial_param', 'Manningn', 0],
-
               # Channel 
               ['_Echan_alpha', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'correction factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2', 'grid', 'spatial_param', 'Echan_alpha', 0],
 
-              # Irrigation
+              # ======= Management =======
+              # Management
+              ['_irrigation_FC_thres', [Opt.cond['none']], 'The soil moisture threshold for irrigation [-]', 'grid', 'spatial_param', 'irrigation_FC_thres', 0],
               ['_irrigation_coeff', [Opt.cond['irrigation_1']], 'Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled', 'grid', 'spatial_param', 'irrigation_coeff', 0],
+              ['_drainage_intensity', [Opt.cond['drainage_1']], 'The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled', 'grid', 'spatial_param', 'drainage_intensity', 0],
 
-              # Mixing
+              # # ======= Mixing =======
               ['_nearsurface_mixing', [Opt.cond['none']], 'The proportion of pond to mix with layer1  [decimal]', 'grid', 'spatial_param', 'nearsurface_mixing', 0],
               ['_ratio_to_interf', [Opt.cond['none']], 'The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]', 'grid', 'spatial_param', 'ratio_to_interf', 0],
 
 
-              # Tracking
+              # ======= Isotope tracking =======
               ['_CG_n_soil', [Opt.cond['tracking_isotope_1']], 'Parameter N in CG model for soil water fractionation [-]', 'grid', 'spatial_param', 'CG_n_soil', 0],
               ['_delta_d18o_init_GW', [Opt.cond['init_d18o_1']], 'Initial d18O of GW storage [‰]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
               
               
 
-              # Nitrogen
+              # ======= Nitrogen =======
               ['_delta_no3_init_GW', [Opt.cond['init_no3_1']], 'Initial no3 of GW storage [‰]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
               ['_denitrification_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic denitrification [-]', 'grid', 'spatial_param', 'denitrification_river', 0],
               #['_autotrophic_uptake_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic autotrophic uptake [-]', 'grid', 'spatial_param', 'autotrophic_uptake_aquatic', 0],
               #['_primary_production_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic primary production [-]', 'grid', 'spatial_param', 'primary_production_aquatic', 0],
               ['_denitrification_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil denitrification [kg/ha]', 'grid', 'spatial_param', 'denitrification_soil', 0],
-              ['_degradation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil degradation [kg/ha]', 'grid', 'spatial_param', 'degradation_soil', 0],
-              ['_mineralisation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil mineralisation [kg/ha]', 'grid', 'spatial_param', 'mineralisation_soil', 0],
+              #['_degradation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil degradation [kg/ha]', 'grid', 'spatial_param', 'degradation_soil', 0],
+              #['_mineralisation_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil mineralisation [kg/ha]', 'grid', 'spatial_param', 'mineralisation_soil', 0],
               #['_dissolution_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil dissolution [kg/ha]', 'grid', 'spatial_param', 'dissolution_soil', 0],
-              ['_deni_soil_moisture_thres', [Opt.cond['nitrogen_sim_1']], 'The moisture threshold of soil denitrification', 'grid', 'spatial_param', 'deni_soil_moisture_thres', 0],              
+              ['_deni_soil_moisture_thres', [Opt.cond['nitrogen_sim_1']], 'The moisture threshold of soil denitrification', 'grid', 'spatial_param', 'deni_soil_moisture_thres', 0],
+
+              # ======= Phenology =======
+              ['_C_in_LeafArea', [Opt.cond['carbon_sim_1']], 'Carbon content per leaf area in [m2(leaf)/mol(Carbon)]', 'grid', 'spatial_param', 'C_in_LeafArea', 0],
+              ['_LAI_shed_ceof', [Opt.cond['carbon_sim_1'], Opt.cond['carbon_sim_1']], 'Leaf shedding coefficient related to LAI [-]', 'grid', 'spatial_param', 'LAI_shed_ceof', 0],
+              ['_tau_wood_C', [Opt.cond['carbon_sim_1']], 'Life time scale of the wood pool and vegetation dynamics [days]', 'grid', 'spatial_param', 'tau_wood_C', 0],     
+              ['_plant_wood_CP_max', [Opt.cond['carbon_sim_1']], 'The maximum carbon content in wood pool [molC/m2] ', 'grid', 'spatial_param', 'plant_wood_CP_max', 0],
+              ['_plant_reserve_CP_max', [Opt.cond['carbon_sim_1']], 'Term to calculate maximum carbon content in reserve pool at optimal conditions [-]: first term is the ratio of ratio of vegetation green pool to reserve pool at maximum LAI, while second term is maximum LAI', 'grid', 'spatial_param', 'plant_reserve_CP_max', 0],
+              
+              # ======= Carbon =======
+              # Assimilation
+              ['_carboxylation_rate', [Opt.cond['carbon_sim_1']], 'Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)] (*1e-6?)', 'grid', 'spatial_param', 'carboxylation_rate', 0],
+              ['_ETransport', [Opt.cond['carbon_sim_1']], 'Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)', 'grid', 'spatial_param', 'ETransport', 0],
+              ['_frac_NPP_to_green', [Opt.cond['carbon_sim_1']], 'The fraction of NPP addition to vegetation green pool [-] ', 'grid', 'spatial_param', 'frac_NPP_to_green', 0],
+              ['_frac_NPP_to_wood', [Opt.cond['carbon_sim_1']], 'The fraction of NPP addition to wood green pool [-] ', 'grid', 'spatial_param', 'frac_NPP_to_wood', 0],             
+              # Distribute wood/nonwood litter to soil carbon pools
+              ['_frac_litter_to_soluble_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of nonwood litter going to soil soluble pool (DOC pool)  [-] ', 'grid', 'spatial_param', 'frac_litter_to_soluble_nonwood', 0],
+              ['_frac_litter_to_acid_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of non-woody litter going to soil acid pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_acid_nonwood', 0],
+              ['_frac_litter_to_ethanol_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of non-woody litter going to soil ethano pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_ethanol_nonwood', 0],
+              ['_frac_litter_to_nonsoluble_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of non-woody litter going to soil nonsoluble pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_nonsoluble_nonwood', 0],
+              ['_frac_litter_to_soluble_wood', [Opt.cond['carbon_sim_1']], 'The fraction of wood litter going to soil soluble pool (DOC pool)  [-] ', 'grid', 'spatial_param', 'frac_litter_to_soluble_wood', 0],
+              ['_frac_litter_to_acid_wood', [Opt.cond['carbon_sim_1']], 'The fraction of wood litter going to soil acid pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_acid_wood', 0],
+              ['_frac_litter_to_ethanol_wood', [Opt.cond['carbon_sim_1']], 'The fraction of wood litter going to soil ethano pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_ethanol_wood', 0],
+              ['_frac_litter_to_nonsoluble_wood', [Opt.cond['carbon_sim_1']], 'The fraction of wood litter going to soil nonsoluble pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_nonsoluble_wood', 0],
+              # Correction of decomposition rates based on the magnitudes of carbon storages
+              ['_decomposition_weight_fast_pool', [Opt.cond['carbon_sim_1']], 'Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]', 'grid', 'spatial_param', '_decomposition_weight_fast_pool', 0],
+              ['_decomposition_weight_humus_pool', [Opt.cond['carbon_sim_1']], 'Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]', 'grid', 'spatial_param', '_decomposition_weight_humus_pool', 0],
+
+              # ======= Nitrogen =======
+              ['_NC_ratio_plant_green', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in vegetation green pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_plant_green', 0],
+              ['_NC_ratio_plant_wood', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in vegetation wood pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_plant_wood', 0],
+              ['_NC_ratio_fast_pool_nonwood', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in non-wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_fast_pool', 0],
+              ['_NC_ratio_fast_pool_wood', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_fast_pool', 0],
+              ['_NC_ratio_humus_pool', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in humus pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_humus_pool', 0],
             ]
+
+
+Phenology = [['_NPP', [Opt.cond['carbon_sim_1']], 'Net primary production [gC/(m2*Ts)] ', 'grid', 'spatial_param', 'net_primary_production', 1],
+             #['_WoodLitterSize', [Opt.cond['carbon_sim_1']], 'Size of wood litter [-] ', 'grid', 'spatial_param', 'WoodLitterSize', 0],
+             ]
+
+Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]', 'grid', 'spatial', 'plant_green_CP', 0],
+          ['_plant_wood_CP', [Opt.cond['carbon_sim_1']], '  Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]', 'grid', 'spatial', 'plant_wood_CP', 0],
+          ['_plant_reserve_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]', 'grid', 'spatial', 'plant_reserve_CP', 0],
+          #['_harvest_CP', [Opt.cond['carbon_sim_1']], '  Carbon pool that contains carbon from that part of crop harvest to be consumed by people or animals  [gC/m2]', 'grid', 'spatial', 'harvest_CP', 1]
+          ['_plant_C', [Opt.cond['carbon_sim_1']], ' The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]', 'grid', 'new', 'plant_C', 1],
+          
+
+          ['_acid_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'acid_CP1_nonwood', 0],
+          ['_ethanol_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'ethanol_CP1_nonwood', 0],
+          ['_nonsoluble_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'nonsoluble_CP1_nonwood', 0],
+          ['_acid_CP1_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 1', 'grid', 'spatial', 'acid_CP1_wood', 0],
+          ['_ethanol_CP1_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'ethanol_CP1_wood', 0],
+          ['_nonsoluble_CP1_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'nonsoluble_CP1_wood', 0],
+          ['_humus_CP1', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood and non-wood) in layer 1', 'grid', 'spatial', 'humus_CP1_nonwood', 0],
+
+          ['_acid_CP2_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 2', 'grid', 'spatial', 'acid_CP2_wood', 0],
+          ['_ethanol_CP2_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'ethanol_CP2_wood', 0],
+          ['_nonsoluble_CP2_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'nonsoluble_CP2_wood', 0],
+          ['_humus_CP2', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 2', 'grid', 'spatial', 'humus_CP2_nonwood', 0],
+        
+          ['_acid_CP3_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 3', 'grid', 'spatial', 'acid_CP3_wood', 0],
+          ['_ethanol_CP3_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'ethanol_CP3_wood', 0],
+          ['_nonsoluble_CP3_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'nonsoluble_CP3_wood', 0],
+          ['_humus_CP3', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 3', 'grid', 'spatial', 'humus_CP3_nonwood', 0],
+
+          #['_fast_C1',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 1 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C1', 0],
+          #['_fast_C2',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 2 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C2', 0],
+          #['_fast_C3',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 3 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C3', 0],
+
+          ['_humus_C',  [Opt.cond['carbon_sim_1']], 'Humus carbon storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_C', 1],
+          ['_fast_C',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_C', 1],
+
+
+          ['_doc_I',   [Opt.cond['carbon_sim_1']], 'DOC in Canopy storage [mgN/L]', 'grid', 'spatial', 'doc_canopy_storage', 1],
+          ['_doc_snow',    [Opt.cond['carbon_sim_1']], 'DOC in Snow depth in [mgN/L]', 'grid', 'spatial', 'doc_snow_depth', 1],
+          ['_doc_pond',    [Opt.cond['carbon_sim_1']], 'DOC in Ponding water in [mgN/L]', 'grid', 'spatial', 'doc_pond', 1],
+          ['_doc_layer1',  [Opt.cond['carbon_sim_1']], 'DOC in Soil moisture in layer 1 [mgN/L]', 'grid', 'spatial', 'doc_SMC_layer1', 1],
+          ['_doc_layer2',  [Opt.cond['carbon_sim_1']], 'DOC in Soil moisture in layer 2 [mgN/L]', 'grid', 'spatial', 'doc_SMC_layer2', 1],
+          ['_doc_layer3',  [Opt.cond['carbon_sim_1']], 'DOC in Soil moisture in layer 3 [mgN/L]', 'grid', 'spatial', 'doc_SMC_layer3', 1],
+          ['_doc_vadose',  [Opt.cond['carbon_sim_1']], 'DOC in vadose storage [mgN/L]', 'grid', 'spatial', 'doc_vadose', 1],
+          ['_doc_GW',  [Opt.cond['carbon_sim_1']], 'DOC in Groundwater storage [mgN/L]', 'grid', 'spatial', 'doc_groundwater_storage', 1],
+          ['_doc_chanS',  [Opt.cond['carbon_sim_1']], 'DOC in Channel storage [mgN/L]', 'grid', 'spatial', 'doc_chanS', 1],
+
+          ['_soil_respiration',  [Opt.cond['carbon_sim_1']], 'Soil respiration summarised in carbon [?]', 'grid', 'new', 'soil_respiration', 1],
+          
+          ['_C4_flag', [Opt.cond['carbon_sim_1']], ' C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)', 'grid', 'spatial', 'soil_respiration', 0],
+          ['_doc_rain', [Opt.cond['carbon_sim_1']], 'The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1', 'grid', 'spatial', 'doc_rain', 0],
+        
+        ]
 
 Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mgN/L]', 'grid', 'spatial', 'no3_canopy_storage', 1],
             ['_no3_snow',    [Opt.cond['nitrogen_sim_1']], 'no3 in Snow depth in [mgN/L]', 'grid', 'spatial', 'no3_snow_depth', 1],
@@ -312,22 +402,37 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
             ['_no3_GW',  [Opt.cond['nitrogen_sim_1']], 'no3 in Groundwater storage [mgN/L]', 'grid', 'spatial', 'no3_groundwater_storage', 1],
             ['_no3_chanS',  [Opt.cond['nitrogen_sim_1']], 'no3 in Channel storage [mgN/L]', 'grid', 'spatial', 'no3_chanS', 1],
 
+            ['_don_I',   [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Canopy storage [mgN/L]', 'grid', 'new', 'don_canopy_storage', 0],
+            ['_don_snow',    [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Snow depth in [mgN/L]', 'grid', 'new', 'don_snow_depth', 0],
+            ['_don_pond',    [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Ponding water in [mgN/L]', 'grid', 'new', 'don_pond', 0],
+            ['_don_layer1',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 1 [mgN/L]', 'grid', 'new', 'don_SMC_layer1', 0],
+            ['_don_layer2',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 2 [mgN/L]', 'grid', 'new', 'don_SMC_layer2', 0],
+            ['_don_layer3',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 3 [mgN/L]', 'grid', 'new', 'don_SMC_layer3', 0],
+            ['_don_vadose',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in vadose storage [mgN/L]', 'grid', 'new', 'don_vadose', 0],
+            ['_don_GW',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Groundwater storage [mgN/L]', 'grid', 'new', 'don_groundwater_storage', 0],
+            ['_don_chanS',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Channel storage [mgN/L]', 'grid', 'new', 'don_chanS', 0],
+
             # Nitrogen
             ['_nitrogen_add', [Opt.cond['nitrogen_sim_1']], 'Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]', 'grid', 'new', 'nitrogen_addition', 1],
             ['_plant_uptake', [Opt.cond['nitrogen_sim_1']], 'Plant uptake [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_uptake', 1],
             ['_deni_soil', [Opt.cond['nitrogen_sim_1']], 'Soil denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_soil', 1],
-            ['_minerl_soil', [Opt.cond['nitrogen_sim_1']], 'Soil mineralisation [mgN/L*m = gN/m2]', 'grid', 'new', 'minerl_soil', 1],
-            ['_degrad_soil', [Opt.cond['nitrogen_sim_1']], 'Soil degradation [mgN/L*m = gN/m2]', 'grid', 'new', 'degrad_soil', 1],
+            ['_minerl_soil', [Opt.cond['nitrogen_sim_1']], 'Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]', 'grid', 'new', 'minerl_soil', 1],
+            #['_degrad_soil', [Opt.cond['nitrogen_sim_1']], 'Soil degradation [mgN/L*m = gN/m2]', 'grid', 'new', 'degrad_soil', 1],
             ['_deni_river', [Opt.cond['nitrogen_sim_1']], 'Aquatic denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_river', 1],
 
+            ['_n2o_emission', [Opt.cond['nitrogen_sim_1']], 'N2O emission from soil due to soil decomposition and denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'n2o_emission', 1],
+            
             # Internal fluxes
-            ['_humusN1',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'humusN1', 0],
-            ['_humusN2',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'humusN2', 0],
-            ['_humusN3',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'humusN3', 0],
-
-            ['_fastN1',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'fastN1', 0],
-            ['_fastN2',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'fastN2', 0],
-            ['_fastN3',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'spatial', 'fastN3', 0],
+            ['_fast_NP1_nonwood',  [Opt.cond['nitrogen_sim_1']], 'Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs', 'grid', 'new', 'fast_NP1_nonwood', 0],
+            ['_fast_NP1_wood',  [Opt.cond['nitrogen_sim_1']], 'Fast wood nitrogen storage in layer 1 (wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of wood pools are variable due to reserve inputs', 'grid', 'new', 'fast_NP1_wood', 0],
+            ['_fast_NP1',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP1', 0],
+            ['_fast_NP2',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP2', 0],
+            ['_fast_NP3',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP3', 0],
+            ['_humus_NP1',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP1', 0],
+            ['_humus_NP2',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP2', 0],
+            ['_humus_NP3',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP3', 0],
+            ['_humus_N',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_N', 1],
+            ['_fast_N',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_N', 1],
             ]
 
 
@@ -349,7 +454,7 @@ Nitrogen_addition = [['is_crop', [Opt.cond['nitrogen_sim_1']], 'Crop flag [], th
                      ['residue_day', [Opt.cond['nitrogen_sim_1']], 'Day of year to start residue addtion [day]', 'vector', 'vector', None, 0],
                      ['residue_down', [Opt.cond['nitrogen_sim_1']], 'The proportion of residue reaching deep soil [decimal]', 'vector', 'vector', None, 0],
                      ['residue_period', [Opt.cond['nitrogen_sim_1']], 'The duration of residue addition [day]', 'vector', 'vector', None, 0],
-                     ['residue_fastN', [Opt.cond['nitrogen_sim_1']], 'The proportion of residue that goes to fastN pool [decimal]', 'vector', 'vector', None, 0],
+                     ['residue_fast_NP', [Opt.cond['nitrogen_sim_1']], 'The proportion of residue that goes to fastNP pool [decimal]', 'vector', 'vector', None, 0],
 
                      ['up1', [Opt.cond['nitrogen_sim_1']], '  ', 'vector', 'vector', None, 0],
                      ['up2', [Opt.cond['nitrogen_sim_1']], '  ', 'vector', 'vector', None, 0],
@@ -371,13 +476,15 @@ Irrigation  = [
 Reports = [Storages[j] for j in (np.squeeze(np.argwhere([i[6]==1 for i in Storages])))]
 Reports.extend(Fluxes)
 Reports.extend(Tracking)
+Reports.extend(Phenology)
+Reports.extend(Carbon)
 Reports.extend(Nitrogen)
 
 
-homepath = '/home/wusongj/GEM/GEM_generic_ecohydrological_model/'
-path = homepath + 'codes/'
+homepath = '/home/wusongj/EcoTWIN/'
+path = homepath + 'src/'
 release_path = homepath + 'release_linux/'
-archive_path = '/home/wusongj/GEM/archive_codes/'
+
 
 
 signs_atmos = ['Climate']
@@ -386,14 +493,17 @@ datas_atmos = [Climate]
 signs_groundTs = ['GroundTs']
 datas_groundTs = [GroundTs]
 
-signs_basin = ['GIS', 'Storages', 'Fluxes', 'Tracking', 'Nitrogen']
-datas_basin = [GIS, Storages, Fluxes, Tracking, Nitrogen]
+signs_ManagementTs = ['ManagementTs']
+datas_ManagementTs = [ManagementTs]
+
+signs_basin = ['GIS', 'Storages', 'Fluxes', 'Tracking', 'Phenology', 'Carbon', 'Nitrogen']
+datas_basin = [GIS, Storages, Fluxes, Tracking, Phenology, Carbon, Nitrogen]
 
 signs_param = ['Parameters']
 datas_param = [Parameters]
 
-signs_control = signs_atmos + signs_groundTs + signs_basin + signs_param
-datas_control = datas_atmos + datas_groundTs + datas_basin + datas_param
+signs_control = signs_atmos + signs_groundTs + signs_ManagementTs + signs_basin + signs_param
+datas_control = datas_atmos + datas_groundTs + datas_ManagementTs + datas_basin + datas_param
 
 
 
@@ -407,10 +517,11 @@ define_variables.constructor(fname=path + 'Constructors/AtmosphereConstruct.cpp'
 define_variables.atmos_read_climate_maps(fname=path + 'Atmosphere/read_climate_maps.cpp', signs=signs_atmos, datas=datas_atmos)
 
 
-define_variables.includes(fname=path + 'includes/Basin.h', signs=signs_groundTs+signs_basin, datas=datas_groundTs+datas_basin, max_category=setting.max_category)
-define_variables.constructor(fname=path + 'Constructors/BasinConstruct.cpp', signs=signs_groundTs+signs_basin, datas=datas_groundTs+datas_basin)
-define_variables.destructor(fname=path + 'Destructors/BasinDestruct.cpp', signs=signs_groundTs+signs_basin, datas=datas_groundTs+datas_basin)
+define_variables.includes(fname=path + 'includes/Basin.h', signs=signs_groundTs+signs_ManagementTs+signs_basin, datas=datas_groundTs+datas_ManagementTs+datas_basin, max_category=setting.max_category)
+define_variables.constructor(fname=path + 'Constructors/BasinConstruct.cpp', signs=signs_groundTs+signs_ManagementTs+signs_basin, datas=datas_groundTs+datas_ManagementTs+datas_basin)
+define_variables.destructor(fname=path + 'Destructors/BasinDestruct.cpp', signs=signs_groundTs+signs_ManagementTs+signs_basin, datas=datas_groundTs+datas_ManagementTs+datas_basin)
 define_variables.basin_read_groundTs_maps(fname=path + 'Atmosphere/read_groundTs_maps.cpp', signs=signs_groundTs, datas=datas_groundTs)
+define_variables.basin_read_ManagementTs_maps(fname=path + 'Atmosphere/read_managementTs_maps.cpp', signs=signs_ManagementTs, datas=datas_ManagementTs)
 
 define_variables.control_includes(fname=path + 'includes/Control.h', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports, static_config=Cali.static_config)
 config_build.read_configs(fname=path+'IO/readConfigFile.cpp', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports, static_config=Cali.static_config)
@@ -433,7 +544,32 @@ define_variables.includes(fname=path + 'includes/Basin.h', signs=['Irrigation'],
 define_variables.includes(fname=path + 'includes/Basin.h', signs=['Nitrogen addition'], datas=[Nitrogen_addition], max_category=setting.max_category)
 config_build.read_crop_info(fname=path+'IO/readCropFile.cpp', Nitrogen_inputs=Nitrogen_addition, Irrigation_inputs=Irrigation)
 
-#config_build.add_header('/home/wusongj/GEM/GEM_generic_ecohydrological_model/codes/')
+#config_build.add_header('/home/wusongj/EcoTWIN/src/')
+
+
+# Carbon
+"""
+define_variables.includes(fname=path + 'includes/Basin.h', signs=['Phenology'], datas=[Phenology], max_category=setting.max_category)
+define_variables.constructor(fname=path + 'Constructors/BasinConstruct.cpp',  signs=['Phenology'], datas=[Phenology])
+define_variables.destructor(fname=path + 'Destructors/BasinDestruct.cpp', signs=['Phenology'], datas=[Phenology])
+
+define_variables.includes(fname=path + 'includes/Basin.h', signs=['Carbon'], datas=[Carbon], max_category=setting.max_category)
+define_variables.constructor(fname=path + 'Constructors/BasinConstruct.cpp',  signs=['Carbon'], datas=[Carbon])
+define_variables.destructor(fname=path + 'Destructors/BasinDestruct.cpp', signs=['Carbon'], datas=[Carbon])
+
+define_variables.control_includes(fname=path + 'includes/Control.h', options=Opt.cond, signs=['Phenology'], datas=[Phenology], reports=Reports, static_config=Cali.static_config)
+define_variables.control_includes(fname=path + 'includes/Control.h', options=Opt.cond, signs=['Carbon'], datas=[Carbon], reports=Reports, static_config=Cali.static_config)
+
+define_variables.includes(fname=path + 'includes/Param.h', signs=signs_param, datas=datas_param, max_category=setting.max_category)
+
+define_variables.report_includes(fname=path + 'includes/Report.h', reports=Reports)
+define_variables.report_destructor(fname=path + 'Destructors/ReportDestruct.cpp', reports=Reports)
+config_build.report_build(fname=path+'IO/report.cpp', reports=Reports)
+
+config_build.read_configs(fname=path+'IO/readConfigFile.cpp', options=Opt.cond, signs=signs_control, datas=datas_control, reports=Reports, static_config=Cali.static_config)
+config_build.gen_config_template(homepath, signs=signs_control, options=Opt.cond, datas=datas_control, reports=Reports, parameters=Parameters, max_category=setting.max_category)
+"""
+
 
 linux_build.release_linux(path, release_path)
 linux_build.linux_make(release_path)

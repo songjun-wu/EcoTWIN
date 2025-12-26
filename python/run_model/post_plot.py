@@ -150,7 +150,7 @@ var_info = {
                 'nitrogen_uptake':[[0,100],10*365,False, 15],
                 'nitrogen_leaching':[[0,100],10*365,False, 15],
                 'wet_deposition':[[0,40],10*365,False],
-                'nitrogen_surplus':[[-20,20],10*365,False],
+                'nitrogen_surplus':[[0,120],10*365,False],
 
 
                 
@@ -2066,6 +2066,12 @@ def plot_spatial_results_EU(mode, chainID, chainID_list, vars, temp_res, replace
             _data = read_outputs('/data/scratch/wusongj/paper4/data/catchment_info/others/wet_deposition_monthly.bin', mask)
         elif var == 'damkholer_num':
             _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/'+var+'_annually.'+extension, mask)
+        elif var =='nitrogen_surplus':
+            _data = (read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/nitrogen_addition.'+extension, mask) +  \
+                    read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/minerl_soil.'+extension, mask) +  \
+                    read_outputs(Path.data_path + 'catchment_info/others/wet_deposition_monthly.bin', mask)) -\
+                    (read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/deni_soil.'+extension, mask) +  \
+                    read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/plant_uptake.'+extension, mask))
         else:
             try:
                 _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/'+var+'.'+extension, mask)
@@ -2113,7 +2119,7 @@ def plot_spatial_results_EU(mode, chainID, chainID_list, vars, temp_res, replace
 
             
  
-
+            print(var, vmin, vmax)
             fig, ax = plt.subplots(1,1, figsize=(15,15), dpi=300)
             plt.subplots_adjust(left=0.01, bottom=0.01, right=0.99, top=0.99, wspace=0.2, hspace=0.2)
             ax.imshow(mask, cmap='Purples_r', alpha=0.1, zorder=0, label='1')
@@ -2443,7 +2449,9 @@ def plot_correlation_YWF_DA(mode, temp_res):
     fig, ax = plt.subplots(1,2, figsize=(8,5), dpi=300)
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.99, top=0.99, wspace=0.05, hspace=0.1)
 
-
+    new_camp = cm.colors.LinearSegmentedColormap.from_list(
+    'new', cm.Purples(np.linspace(0.1, 1, 256))
+    )
 
 
     
@@ -2455,7 +2463,7 @@ def plot_correlation_YWF_DA(mode, temp_res):
             C=nitrogen_addition[index],
             reduce_C_function=np.nanmean,
             gridsize=60,
-            cmap='coolwarm',
+            cmap=new_camp,
             vmin=0, vmax=120,
             mincnt=10
         )
@@ -2778,10 +2786,16 @@ def plot_TS_results_EU(mode, chainID, chainID_list, vars, temp_res, replace=Fals
                     _data = read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/nitrogen_addition.'+extension, mask) +  \
                             read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/minerl_soil.'+extension, mask) +  \
                             read_outputs(Path.data_path + 'catchment_info/others/wet_deposition_monthly.bin', mask)
+                elif var =='nitrogen_surplus':
+                    _data = (read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/nitrogen_addition.'+extension, mask) +  \
+                            read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/minerl_soil.'+extension, mask) +  \
+                            read_outputs(Path.data_path + 'catchment_info/others/wet_deposition_monthly.bin', mask)) -\
+                            (read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/deni_soil.'+extension, mask) +  \
+                            read_outputs(Path.work_path + mode +'/outputs/cali_merged/'+temp_res+'/all/plant_uptake.'+extension, mask))
                 else:
                     _data = read_outputs(output_path+var+'.'+extension, mask)
                 
-            except:
+            except Exception as e:
                 _data = read_outputs(Path.data_path+'catchment_info/climate_3035_tmp/'+var+'.'+extension, mask, dtype=np.float32)               
         except:
             continue

@@ -380,7 +380,7 @@ def foward_run_debug(catchment_ID, chainID, nn, save_output_flag=False, experime
 
 
     if os.path.exists(save_path) and nn==0:
-            shutil.rmtree(save_path)
+        shutil.rmtree(save_path)
     os.makedirs(save_path, exist_ok=True)
 
     os.makedirs(chain_path, exist_ok=True)
@@ -397,11 +397,15 @@ def foward_run_debug(catchment_ID, chainID, nn, save_output_flag=False, experime
 
 
     if experiment is None:
-        newlines = [    'opt_init_no3 = 0\n' + \
+        newlines = [    'opt_carbon_sim = 1\n' + \
+                        'opt_init_no3 = 0\n' + \
+                        'Simul_end = 818035200 # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
                         'Clim_Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/climate/\n' + \
                         'Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/spatial_'+str(chainID)+'/\n']
     else:
-        newlines = [    'opt_init_no3 = 0\n' + \
+        newlines = [    'opt_carbon_sim = 1\n' + \
+                        'opt_init_no3 = 0\n' + \
+                        'Simul_end = 3818448000 # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
                         'Clim_Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/climate/'+experiment+'/\n' + \
                         'Maps_Folder = /data/scratch/wusongj/paper4/data/catchment_info/forward/'+catchment_ID+'/spatial_'+str(chainID)+'/\n']
     with open(run_path + 'config.ini', 'r') as f:
@@ -424,8 +428,9 @@ def foward_run_debug(catchment_ID, chainID, nn, save_output_flag=False, experime
     
         
 
-    #os.remove(run_path + 'gEcoHydro')
+    os.remove(run_path + 'gEcoHydro')
     #os.symlink('/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux/gEcoHydro', run_path + 'gEcoHydro')
+    os.symlink('/home/wusongj/EcoTWIN/release_linux/gEcoHydro', run_path + 'gEcoHydro')
 
        
     
@@ -438,25 +443,39 @@ def foward_run_debug(catchment_ID, chainID, nn, save_output_flag=False, experime
         #shutil.rmtree(chain_path)
     
     #print(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc', os.path.exists(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc'))
+    data_path = '/data/scratch/wusongj/paper4/test/outputs/'+catchment_ID+'/'
     mask = np.loadtxt(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc', skiprows=6)
-    data = np.fromfile('/data/scratch/wusongj/paper4/test/outputs/'+catchment_ID+'/perc_layer1_map.bin').reshape(-1, mask.shape[0], mask.shape[1])
-    data[:,mask==-9999] = np.nan
-    fig, ax = plt.subplots(1,4)
-
+    chanmask = np.loadtxt(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/chnwidth.asc', skiprows=6)
+    chanmask = chanmask>0
     
-    data0 = np.mean(data[35*12:45*12], axis=0)*1000*365
-    data1 = np.mean(data[110*12:120*12], axis=0)*1000*365
-    diff = data1 - data0
 
-    ax[0].imshow(np.mean(data, axis=0))
-    ax[1].imshow(data0, vmin=0, vmax=1000)
-    ax[2].imshow(data1, vmin=0, vmax=100)
-    print(np.nanmean(data0),np.nanmean(data1),np.nanmean(diff))
-    ax[3].imshow(diff, vmin=-100, vmax=100, cmap='coolwarm')
-    fig.savefig(Path.work_path+'plots/test.png')
+    fig, ax = plt.subplots(2,3)
+
+    ax[0,0].imshow(read_spatial_data(data_path+'age_SMC_layer1_map.bin', mask))
+    ax[1,0].imshow(read_spatial_data(data_path+'age_chanS_map.bin', mask, chanmask))
+    
+    ax[0,1].imshow(read_spatial_data(data_path+'trans_age_SMC_layer1_map.bin', mask))
+    ax[1,1].imshow(read_spatial_data(data_path+'trans_age_chanS_map.bin', mask, chanmask))
+    
+    ax[0,2].imshow(read_spatial_data(data_path+'no3_SMC_layer1_map.bin', mask))
+    ax[1,2].imshow(read_spatial_data(data_path+'no3_chanS_map.bin', mask, chanmask))
+
+    #ax[0,0].imshow(read_spatial_data(data_path+'SMC_layer1.bin', mask))
+    #ax[1,0].imshow(read_spatial_data(data_path+'perc_layer1_map.bin', mask))
+
+    fig.savefig('/data/scratch/wusongj/paper6/plots/test/overview_'+str(catchment_ID)+'.png', transparent=True)
     #print(data.shape, data[538:543, 1,13])
     
+def read_spatial_data(path, mask, chanmask=None):
+    data = np.fromfile(path).reshape(-1, mask.shape[0], mask.shape[1])
     
+    if chanmask is not None:
+        data[:,~chanmask] = np.nan
+    else:
+        data[:,mask==-9999] = np.nan
+    
+    data = np.mean(data, axis=0)
+    return data
 
 def test0():
     mask = np.loadtxt(Path.data_path+'catchment_info/land_mask_3035.asc', skiprows=6)
@@ -1158,8 +1177,12 @@ if __name__ == "__main__":
     _param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param_all.bin').reshape(nchains,-1)
 
 
-    os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux')
-    os.system('make all')
+    #os.chdir('/home/wusongj/GEM/GEM_generic_ecohydrological_model/release_linux')
+    #os.system('make all')
+
+    os.chdir('/home/wusongj/EcoTWIN/python/development')
+    os.system('python3 develop.py')
+
 
     
     """
@@ -1233,14 +1256,14 @@ if __name__ == "__main__":
     #experiment=''
     #test1_examine_experiment_inputs(experiments)
     #check_climate_experiments()
-    for experiment in experiments:
-        plot_forward_results(['291110'], experiment)
-        plot_forward_results_details(['291110'], experiment)
-        calculate_monthly_Damkohler_test(catchment_ID='291110', experiment=experiment)
+    #for experiment in experiments:
+    #    plot_forward_results(['291110'], experiment)
+    #    plot_forward_results_details(['291110'], experiment)
+    #    calculate_monthly_Damkohler_test(catchment_ID='291110', experiment=experiment)
 
     #plot_forward_results_tmp(experiment)
 
-    #foward_run_debug(catchment_ID='566445', chainID=0, nn=0, save_output_flag=True, experiment='ssp585')
+    foward_run_debug(catchment_ID='831616', chainID=0, nn=0, save_output_flag=True, experiment=None)
 
     #shutil.copytree('/data/scratch/wusongj/paper4/test/outputs/566445', '/data/scratch/wusongj/paper4/forward_all/outputs/cali/monthly/566445/all_ssp126')
 

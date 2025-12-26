@@ -18,6 +18,12 @@ class Opt:
     cond['GroundTs_input_format_2'] = {'key':'opt_groundTs_input_format', 'value':2,
                                       'general_description':'How is Ground time series inputs orgainsed?\n# 1: raster\n# 2: aggregated binary file (Time series should be prepared for each of the category; input.bin.shape = (N of timestep, num_category))',
                                       'description':'Binary inputs based on cliamte zones'}
+    cond['managementTs_input_format_1'] = {'key':'opt_managementTs_input_format', 'value':1,
+                                      'general_description':'How is management-related time series inputs orgainsed?\n# 1: raster\n# 2: aggregated binary file (Time series should be prepared for each of the category; input.bin.shape = (N of timestep, num_category))',
+                                      'description':'Binary inputs from binary inputs (timesteps, lats, lons)'}
+    cond['managementTs_input_format_2'] = {'key':'opt_managementTs_input_format', 'value':2,
+                                      'general_description':'How is management-related time series inputs orgainsed?\n# 1: raster\n# 2: aggregated binary file (Time series should be prepared for each of the category; input.bin.shape = (N of timestep, num_category))',
+                                      'description':'Binary inputs based on cliamte zones'}
     cond['tracking_isotope_1'] = {'key':'opt_tracking_isotope', 'value':1,
                                   'general_description':'Enable isotopic tracking?\n# 0: disabled\n# 1: enabled',
                                   'description':'Isotopic tracking'}
@@ -27,12 +33,18 @@ class Opt:
     cond['tracking_trans_age_1'] = {'key':'opt_tracking_trans_age', 'value':1,
                                   'general_description':'Enable water transient age tracking?\n# 0: disabled\n# 1: enabled',
                                   'description':'Water age tracking'}
+    cond['carbon_sim_1'] = {'key':'opt_carbon_sim', 'value':1,
+                                  'general_description':'Enable carbon simulation?\n# 0: disabled\n# 1: enabled',
+                                  'description':'Carbon simulation'}
     cond['nitrogen_sim_1'] = {'key':'opt_nitrogen_sim', 'value':1,
                                   'general_description':'Enable nitrogen simulation?\n# 0: disabled\n# 1: enabled',
                                   'description':'Nitrogen simulation'}
     cond['irrigation_1']   = {'key':'opt_irrigation', 'value':1, 
                         'general_description':'Agricultural irrigation\n# 0: disabled\n# 1: enabled',
                         'description':'Irrigation Enabled'}
+    cond['drainage_1']   = {'key':'opt_drainage', 'value':1, 
+                        'general_description':'Drainage\n# 0: disabled\n# 1: enabled',
+                        'description':'Drainage Enabled'}
     cond['reinfil_1']   = {'key':'opt_reinfil', 'value':1, 
                         'general_description':'Reinfiltration during overland flow routing',
                         'description':'Reinfiltration Enabled'}
@@ -176,13 +188,13 @@ class Opt:
                         'general_description':'Whether to use baseflow mixing for GW storage\n# 0: NO, use full mixing\n# 1: YES, use baseflow mixing with more damped variation',
                         'description':'Use baseflow mixing with more damped variation for GW storage'}
 
-
-    cond['init_no3_1']   = {'key':'opt_init_no3', 'value':1, 
-                        'general_description':'Whether to adjust the no3 compostion in inital storages\n# 0: NO\n# 1: YES (the parameter no3_init_GW needs to be specified)',
-                        'description':'Adjust the initial no3 composition from raster inputs, the parameter no3_init_GW needs to be specified'}
     cond['init_no3_0']   = {'key':'opt_init_no3', 'value':0, 
                         'general_description':'Whether to adjust the no3 compostion in inital storages\n# 0: NO\n# 1: YES (the parameter no3_init_GW needs to be specified)',
                         'description':'Adjust the initial no3 composition from raster inputs, the parameter no3_init_GW needs to be specified'}
+    cond['init_no3_1']   = {'key':'opt_init_no3', 'value':1, 
+                        'general_description':'Whether to adjust the no3 compostion in inital storages\n# 0: NO\n# 1: YES (the parameter no3_init_GW needs to be specified)',
+                        'description':'Adjust the initial no3 composition from raster inputs, the parameter no3_init_GW needs to be specified'}
+    
 
     
 

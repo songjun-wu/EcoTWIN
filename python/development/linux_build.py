@@ -34,7 +34,7 @@ def release_linux(path, release_path):
                 objs_text = ['OBJS += ' + '\\'+ '\n']
                 DEPS_text = ['CPP_DEPS += ' + '\\'+ '\n']
                 for gg in range(len(cppfiles)):
-                    cpp_text.append('../codes/'+fname_0+'/'+cppfiles[gg]+' \\\n')
+                    cpp_text.append('../src/'+fname_0+'/'+cppfiles[gg]+' \\\n')
                     objs_text.append('./'+fname_0+'/'+cppfiles[gg].split('.')[0]+'.o \\\n')
                     DEPS_text.append('./'+fname_0+'/'+cppfiles[gg].split('.')[0]+'.d \\\n')
                 
@@ -42,10 +42,10 @@ def release_linux(path, release_path):
                 text.extend(objs_text + ['\n\n']) 
                 text.extend(DEPS_text + ['\n\n'])                
                 text.extend(['# Each subdirectory must supply rules for building sources it contributes\n'])
-                text.extend([fname_0+'/%.o: ../codes/'+fname_0+'/%.cpp\n'])
+                text.extend([fname_0+'/%.o: ../src/'+fname_0+'/%.cpp\n'])
                 text.extend(["	@echo 'Building file: $<'\n"])
                 text.extend(["	@echo 'Invoking: GCC C++ Compiler'\n"])
-                text.extend(['	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../codes/includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"\n'])
+                text.extend(['	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../src/includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"\n'])
                 text.extend(["	@echo 'Finished building: $<'\n"])
                 text.extend(["	@echo ' '\n"])
 

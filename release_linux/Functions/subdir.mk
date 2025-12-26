@@ -4,27 +4,33 @@
 
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
-../codes/Functions/Sort_percolation_travel_time.cpp \
-../codes/Functions/Sort_root_fraction.cpp \
-../codes/Functions/Sort_datetime.cpp \
+../src/Functions/Sort_datetime.cpp \
+../src/Functions/Sort_percolation_travel_time.cpp \
+../src/Functions/Sort_root_fraction.cpp \
+../src/Functions/Sort_soil_transformation_factors.cpp \
+../src/Functions/Initialisation_each_timestep.cpp \
 
 
 OBJS += \
+./Functions/Sort_datetime.o \
 ./Functions/Sort_percolation_travel_time.o \
 ./Functions/Sort_root_fraction.o \
-./Functions/Sort_datetime.o \
+./Functions/Sort_soil_transformation_factors.o \
+./Functions/Initialisation_each_timestep.o \
 
 
 CPP_DEPS += \
+./Functions/Sort_datetime.d \
 ./Functions/Sort_percolation_travel_time.d \
 ./Functions/Sort_root_fraction.d \
-./Functions/Sort_datetime.d \
+./Functions/Sort_soil_transformation_factors.d \
+./Functions/Initialisation_each_timestep.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-Functions/%.o: ../codes/Functions/%.cpp
+Functions/%.o: ../src/Functions/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../codes/includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../src/includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '

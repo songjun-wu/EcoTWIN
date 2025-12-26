@@ -4,33 +4,33 @@
 
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
-../codes/Constructors/AtmosphereConstruct.cpp \
-../codes/Constructors/ControlConstruct.cpp \
-../codes/Constructors/ReportConstruct.cpp \
-../codes/Constructors/ParamConstruct.cpp \
-../codes/Constructors/BasinConstruct.cpp \
+../src/Constructors/AtmosphereConstruct.cpp \
+../src/Constructors/BasinConstruct.cpp \
+../src/Constructors/ControlConstruct.cpp \
+../src/Constructors/ParamConstruct.cpp \
+../src/Constructors/ReportConstruct.cpp \
 
 
 OBJS += \
 ./Constructors/AtmosphereConstruct.o \
-./Constructors/ControlConstruct.o \
-./Constructors/ReportConstruct.o \
-./Constructors/ParamConstruct.o \
 ./Constructors/BasinConstruct.o \
+./Constructors/ControlConstruct.o \
+./Constructors/ParamConstruct.o \
+./Constructors/ReportConstruct.o \
 
 
 CPP_DEPS += \
 ./Constructors/AtmosphereConstruct.d \
-./Constructors/ControlConstruct.d \
-./Constructors/ReportConstruct.d \
-./Constructors/ParamConstruct.d \
 ./Constructors/BasinConstruct.d \
+./Constructors/ControlConstruct.d \
+./Constructors/ParamConstruct.d \
+./Constructors/ReportConstruct.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-Constructors/%.o: ../codes/Constructors/%.cpp
+Constructors/%.o: ../src/Constructors/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../codes/includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -ggdb -DCPU_LITTLE_ENDIAN -I"../src/includes" -O3 -ggdb -Wall -c -fmessage-length=0 -fopenmp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
