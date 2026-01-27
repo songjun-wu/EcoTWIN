@@ -35,6 +35,7 @@ int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){
     }
 
     
+    
     // Infiltration
     if (ctrl.opt_infil == 1){
         Infiltration_1(ctrl, par);

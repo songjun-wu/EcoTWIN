@@ -41,6 +41,8 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
     double WP1, WP2, WP3;
     double ET_weight;
 
+    double minimum_theta = 1e-3;
+
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
 
         Esoil = 0;
@@ -81,11 +83,11 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
             froot_coeff_corrcted = _froot_layer1->val[j] * (theta1 - WP1) / (FC1 - WP1);      
         }
         froot_coeff_corrcted = min(froot_coeff_corrcted, 1.0);
-        Tr1 = min(PT*froot_coeff_corrcted * ET_weight, ST1);
+        Tr1 = min(PT*froot_coeff_corrcted * ET_weight, ST1 - minimum_theta);
         ST1 -= Tr1;
         PT -= Tr1;
         // Soil evaporation
-        Esoil = min(PE*min(ST1/depth1/FC1, 1.0), ST1) * ET_weight;
+        Esoil = min(PE*min(ST1/depth1/FC1, 1.0), ST1 - minimum_theta) * ET_weight;
         ST1 -= Esoil;
 
         
@@ -99,7 +101,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
             froot_coeff_corrcted = _froot_layer2->val[j] * (theta2 - WP2) / (FC2 - WP2);      
         }
         froot_coeff_corrcted = min(froot_coeff_corrcted, 1.0);
-        Tr2 = min(PT*froot_coeff_corrcted * ET_weight, ST2);
+        Tr2 = min(PT*froot_coeff_corrcted * ET_weight, ST2 - minimum_theta);
         ST2 -= Tr2;
         PT -= Tr2;
 
@@ -114,7 +116,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
             froot_coeff_corrcted = _froot_layer3->val[j] * (theta3 - WP3) / (FC3 - WP3);      
         }
         froot_coeff_corrcted = min(froot_coeff_corrcted, 1.0);
-        Tr3 = min(PT*froot_coeff_corrcted * ET_weight, ST3);
+        Tr3 = min(PT*froot_coeff_corrcted * ET_weight, ST3 - minimum_theta);
         ST3 -= Tr3;
         PT -= Tr3;
 

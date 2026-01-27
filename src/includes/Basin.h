@@ -311,7 +311,8 @@ class Basin {
   svector *_doc_vadose;  // DOC in vadose storage [mgN/L]
   svector *_doc_GW;  // DOC in Groundwater storage [mgN/L]
   svector *_doc_chanS;  // DOC in Channel storage [mgN/L]
-  svector *_soil_respiration;  // Soil respiration summarised in carbon [?]
+  svector *_soil_respiration_C;  // Soil respiration summarised in carbon [gC/m2]
+  svector *_soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
   svector *_C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   svector *_doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
   /* end of Carbon */

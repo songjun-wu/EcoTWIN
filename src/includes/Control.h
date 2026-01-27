@@ -377,7 +377,7 @@ struct Control{
   string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   string fn__deni_soil_moisture_thres;  // The moisture threshold of soil denitrification
   string fn__C_in_LeafArea;  // Carbon content per leaf area in [m2(leaf)/mol(Carbon)]
-  string fn__LAI_shed_ceof;  // Leaf shedding coefficient related to LAI [-]
+  string fn__LAI_shed_coef;  // Leaf shedding coefficient related to LAI [-]
   string fn__tau_wood_C;  // Life time scale of the wood pool and vegetation dynamics [days]
   string fn__plant_wood_CP_max;  // The maximum carbon content in wood pool [molC/m2] 
   string fn__plant_reserve_CP_max;  // Term to calculate maximum carbon content in reserve pool at optimal conditions [-]: first term is the ratio of ratio of vegetation green pool to reserve pool at maximum LAI, while second term is maximum LAI
@@ -488,7 +488,8 @@ struct Control{
   int report__doc_vadose;  // report DOC in vadose storage [mgN/L]
   int report__doc_GW;  // report DOC in Groundwater storage [mgN/L]
   int report__doc_chanS;  // report DOC in Channel storage [mgN/L]
-  int report__soil_respiration;  // report Soil respiration summarised in carbon [?]
+  int report__soil_respiration_C;  // report Soil respiration summarised in carbon [gC/m2]
+  int report__soil_decomposition_C;  // report Soil decomposition summarised in carbon [gC/m2]
   int report__no3_I;  // report no3 in Canopy storage [mgN/L]
   int report__no3_snow;  // report no3 in Snow depth in [mgN/L]
   int report__no3_pond;  // report no3 in Ponding water in [mgN/L]

@@ -79,7 +79,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(denitrification_soil, "denitrification_soil", lines);
   readIntoParam(deni_soil_moisture_thres, "deni_soil_moisture_thres", lines);
   readIntoParam(C_in_LeafArea, "C_in_LeafArea", lines);
-  readIntoParam(LAI_shed_ceof, "LAI_shed_ceof", lines);
+  readIntoParam(LAI_shed_coef, "LAI_shed_coef", lines);
   readIntoParam(tau_wood_C, "tau_wood_C", lines);
   readIntoParam(plant_wood_CP_max, "plant_wood_CP_max", lines);
   readIntoParam(plant_reserve_CP_max, "plant_reserve_CP_max", lines);

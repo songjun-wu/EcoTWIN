@@ -40,19 +40,22 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         double perc3 = 0;
 
         // Drainage variables
-        double drainage_depth;  // Drainage depth [m]
+        double drainage_depth =  _drainage_depth->val[j];;  // Drainage depth [m]
         double relative_drainage_depth;  // Drainage depth relative to the bottom of soil layer [0-1]
         double relative_grounwater_table;  // Groundwater table relative to the bottom of soil layer [0-1]
         double drainage1, drainage2, drainage3;  // Drainage amount for each soil layer [m]
+
+        drainage1 = 0.0;
+        drainage2 = 0.0;
+        drainage3 = 0.0;
         
 
         // Drainage from soil layer 1
-        if (ctrl.opt_drainage == 1) {
+        if (ctrl.opt_drainage == 1 and drainage_depth > roundoffERR) {
             // Initialize drainage variables
             drainage1 = 0.0;
             drainage2 = 0.0;
             drainage3 = 0.0;
-            drainage_depth = _drainage_depth->val[j];
 
             // Drainage from layer 1 if activated
             relative_drainage_depth =  max(0.0, (depth1 - drainage_depth) / depth1);  
@@ -72,7 +75,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
 
 
         // Drainage from soil layer 2
-        if (ctrl.opt_drainage == 1) {
+        if (ctrl.opt_drainage == 1 and drainage_depth > roundoffERR) {
             relative_drainage_depth =  max(0.0, (depth2 - (drainage_depth - depth1)) / depth2);
             if (relative_drainage_depth < 1.0) {
                 relative_grounwater_table = theta2 > thetaFC2 ? (theta2 - thetaFC2) / (_thetaS2->val[j] - thetaFC2) : 0.0;
@@ -92,7 +95,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
 
 
         // Drainage from soil layer 3
-        if (ctrl.opt_drainage == 1) {
+        if (ctrl.opt_drainage == 1 and drainage_depth > roundoffERR) {
             relative_drainage_depth =  max(0.0, (depth3 - (drainage_depth - depth1 - depth2)) / depth3);
             if (relative_drainage_depth < 1.0) {
                 relative_grounwater_table = theta3 > thetaFC3 ? (theta3 - thetaFC3) / (_thetaS3->val[j] - thetaFC3) : 0.0;

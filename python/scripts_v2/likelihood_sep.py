@@ -30,8 +30,8 @@ def likelihood(param, chainID, modelID):
         if os.path.exists('outputs'):
             shutil.rmtree('outputs')
         os.mkdir('outputs')
-        #os.system('./gEcoHydro')
-        subprocess.run('./gEcoHydro', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        #os.system('./EcoTWIN')
+        subprocess.run('./EcoTWIN', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         # Calculate simulation error for each variables
         for key in Output.sim.keys():

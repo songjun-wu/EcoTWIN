@@ -107,7 +107,8 @@ int Report::dtor(Control &ctrl){
   if (of__doc_vadose.is_open())  of__doc_vadose.close();
   if (of__doc_GW.is_open())  of__doc_GW.close();
   if (of__doc_chanS.is_open())  of__doc_chanS.close();
-  if (of__soil_respiration.is_open())  of__soil_respiration.close();
+  if (of__soil_respiration_C.is_open())  of__soil_respiration_C.close();
+  if (of__soil_decomposition_C.is_open())  of__soil_decomposition_C.close();
   if (of__no3_I.is_open())  of__no3_I.close();
   if (of__no3_snow.is_open())  of__no3_snow.close();
   if (of__no3_pond.is_open())  of__no3_pond.close();
@@ -209,7 +210,8 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__doc_vadose==2) delete _doc_vadose_acc;
   if (ctrl.report__doc_GW==2) delete _doc_GW_acc;
   if (ctrl.report__doc_chanS==2) delete _doc_chanS_acc;
-  if (ctrl.report__soil_respiration==2) delete _soil_respiration_acc;
+  if (ctrl.report__soil_respiration_C==2) delete _soil_respiration_C_acc;
+  if (ctrl.report__soil_decomposition_C==2) delete _soil_decomposition_C_acc;
   if (ctrl.report__no3_I==2) delete _no3_I_acc;
   if (ctrl.report__no3_snow==2) delete _no3_snow_acc;
   if (ctrl.report__no3_pond==2) delete _no3_pond_acc;

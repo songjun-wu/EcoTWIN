@@ -135,7 +135,8 @@ class Report {
     ofstream of__doc_vadose;  // DOC in vadose storage [mgN/L]
     ofstream of__doc_GW;  // DOC in Groundwater storage [mgN/L]
     ofstream of__doc_chanS;  // DOC in Channel storage [mgN/L]
-    ofstream of__soil_respiration;  // Soil respiration summarised in carbon [?]
+    ofstream of__soil_respiration_C;  // Soil respiration summarised in carbon [gC/m2]
+    ofstream of__soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
     ofstream of__C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     ofstream of__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
     ofstream of__no3_I;  // no3 in Canopy storage [mgN/L]
@@ -275,7 +276,8 @@ class Report {
     svector *_doc_vadose_acc;  // DOC in vadose storage [mgN/L]
     svector *_doc_GW_acc;  // DOC in Groundwater storage [mgN/L]
     svector *_doc_chanS_acc;  // DOC in Channel storage [mgN/L]
-    svector *_soil_respiration_acc;  // Soil respiration summarised in carbon [?]
+    svector *_soil_respiration_C_acc;  // Soil respiration summarised in carbon [gC/m2]
+    svector *_soil_decomposition_C_acc;  // Soil decomposition summarised in carbon [gC/m2]
     svector *_C4_flag_acc;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     svector *_doc_rain_acc;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
     svector *_no3_I_acc;  // no3 in Canopy storage [mgN/L]

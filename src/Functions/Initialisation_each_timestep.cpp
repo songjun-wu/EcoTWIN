@@ -42,6 +42,7 @@ int Basin::Initialisation_each_timestep(Control &ctrl) {
     
     // Nitrogen variables
     if (ctrl.opt_nitrogen_sim==1) {
+        _plant_uptake->reset();
         _minerl_soil->reset();
         _n2o_emission->reset();
     }

@@ -140,7 +140,7 @@ Param::Param(Control &ctrl){
     _decomposition_weight_humus_pool = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
-    _LAI_shed_ceof = new svector(_sortedGrid.size);
+    _LAI_shed_coef = new svector(_sortedGrid.size);
   }
   /* end of Parameters */
 

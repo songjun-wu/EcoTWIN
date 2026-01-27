@@ -124,7 +124,8 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__doc_vadose==2) _doc_vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_GW==2) _doc_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_chanS==2) _doc_chanS_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__soil_respiration==2) _soil_respiration_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__soil_respiration_C==2) _soil_respiration_C_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__soil_decomposition_C==2) _soil_decomposition_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_I==2) _no3_I_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_snow==2) _no3_snow_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_pond==2) _no3_pond_acc = new svector(ctrl._sortedGrid.size);
@@ -233,7 +234,8 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__doc_vadose==2) _doc_vadose_acc->plus(*Bsn._doc_vadose);
   if (ctrl.report__doc_GW==2) _doc_GW_acc->plus(*Bsn._doc_GW);
   if (ctrl.report__doc_chanS==2) _doc_chanS_acc->plus(*Bsn._doc_chanS);
-  if (ctrl.report__soil_respiration==2) _soil_respiration_acc->plus(*Bsn._soil_respiration);
+  if (ctrl.report__soil_respiration_C==2) _soil_respiration_C_acc->plus(*Bsn._soil_respiration_C);
+  if (ctrl.report__soil_decomposition_C==2) _soil_decomposition_C_acc->plus(*Bsn._soil_decomposition_C);
   if (ctrl.report__no3_I==2) _no3_I_acc->plus(*Bsn._no3_I);
   if (ctrl.report__no3_snow==2) _no3_snow_acc->plus(*Bsn._no3_snow);
   if (ctrl.report__no3_pond==2) _no3_pond_acc->plus(*Bsn._no3_pond);
@@ -511,8 +513,11 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__doc_chanS==1)  report_create(ctrl.path_ResultsFolder+"doc_chanS_TS.bin", of__doc_chanS);
   else if (ctrl.report__doc_chanS==2)  report_create(ctrl.path_ResultsFolder+"doc_chanS_map.bin", of__doc_chanS);
 
-  if (ctrl.report__soil_respiration==1)  report_create(ctrl.path_ResultsFolder+"soil_respiration_TS.bin", of__soil_respiration);
-  else if (ctrl.report__soil_respiration==2)  report_create(ctrl.path_ResultsFolder+"soil_respiration_map.bin", of__soil_respiration);
+  if (ctrl.report__soil_respiration_C==1)  report_create(ctrl.path_ResultsFolder+"soil_respiration_C_TS.bin", of__soil_respiration_C);
+  else if (ctrl.report__soil_respiration_C==2)  report_create(ctrl.path_ResultsFolder+"soil_respiration_C_map.bin", of__soil_respiration_C);
+
+  if (ctrl.report__soil_decomposition_C==1)  report_create(ctrl.path_ResultsFolder+"soil_decomposition_C_TS.bin", of__soil_decomposition_C);
+  else if (ctrl.report__soil_decomposition_C==2)  report_create(ctrl.path_ResultsFolder+"soil_decomposition_C_map.bin", of__soil_decomposition_C);
 
   if (ctrl.report__no3_I==1)  report_create(ctrl.path_ResultsFolder+"no3_canopy_storage_TS.bin", of__no3_I);
   else if (ctrl.report__no3_I==2)  report_create(ctrl.path_ResultsFolder+"no3_canopy_storage_map.bin", of__no3_I);
@@ -663,7 +668,8 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__doc_vadose==1) {reportTS(ctrl, Bsn._doc_vadose, of__doc_vadose);}
   if (ctrl.report__doc_GW==1) {reportTS(ctrl, Bsn._doc_GW, of__doc_GW);}
   if (ctrl.report__doc_chanS==1) {reportTS(ctrl, Bsn._doc_chanS, of__doc_chanS);}
-  if (ctrl.report__soil_respiration==1) {reportTS(ctrl, Bsn._soil_respiration, of__soil_respiration);}
+  if (ctrl.report__soil_respiration_C==1) {reportTS(ctrl, Bsn._soil_respiration_C, of__soil_respiration_C);}
+  if (ctrl.report__soil_decomposition_C==1) {reportTS(ctrl, Bsn._soil_decomposition_C, of__soil_decomposition_C);}
   if (ctrl.report__no3_I==1) {reportTS(ctrl, Bsn._no3_I, of__no3_I);}
   if (ctrl.report__no3_snow==1) {reportTS(ctrl, Bsn._no3_snow, of__no3_snow);}
   if (ctrl.report__no3_pond==1) {reportTS(ctrl, Bsn._no3_pond, of__no3_pond);}
@@ -773,7 +779,8 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__doc_vadose==2) {reportMap(ctrl, _doc_vadose_acc, ctrl._sortedGrid, of__doc_vadose);}
   if (ctrl.report__doc_GW==2) {reportMap(ctrl, _doc_GW_acc, ctrl._sortedGrid, of__doc_GW);}
   if (ctrl.report__doc_chanS==2) {reportMap(ctrl, _doc_chanS_acc, ctrl._sortedGrid, of__doc_chanS);}
-  if (ctrl.report__soil_respiration==2) {reportMap(ctrl, _soil_respiration_acc, ctrl._sortedGrid, of__soil_respiration);}
+  if (ctrl.report__soil_respiration_C==2) {reportMap(ctrl, _soil_respiration_C_acc, ctrl._sortedGrid, of__soil_respiration_C);}
+  if (ctrl.report__soil_decomposition_C==2) {reportMap(ctrl, _soil_decomposition_C_acc, ctrl._sortedGrid, of__soil_decomposition_C);}
   if (ctrl.report__no3_I==2) {reportMap(ctrl, _no3_I_acc, ctrl._sortedGrid, of__no3_I);}
   if (ctrl.report__no3_snow==2) {reportMap(ctrl, _no3_snow_acc, ctrl._sortedGrid, of__no3_snow);}
   if (ctrl.report__no3_pond==2) {reportMap(ctrl, _no3_pond_acc, ctrl._sortedGrid, of__no3_pond);}

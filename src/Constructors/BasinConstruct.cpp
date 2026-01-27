@@ -286,7 +286,8 @@
     _doc_vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_vadose, _rowNum, _colNum, _sortedGrid);
     _doc_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_GW, _rowNum, _colNum, _sortedGrid);
     _doc_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_chanS, _rowNum, _colNum, _sortedGrid);
-    _soil_respiration = new svector(_sortedGrid.size);
+    _soil_respiration_C = new svector(_sortedGrid.size);
+    _soil_decomposition_C = new svector(_sortedGrid.size);
     _C4_flag = new svector(ctrl.path_BasinFolder + ctrl.fn__C4_flag, _rowNum, _colNum, _sortedGrid);
     _doc_rain = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_rain, _rowNum, _colNum, _sortedGrid);
   }

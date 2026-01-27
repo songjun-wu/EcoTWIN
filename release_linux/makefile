@@ -51,24 +51,24 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: gEcoHydro
+all: EcoTWIN
 
 # Tool invocations
-gEcoHydro: $(OBJS) $(USER_OBJS)
+EcoTWIN: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -ggdb -O3 -L"../lib" -fopenmp -o "gEcoHydro" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -ggdb -O3 -L"../lib" -fopenmp -o "EcoTWIN" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
-	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) gEcoHydro
+	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) EcoTWIN
 	-@echo ' '
 
 post-build:
-#	-strip gEcoHydro
+#	-strip EcoTWIN
 	-@echo ' '
 
 .PHONY: all clean dependents

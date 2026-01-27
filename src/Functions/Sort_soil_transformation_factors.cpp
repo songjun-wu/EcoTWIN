@@ -42,13 +42,13 @@ double Basin::Moist_factor(const double db_theta, const double db_thetaWP, const
 
     double fct_theta;
     if (db_theta >= db_thetaS) {
-        fct_theta = 0.3;
+        fct_theta = 0.0;
     } else if (db_theta < db_thetaWP){
         fct_theta = 0.0;
     } else {
         //fct_theta = min(1.0, (1 - fct_thetaS) * pow((db_thetaS - db_theta) / (fct_theta_up / 100 * db_depth * 1000), fct_theta_pow)  + fct_thetaS);
         //fct_theta = min(fct_theta, pow((db_theta - db_thetaWP) / (fct_theta_low /100 * db_depth * 1000), fct_theta_pow));
-        fct_theta = min(1.0, 0.7 * (db_thetaS - db_theta) / (1.2) + 0.3);
+        fct_theta = min(1.0, 1.0 * (db_thetaS - db_theta) / (1.2) + 0.0);
         fct_theta = min(fct_theta, (db_theta - db_thetaWP) / (0.8));
     }
 

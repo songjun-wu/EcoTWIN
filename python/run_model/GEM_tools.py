@@ -156,7 +156,8 @@ def kge_modified(sim, obs):
     
 
 def kge(sim, obs):
-    validIDX = np.logical_not( np.logical_or( np.isnan(sim), np.isnan(obs) ) )
+    #validIDX = np.logical_not( np.logical_or( np.isnan(sim), np.isnan(obs) ) )
+    validIDX = np.logical_not( np.isnan(obs) )
     validIDX[obs==-9999] = False
     sim = sim[validIDX]
     obs = obs[validIDX]
@@ -307,7 +308,7 @@ def set_env(mode, Path, nchains, Output, catchment_list=None):
 
                 # link the model
                 if not os.path.exists(run_path + Path.path_EXEC):
-                    os.symlink(Path.model_path + Path.path_EXEC, run_path + 'gEcoHydro')
+                    os.symlink(Path.model_path + Path.path_EXEC, run_path + 'EcoTWIN')
                 # copy inputs
                 #shutil.copytree(Path.data_path+'catchment_info/'+str(Output.Catchment_ID[kk])+'/spatial/', run_path+'spatial/')
                 # copy configs
@@ -321,7 +322,7 @@ def set_env(mode, Path, nchains, Output, catchment_list=None):
             run_path =  catchment_path + '/run/'    # The path for model runs
             # link the model
             if not os.path.exists(run_path + Path.path_EXEC):
-                os.symlink(Path.model_path + Path.path_EXEC, run_path + 'gEcoHydro')
+                os.symlink(Path.model_path + Path.path_EXEC, run_path + 'EcoTWIN')
             # copy inputs
             #shutil.copytree(Path.data_path+'spatial/', run_path+'spatial/')
             # copy configs
@@ -386,7 +387,7 @@ def set_config(mode, Path, Cali, Output, catchment_list=None, experiment=None):
                     lines = np.append('Clim_Maps_Folder = ' + Path.data_path + 'catchment_info/forward/'+str(catchment_ID)+'/climate/'+experiment+'/\n', lines)
                 for line in lines:
                     if 'path_EXEC = ' in line:
-                        lines[i] = "    path_EXEC = 'gEcoHydro_forward'\n"
+                        lines[i] = "    path_EXEC = 'EcoTWIN_forward'\n"
 
                 if mode == 'SA':
                     seconds_since_1980 = np.loadtxt( Path.data_path + 'catchment_info/cali/'+str(catchment_ID)+'/obs/seconds_from_1980.txt')

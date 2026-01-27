@@ -305,7 +305,7 @@ Parameters = [# ======= Hydrology =======
 
               # ======= Phenology =======
               ['_C_in_LeafArea', [Opt.cond['carbon_sim_1']], 'Carbon content per leaf area in [m2(leaf)/mol(Carbon)]', 'grid', 'spatial_param', 'C_in_LeafArea', 0],
-              ['_LAI_shed_ceof', [Opt.cond['carbon_sim_1'], Opt.cond['carbon_sim_1']], 'Leaf shedding coefficient related to LAI [-]', 'grid', 'spatial_param', 'LAI_shed_ceof', 0],
+              ['_LAI_shed_coef', [Opt.cond['carbon_sim_1'], Opt.cond['carbon_sim_1']], 'Leaf shedding coefficient related to LAI [-]', 'grid', 'spatial_param', 'LAI_shed_coef', 0],
               ['_tau_wood_C', [Opt.cond['carbon_sim_1']], 'Life time scale of the wood pool and vegetation dynamics [days]', 'grid', 'spatial_param', 'tau_wood_C', 0],     
               ['_plant_wood_CP_max', [Opt.cond['carbon_sim_1']], 'The maximum carbon content in wood pool [molC/m2] ', 'grid', 'spatial_param', 'plant_wood_CP_max', 0],
               ['_plant_reserve_CP_max', [Opt.cond['carbon_sim_1']], 'Term to calculate maximum carbon content in reserve pool at optimal conditions [-]: first term is the ratio of ratio of vegetation green pool to reserve pool at maximum LAI, while second term is maximum LAI', 'grid', 'spatial_param', 'plant_reserve_CP_max', 0],
@@ -385,9 +385,10 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           ['_doc_GW',  [Opt.cond['carbon_sim_1']], 'DOC in Groundwater storage [mgN/L]', 'grid', 'spatial', 'doc_groundwater_storage', 1],
           ['_doc_chanS',  [Opt.cond['carbon_sim_1']], 'DOC in Channel storage [mgN/L]', 'grid', 'spatial', 'doc_chanS', 1],
 
-          ['_soil_respiration',  [Opt.cond['carbon_sim_1']], 'Soil respiration summarised in carbon [?]', 'grid', 'new', 'soil_respiration', 1],
+          ['_soil_respiration_C',  [Opt.cond['carbon_sim_1']], 'Soil respiration summarised in carbon [gC/m2]', 'grid', 'new', 'soil_respiration_C', 1],
+          ['_soil_decomposition_C',  [Opt.cond['carbon_sim_1']], 'Soil decomposition summarised in carbon [gC/m2]', 'grid', 'new', 'soil_decomposition_C', 1],
           
-          ['_C4_flag', [Opt.cond['carbon_sim_1']], ' C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)', 'grid', 'spatial', 'soil_respiration', 0],
+          ['_C4_flag', [Opt.cond['carbon_sim_1']], ' C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)', 'grid', 'spatial', 'C4_flag', 0],
           ['_doc_rain', [Opt.cond['carbon_sim_1']], 'The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1', 'grid', 'spatial', 'doc_rain', 0],
         
         ]

@@ -21,20 +21,19 @@
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     
     // For debug
-    //int j = 98;  // todo; 6806, 13
-    //cout << ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
+    //int i = 1127;
+    //int j = 858;  // todo; 858 forest, 1127 cropland, 3433 Alpine
+    //cout <<ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
     //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
+        //if (_sortedGrid.row[j]==41 and _sortedGrid.col[j]==60) cout << j<< endl; 
     //}
+
+
     Initialisation_each_timestep(ctrl);
-    
     Solve_canopy(ctrl, par, atm);
-
     Solve_surface(ctrl, par, atm);
-    
     Solve_soil_profile(ctrl, par, atm);
-
     Solve_routing(ctrl, par);
-
     Solve_channel(ctrl, par, atm);
 
 

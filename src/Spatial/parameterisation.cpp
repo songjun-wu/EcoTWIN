@@ -583,15 +583,24 @@ int Param::Parameterisation(Control &ctrl){
 
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
   
-  _LAI_shed_ceof->reset();
+  _LAI_shed_coef->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (LAI_shed_ceof[k]!=nodata) {
+      if (LAI_shed_coef[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _LAI_shed_ceof->val[j] += param_category->val[k][j] * LAI_shed_ceof[k];
+        _LAI_shed_coef->val[j] += param_category->val[k][j] * LAI_shed_coef[k];
      }}}
 
   }
   /* end of Parameters */
+
+
+  /* Some parameters need to re-examined after parameterisation */
+  if (ctrl.opt_nitrogen_sim == 1){
+    _NC_ratio_plant_green->higher_than(*_NC_ratio_fast_pool_nonwood);
+    _NC_ratio_plant_wood->higher_than(*_NC_ratio_fast_pool_wood);
+    _NC_ratio_humus_pool->higher_than(*_NC_ratio_fast_pool_nonwood);
+    _NC_ratio_humus_pool->higher_than(*_NC_ratio_fast_pool_wood);
+  }
 
   return EXIT_SUCCESS;
 }

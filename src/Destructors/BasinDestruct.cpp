@@ -282,7 +282,8 @@ int Basin::dtor(Control &ctrl){
     if(_doc_vadose) delete _doc_vadose;
     if(_doc_GW) delete _doc_GW;
     if(_doc_chanS) delete _doc_chanS;
-    if(_soil_respiration) delete _soil_respiration;
+    if(_soil_respiration_C) delete _soil_respiration_C;
+    if(_soil_decomposition_C) delete _soil_decomposition_C;
     if(_C4_flag) delete _C4_flag;
     if(_doc_rain) delete _doc_rain;
   }

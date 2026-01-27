@@ -47,6 +47,6 @@ int Basin::Solve_surface_nutrient(Control &ctrl, Atmosphere &atm, Param &par){
       Solve_surface_transport(ctrl, atm, par, *_no3_I, *_no3_snow, *_no3_pond, *_no3_chanS, *_no3_GW, true); // enrich_flag = true
       Solve_surface_transport(ctrl, atm, par, *_don_I, *_don_snow, *_don_pond, *_don_chanS, *_don_GW, true); // enrich_flag = true
     }  
-
+    
     return EXIT_SUCCESS;
 }

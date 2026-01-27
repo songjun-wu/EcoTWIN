@@ -93,6 +93,7 @@ int main(){
       advance_climate = 0;
     }
 
+
     // Update Ground inputs
     if (advance_groundTs >= oControl->Ground_input_tstep) {
       if (oControl->opt_groundTs_input_format == 1){

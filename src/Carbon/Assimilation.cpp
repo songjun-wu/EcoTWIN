@@ -31,7 +31,7 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
   double absorb_PAR_per_lai; // Absored PAR by canopy J / (mol(photons) * LAI)
   double JC; // Carboxylilation controlled assimilation
   double JE; // Light limited Assimilation
-  double GPP;  // Gross primary production
+  double GPP;  // Gross primary production per leaf area
   double N_limitation_factor = 1.0; // TODO: No nutrient limitation
   double water_limitation_factor; // Water stress factor
   double G0, B, C, J1, W1;
@@ -82,7 +82,7 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
     // ======= Photosythesis =======
     // =============================
     PAR_mol = Rsw / Epar;   // Photosynthetically Active Radiation in J / mol(photons)
-    absorb_PAR_per_lai = PAR_mol * (1 - exp(-0.5*LAI)/LAI) ; // Absored PAR by canopy J / (mol(photons) * LAI)
+    absorb_PAR_per_lai = PAR_mol * (1 - exp(-0.5*LAI)) /LAI ; // Absored PAR by canopy J / (mol(photons) * LAI)
     // absorbed fraction = 1 - exp(-k*LAI)/LAI; k is related to zenith angles (0.5 / cos_zenith_angle), but this is ommitted for simplification 
     
     Ta_k = atm._Ta->val[j] + 273.15;  // Air temperature in Kalvin
@@ -146,6 +146,7 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
         JE = 0.0;
       }
 
+      
       // Simialr procedure applies for the light limited Assimilation Jc;
       // Set Ci in eqation : JC = VC_max * (Ci - Gam) / (Ci + KC * (1 + OX/KO))
       // We get quadratic formula:
@@ -155,7 +156,7 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
       JC = B/2 - sqrt(max(pow(B,2)/4 - C, 0.0));
       
       // Calculate GPP and NPP
-      GPP = min(JE, JC) * hitin_hib;
+      GPP = min(JE, JC) * hitin_hib; 
       
     } else {
       // =============== C4 Plants ===============
@@ -166,11 +167,9 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
 
     maintenance_respiration = dark_respiration / 0.4;  // leaf fraction of plant-total (autotrophic) respiration
     grow_respiration = max(0.0, (0.25/1.25 * (GPP - maintenance_respiration)));
-    _NPP->val[j] = (GPP - maintenance_respiration - grow_respiration) * ctrl.Simul_tstep * molC_m2_to_gC_m2;
+    _NPP->val[j] = (GPP - maintenance_respiration - grow_respiration) * ctrl.Simul_tstep * molC_m2_to_gC_m2 * LAI;
     
-
-      
-  }
+  }  // end of for loop over grid cells
 
     return EXIT_SUCCESS;
 }

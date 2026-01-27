@@ -90,7 +90,7 @@ class Param {
   vector<double> denitrification_soil;
   vector<double> deni_soil_moisture_thres;
   vector<double> C_in_LeafArea;
-  vector<double> LAI_shed_ceof;
+  vector<double> LAI_shed_coef;
   vector<double> tau_wood_C;
   vector<double> plant_wood_CP_max;
   vector<double> plant_reserve_CP_max;
@@ -180,7 +180,7 @@ class Param {
   svector *_frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
   svector *_decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
   svector *_decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
-  svector *_LAI_shed_ceof;  // Leaf shedding coefficient related to LAI [-]
+  svector *_LAI_shed_coef;  // Leaf shedding coefficient related to LAI [-]
   /* end of Parameters */
 
   svector_2d *param_category;

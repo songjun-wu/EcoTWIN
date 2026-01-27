@@ -130,7 +130,7 @@ int Param::dtor(Control &ctrl){
     if(_decomposition_weight_humus_pool) delete _decomposition_weight_humus_pool;
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
-    if(_LAI_shed_ceof) delete _LAI_shed_ceof;
+    if(_LAI_shed_coef) delete _LAI_shed_coef;
   }
   /* end of Parameters */
 

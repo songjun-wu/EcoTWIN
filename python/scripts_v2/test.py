@@ -14,6 +14,7 @@ from def_GEM_v2 import Path, Info, Cali, Output, Param
 
 def read_spatial_data(path, mask, chanmask=None, weight=1):
     data = np.fromfile(path).reshape(-1, mask.shape[0], mask.shape[1])
+    data = data[2:,:,:]
     
     if chanmask is not None:
         data[:,~chanmask] = np.nan
@@ -39,7 +40,8 @@ def read_temporal_data(path, mask, chanmask=None):
 def save_cumulative_outputs_memmap(output_path, save_path, save_all_flag=False, lock=None, replace=False):
 
     if replace:
-        shutil.rmtree(save_path)
+        if os.path.exists(save_path):
+            shutil.rmtree(save_path)
 
     os.makedirs(save_path, exist_ok=True)
     os.makedirs(save_path + '/finish_counter/', exist_ok=True)
@@ -106,87 +108,104 @@ def model_test(mode, catchment_ID):
 
     run_path = Path.work_path+mode+'/'+catchment_ID+'/run/'
     save_path = Path.work_path+mode+'/outputs/'+catchment_ID + '/'
-
-    param_N = GEM_tools.get_param_N(Info, Param)
-    param = np.full(param_N, 0.5)
-
-    #_param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param_all.bin').reshape(nchains,-1)
-    #param = _param[0, :]
-    GEM_tools.gen_param(run_path, Info, Param, param)
-    GEM_tools.gen_no3_addtion(run_path, Info)
-
-    # Link latest version of model executable
-    if os.path.exists(run_path + 'gEcoHydro'):
-        os.remove(run_path + 'gEcoHydro')
-    os.symlink('/home/wusongj/EcoTWIN/release_linux/gEcoHydro', run_path + 'gEcoHydro')
-
-    # Set config.ini
-    seconds_from_1980 = np.loadtxt(Path.data_path+'catchment_info/cali/'+catchment_ID+'/obs/seconds_from_1980.txt')
-    newlines = [    'num_category = '+str(int(Info.N_landuse+Info.N_soil+1))+'\n' + \
-                    'opt_carbon_sim = 1\n' + \
-                    'opt_init_no3 = 0\n' + \
-                    'Simul_end = '+str(int(seconds_from_1980))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
-                    #'Simul_end = '+str(int(86400*365))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
-                    'Clim_Maps_Folder = /data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/climate/\n' + \
-                    'Maps_Folder = /data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/spatial/\n']
-    with open(run_path + 'config.ini', 'r') as f:
-        lines = f.readlines()
-    newlines.extend(lines)
-    #with open(run_path + 'config.ini', 'w') as f:
-    #    f.writelines(newlines)
     
 
-    # TODO
-    spatial_path = '/data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/spatial/'
-    climate_path = '/data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/climate/'
-    dem_map = np.loadtxt(spatial_path+'dem.asc', skiprows=6)
-    unit_map = np.full(dem_map.shape, 0.0)
-    unit_map[dem_map!=-9999] = 0.0
-    drainage_depth_Ts = np.array([])
-    unit_flat = unit_map.ravel()
-    drainage_depth_Ts = np.tile(unit_flat, 45)
-    drainage_depth_Ts.tofile(climate_path+'drainage_depth.bin')
-    
-    #for i in range(12):
-    #    shutil.copyfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/'+'category_'+str(i)+'.bin', spatial_path+'category_'+str(i)+'.bin')
+    #for xxxx in range(nchains):
+    for xxxx in [7]:
+        print(xxxx)
+        #param_N = GEM_tools.get_param_N(Info, Param)
+        #param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_831616_001_failed.bin').reshape(nchains,-1)[xxxx, :]
+        param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_831616_001.bin').reshape(nchains,-1)[xxxx, :]
+
+        #_param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param_all.bin').reshape(nchains,-1)
+        #param = _param[0, :]
+        GEM_tools.gen_param(run_path, Info, Param, param)
+        GEM_tools.gen_no3_addtion(run_path, Info)
+
+        # Link latest version of model executable
+        if os.path.exists(run_path + 'EcoTWIN'):
+            os.remove(run_path + 'EcoTWIN')
+        os.symlink('/home/wusongj/EcoTWIN/release_linux/EcoTWIN', run_path + 'EcoTWIN')
+
+        # Set config.ini
+        seconds_from_1980 = np.loadtxt(Path.data_path+'catchment_info/cali/'+catchment_ID+'/obs/seconds_from_1980.txt')
+        newlines = [    'num_category = '+str(int(Info.N_landuse+Info.N_soil+1))+'\n' + \
+                        'opt_carbon_sim = 1\n' + \
+                        'opt_init_no3 = 0\n' + \
+                        #'Simul_end = '+str(int(seconds_from_1980))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
+                        'Simul_end = '+str(int(86400*365*2))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
+                        'Clim_Maps_Folder = /data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/climate/\n' + \
+                        'Maps_Folder = /data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/spatial/\n']
+        with open(run_path + 'config.ini', 'r') as f:
+            lines = f.readlines()
+        newlines.extend(lines)
+        #with open(run_path + 'config.ini', 'w') as f:
+        #    f.writelines(newlines)
     
 
-    # Run model
-    os.chdir(run_path)
-    #subprocess.run('./gEcoHydro', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    os.system('./gEcoHydro')
+        # TODO
+        spatial_path = '/data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/spatial/'
+        climate_path = '/data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/climate/'
+        dem_map = np.loadtxt(spatial_path+'dem.asc', skiprows=6)
+        unit_map = np.full(dem_map.shape, 0.0)
+        unit_map[dem_map!=-9999] = 0.0
+        drainage_depth_Ts = np.array([])
+        unit_flat = unit_map.ravel()
+        drainage_depth_Ts = np.tile(unit_flat, 45)
+        drainage_depth_Ts.tofile(climate_path+'drainage_depth.bin')
+        
+        #for i in range(12):
+        #    shutil.copyfile('/data/scratch/wusongj/paper4/data/catchment_info/cali/'+catchment_ID+'/spatial/'+'category_'+str(i)+'.bin', spatial_path+'category_'+str(i)+'.bin')
+        
+
+        # Run model
+        os.chdir(run_path)
+        #subprocess.run('./EcoTWIN', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        os.system('./EcoTWIN')
+        # Save outputs
+        save_cumulative_outputs_memmap(output_path=run_path+'outputs/', save_path=save_path, save_all_flag=True, replace=True)
+        #shutil.rmtree(chain_path)
 
 
-    # Save outputs
-    save_cumulative_outputs_memmap(output_path=run_path+'outputs/', save_path=save_path, save_all_flag=True, replace=True)
-    #shutil.rmtree(chain_path)
-    
+    # Plot results 
     #print(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc', os.path.exists(Path.data_path+'catchment_info/forward/'+catchment_ID+'/spatial/dem.asc'))
     mask = np.loadtxt(Path.data_path+'catchment_info/cali/'+catchment_ID+'/spatial/dem.asc', skiprows=6)
     chanmask = np.loadtxt(Path.data_path+'catchment_info/cali/'+catchment_ID+'/spatial/chnwidth.asc', skiprows=6)
     chanmask = chanmask>0
 
-    fig, ax = plt.subplots(5,3, dpi=300)
+    nrows = 7
+    ncols = 3
+
+    fig, ax = plt.subplots(nrows, ncols, figsize=(10,20), dpi=300)
     plt.subplots_adjust(left=0.05, right=0.95, bottom=0.05, top=0.95, wspace=0.1, hspace=0.1)
-    im0 = ax[0,0].imshow(read_spatial_data(save_path+'SMC_layer1_map.bin', mask), vmin=0.2, vmax=0.4)
-    im1 = ax[0,1].imshow(read_spatial_data(save_path+'SMC_layer2_map.bin', mask), vmin=0.2, vmax=0.4)
-    im2 = ax[0,2].imshow(read_spatial_data(save_path+'SMC_layer3_map.bin', mask), vmin=0.2, vmax=0.4)
+    im0 = ax[0,0].imshow(read_spatial_data(save_path+'SMC_layer1_map.bin', mask), vmin=0.2, vmax=0.8)
+    im1 = ax[0,1].imshow(read_spatial_data(save_path+'SMC_layer2_map.bin', mask), vmin=0.2, vmax=0.8)
+    im2 = ax[0,2].imshow(read_spatial_data(save_path+'SMC_layer3_map.bin', mask), vmin=0.2, vmax=0.8)
 
-    im3 = ax[1,0].imshow(read_spatial_data(save_path+'infiltration_map.bin', mask, weight=1000*365), vmin=500, vmax=700)
-    im4 = ax[1,1].imshow(read_spatial_data(save_path+'perc_layer1_map.bin', mask, weight=1000*365), vmin=200, vmax=400)
-    im5 = ax[1,2].imshow(read_spatial_data(save_path+'perc_layer2_map.bin', mask, weight=1000*365), vmin=200, vmax=400)
+    im3 = ax[1,0].imshow(read_spatial_data(save_path+'infiltration_map.bin', mask, weight=1000*365), vmin=500, vmax=1000)
+    im4 = ax[1,1].imshow(read_spatial_data(save_path+'perc_layer1_map.bin', mask, weight=1000*365), vmin=200, vmax=900)
+    im5 = ax[1,2].imshow(read_spatial_data(save_path+'perc_layer2_map.bin', mask, weight=1000*365), vmin=200, vmax=700)
 
-    im6 = ax[2,0].imshow(read_spatial_data(save_path+'drainage_from_soil_map.bin', mask, weight=1000*365), vmin=0, vmax=70)
-    im7 = ax[2,1].imshow(read_spatial_data(save_path+'age_chanS_map.bin', mask, chanmask, weight=1))
-    im8 = ax[2,2].imshow(read_spatial_data(save_path+'trans_age_chanS_map.bin', mask, chanmask, weight=1))
+    im6 = ax[2,0].imshow(read_spatial_data(save_path+'age_chanS_map.bin', mask, chanmask, weight=1))
+    im7 = ax[2,1].imshow(read_spatial_data(save_path+'age_vadose_map.bin', mask, chanmask, weight=1))
+    im8 = ax[2,2].imshow(read_spatial_data(save_path+'age_groundwater_storage_map.bin', mask, chanmask, weight=1))
 
-    im9 = ax[3,0].imshow(read_spatial_data(save_path+'d18o_chanS_map.bin', mask, chanmask, weight=1))
+    im9 = ax[3,0].imshow(read_spatial_data(save_path+'snow_depth_map.bin', mask, weight=1))
     im10 = ax[3,1].imshow(read_spatial_data(save_path+'doc_chanS_map.bin', mask, chanmask, weight=1))
     im11 = ax[3,2].imshow(read_spatial_data(save_path+'no3_chanS_map.bin', mask, chanmask, weight=1))
 
-    im12 = ax[4,0].imshow(read_spatial_data(save_path+'deni_soil_map.bin', mask, weight=10*365))
-    im13 = ax[4,1].imshow(read_spatial_data(save_path+'minerl_soil_map.bin', mask, weight=10*365))
-    im14 = ax[4,2].imshow(read_spatial_data(save_path+'plant_uptake_map.bin', mask, weight=10*365))
+    im12 = ax[4,0].imshow(read_spatial_data(save_path+'overland_flow_toChn_map.bin', mask, weight=1000*365))
+    im13 = ax[4,1].imshow(read_spatial_data(save_path+'interflow_toChn_map.bin', mask, weight=1000*365))
+    im14 = ax[4,2].imshow(read_spatial_data(save_path+'GWflow_toChn_map.bin', mask, weight=1000*365))
+
+    im15 = ax[5,0].imshow(read_spatial_data(save_path+'soil_evap_map.bin', mask, weight=1000*365))
+    im16 = ax[5,1].imshow(read_spatial_data(save_path+'transp_map.bin', mask, weight=1000*365))
+    im17 = ax[5,2].imshow(read_spatial_data(save_path+'plant_C_map.bin', mask, weight=1))
+
+    im18 = ax[6,0].imshow(read_spatial_data(save_path+'net_primary_production.bin', mask, weight=1*365))
+    im19 = ax[6,1].imshow(read_spatial_data(save_path+'soil_respiration.bin', mask, weight=1*365))
+    im20 = ax[6,2].imshow(read_spatial_data(save_path+'age_SMC_layer3_map.bin', mask, weight=1), vmin=0, vmax=3000)
+
 
     """
     im0 = ax[0,0].imshow(read_spatial_data(save_path+'doc_SMC_layer1_map.bin', mask))
@@ -207,8 +226,8 @@ def model_test(mode, catchment_ID):
     #print(np.nanmax(tmp))
     #print(np.where(tmp == np.nanmax(tmp)))
 
-    for r in range(5):
-        for c in range(3):
+    for r in range(nrows):
+        for c in range(ncols):
             ax[r,c].axis('off')
 
     #ax[3,0].plot(read_temporal_data(save_path+'plant_C_map.bin', mask))
@@ -231,6 +250,12 @@ def model_test(mode, catchment_ID):
     fig.colorbar(im12, ax=ax[4,0])
     fig.colorbar(im13, ax=ax[4,1])
     fig.colorbar(im14, ax=ax[4,2])
+    fig.colorbar(im15, ax=ax[5,0])
+    fig.colorbar(im16, ax=ax[5,1])
+    fig.colorbar(im17, ax=ax[5,2])
+    fig.colorbar(im18, ax=ax[6,0])
+    fig.colorbar(im19, ax=ax[6,1])
+    fig.colorbar(im20, ax=ax[6,2])
 
     fig.savefig('/data/scratch/wusongj/paper6/plots/test/overview_'+str(catchment_ID)+'.png', transparent=True)
 
@@ -239,5 +264,7 @@ def model_test(mode, catchment_ID):
 
 
 mode = 'test'
-nchains = 40
-model_test(mode, catchment_ID='831616_001')
+nchains = 20
+
+model_test(mode, catchment_ID='291110_001')
+#model_test(mode, catchment_ID='831616_001')

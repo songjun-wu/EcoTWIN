@@ -64,7 +64,6 @@ try:
     # Import configuration
     sys.path.insert(0, os.getcwd())
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/run_model')
-    print(sys.path, flush=True)
     config = __import__(options.def_py)
     Path = config.Path
     Cali = config.Cali
