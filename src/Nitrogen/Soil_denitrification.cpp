@@ -28,18 +28,18 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
     double DT = ctrl.Simul_tstep / 86400;  // all rates are calculated at daily timesteps
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        deni1 = 0; // Soil denitrification in layer1 [kg/ha]
-        deni2 = 0; // Soil denitrification in layer2 [kg/ha]
-        deni3 = 0; // Soil denitrification in layer3 [kg/ha]
+        deni1 = 0; // Soil denitrification in layer1 [gN/m2]
+        deni2 = 0; // Soil denitrification in layer2 [gN/m2]
+        deni3 = 0; // Soil denitrification in layer3 [gN/m2]
         theta1 = _theta1->val[j];
         theta2 = _theta2->val[j];
         theta3 = _theta3->val[j];
-        no3_layer1 = _no3_layer1->val[j];
-        no3_layer2 = _no3_layer2->val[j];
-        no3_layer3 = _no3_layer3->val[j];
-        diss_IN1 = theta1 * _depth1->val[j] * no3_layer1;
-        diss_IN2 = theta2 * _depth2->val[j] * no3_layer2;
-        diss_IN3 = theta3 * par._depth3->val[j] * no3_layer3;
+        no3_layer1 = _no3_layer1->val[j]; // Nitrate concentration in layer 1 [mgN/L]
+        no3_layer2 = _no3_layer2->val[j]; // Nitrate concentration in layer 2 [mgN/L]
+        no3_layer3 = _no3_layer3->val[j]; // Nitrate concentration in layer 3 [mgN/L]
+        diss_IN1 = theta1 * _depth1->val[j] * no3_layer1; // Dissolved inorganic nitrogen in layer 1 [mgN/L * m = gN/m2]
+        diss_IN2 = theta2 * _depth2->val[j] * no3_layer2; // Dissolved inorganic nitrogen in layer 2 [mgN/L * m = gN/m2]
+        diss_IN3 = theta3 * par._depth3->val[j] * no3_layer3; // Dissolved inorganic nitrogen in layer 3 [mgN/L * m = gN/m2]
         Ts = Get_soil_temperature(atm._Ta->val[j], _LAI->val[j]);  // Soil temperature [Degree C]
 
         double moisture_function_threshold = par._deni_soil_moisture_thres->val[j];

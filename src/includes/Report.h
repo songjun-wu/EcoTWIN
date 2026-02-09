@@ -105,6 +105,7 @@ class Report {
     ofstream of__trans_age_GW;  // Transient age in Groundwater storage [days]
     ofstream of__trans_age_chanS;  // Transient age in Channel storage [days]
     ofstream of__NPP;  // Net primary production [gC/(m2*Ts)] 
+    ofstream of__canopy_conductance;  // Stomatal conductance for whole canopy  [m s-1]
     ofstream of__plant_green_CP;  //  Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]
     ofstream of__plant_wood_CP;  //   Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]
     ofstream of__plant_reserve_CP;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
@@ -135,10 +136,13 @@ class Report {
     ofstream of__doc_vadose;  // DOC in vadose storage [mgN/L]
     ofstream of__doc_GW;  // DOC in Groundwater storage [mgN/L]
     ofstream of__doc_chanS;  // DOC in Channel storage [mgN/L]
+    ofstream of__litter_fall_C;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
     ofstream of__soil_respiration_C;  // Soil respiration summarised in carbon [gC/m2]
     ofstream of__soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
+    ofstream of__respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     ofstream of__C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     ofstream of__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
+    ofstream of__plant_mobile_N;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
     ofstream of__no3_I;  // no3 in Canopy storage [mgN/L]
     ofstream of__no3_snow;  // no3 in Snow depth in [mgN/L]
     ofstream of__no3_pond;  // no3 in Ponding water in [mgN/L]
@@ -162,15 +166,8 @@ class Report {
     ofstream of__deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
     ofstream of__minerl_soil;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
     ofstream of__deni_river;  // Aquatic denitrification [mgN/L*m = gN/m2]
-    ofstream of__n2o_emission;  // N2O emission from soil due to soil decomposition and denitrification [mgN/L*m = gN/m2]
     ofstream of__fast_NP1_nonwood;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
-    ofstream of__fast_NP1_wood;  // Fast wood nitrogen storage in layer 1 (wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of wood pools are variable due to reserve inputs
     ofstream of__fast_NP1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-    ofstream of__fast_NP2;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
-    ofstream of__fast_NP3;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
-    ofstream of__humus_NP1;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-    ofstream of__humus_NP2;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
-    ofstream of__humus_NP3;  // Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
     ofstream of__humus_N;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
     ofstream of__fast_N;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
 
@@ -246,6 +243,7 @@ class Report {
     svector *_trans_age_GW_acc;  // Transient age in Groundwater storage [days]
     svector *_trans_age_chanS_acc;  // Transient age in Channel storage [days]
     svector *_NPP_acc;  // Net primary production [gC/(m2*Ts)] 
+    svector *_canopy_conductance_acc;  // Stomatal conductance for whole canopy  [m s-1]
     svector *_plant_green_CP_acc;  //  Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]
     svector *_plant_wood_CP_acc;  //   Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]
     svector *_plant_reserve_CP_acc;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
@@ -276,10 +274,13 @@ class Report {
     svector *_doc_vadose_acc;  // DOC in vadose storage [mgN/L]
     svector *_doc_GW_acc;  // DOC in Groundwater storage [mgN/L]
     svector *_doc_chanS_acc;  // DOC in Channel storage [mgN/L]
+    svector *_litter_fall_C_acc;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
     svector *_soil_respiration_C_acc;  // Soil respiration summarised in carbon [gC/m2]
     svector *_soil_decomposition_C_acc;  // Soil decomposition summarised in carbon [gC/m2]
+    svector *_respiration_river_C_acc;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     svector *_C4_flag_acc;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     svector *_doc_rain_acc;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
+    svector *_plant_mobile_N_acc;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
     svector *_no3_I_acc;  // no3 in Canopy storage [mgN/L]
     svector *_no3_snow_acc;  // no3 in Snow depth in [mgN/L]
     svector *_no3_pond_acc;  // no3 in Ponding water in [mgN/L]
@@ -303,15 +304,8 @@ class Report {
     svector *_deni_soil_acc;  // Soil denitrification [mgN/L*m = gN/m2]
     svector *_minerl_soil_acc;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
     svector *_deni_river_acc;  // Aquatic denitrification [mgN/L*m = gN/m2]
-    svector *_n2o_emission_acc;  // N2O emission from soil due to soil decomposition and denitrification [mgN/L*m = gN/m2]
     svector *_fast_NP1_nonwood_acc;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
-    svector *_fast_NP1_wood_acc;  // Fast wood nitrogen storage in layer 1 (wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of wood pools are variable due to reserve inputs
     svector *_fast_NP1_acc;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-    svector *_fast_NP2_acc;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
-    svector *_fast_NP3_acc;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
-    svector *_humus_NP1_acc;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-    svector *_humus_NP2_acc;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
-    svector *_humus_NP3_acc;  // Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
     svector *_humus_N_acc;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
     svector *_fast_N_acc;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
     /* end of Report */

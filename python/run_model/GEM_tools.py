@@ -445,6 +445,52 @@ def gen_param(run_path, Info, Param, param_arr):
     N_soil = len(soil_index)
     N_total = N_land_use + N_soil + 1
 
+    # Sort positions of parameters
+    counter = 0
+    for key in Param.ref.keys():
+        dict = Param.ref.get(key)
+        if dict['fix_value'] is None:
+            if dict['type'] == 'global':  # The first column is for global parameters
+                dict['position_start'] = counter
+                dict['position_end'] = counter + 1
+                counter += 1
+            elif dict['type'] == 'landuse':
+                dict['position_start'] = counter
+                dict['position_end'] = counter + N_land_use
+                counter += N_land_use
+            elif dict['type'] == 'soil':
+                dict['position_start'] = counter
+                dict['position_end'] = counter + N_soil
+                counter += N_soil
+
+    # Parameter prior check
+    if 'NC_ratio_plant_green' in Param.ref.keys():
+        NC_ratio_plant_green = param_arr[Param.ref['NC_ratio_plant_green']['position_start']]
+        NC_ratio_wood = param_arr[Param.ref['NC_ratio_plant_wood']['position_start']]
+        NC_ratio_fast_pool_nonwood = param_arr[Param.ref['NC_ratio_fast_pool_nonwood']['position_start']]
+        NC_ratio_fast_pool_wood = param_arr[Param.ref['NC_ratio_fast_pool_wood']['position_start']]
+        NC_ratio_humus_pool = param_arr[Param.ref['NC_ratio_humus_pool']['position_start']]
+
+        if (NC_ratio_plant_green/NC_ratio_fast_pool_nonwood)<1.3:
+            NC_ratio_plant_green = NC_ratio_fast_pool_nonwood * 1.3
+        if (NC_ratio_plant_green/NC_ratio_fast_pool_nonwood)>2:
+            NC_ratio_plant_green = NC_ratio_fast_pool_nonwood * 2
+        
+        if (NC_ratio_wood/NC_ratio_fast_pool_wood)<1.3:
+            NC_ratio_wood = NC_ratio_fast_pool_wood * 1.3
+        if (NC_ratio_wood/NC_ratio_fast_pool_wood)>2:
+            NC_ratio_wood = NC_ratio_fast_pool_wood * 2
+        
+        if (NC_ratio_humus_pool/NC_ratio_fast_pool_nonwood)>0.8:
+            NC_ratio_humus_pool = NC_ratio_fast_pool_nonwood * 0.8
+        
+        param_arr[Param.ref['NC_ratio_plant_green']['position_start']] = NC_ratio_plant_green
+        param_arr[Param.ref['NC_ratio_plant_wood']['position_start']] = NC_ratio_wood
+        param_arr[Param.ref['NC_ratio_fast_pool_nonwood']['position_start']] = NC_ratio_fast_pool_nonwood
+        param_arr[Param.ref['NC_ratio_fast_pool_wood']['position_start']] = NC_ratio_fast_pool_wood
+        param_arr[Param.ref['NC_ratio_humus_pool']['position_start']] = NC_ratio_humus_pool
+
+
     counter = 0
     lines = []
     for key in Param.ref.keys():
@@ -463,33 +509,29 @@ def gen_param(run_path, Info, Param, param_arr):
 
         else:
             if dict['type'] == 'global':  # The first column is for global parameters
-                if dict['log'] == 0:
-                    param_values[0] = mins[0] + (maxs[0] - mins[0]) * param_arr[counter]
-                else:
-                    log_mins = np.log(mins[0])
-                    log_maxs = np.log(maxs[0])
-                    param_values[0] = np.exp(log_mins + param_arr[counter] * (log_maxs - log_mins))
+                param_values[0] = assign_param_value(param_arr[counter], mins, maxs, dict['log'])
                 counter += 1
             elif dict['type'] == 'landuse':
-                if dict['log'] == 0:
-                    param_values[landuse_index] = mins + (maxs - mins) * param_arr[counter:counter+N_land_use]
-                else:
-                    log_mins = np.log(mins)
-                    log_maxs = np.log(maxs)
-                    param_values[landuse_index] = np.exp( log_mins + param_arr[counter:counter+N_land_use] * (log_maxs - log_mins))
+                param_values[landuse_index] = assign_param_value(param_arr[counter:counter+N_land_use], mins, maxs, dict['log'])
                 counter += N_land_use
             elif dict['type'] == 'soil':
-                if dict['log'] == 0:
-                    param_values[soil_index] = mins + (maxs - mins) * param_arr[counter:counter+N_soil]
-                else:
-                    log_mins = np.log(mins)
-                    log_maxs = np.log(maxs)
-                    param_values[soil_index] = np.exp( log_mins + param_arr[counter:counter+N_soil] * (log_maxs - log_mins))
+                param_values[soil_index] = assign_param_value(param_arr[counter:counter+N_soil], mins, maxs, dict['log'])
                 counter += N_soil
         text = key + ',' + (',').join(param_values.astype(np.str)) + '\n'
         lines.append(text)
     with open(run_path+'param.ini', 'w') as f:
         f.writelines(lines)
+
+
+def assign_param_value(param_arr, mins, maxs, log):
+    if log==0:
+        return mins + (maxs - mins) * param_arr
+    elif log==1:
+        log_mins = np.log(mins)
+        log_maxs = np.log(maxs)
+        return np.exp( log_mins + param_arr * (log_maxs - log_mins))
+    elif log==2:
+        return 1 / (mins + (maxs - mins) * param_arr)
 
   
 def gen_no3_addtion(run_path, Info):

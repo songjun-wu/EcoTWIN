@@ -244,8 +244,8 @@ class Param:
     #ref['carboxylation_rate'] = {'type':'landuse',   'log':0, 'file':'carboxylation_rate',   'min':np.array([95,75,75,35,0,0])*1e-6, 'max':np.array([105,85,85,65,30,30])*1e-6, 'fix_value':None} # Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)]
     #ref['ETransport'] = {'type':'landuse',   'log':0, 'file':'ETransport',   'min':np.array([180,130,130,100,20,20])*1e-6, 'max':np.array([200,160,160,120,80,80])*1e-6, 'fix_value':None} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)
     # Assimilation
-    ref['carboxylation_rate'] = {'type':'landuse',   'log':0, 'file':'carboxylation_rate',   'min':[np.array([100,80,80,50,70,70])*1e-7], 'max':[np.array([100,80,80,50,70,70])*1e-6], 'fix_value':None} # Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)]; np.array([100,80,80,50,70,70])*1e-6
-    ref['ETransport'] = {'type':'landuse',   'log':0, 'file':'ETransport',   'min':[np.array([190,145,145,110,130,130])*1e-7], 'max':[np.array([190,145,145,110,130,130])*1e-6], 'fix_value':None} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants); np.array([190,145,145,110,130,130])*1e-6
+    ref['carboxylation_rate'] = {'type':'landuse',   'log':0, 'file':'carboxylation_rate',   'min':[np.array([100,80,80,50,70,70])*1e-6], 'max':[np.array([100,80,80,50,70,70])*1e-6], 'fix_value':None} # Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)]; np.array([100,80,80,50,70,70])*1e-6
+    ref['ETransport'] = {'type':'landuse',   'log':0, 'file':'ETransport',   'min':[np.array([190,145,145,110,130,130])*1e-6], 'max':[np.array([190,145,145,110,130,130])*1e-6], 'fix_value':None} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants); np.array([190,145,145,110,130,130])*1e-6
     
     ref['C_in_LeafArea'] = {'type':'landuse',   'log':0, 'file':'C_in_LeafArea',   'min':[], 'max':[], 'fix_value':np.array([0.45, 0.45, 0.45, 0.25, 0.3, 0.3])/12} # Carbon content per leaf area in [m2(leaf)/gC] <== [m2(leaf)/mol(Carbon)/12]
     ref['LAI_shed_coef'] = {'type':'landuse',   'log':0, 'file':'LAI_shed_coef',   'min':[], 'max':[], 'fix_value':[0.0027, 0.0037, 0.0055, 0.0, 0.0015, 0.0015]} # Leaf shedding coefficient related to LAI; Time in which leaves are constantly shedded [days-1]
@@ -268,11 +268,11 @@ class Param:
     # Reference decomposition rates of carbon pools
     ref['decomposition_weight_fast_pool'] = {'type':'global',   'log':1, 'file':'decomposition_weight_fast_pool',   'min':[1e-2], 'max':[1e2], 'fix_value':None} # Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
     ref['decomposition_weight_humus_pool'] = {'type':'global',   'log':1, 'file':'decomposition_weight_humus_pool',   'min':[1e-2], 'max':[1e2], 'fix_value':None} # Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
-
+    ref['respiration_river'] = {'type':'global',   'log':1, 'file':'respiration_river',   'min':[1e-5], 'max':[1e-1], 'fix_value':[0.1]} # Reference rates of aquatic heterotrophic respiration [gC m-2 day-1]
 
     # === Nitrogen simulation ===
     ref['delta_no3_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_no3_init_GW',   'min':[-5,-1,-0.2,-0.2,-0.2,-0.2], 'max':[5,1,0.2,0.2,0.2,0.2], 'fix_value':None} # The adjustment of initial no3 composition
-    ref['denitrification_river']   = {'type':'landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None}
+    ref['denitrification_river']   = {'type':'landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-5]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None} # Reference rates of aquatic denitrification [gN m-2 day-1]
     #ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':None}
     #ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None}
     ref['denitrification_soil']   = {'type':'landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-4,1e-4,1e-4,1e-5,1e-5,1e-5], 'max':[0.8, 0.8, 0.5, 0.3, 0.1, 0.01], 'fix_value':None}
@@ -281,8 +281,8 @@ class Param:
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None}
     ref['deni_soil_moisture_thres']   = {'type':'global',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.2], 'max':[0.85], 'fix_value':None}
 
-    ref['NC_ratio_plant_green'] = {'type':'global',   'log':1, 'file':'NC_ratio_plant_green',   'min':[1/70], 'max':[1/16], 'fix_value':None} # Nitrogen carbon ratio in vegetation green pool  [gN/gC]
-    ref['NC_ratio_plant_wood'] = {'type':'global',   'log':1, 'file':'NC_ratio_plant_wood',   'min':[1/250], 'max':[1/50], 'fix_value':None} # Nitrogen carbon ratio in vegetation wood pool  [gN/gC]
-    ref['NC_ratio_fast_pool_nonwood'] = {'type':'global',   'log':1, 'file':'NC_ratio_fast_pool_nonwood',   'min':[1/150], 'max':[1/30], 'fix_value':None} # Nitrogen carbon ratio in non-wood fast (litter) pool (acid, ethanol, and nonsoluble)  [gN/gC]
-    ref['NC_ratio_fast_pool_wood'] = {'type':'global',   'log':1, 'file':'NC_ratio_fast_pool_wood',   'min':[1/1400], 'max':[1/250], 'fix_value':None} # Nitrogen carbon ratio in wood fast (litter) pool (acid, ethanol, and nonsoluble)  [gN/gC]
-    ref['NC_ratio_humus_pool'] = {'type':'global',   'log':1, 'file':'NC_ratio_humus_pool',   'min':[1/30], 'max':[1/8], 'fix_value':None} # Nitrogen carbon ratio in humus pool  [gN/gC]
+    ref['NC_ratio_plant_green'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_green',   'min':[16], 'max':[70], 'fix_value':None} # Nitrogen carbon ratio in vegetation green pool  [gN/gC]; log:2 means the parameter values are the inverse of the nitrogen carbon ratio for mathematic simplicity
+    ref['NC_ratio_plant_wood'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_wood',   'min':[50], 'max':[250], 'fix_value':None} # Nitrogen carbon ratio in vegetation wood pool  [gN/gC]
+    ref['NC_ratio_fast_pool_nonwood'] = {'type':'global',   'log':2, 'file':'NC_ratio_fast_pool_nonwood',   'min':[30], 'max':[150], 'fix_value':None} # Nitrogen carbon ratio in non-wood fast (litter) pool (acid, ethanol, and nonsoluble)  [gN/gC]
+    ref['NC_ratio_fast_pool_wood'] = {'type':'global',   'log':2, 'file':'NC_ratio_fast_pool_wood',   'min':[250], 'max':[1400], 'fix_value':None} # Nitrogen carbon ratio in wood fast (litter) pool (acid, ethanol, and nonsoluble)  [gN/gC]
+    ref['NC_ratio_humus_pool'] = {'type':'global',   'log':2, 'file':'NC_ratio_humus_pool',   'min':[8], 'max':[30], 'fix_value':None} # Nitrogen carbon ratio in humus pool  [gN/gC]

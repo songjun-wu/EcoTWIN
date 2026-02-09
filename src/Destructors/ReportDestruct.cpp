@@ -44,12 +44,8 @@ int Report::dtor(Control &ctrl){
   if (of__rPerc2.is_open())  of__rPerc2.close();
   if (of__rPerc3.is_open())  of__rPerc3.close();
   if (of__rPerc_vadose.is_open())  of__rPerc_vadose.close();
-  if (of__Ei.is_open())  of__Ei.close();
   if (of__Es.is_open())  of__Es.close();
   if (of__Tr.is_open())  of__Tr.close();
-  if (of__Tr1.is_open())  of__Tr1.close();
-  if (of__Tr2.is_open())  of__Tr2.close();
-  if (of__Tr3.is_open())  of__Tr3.close();
   if (of__irrigation_from_river.is_open())  of__irrigation_from_river.close();
   if (of__irrigation_from_GW.is_open())  of__irrigation_from_GW.close();
   if (of__drainage_from_soil.is_open())  of__drainage_from_soil.close();
@@ -107,8 +103,10 @@ int Report::dtor(Control &ctrl){
   if (of__doc_vadose.is_open())  of__doc_vadose.close();
   if (of__doc_GW.is_open())  of__doc_GW.close();
   if (of__doc_chanS.is_open())  of__doc_chanS.close();
+  if (of__litter_fall_C.is_open())  of__litter_fall_C.close();
   if (of__soil_respiration_C.is_open())  of__soil_respiration_C.close();
   if (of__soil_decomposition_C.is_open())  of__soil_decomposition_C.close();
+  if (of__respiration_river_C.is_open())  of__respiration_river_C.close();
   if (of__no3_I.is_open())  of__no3_I.close();
   if (of__no3_snow.is_open())  of__no3_snow.close();
   if (of__no3_pond.is_open())  of__no3_pond.close();
@@ -123,7 +121,6 @@ int Report::dtor(Control &ctrl){
   if (of__deni_soil.is_open())  of__deni_soil.close();
   if (of__minerl_soil.is_open())  of__minerl_soil.close();
   if (of__deni_river.is_open())  of__deni_river.close();
-  if (of__n2o_emission.is_open())  of__n2o_emission.close();
   if (of__humus_N.is_open())  of__humus_N.close();
   if (of__fast_N.is_open())  of__fast_N.close();
   if (ctrl.report__I==2) delete _I_acc;
@@ -147,12 +144,8 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__rPerc2==2) delete _rPerc2_acc;
   if (ctrl.report__rPerc3==2) delete _rPerc3_acc;
   if (ctrl.report__rPerc_vadose==2) delete _rPerc_vadose_acc;
-  if (ctrl.report__Ei==2) delete _Ei_acc;
   if (ctrl.report__Es==2) delete _Es_acc;
   if (ctrl.report__Tr==2) delete _Tr_acc;
-  if (ctrl.report__Tr1==2) delete _Tr1_acc;
-  if (ctrl.report__Tr2==2) delete _Tr2_acc;
-  if (ctrl.report__Tr3==2) delete _Tr3_acc;
   if (ctrl.report__irrigation_from_river==2) delete _irrigation_from_river_acc;
   if (ctrl.report__irrigation_from_GW==2) delete _irrigation_from_GW_acc;
   if (ctrl.report__drainage_from_soil==2) delete _drainage_from_soil_acc;
@@ -210,8 +203,10 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__doc_vadose==2) delete _doc_vadose_acc;
   if (ctrl.report__doc_GW==2) delete _doc_GW_acc;
   if (ctrl.report__doc_chanS==2) delete _doc_chanS_acc;
+  if (ctrl.report__litter_fall_C==2) delete _litter_fall_C_acc;
   if (ctrl.report__soil_respiration_C==2) delete _soil_respiration_C_acc;
   if (ctrl.report__soil_decomposition_C==2) delete _soil_decomposition_C_acc;
+  if (ctrl.report__respiration_river_C==2) delete _respiration_river_C_acc;
   if (ctrl.report__no3_I==2) delete _no3_I_acc;
   if (ctrl.report__no3_snow==2) delete _no3_snow_acc;
   if (ctrl.report__no3_pond==2) delete _no3_pond_acc;
@@ -226,7 +221,6 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__deni_soil==2) delete _deni_soil_acc;
   if (ctrl.report__minerl_soil==2) delete _minerl_soil_acc;
   if (ctrl.report__deni_river==2) delete _deni_river_acc;
-  if (ctrl.report__n2o_emission==2) delete _n2o_emission_acc;
   if (ctrl.report__humus_N==2) delete _humus_N_acc;
   if (ctrl.report__fast_N==2) delete _fast_N_acc;
   /* end of Report */

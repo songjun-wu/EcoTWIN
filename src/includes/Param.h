@@ -108,6 +108,7 @@ class Param {
   vector<double> frac_litter_to_nonsoluble_wood;
   vector<double> decomposition_weight_fast_pool;
   vector<double> decomposition_weight_humus_pool;
+  vector<double> respiration_river;
   vector<double> NC_ratio_plant_green;
   vector<double> NC_ratio_plant_wood;
   vector<double> NC_ratio_fast_pool_nonwood;
@@ -154,9 +155,10 @@ class Param {
   svector *_CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   svector *_delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
   svector *_delta_no3_init_GW;  // Initial no3 of GW storage [‰]
-  svector *_denitrification_river;  // Reference rates of aquatic denitrification [-]
+  svector *_denitrification_river;  // Reference rates of aquatic denitrification [day-1]
   svector *_denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   svector *_deni_soil_moisture_thres;  // The moisture threshold of soil denitrification
+  svector *_respiration_river;  // Reference rates of aquatic heterotrophic respiration [day-1]
   svector *_NC_ratio_plant_green;  // Nitrogen carbon ratio in vegetation green pool  [gN/gC] 
   svector *_NC_ratio_plant_wood;  // Nitrogen carbon ratio in vegetation wood pool  [gN/gC] 
   svector *_NC_ratio_fast_pool_nonwood;  // Nitrogen carbon ratio in non-wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] 

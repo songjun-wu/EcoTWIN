@@ -49,7 +49,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
     double potential_N_for_plant_growth_layer1, potential_N_for_plant_growth_layer2, potential_N_for_plant_growth_layer3; // Potential nitrogen uptake by vegetation for plant growth in each layer [gN/m2]
     double actual_N_for_plant_growth; // Actual nitrogen uptake by vegetation for plant growth in all layers [gN/m2]
     double plant_uptake; // Plant uptake in each layer [gN/m2]
-    double fct_N_limitation;  // Limitation of vegetation growth of green and wood pools based on N availability; plant_reserve_CP pool is not affected; Set to 1 if nitrogen simulation is not enabled is not activated
+    double fct_N_limitation_green, fct_N_limitation_wood;  // Limitation of vegetation growth of green and wood pools based on N availability; plant_reserve_CP pool is not affected; Set to 1 if nitrogen simulation is not enabled is not activated
 
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -73,7 +73,9 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       froot_layer2 = _froot_layer2->val[j];  // Root fraction in layer 2 [-]
       froot_layer3 = _froot_layer3->val[j];  // Root fraction in layer 3 [-]
 
-      fct_N_limitation = 1.0;  // Limitation of vegetation growth of green and wood pools based on N availability; plant_reserve_CP pool is not affected; Set to 1 if nitrogen simulation is not enabled is not activated
+      fct_N_limitation_green = 1.0;  // Limitation of vegetation growth of green and wood pools based on N availability; plant_reserve_CP pool is not affected; Set to 1 if nitrogen simulation is not enabled is not activated
+      fct_N_limitation_wood = 1.0;  
+
 
 
 
@@ -120,10 +122,10 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       if (NPP <= 0){  // Negetive NPP
         NPP_2_reserve = max(NPP, - plant_reserve_CP);
         NPP -= NPP_2_reserve;
-        NPP_2_green = max(NPP, - plant_green_CP);
-        NPP -= NPP_2_green;
-        NPP_2_wood = max(NPP, - plant_wood_CP);
-        NPP -= NPP_2_wood;
+        //NPP_2_green = max(NPP, - plant_green_CP);
+        //NPP -= NPP_2_green;
+        //NPP_2_wood = max(NPP, - plant_wood_CP);
+        //NPP -= NPP_2_wood;
 
       } else {
         // Positive NPP: Potential growth of vegetation pools
@@ -174,62 +176,124 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       /* ======= For nitrogen: mineral N uptake to sustain vegetation growth ======= */
       /* ================================================== */
       if (ctrl.opt_nitrogen_sim){
-        potential_N_for_plant_growth = (NPP_2_green)*par._NC_ratio_plant_green->val[j] + NPP_2_wood*par._NC_ratio_plant_wood->val[j];
-        if (potential_N_for_plant_growth > roundoffERR) {
-          // Actual growth of vegetation pools with N limitation
-          // Get mineral N pools in each layer
-          mineral_N_layer1 = _no3_layer1->val[j] * _theta1->val[j] * depth1;
-          mineral_N_layer2 = _no3_layer2->val[j] * _theta2->val[j] * depth2;
-          mineral_N_layer3 = _no3_layer3->val[j] * _theta3->val[j] * depth3;
+        double potential_N_for_green_growth = NPP_2_green * par._NC_ratio_plant_green->val[j];
+        double potential_N_for_wood_growth = NPP_2_wood * par._NC_ratio_plant_wood->val[j];
+        double plant_uptake_cumulative = 0.0;  // Cumulative nitrogen uptake by vegetation for plant growth in all layers
+        double plant_mobile_N = _plant_mobile_N->val[j];  // Plant mobile N availability [gN/m2]
 
-          // Get potential nitrogen uptake in each layer based on root distribution
-          potential_N_for_plant_growth_layer1 = potential_N_for_plant_growth * froot_layer1;
-          potential_N_for_plant_growth_layer2 = potential_N_for_plant_growth * froot_layer2;
-          potential_N_for_plant_growth_layer3 = potential_N_for_plant_growth * froot_layer3;
+        // Get mineral N pools in each layer
+        mineral_N_layer1 = _no3_layer1->val[j] * _theta1->val[j] * depth1;
+        mineral_N_layer2 = _no3_layer2->val[j] * _theta2->val[j] * depth2;
+        mineral_N_layer3 = _no3_layer3->val[j] * _theta3->val[j] * depth3;
 
-          actual_N_for_plant_growth = 0.0;  // Cumulative nitrogen uptake by vegetation for plant growth in all layers
-          // Plant nitrogen uptake in each layer
+        // First sort green pool growth
+        if (potential_N_for_green_growth > roundoffERR) {
+          // Green pool growth is supplied by Plant mobile N availability and soil mobile N
+          if (potential_N_for_green_growth < plant_mobile_N) {  // If there is sufficient Plant mobile N availability
+            fct_N_limitation_wood = 1.0;
+            plant_mobile_N -= potential_N_for_green_growth;
+          } else {
+            actual_N_for_plant_growth = 0.0;  // Cumulative nitrogen uptake by vegetation for plant growth in all layers
+            // Get potential nitrogen uptake from soil mobile N in each layer based on root distribution
+            potential_N_for_plant_growth_layer1 = (potential_N_for_green_growth - plant_mobile_N) * froot_layer1;
+            potential_N_for_plant_growth_layer2 = (potential_N_for_green_growth - plant_mobile_N) * froot_layer2;
+            potential_N_for_plant_growth_layer3 = (potential_N_for_green_growth - plant_mobile_N) * froot_layer3;
+            // Use up all plant mobile N for green pool growth
+            actual_N_for_plant_growth += plant_mobile_N;
+            plant_mobile_N = 0.0;
+            //
+            
+            // The remaining nitrogen are taken from soil mobile N in each layer
+            if (mineral_N_layer1 > roundoffERR) {
+              plant_uptake = min(potential_N_for_plant_growth_layer1, mineral_N_layer1);
+              actual_N_for_plant_growth += plant_uptake;
+              plant_uptake_cumulative += plant_uptake;
+              mineral_N_layer1 -= plant_uptake;
+            }
+            if (mineral_N_layer2 > roundoffERR) {
+              plant_uptake = min(potential_N_for_plant_growth_layer2, mineral_N_layer2);
+              actual_N_for_plant_growth += plant_uptake;
+              plant_uptake_cumulative += plant_uptake;
+              mineral_N_layer2 -= plant_uptake;
+            }
+            if (mineral_N_layer3 > roundoffERR) {
+              plant_uptake = min(potential_N_for_plant_growth_layer3, mineral_N_layer3);
+              actual_N_for_plant_growth += plant_uptake;
+              plant_uptake_cumulative += plant_uptake;
+              mineral_N_layer3 -= plant_uptake;
+            }
+
+            // fct_N_limitation is calculated as the ratio between actual and potential nitrogen uptake
+            fct_N_limitation_green = actual_N_for_plant_growth / potential_N_for_green_growth;  // Limitation of vegetation growth of green pool based on N availability
+          } 
+        } else {  // If there is no potential nitrogen for green pool growth
+          fct_N_limitation_green = 1.0;
+        }         
+          
+        // Then sort wood pool growth
+        // Wood pool growth is supplied only by soil mobile N
+        if (potential_N_for_wood_growth > roundoffERR) {
+          // Get potential nitrogen uptake from soil mobile N in each layer based on root distribution
+          potential_N_for_plant_growth_layer1 = (potential_N_for_wood_growth) * froot_layer1;
+          potential_N_for_plant_growth_layer2 = (potential_N_for_wood_growth) * froot_layer2;
+          potential_N_for_plant_growth_layer3 = (potential_N_for_wood_growth) * froot_layer3;
+
+          actual_N_for_plant_growth = 0.0;  // Cumulative nitrogen uptake by vegetation for wood growth in all layers
+          // Nitrogen uptake from soil mobile N in each layer
           if (mineral_N_layer1 > roundoffERR) {
             plant_uptake = min(potential_N_for_plant_growth_layer1, mineral_N_layer1);
             actual_N_for_plant_growth += plant_uptake;
+            plant_uptake_cumulative += plant_uptake;
             mineral_N_layer1 -= plant_uptake;
           }
           if (mineral_N_layer2 > roundoffERR) {
             plant_uptake = min(potential_N_for_plant_growth_layer2, mineral_N_layer2);
             actual_N_for_plant_growth += plant_uptake;
+            plant_uptake_cumulative += plant_uptake;
             mineral_N_layer2 -= plant_uptake;
           }
           if (mineral_N_layer3 > roundoffERR) {
             plant_uptake = min(potential_N_for_plant_growth_layer3, mineral_N_layer3);
             actual_N_for_plant_growth += plant_uptake;
+            plant_uptake_cumulative += plant_uptake;
             mineral_N_layer3 -= plant_uptake;
           }
-          
           // fct_N_limitation is calculated as the ratio between actual and potential nitrogen uptake
-          fct_N_limitation = actual_N_for_plant_growth / potential_N_for_plant_growth;  // Limitation of vegetation growth of green and wood pools based on N availability
+          fct_N_limitation_wood = actual_N_for_plant_growth / potential_N_for_wood_growth;  // Limitation of vegetation growth of wood pool based on N availability
+        }  else {
+          fct_N_limitation_wood = 1.0;
+        }
+        
+        // Update global variables
+        _no3_layer1->val[j] = mineral_N_layer1 / (_theta1->val[j] * depth1);
+        _no3_layer2->val[j] = mineral_N_layer2 / (_theta2->val[j] * depth2);
+        _no3_layer3->val[j] = mineral_N_layer3 / (_theta3->val[j] * depth3);
+        _plant_mobile_N->val[j] = plant_mobile_N;  // Update plant mobile N availability [gN/m2]
+        _plant_uptake->val[j] = plant_uptake_cumulative;  // Update plant uptake from soil mineral N pools [gN/m2]       
 
-          // Update global variables
-          _no3_layer1->val[j] = mineral_N_layer1 / (_theta1->val[j] * depth1);
-          _no3_layer2->val[j] = mineral_N_layer2 / (_theta2->val[j] * depth2);
-          _no3_layer3->val[j] = mineral_N_layer3 / (_theta3->val[j] * depth3);
-          _plant_uptake->val[j] = actual_N_for_plant_growth;  // Update plant uptake [gN/m2]          
-      } else {
-        fct_N_limitation = 1.0;  // vegetation growth is little thus not limited by N availability
-      }
-    }  // end if (ctrl.opt_nitrogen_sim)
+      }  // end if (ctrl.opt_nitrogen_sim)
+
+
 
 
     /* ======= Update carbon variables ======= */
-    plant_green_CP += NPP_2_green * fct_N_limitation;  
-    plant_wood_CP += NPP_2_wood * fct_N_limitation;
+    // Apply N limitation to NPP for vegetation growth
+    NPP_2_green *= fct_N_limitation_green;
+    NPP_2_wood *= fct_N_limitation_wood;
+    // NPP_2_reserve is not limited by N availability, as it contains only nitrogen-free sugar
+    // NPP_2_root_exudates is not limited by N availability, as it contains only nitrogen-free sugar
+    // Update vegetation carbon pools
+    plant_green_CP += NPP_2_green;  
+    plant_wood_CP += NPP_2_wood;
     plant_reserve_CP += NPP_2_reserve;
-    //NPP_2_root_exudates *= 1; // Root exudates is not limited by N availability, as it contains only nitrogen-free sugar
-    
     _plant_green_CP->val[j] = plant_green_CP;
     _plant_wood_CP->val[j] = plant_wood_CP;
     _plant_reserve_CP->val[j] = plant_reserve_CP;
+    // Update actual NPP
     _NPP->val[j] = NPP_2_green + NPP_2_wood + NPP_2_reserve + NPP_2_root_exudates;
 
+
+    
     
  
     /* ============================================================= */
@@ -285,6 +349,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
     _doc_layer1->val[j] = soluble_CP1 / (_theta1->val[j] * depth1);
     _doc_layer2->val[j] = soluble_CP2 / (_theta2->val[j] * depth2);
     _doc_layer3->val[j] = soluble_CP3 / (_theta3->val[j] * depth3);
+    _litter_fall_C->val[j] = C_green_2_litter_nonwood + C_wood_2_litter_wood + C_plant_reserve_CP_2_litter_nonwood + NPP_2_root_exudates;  // Litter fall from vegetation pools to litter pools [gC m2-1 d-1]
     
     /* =============== Nitrogen simulation =============== */
     /* ======= For nitrogen: nitrogen addtion from vegetation to litter pools ======= */
@@ -292,7 +357,6 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
     if (ctrl.opt_nitrogen_sim){
       // Nitrogen carbon ratio is constant in acid, ethanol, and nonsoluble wood litter pools, thus nitrogen addition does not need explicit calculation
       // Nitrogen carbon ratio is varaible in non-wood pools in the first layer and DON pool across all layers
-      
       double soluble_DON_NP1 = _don_layer1->val[j] * _theta1->val[j] * depth1;
       double soluble_DON_NP2 = _don_layer2->val[j] * _theta2->val[j] * depth2;
       double soluble_DON_NP3 = _don_layer3->val[j] * _theta3->val[j] * depth3;
@@ -308,24 +372,23 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       // Non-wood pools in the first layer
       // From green pool to litter pools
       _fast_NP1_nonwood->val[j] += (C_green_2_litter_nonwood) * (1 - par._frac_litter_to_soluble_nonwood->val[j]) * par._NC_ratio_fast_pool_nonwood->val[j];  // Only green pool contains ntrogen (reserve pool is nitrogen free)
-      soluble_DON_NP1 += (C_green_2_litter_nonwood) * par._frac_litter_to_soluble_nonwood->val[j] * par._NC_ratio_fast_pool_nonwood->val[j];
-      mineralisation_soil_each_layer = (C_green_2_litter_nonwood) * (par._NC_ratio_plant_green->val[j] - par._NC_ratio_fast_pool_nonwood->val[j]);
-      soluble_DIN_NP1 += mineralisation_soil_each_layer;
-      mineralisation_soil += mineralisation_soil_each_layer;
+      soluble_DON_NP1 += (C_green_2_litter_nonwood) * par._frac_litter_to_soluble_nonwood->val[j] * par._NC_ratio_fast_pool_nonwood->val[j]; 
+      _plant_mobile_N->val[j] += (C_green_2_litter_nonwood) * (par._NC_ratio_plant_green->val[j] - par._NC_ratio_fast_pool_nonwood->val[j]); // Excess N goes to plant mobile N pool
+      
      
       // Wood pools in the first layer
       // No need to update fast_NP1_wood because all wood pools have consistent NC ratio as par._NC_ratio_fast_pool_wood->val[j]; so we only need to track fast carbon pools
       C_wood_2_litter_wood_each_layer = C_wood_2_litter_wood * froot_layer1;
       soluble_DON_NP1 += C_wood_2_litter_wood_each_layer * par._frac_litter_to_soluble_wood->val[j] * par._NC_ratio_fast_pool_wood->val[j];
-      mineralisation_soil_each_layer = C_wood_2_litter_wood_each_layer * (par._NC_ratio_plant_wood->val[j] - par._NC_ratio_fast_pool_wood->val[j]);
+      mineralisation_soil_each_layer = C_wood_2_litter_wood_each_layer * (par._NC_ratio_plant_wood->val[j] - par._NC_ratio_fast_pool_wood->val[j]);  // Excess N goes to soil mobile N pool
       soluble_DIN_NP1 += mineralisation_soil_each_layer;
       mineralisation_soil += mineralisation_soil_each_layer;
       
       // Wood pools in the second layer
       // No need to update fast_NP1_wood because all wood pools have consistent NC ratio as par._NC_ratio_fast_pool_wood->val[j]; so we only need to track fast carbon pools
       C_wood_2_litter_wood_each_layer = C_wood_2_litter_wood * froot_layer2;
-      soluble_DON_NP2 += C_wood_2_litter_wood_each_layer * par._frac_litter_to_soluble_wood->val[j] * par._NC_ratio_fast_pool_wood->val[j];
-      mineralisation_soil_each_layer = C_wood_2_litter_wood_each_layer * (par._NC_ratio_plant_wood->val[j] - par._NC_ratio_fast_pool_wood->val[j]);
+      soluble_DON_NP2 += C_wood_2_litter_wood_each_layer * par._frac_litter_to_soluble_wood->val[j] * par._NC_ratio_fast_pool_wood->val[j];  
+      mineralisation_soil_each_layer = C_wood_2_litter_wood_each_layer * (par._NC_ratio_plant_wood->val[j] - par._NC_ratio_fast_pool_wood->val[j]);  // Excess N goes to soil mobile N pool
       soluble_DIN_NP2 += mineralisation_soil_each_layer;
       mineralisation_soil += mineralisation_soil_each_layer;
 
@@ -333,7 +396,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       // No need to update fast_NP1_wood because all wood pools have consistent NC ratio as par._NC_ratio_fast_pool_wood->val[j]; so we only need to track fast carbon pools
       C_wood_2_litter_wood_each_layer = C_wood_2_litter_wood * froot_layer3;
       soluble_DON_NP3 += C_wood_2_litter_wood_each_layer * par._frac_litter_to_soluble_wood->val[j] * par._NC_ratio_fast_pool_wood->val[j];
-      mineralisation_soil_each_layer = C_wood_2_litter_wood_each_layer * (par._NC_ratio_plant_wood->val[j] - par._NC_ratio_fast_pool_wood->val[j]);
+      mineralisation_soil_each_layer = C_wood_2_litter_wood_each_layer * (par._NC_ratio_plant_wood->val[j] - par._NC_ratio_fast_pool_wood->val[j]);  // Excess N goes to soil mobile N pool
       soluble_DIN_NP3 += mineralisation_soil_each_layer;
       mineralisation_soil += mineralisation_soil_each_layer;
       
@@ -345,8 +408,51 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       _no3_layer2->val[j] = soluble_DIN_NP2 / (_theta2->val[j] * depth2);
       _no3_layer3->val[j] = soluble_DIN_NP3 / (_theta3->val[j] * depth3);
       _minerl_soil->val[j] += mineralisation_soil;
+
+      // ================== MASS BALANCE CHECKS ==================
+      /*
+      double plant_C_new = _plant_green_CP->val[j] + _plant_wood_CP->val[j] + _plant_reserve_CP->val[j];
+      double fast_C_new = _acid_CP1_nonwood->val[j] + _ethanol_CP1_nonwood->val[j] + _nonsoluble_CP1_nonwood->val[j] + 
+                          _acid_CP1_wood->val[j] + _ethanol_CP1_wood->val[j] + _nonsoluble_CP1_wood->val[j] + 
+                          _acid_CP2_wood->val[j] + _ethanol_CP2_wood->val[j] + _nonsoluble_CP2_wood->val[j] + 
+                          _acid_CP3_wood->val[j] + _ethanol_CP3_wood->val[j] + _nonsoluble_CP3_wood->val[j];
+      double soluble_CP_new = soluble_CP1 + soluble_CP2 + soluble_CP3;
+      double humus_CP_new = _humus_CP1->val[j] + _humus_CP2->val[j] + _humus_CP3->val[j];
+
+      double plant_N_new = _plant_green_CP->val[j]*par._NC_ratio_plant_green->val[j] + _plant_wood_CP->val[j]*par._NC_ratio_plant_wood->val[j] +  _plant_mobile_N->val[j];
+      double fast_N_new = _fast_NP1_nonwood->val[j] + (fast_C_new - (_acid_CP1_nonwood->val[j] + _ethanol_CP1_nonwood->val[j] + _nonsoluble_CP1_nonwood->val[j]))*par._NC_ratio_fast_pool_wood->val[j];
+      double soluble_NP_new = _don_layer1->val[j]*_theta1->val[j]*depth1+_don_layer2->val[j]*_theta2->val[j]*depth2+_don_layer3->val[j]*_theta3->val[j]*depth3;
+      double DIN_new = _no3_layer1->val[j]*_theta1->val[j]*depth1+_no3_layer2->val[j]*_theta2->val[j]*depth2+_no3_layer3->val[j]*_theta3->val[j]*depth3;
+
+      // Soil litter C pool: Mass balance check passed
+      //double soil_litter_C_input = C_green_2_litter_nonwood + C_wood_2_litter_wood + C_plant_reserve_CP_2_litter_nonwood + NPP_2_root_exudates;
+      //double soil_litter_C_output = 0;
+      //double balance_soil_litter_C = (fast_C_new+soluble_CP_new+humus_CP_new) - (fast_C_old+soluble_CP_old+humus_CP_old) - soil_litter_C_input + soil_litter_C_output;
+
+      // Plant N pool:Mass balance check passed
+      //double plant_N_input = _plant_uptake->val[j];  // Some nitrogen were supplied by plant mobile N pool
+      //double plant_N_output = C_green_2_litter_nonwood*par._NC_ratio_plant_green->val[j] + C_wood_2_litter_wood*par._NC_ratio_plant_wood->val[j] - C_green_2_litter_nonwood*(par._NC_ratio_plant_green->val[j]-par._NC_ratio_fast_pool_nonwood->val[j]);
+      //double balance_plant_N = (plant_N_new-plant_N_old) - plant_N_input + plant_N_output;
+      
+      // Soil litter N pool: Mass balance check passed
+      //double soil_litter_N_input =  C_green_2_litter_nonwood*par._NC_ratio_fast_pool_nonwood->val[j]+C_wood_2_litter_wood*par._NC_ratio_fast_pool_wood->val[j];
+      //double soil_litter_N_output = 0;
+      //double balance_soil_litter_N = (fast_N_new+ + soluble_NP_new) - (fast_N_old + soluble_NP_old) - soil_litter_N_input + soil_litter_N_output;
+
+      // DIN: Mass balance check passed
+      //double DIN_input = C_wood_2_litter_wood * (par._NC_ratio_plant_wood->val[j] - par._NC_ratio_fast_pool_wood->val[j]);
+      //double DIN_output = _plant_uptake->val[j];
+      //double balance_DIN = (DIN_new - DIN_old) - DIN_input + DIN_output ;
+
+      //if (abs(balance_DIN) > roundoffERR*100) cout<< j<<"  "<<balance_DIN<<endl;
+      //if (j==100) cout<<balance_soil_litter_N<<"  "<<fast_N_new - fast_N_old<<"  "<<soil_litter_N_input<<"     ";
+      //if (j==100) cout<<froot_layer1+froot_layer2+froot_layer3<<endl;
+      */
+
+
       
     }   // end if (ctrl.opt_nitrogen_sim)
+
 
   }  // end for (unsigned int j = 0; j < _sortedGrid.row.size(); j++)
 

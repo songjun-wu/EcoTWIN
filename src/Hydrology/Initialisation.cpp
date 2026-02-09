@@ -84,14 +84,14 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
       for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         // Set Fast litter pools
         _fast_NP1_nonwood->val[j] = (_acid_CP1_nonwood->val[j] + _ethanol_CP1_nonwood->val[j] + _nonsoluble_CP1_nonwood->val[j]) * par._NC_ratio_fast_pool_nonwood->val[j];
-        _fast_NP1_wood->val[j] = (_acid_CP1_wood->val[j] + _ethanol_CP1_wood->val[j] + _nonsoluble_CP1_wood->val[j]) * par._NC_ratio_fast_pool_wood->val[j];
-        _fast_NP1->val[j] = _fast_NP1_nonwood->val[j] + _fast_NP1_wood->val[j];
-        _fast_NP2->val[j] = (_acid_CP2_wood->val[j] + _ethanol_CP2_wood->val[j] + _nonsoluble_CP2_wood->val[j]) * par._NC_ratio_fast_pool_wood->val[j];
-        _fast_NP3->val[j] = (_acid_CP3_wood->val[j] + _ethanol_CP3_wood->val[j] + _nonsoluble_CP3_wood->val[j]) * par._NC_ratio_fast_pool_wood->val[j];
+        //_fast_NP1_wood->val[j] = (_acid_CP1_wood->val[j] + _ethanol_CP1_wood->val[j] + _nonsoluble_CP1_wood->val[j]) * par._NC_ratio_fast_pool_wood->val[j];
+        //_fast_NP1->val[j] = _fast_NP1_nonwood->val[j] + _fast_NP1_wood->val[j];
+        //_fast_NP2->val[j] = (_acid_CP2_wood->val[j] + _ethanol_CP2_wood->val[j] + _nonsoluble_CP2_wood->val[j]) * par._NC_ratio_fast_pool_wood->val[j];
+        //_fast_NP3->val[j] = (_acid_CP3_wood->val[j] + _ethanol_CP3_wood->val[j] + _nonsoluble_CP3_wood->val[j]) * par._NC_ratio_fast_pool_wood->val[j];
         // Set Slow humus pools
-        _humus_NP1->val[j] = _humus_CP1->val[j] * par._NC_ratio_humus_pool->val[j];
-        _humus_NP2->val[j] = _humus_CP2->val[j] * par._NC_ratio_humus_pool->val[j];
-        _humus_NP3->val[j] = _humus_CP3->val[j] * par._NC_ratio_humus_pool->val[j];       
+        //_humus_NP1->val[j] = _humus_CP1->val[j] * par._NC_ratio_humus_pool->val[j];
+        //_humus_NP2->val[j] = _humus_CP2->val[j] * par._NC_ratio_humus_pool->val[j];
+        //_humus_NP3->val[j] = _humus_CP3->val[j] * par._NC_ratio_humus_pool->val[j];       
 
         // Set DON concentrations
         _don_I->val[j] = _doc_I->val[j] * par._NC_ratio_fast_pool_wood->val[j];

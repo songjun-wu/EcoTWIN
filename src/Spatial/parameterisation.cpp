@@ -414,6 +414,13 @@ int Param::Parameterisation(Control &ctrl){
         _deni_soil_moisture_thres->val[j] += param_category->val[k][j] * deni_soil_moisture_thres[k];
      }}}
   
+  _respiration_river->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (respiration_river[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _respiration_river->val[j] += param_category->val[k][j] * respiration_river[k];
+     }}}
+  
   _NC_ratio_plant_green->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (NC_ratio_plant_green[k]!=nodata) {
@@ -595,12 +602,12 @@ int Param::Parameterisation(Control &ctrl){
 
 
   /* Some parameters need to re-examined after parameterisation */
-  if (ctrl.opt_nitrogen_sim == 1){
-    _NC_ratio_plant_green->higher_than(*_NC_ratio_fast_pool_nonwood);
-    _NC_ratio_plant_wood->higher_than(*_NC_ratio_fast_pool_wood);
-    _NC_ratio_humus_pool->higher_than(*_NC_ratio_fast_pool_nonwood);
-    _NC_ratio_humus_pool->higher_than(*_NC_ratio_fast_pool_wood);
-  }
+  //if (ctrl.opt_nitrogen_sim == 1){
+  //  _NC_ratio_plant_green->higher_than(*_NC_ratio_fast_pool_nonwood);
+  //  _NC_ratio_plant_wood->higher_than(*_NC_ratio_fast_pool_wood);
+  //  _NC_ratio_humus_pool->higher_than(*_NC_ratio_fast_pool_nonwood);
+  //  _NC_ratio_humus_pool->higher_than(*_NC_ratio_fast_pool_wood);
+  //}
 
   return EXIT_SUCCESS;
 }

@@ -232,7 +232,7 @@ elif mode == 'forward_sep':
         param_all = np.fromfile(param_path).reshape(-1, param_N)
 
         #for chainID in range(nchains):
-        for chainID in [3]:  # TODO
+        for chainID in [7]:  # TODO
             print(catchment_ID, chainID)
             
 

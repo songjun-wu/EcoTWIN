@@ -208,11 +208,13 @@ int Basin::dtor(Control &ctrl){
   /* Phenology */
   if (ctrl.opt_carbon_sim == 1){
     if(_NPP) delete _NPP;
+    if(_canopy_conductance) delete _canopy_conductance;
   }
   /* end of Phenology */
 
   /* Nitrogen */
   if (ctrl.opt_nitrogen_sim == 1){
+    if(_plant_mobile_N) delete _plant_mobile_N;
     if(_no3_I) delete _no3_I;
     if(_no3_snow) delete _no3_snow;
     if(_no3_pond) delete _no3_pond;
@@ -236,15 +238,8 @@ int Basin::dtor(Control &ctrl){
     if(_deni_soil) delete _deni_soil;
     if(_minerl_soil) delete _minerl_soil;
     if(_deni_river) delete _deni_river;
-    if(_n2o_emission) delete _n2o_emission;
     if(_fast_NP1_nonwood) delete _fast_NP1_nonwood;
-    if(_fast_NP1_wood) delete _fast_NP1_wood;
     if(_fast_NP1) delete _fast_NP1;
-    if(_fast_NP2) delete _fast_NP2;
-    if(_fast_NP3) delete _fast_NP3;
-    if(_humus_NP1) delete _humus_NP1;
-    if(_humus_NP2) delete _humus_NP2;
-    if(_humus_NP3) delete _humus_NP3;
     if(_humus_N) delete _humus_N;
     if(_fast_N) delete _fast_N;
   }
@@ -282,8 +277,10 @@ int Basin::dtor(Control &ctrl){
     if(_doc_vadose) delete _doc_vadose;
     if(_doc_GW) delete _doc_GW;
     if(_doc_chanS) delete _doc_chanS;
+    if(_litter_fall_C) delete _litter_fall_C;
     if(_soil_respiration_C) delete _soil_respiration_C;
     if(_soil_decomposition_C) delete _soil_decomposition_C;
+    if(_respiration_river_C) delete _respiration_river_C;
     if(_C4_flag) delete _C4_flag;
     if(_doc_rain) delete _doc_rain;
   }

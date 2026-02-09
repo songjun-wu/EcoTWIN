@@ -113,6 +113,7 @@ Param::Param(Control &ctrl){
     _denitrification_river = new svector(_sortedGrid.size);
     _denitrification_soil = new svector(_sortedGrid.size);
     _deni_soil_moisture_thres = new svector(_sortedGrid.size);
+    _respiration_river = new svector(_sortedGrid.size);
     _NC_ratio_plant_green = new svector(_sortedGrid.size);
     _NC_ratio_plant_wood = new svector(_sortedGrid.size);
     _NC_ratio_fast_pool_nonwood = new svector(_sortedGrid.size);

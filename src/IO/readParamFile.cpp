@@ -97,6 +97,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(frac_litter_to_nonsoluble_wood, "frac_litter_to_nonsoluble_wood", lines);
   readIntoParam(decomposition_weight_fast_pool, "decomposition_weight_fast_pool", lines);
   readIntoParam(decomposition_weight_humus_pool, "decomposition_weight_humus_pool", lines);
+  readIntoParam(respiration_river, "respiration_river", lines);
   readIntoParam(NC_ratio_plant_green, "NC_ratio_plant_green", lines);
   readIntoParam(NC_ratio_plant_wood, "NC_ratio_plant_wood", lines);
   readIntoParam(NC_ratio_fast_pool_nonwood, "NC_ratio_fast_pool_nonwood", lines);

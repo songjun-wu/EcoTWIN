@@ -64,15 +64,18 @@ int Basin::Solve_soil_profile_nutrient(Control &ctrl, Atmosphere &atm, Param &pa
       Solve_soil_transport(par, *_don_pond, *_don_layer1, *_don_layer2, *_don_layer3, *_don_chanS, true, ctrl.opt_drainage);  // True: enrichment due to evaportranspiration
     }
 
-    
-    
     // ======= Carbon/nitrogen biogeochemical processes =======
     if (ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){
-      Assimilation(ctrl, atm, par);
       Carbon_addition(ctrl, par);
-      Carbon_transformation(ctrl, atm, par);
+      Carbon_transformation(ctrl, atm, par); 
       //Carbon_summary();
     }
+    // Mass balance check (passed)
+    // Delta fast_N + humus_N + DON = litter_fall_N - minerl_soil;
+    // Delta fast_C + humus_C + DOC = litter_fall_C - soil_respiration_C;
+    // Delta NO3 = plant_uptake - minerl_soil;
+
+
 
     
 

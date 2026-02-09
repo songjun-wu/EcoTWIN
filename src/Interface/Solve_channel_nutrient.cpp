@@ -48,7 +48,10 @@ int Basin::Solve_channel_nutrient(Control &ctrl, Atmosphere &atm, Param &par){
                 }
             }
         }
+        Carbon_instream_transformation(ctrl, atm, par);  // In-stream decomposition of DOC
     }
+
+    
 
     // Nitrogen (Solve evaporative enrichment of in-stream DIN and DON)
     if (ctrl.opt_nitrogen_sim==1){
@@ -65,9 +68,10 @@ int Basin::Solve_channel_nutrient(Control &ctrl, Atmosphere &atm, Param &par){
                 }
             }
         }
+        Nitrogen_instream_transformation(ctrl, atm, par);  // In-stream denitrification of NO3
     }
     
-    Instream_transformation(ctrl, atm, par);  // In-stream denitrification
+    
 
 
 

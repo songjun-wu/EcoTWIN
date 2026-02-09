@@ -69,14 +69,13 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       ethanol_CP = _ethanol_CP1_wood->val[j];
       nonsoluble_CP = _nonsoluble_CP1_wood->val[j];
 
-      
       // Potential decomposition without nitrogen limitation
       C_from_acid = acid_CP * (min(1.0, ref_decomp_rate_acid * par._decomposition_weight_fast_pool->val[j] * fct_Ts * fct_theta * fct_size));
       C_from_ethanol = ethanol_CP * (min(1.0, ref_decomp_rate_ethanol * par._decomposition_weight_fast_pool->val[j] * fct_Ts * fct_theta * fct_size));
       C_from_nonsoluble = nonsoluble_CP * (min(1.0, ref_decomp_rate_nonsoluble * par._decomposition_weight_fast_pool->val[j] * fct_Ts * fct_theta * fct_size));
       C_from_soluble = soluble_CP * (min(1.0, ref_decomp_rate_soluble * par._decomposition_weight_fast_pool->val[j] * fct_Ts * fct_theta)); // Decomposition of DOC is not limited by wood and litter size
       C_from_humus = humus_CP * (min(1.0, ref_decomp_rate_humus * par._decomposition_weight_humus_pool->val[j] * fct_Ts * fct_theta)); // Decomposition of humus is not limited by wood and litter size, as well as nutrients
-
+      
       /* =============== Nitrogen simulation =============== */
       // For carbon: transformation contrainted by nitrogen availability: building humus and transformation between soluble and other litter pools may consume nitrogen from mineral nitrogen pool (DIN) 
       // For nitrogen: transformations lead to nitrogen absortion or release
@@ -157,7 +156,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
                           C_from_ethanol * C_respiration_ratio_ethanol + \
                           C_from_nonsoluble * C_respiration_ratio_nonsoluble + \
                           C_from_humus;
-      soil_decomposition_C += C_from_acid + C_from_ethanol + C_from_nonsoluble + C_from_soluble + C_from_humus;
+      soil_decomposition_C += C_2_soluble + C_2_humus;
       // Allocation carbon to pools
       _acid_CP1_wood->val[j] = acid_CP - C_from_acid + C_2_acid;
       _ethanol_CP1_wood->val[j]  = ethanol_CP - C_from_ethanol + C_2_ethanol;
@@ -165,7 +164,12 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       soluble_CP1_cumu += soluble_CP - C_from_soluble + C_2_soluble;  // Sum over wood and nonwood pool in layer 1
       humus_CP1_cumu += humus_CP - C_from_humus + C_2_humus;  // Sum over wood and nonwood pool in layer 1
 
-      
+
+
+
+
+
+
 
 
       
@@ -262,7 +266,8 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
                           C_from_ethanol * C_respiration_ratio_ethanol + \
                           C_from_nonsoluble * C_respiration_ratio_nonsoluble + \
                           C_from_humus;
-      soil_decomposition_C += C_from_acid + C_from_ethanol + C_from_nonsoluble + C_from_soluble + C_from_humus;
+      soil_decomposition_C += C_2_soluble + C_2_humus;
+
       // Allocation carbon to pools
       _acid_CP1_nonwood->val[j] = acid_CP - C_from_acid + C_2_acid;
       _ethanol_CP1_nonwood->val[j]  = ethanol_CP - C_from_ethanol + C_2_ethanol;
@@ -278,8 +283,11 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
         // Based on the assumption that transformation does not change the NC ratio in targeted pool;
         _fast_NP1_nonwood->val[j] = (_acid_CP1_nonwood->val[j]+_ethanol_CP1_nonwood->val[j]+_nonsoluble_CP1_nonwood->val[j]) * NC_ratio_fast;
         _don_layer1->val[j] = _doc_layer1->val[j] * NC_ratio_soluble;
-
       }
+
+
+
+
       
 
 
@@ -324,7 +332,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
         // Assumption: transformation does not change the NC ratio in targeted pool;
         // This is realised by absorbing or releasing nitrogen from/to mineral nitrogen pool (DIN)
         N_balance_fast = (respiration_from_acid+respiration_from_ethanol+respiration_from_nonsoluble) * NC_ratio_fast +  // Respiration only generates CO2, thus leading to nitrogen excess
-                                C_2_soluble * (NC_ratio_fast - NC_ratio_soluble) +    // Inbalance due to different NC ratios between soluble and fast pools
+                                 C_2_soluble * (NC_ratio_fast - NC_ratio_soluble) +    // Inbalance due to different NC ratios between soluble and fast pools
                                 C_fast_2_humus * (NC_ratio_fast - par._NC_ratio_humus_pool->val[j]);    // Inbalance due to different NC ratios between fast and humus pools
 
         N_balance_DON =  respiration_from_soluble * NC_ratio_soluble +  // Respiration only generates CO2, thus leading to nitrogen excess
@@ -378,7 +386,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
                           C_from_ethanol * C_respiration_ratio_ethanol + \
                           C_from_nonsoluble * C_respiration_ratio_nonsoluble + \
                           C_from_humus;
-      soil_decomposition_C += C_from_acid + C_from_ethanol + C_from_nonsoluble + C_from_soluble + C_from_humus;
+      soil_decomposition_C += C_2_soluble + C_2_humus;
       // Allocation carbon to pools
       _acid_CP2_wood->val[j] = acid_CP - C_from_acid + C_2_acid;
       _ethanol_CP2_wood->val[j]  = ethanol_CP - C_from_ethanol + C_2_ethanol;
@@ -391,6 +399,9 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
         // Based on the assumption that transformation does not change the NC ratio in targeted pool;
         _don_layer2->val[j] = _doc_layer2->val[j] * NC_ratio_soluble;
       }
+
+
+
 
 
 
@@ -490,13 +501,21 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
                           C_from_ethanol * C_respiration_ratio_ethanol + \
                           C_from_nonsoluble * C_respiration_ratio_nonsoluble + \
                           C_from_humus;
-      soil_decomposition_C += C_from_acid + C_from_ethanol + C_from_nonsoluble + C_from_soluble + C_from_humus;
+      soil_decomposition_C += C_2_soluble + C_2_humus;
       // Allocation carbon to pools
       _acid_CP3_wood->val[j] = acid_CP - C_from_acid + C_2_acid;
       _ethanol_CP3_wood->val[j]  = ethanol_CP - C_from_ethanol + C_2_ethanol;
       _nonsoluble_CP3_wood->val[j] = nonsoluble_CP - C_from_nonsoluble + C_2_nonsoluble;
       _doc_layer3->val[j] = theta3 > roundoffERR ? (soluble_CP - C_from_soluble + C_2_soluble) / theta3 / depth3 : 0.0;
       _humus_CP3->val[j] = humus_CP - C_from_humus + C_2_humus;
+
+      // Update nitrogen pools
+      if (ctrl.opt_nitrogen_sim) {
+        // Based on the assumption that transformation does not change the NC ratio in targeted pool;
+        _don_layer3->val[j] = _doc_layer3->val[j] * NC_ratio_soluble;
+      }
+
+      
 
 
 

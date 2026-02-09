@@ -103,6 +103,7 @@ int Param::dtor(Control &ctrl){
     if(_denitrification_river) delete _denitrification_river;
     if(_denitrification_soil) delete _denitrification_soil;
     if(_deni_soil_moisture_thres) delete _deni_soil_moisture_thres;
+    if(_respiration_river) delete _respiration_river;
     if(_NC_ratio_plant_green) delete _NC_ratio_plant_green;
     if(_NC_ratio_plant_wood) delete _NC_ratio_plant_wood;
     if(_NC_ratio_fast_pool_nonwood) delete _NC_ratio_fast_pool_nonwood;

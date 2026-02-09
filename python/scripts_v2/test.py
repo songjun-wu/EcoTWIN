@@ -102,9 +102,9 @@ def model_test(mode, catchment_ID):
     os.chdir('/home/wusongj/EcoTWIN/python/development')    
     os.system('python3 develop.py')
     
-    #GEM_tools.sort_directory(mode, Path, Cali, Output)   # create the working directory
-    #GEM_tools.set_env(mode, Path, nchains, Output)  # Create run/output path and link model executable
-    #GEM_tools.set_config(mode, Path, Cali, Output)  # Set configs - input paths, output paths, and running period, etc.
+    GEM_tools.sort_directory(mode, Path, Cali, Output)   # create the working directory
+    GEM_tools.set_env(mode, Path, nchains, Output)  # Create run/output path and link model executable
+    GEM_tools.set_config(mode, Path, Cali, Output)  # Set configs - input paths, output paths, and running period, etc.
 
     run_path = Path.work_path+mode+'/'+catchment_ID+'/run/'
     save_path = Path.work_path+mode+'/outputs/'+catchment_ID + '/'
@@ -115,7 +115,8 @@ def model_test(mode, catchment_ID):
         print(xxxx)
         #param_N = GEM_tools.get_param_N(Info, Param)
         #param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_831616_001_failed.bin').reshape(nchains,-1)[xxxx, :]
-        param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_831616_001.bin').reshape(nchains,-1)[xxxx, :]
+        #param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_831616_001.bin').reshape(nchains,-1)[xxxx, :]
+        param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_'+catchment_ID+'.bin').reshape(nchains,-1)[xxxx, :]
 
         #_param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param_all.bin').reshape(nchains,-1)
         #param = _param[0, :]
@@ -133,7 +134,7 @@ def model_test(mode, catchment_ID):
                         'opt_carbon_sim = 1\n' + \
                         'opt_init_no3 = 0\n' + \
                         #'Simul_end = '+str(int(seconds_from_1980))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
-                        'Simul_end = '+str(int(86400*365*2))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
+                        'Simul_end = '+str(int(86400*365*3))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
                         'Clim_Maps_Folder = /data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/climate/\n' + \
                         'Maps_Folder = /data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/spatial/\n']
         with open(run_path + 'config.ini', 'r') as f:

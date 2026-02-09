@@ -159,12 +159,12 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
 
 
             
-            ['_Ei', [Opt.cond['none']], 'Canopy evaporation [m]', 'grid', 'new', 'canopy_evap', 1],
+            ['_Ei', [Opt.cond['none']], 'Canopy evaporation [m]', 'grid', 'new', 'canopy_evap', 0],
             ['_Es', [Opt.cond['none']], 'Soil evaporation [m]', 'grid', 'new', 'soil_evap', 1],
             ['_Tr', [Opt.cond['none']], 'Total transpiration in three layers [m]', 'grid', 'new', 'transp', 1],
-            ['_Tr1', [Opt.cond['none']], 'Transpiration in layer 1 [m]', 'grid', 'new', 'transp_layer1', 1],
-            ['_Tr2', [Opt.cond['none']], 'Transpiration in layer 2 [m]', 'grid', 'new', 'transp_layer2', 1],
-            ['_Tr3', [Opt.cond['none']], 'Transpiration in layer 3 [m]', 'grid', 'new', 'transp_layer3', 1],
+            ['_Tr1', [Opt.cond['none']], 'Transpiration in layer 1 [m]', 'grid', 'new', 'transp_layer1', 0],
+            ['_Tr2', [Opt.cond['none']], 'Transpiration in layer 2 [m]', 'grid', 'new', 'transp_layer2', 0],
+            ['_Tr3', [Opt.cond['none']], 'Transpiration in layer 3 [m]', 'grid', 'new', 'transp_layer3', 0],
 
             # Management
             ['_irrigation_from_river', [Opt.cond['none']], 'Water extraction from river [m]', 'grid', 'new', 'irrigation_from_river', 1],
@@ -294,7 +294,7 @@ Parameters = [# ======= Hydrology =======
 
               # ======= Nitrogen =======
               ['_delta_no3_init_GW', [Opt.cond['init_no3_1']], 'Initial no3 of GW storage [‰]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
-              ['_denitrification_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic denitrification [-]', 'grid', 'spatial_param', 'denitrification_river', 0],
+              ['_denitrification_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic denitrification [day-1]', 'grid', 'spatial_param', 'denitrification_river', 0],
               #['_autotrophic_uptake_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic autotrophic uptake [-]', 'grid', 'spatial_param', 'autotrophic_uptake_aquatic', 0],
               #['_primary_production_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic primary production [-]', 'grid', 'spatial_param', 'primary_production_aquatic', 0],
               ['_denitrification_soil', [Opt.cond['nitrogen_sim_1']], 'Reference rates of soil denitrification [kg/ha]', 'grid', 'spatial_param', 'denitrification_soil', 0],
@@ -328,7 +328,7 @@ Parameters = [# ======= Hydrology =======
               # Correction of decomposition rates based on the magnitudes of carbon storages
               ['_decomposition_weight_fast_pool', [Opt.cond['carbon_sim_1']], 'Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]', 'grid', 'spatial_param', '_decomposition_weight_fast_pool', 0],
               ['_decomposition_weight_humus_pool', [Opt.cond['carbon_sim_1']], 'Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]', 'grid', 'spatial_param', '_decomposition_weight_humus_pool', 0],
-
+              ['_respiration_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic heterotrophic respiration [day-1]', 'grid', 'spatial_param', 'respiration_river', 0],
               # ======= Nitrogen =======
               ['_NC_ratio_plant_green', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in vegetation green pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_plant_green', 0],
               ['_NC_ratio_plant_wood', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in vegetation wood pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_plant_wood', 0],
@@ -339,7 +339,9 @@ Parameters = [# ======= Hydrology =======
 
 
 Phenology = [['_NPP', [Opt.cond['carbon_sim_1']], 'Net primary production [gC/(m2*Ts)] ', 'grid', 'spatial_param', 'net_primary_production', 1],
+             #['_GPP', [Opt.cond['carbon_sim_1']], 'Gross primary production [gC/(m2*Ts)] ', 'grid', 'spatial_param', 'gross_primary_production', 1],
              #['_WoodLitterSize', [Opt.cond['carbon_sim_1']], 'Size of wood litter [-] ', 'grid', 'spatial_param', 'WoodLitterSize', 0],
+             ['_canopy_conductance', [Opt.cond['carbon_sim_1']], 'Stomatal conductance for whole canopy  [m s-1]', 'grid', 'spatial_param', 'canopy_conductance', 0],
              ]
 
 Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]', 'grid', 'spatial', 'plant_green_CP', 0],
@@ -385,15 +387,20 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           ['_doc_GW',  [Opt.cond['carbon_sim_1']], 'DOC in Groundwater storage [mgN/L]', 'grid', 'spatial', 'doc_groundwater_storage', 1],
           ['_doc_chanS',  [Opt.cond['carbon_sim_1']], 'DOC in Channel storage [mgN/L]', 'grid', 'spatial', 'doc_chanS', 1],
 
+          ['_litter_fall_C',  [Opt.cond['carbon_sim_1']], 'Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]', 'grid', 'new', 'litter_fall_C', 1],
           ['_soil_respiration_C',  [Opt.cond['carbon_sim_1']], 'Soil respiration summarised in carbon [gC/m2]', 'grid', 'new', 'soil_respiration_C', 1],
           ['_soil_decomposition_C',  [Opt.cond['carbon_sim_1']], 'Soil decomposition summarised in carbon [gC/m2]', 'grid', 'new', 'soil_decomposition_C', 1],
+          ['_respiration_river_C',  [Opt.cond['carbon_sim_1']], 'Aquatic heterotrophic respiration summarised in carbon [gC/m2]', 'grid', 'new', 'respiration_river_C', 1],
+
+          
           
           ['_C4_flag', [Opt.cond['carbon_sim_1']], ' C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)', 'grid', 'spatial', 'C4_flag', 0],
           ['_doc_rain', [Opt.cond['carbon_sim_1']], 'The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1', 'grid', 'spatial', 'doc_rain', 0],
         
         ]
 
-Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mgN/L]', 'grid', 'spatial', 'no3_canopy_storage', 1],
+Nitrogen = [['_plant_mobile_N', [Opt.cond['nitrogen_sim_1']], 'Plant mobile nitrogen [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_mobile_N', 0],
+            ['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mgN/L]', 'grid', 'spatial', 'no3_canopy_storage', 1],
             ['_no3_snow',    [Opt.cond['nitrogen_sim_1']], 'no3 in Snow depth in [mgN/L]', 'grid', 'spatial', 'no3_snow_depth', 1],
             ['_no3_pond',    [Opt.cond['nitrogen_sim_1']], 'no3 in Ponding water in [mgN/L]', 'grid', 'spatial', 'no3_pond', 1],
             ['_no3_layer1',  [Opt.cond['nitrogen_sim_1']], 'no3 in Soil moisture in layer 1 [mgN/L]', 'grid', 'spatial', 'no3_SMC_layer1', 1],
@@ -421,17 +428,17 @@ Nitrogen = [['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [m
             #['_degrad_soil', [Opt.cond['nitrogen_sim_1']], 'Soil degradation [mgN/L*m = gN/m2]', 'grid', 'new', 'degrad_soil', 1],
             ['_deni_river', [Opt.cond['nitrogen_sim_1']], 'Aquatic denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_river', 1],
 
-            ['_n2o_emission', [Opt.cond['nitrogen_sim_1']], 'N2O emission from soil due to soil decomposition and denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'n2o_emission', 1],
+            #['_n2o_emission', [Opt.cond['nitrogen_sim_1']], 'N2O emission from soil due to soil decomposition and denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'n2o_emission', 1],
             
             # Internal fluxes
             ['_fast_NP1_nonwood',  [Opt.cond['nitrogen_sim_1']], 'Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs', 'grid', 'new', 'fast_NP1_nonwood', 0],
-            ['_fast_NP1_wood',  [Opt.cond['nitrogen_sim_1']], 'Fast wood nitrogen storage in layer 1 (wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of wood pools are variable due to reserve inputs', 'grid', 'new', 'fast_NP1_wood', 0],
+            #['_fast_NP1_wood',  [Opt.cond['nitrogen_sim_1']], 'Fast wood nitrogen storage in layer 1 (wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of wood pools are variable due to reserve inputs', 'grid', 'new', 'fast_NP1_wood', 0],
             ['_fast_NP1',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP1', 0],
-            ['_fast_NP2',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP2', 0],
-            ['_fast_NP3',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP3', 0],
-            ['_humus_NP1',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP1', 0],
-            ['_humus_NP2',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP2', 0],
-            ['_humus_NP3',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP3', 0],
+            #['_fast_NP2',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP2', 0],
+            #['_fast_NP3',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP3', 0],
+            #['_humus_NP1',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP1', 0],
+            #['_humus_NP2',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP2', 0],
+            #['_humus_NP3',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP3', 0],
             ['_humus_N',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_N', 1],
             ['_fast_N',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_N', 1],
             ]

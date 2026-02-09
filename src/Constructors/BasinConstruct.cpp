@@ -212,11 +212,13 @@
   /* Phenology */
   if (ctrl.opt_carbon_sim == 1){
     _NPP = new svector(_sortedGrid.size);
+    _canopy_conductance = new svector(_sortedGrid.size);
   }
   /* end of Phenology */
 
   /* Nitrogen */
   if (ctrl.opt_nitrogen_sim == 1){
+    _plant_mobile_N = new svector(_sortedGrid.size);
     _no3_I = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_I, _rowNum, _colNum, _sortedGrid);
     _no3_snow = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_snow, _rowNum, _colNum, _sortedGrid);
     _no3_pond = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_pond, _rowNum, _colNum, _sortedGrid);
@@ -240,15 +242,8 @@
     _deni_soil = new svector(_sortedGrid.size);
     _minerl_soil = new svector(_sortedGrid.size);
     _deni_river = new svector(_sortedGrid.size);
-    _n2o_emission = new svector(_sortedGrid.size);
     _fast_NP1_nonwood = new svector(_sortedGrid.size);
-    _fast_NP1_wood = new svector(_sortedGrid.size);
     _fast_NP1 = new svector(_sortedGrid.size);
-    _fast_NP2 = new svector(_sortedGrid.size);
-    _fast_NP3 = new svector(_sortedGrid.size);
-    _humus_NP1 = new svector(_sortedGrid.size);
-    _humus_NP2 = new svector(_sortedGrid.size);
-    _humus_NP3 = new svector(_sortedGrid.size);
     _humus_N = new svector(_sortedGrid.size);
     _fast_N = new svector(_sortedGrid.size);
   }
@@ -286,8 +281,10 @@
     _doc_vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_vadose, _rowNum, _colNum, _sortedGrid);
     _doc_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_GW, _rowNum, _colNum, _sortedGrid);
     _doc_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_chanS, _rowNum, _colNum, _sortedGrid);
+    _litter_fall_C = new svector(_sortedGrid.size);
     _soil_respiration_C = new svector(_sortedGrid.size);
     _soil_decomposition_C = new svector(_sortedGrid.size);
+    _respiration_river_C = new svector(_sortedGrid.size);
     _C4_flag = new svector(ctrl.path_BasinFolder + ctrl.fn__C4_flag, _rowNum, _colNum, _sortedGrid);
     _doc_rain = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_rain, _rowNum, _colNum, _sortedGrid);
   }

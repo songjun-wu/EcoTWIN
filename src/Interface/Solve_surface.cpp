@@ -30,6 +30,13 @@ int Basin::Solve_surface(Control &ctrl, Param &par, Atmosphere &atm){
         Irrigation(ctrl, par);
     }
 
+    // Assimilaton to get canopy conductance
+    if (ctrl.opt_evap==1 or ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){
+        Assimilation(ctrl, atm, par); // Assimilaton to get canopy conductance for evapotranspiration and GPP/NPP for carbon and nitrogen simulation
+    }
+
+
+    // Tracking isotopes or age
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1){
         Mixing_surface_tracking(ctrl, atm, par);
     }

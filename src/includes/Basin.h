@@ -240,9 +240,11 @@ class Basin {
 
   /* Phenology */
   svector *_NPP;  // Net primary production [gC/(m2*Ts)] 
+  svector *_canopy_conductance;  // Stomatal conductance for whole canopy  [m s-1]
   /* end of Phenology */
 
   /* Nitrogen */
+  svector *_plant_mobile_N;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
   svector *_no3_I;  // no3 in Canopy storage [mgN/L]
   svector *_no3_snow;  // no3 in Snow depth in [mgN/L]
   svector *_no3_pond;  // no3 in Ponding water in [mgN/L]
@@ -266,15 +268,8 @@ class Basin {
   svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
   svector *_minerl_soil;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
   svector *_deni_river;  // Aquatic denitrification [mgN/L*m = gN/m2]
-  svector *_n2o_emission;  // N2O emission from soil due to soil decomposition and denitrification [mgN/L*m = gN/m2]
   svector *_fast_NP1_nonwood;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
-  svector *_fast_NP1_wood;  // Fast wood nitrogen storage in layer 1 (wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of wood pools are variable due to reserve inputs
   svector *_fast_NP1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-  svector *_fast_NP2;  // Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]
-  svector *_fast_NP3;  // Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]
-  svector *_humus_NP1;  // Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-  svector *_humus_NP2;  // Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]
-  svector *_humus_NP3;  // Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]
   svector *_humus_N;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
   svector *_fast_N;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
   /* end of Nitrogen */
@@ -311,8 +306,10 @@ class Basin {
   svector *_doc_vadose;  // DOC in vadose storage [mgN/L]
   svector *_doc_GW;  // DOC in Groundwater storage [mgN/L]
   svector *_doc_chanS;  // DOC in Channel storage [mgN/L]
+  svector *_litter_fall_C;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
   svector *_soil_respiration_C;  // Soil respiration summarised in carbon [gC/m2]
   svector *_soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
+  svector *_respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
   svector *_C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   svector *_doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
   /* end of Carbon */
@@ -320,7 +317,17 @@ class Basin {
   /* Unit transformer */
   double molC_m2_to_gC_m2;  // 1 mol(C)/m2 = 12.01 gC/m2
 
+  double ratio_day_time;  // Ratio of day time to total time [-]
+
   /* Assimilation_constant */
+  // Radiation
+  double ratio_diffuse;  // Ratio of diffuse radiation to total radiation [-]
+  double ratio_par_to_Rsw;  // Ratio of Photosynthetically Active Radiation to Shortwave radiation [-]
+  double canopy_albedo;  // Canopy albedo [-]
+  double R_gas;  // Gas constant [J/mol-1K-1]
+  double Epar;  // Photosynthetically Active Radiation in J / mol(photons)
+  
+  // Photosynthesis
   double KC0;   // Michaelis-menten Constant for CO2 at 25C [mol(CO2) / mol(air)]
   double KO0;   // Michaelis-menten Constant for O2 at 25C [mol(O2) / mol(air)]
   double EC;     // Activation energy for KC [J/mol]
@@ -331,9 +338,10 @@ class Basin {
   double frac_photon_capture;  // Efficiency ofphoton capture
   double o2_mol;  // Oxygen concentration [mol(o2) / mol(air)]
   double co2_mol;  // CO2 concentration [mol(co2) / mol(air)]
+  double ratio_co2_leaf_to_air_C3;  // Ratio of CO2 in leaf to air for C3 plants
+  double ratio_co2_leaf_to_air_C4;  // Ratio of CO2 in leaf to air for C4 plants
   double min_of_max_carboxylation_rate; // Minimum of maximum carboxylation rate [10^(-6) mol/(m^2 s)]
-  double R_gas;  // Gas constant [J/mol-1K-1]
-  double Epar;  // Photosynthetically Active Radiation in J / mol(photons)
+  
   // Canopy conductance (Eq. 3.3.2.12 in ECHAM3 manual / JSBACH)
   double conductance_k;    // Parameter for canopy conductance/resistance [-]
   double conductance_a;   // Parameter for conductance/resistance [Jm-3]
@@ -425,7 +433,8 @@ class Basin {
   // Evapotranspiration
   int Canopy_evaporation_1(Control &ctrl, Param &par, Atmosphere &atm);
   int Seperate_PET(Param &par, Atmosphere &atm);  // Seperate PET to PE and PT based on LAI and a rExtinct parameter; Rutter (1972)
-  int Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm);
+  int Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm);  // Evapotranspiration based on Rutter (1972)
+  int Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm);  // Evapotranspiration based on 
   // Percolation
   int Percolation_1(Control &ctrl, Param &par);
   int Percolation_2(Control &ctrl, Param &par);
@@ -481,10 +490,13 @@ class Basin {
 
   /* ===== Carbon module ===== */
   int Assimilation(Control &ctrl, Atmosphere &atm, Param &par);  // GPP and NPP calculation
+  int Photosynthesis_C3(int j, int timestep, double PAR_mol, double LAI, double Ta_k, double TC_c, double air_pressure, double energy_scaling_factor, double co2_mol, double co2_leaf_mol, 
+    double KC, double KO, double VC_max, double Jmax, double gamma, double water_limitation_factor, double carboxylation_rate, svector &sv_NPP, svector &sv_canopy_conductance);  // C3 photosynthesis based on Farquhar (1980)
   int Set_carbon_constant();  // Set constants for carbon simulation (tansformation rates between different carbon pools)
   int Solve_soil_profile_carbon(Control &ctrl, Atmosphere &atm, Param &par);  // Solve soil carbon processes (addition, transport, decomposition)
   int Carbon_addition(Control &ctrl, Param &par);
   int Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par);   // Solve soil carbon decomposition
+  int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC
   int Carbon_summary();  // Summary carbon states and fluxes
 
   /* Nitrogen module */
@@ -494,13 +506,13 @@ class Basin {
   int Plant_uptake(Control &ctrl, Param &par, Atmosphere &atm);
   int Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par);
   //int Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // Disabled in v2.0
-  int Instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);
+  int Nitrogen_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);
   int Nitrogen_summary(Param &par);  // Summary nitrogen states and fluxes
 
   /* ===== Global functions ===== */
   int Sort_percolation_travel_time(Control &ctrl, Param &par);
   int Sort_root_fraction(Control &ctrl,Param &par);  // Estimate root fraction
-  double Temp_factor(const double T);  // Temperature factor of nitrogen transformation
+  double Temp_factor(double T);  // Temperature factor of nitrogen transformation
   double Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaS, const double db_depth); // Moisture factor of nitrogen transformation
 
   /* ===== Initialisation ===== */
@@ -524,7 +536,7 @@ class Basin {
   int update_managementTs(Control &ctrl, Param &par);
 
   // Model test
-  int Check_mass_balance(Control &ctrl, Param &par, Atmosphere &atm);
+  //int Check_mass_balance(Control &ctrl, Param &par, Atmosphere &atm);
 
   /* Save TS output to speed up calibration; Temporary implementation */
   int Report_for_cali(Control &ctrl);

@@ -17,13 +17,18 @@
 
 #include "Basin.h"
 
-double Basin::Temp_factor(const double T){
+double Basin::Temp_factor(double T){
 
+    double f_T; // Temperature factor [-, decimal]
 
-    double f_T = pow(2, (T - 20.0) / 10.0);  // Temperature factor
+    if (T > 34.0) T = 34.0 - (T - 34.0); // Maximum temperature for soil respiration is set to 34 degree celcius
 
-    if (T < 5.0) f_T *= (T / 5.0);
-    if (T < 0.0) f_T = 0.0;
+    if (T < 0.0) {
+        f_T = 0.0;
+    } else {
+        f_T = pow(2, (T - 20.0) / 10.0);
+        if (T < 5.0) f_T *= (T / 5.0);
+    }
 
     return f_T;
 

@@ -25,6 +25,20 @@ def read_spatial_data(path, mask, nchains, chanmask=None, weight=1, warming_peri
     return data
 
 
+def read_spatial_data_diff(path, mask, nchains, chanmask=None, weight=1, warming_period=2):
+    
+    data = np.fromfile(path).reshape(nchains, -1, mask.shape[0], mask.shape[1])
+    data = np.mean(data, axis=0)
+    
+    if chanmask is not None:
+        data[:,~chanmask] = np.nan
+    else:
+        data[:,mask==-9999] = np.nan
+    
+    data = (np.mean(data[-5:,:,:], axis=0) - np.mean(data[warming_period:warming_period+5,:,:], axis=0)) * weight
+    return data
+
+
 def read_temporal_data(path, mask, nchains, chanmask=None, weight=1):
     data = np.fromfile(path).reshape(nchains, -1, mask.shape[0], mask.shape[1])
     data = np.mean(data, axis=0)
@@ -43,7 +57,7 @@ def plot_spatial_maps(sim_path, plot_path, catchment_ID, nchains, suffix=''):
     chanmask = np.loadtxt(Path.data_path+'catchment_info/cali/'+catchment_ID+'/spatial/chnwidth.asc', skiprows=6)
     chanmask = chanmask>0
 
-    nrow = 7
+    nrow = 8
     ncol = 6
 
     vars = ['SMC_layer1', 'SMC_layer2', 'SMC_layer3', 'infiltration', 'perc_layer1', 'perc_layer2', 'drainage_from_soil', 'age_chanS', 'trans_age_chanS', 'd18o_chanS', 'doc_chanS', 'no3_chanS', 'deni_soil', 'minerl_soil', 'plant_uptake', 'nitrogen_addition', 'fast_N', 'humus_N', 'net_primary_production', 'soil_respiration', 'plant_C', 'fast_C', 'humus_C']
@@ -70,9 +84,9 @@ def plot_spatial_maps(sim_path, plot_path, catchment_ID, nchains, suffix=''):
                 'overland_flow_output':[1000*365,False, 0, 1000],
                 'overland_flow_toChn':[1000*365,False, 0, 500],
                 'interflow_output':[1000*365,False, 0, 1000],
-                'interflow_toChn':[1000*365,False, 0, 500],
+                'interflow_toChn':[1000*365,False, 0, 1000],
                 'GWflow_output':[1000*365,False, 0, 1000],
-                'GWflow_toChn':[1000*365,False, 0, 500],
+                'GWflow_toChn':[1000*365,False, 0, 1000],
 
                 'doc_SMC_layer1':[1,False, 0, 100],
                 'doc_SMC_layer2':[1,False, 0, 50],
@@ -98,19 +112,23 @@ def plot_spatial_maps(sim_path, plot_path, catchment_ID, nchains, suffix=''):
 
                 
                 
-                'deni_soil':[1*365,False, None, None],
-                'minerl_soil':[1*365,False, None, None],
-                'plant_uptake':[1*365,False, None, None],
-                'nitrogen_addition':[1*365,False, None, None],
-                'fast_N':[1,False, None, None],
-                'humus_N':[1,False, None, None],
+                'deni_soil':[1*365,False, 0, 15],
+                'minerl_soil':[1*365,False, 0, 15],
+                'plant_uptake':[1*365,False, 0, 15],
+                'nitrogen_addition':[1*365,False, 0, 15],
+                'fast_N':[1,False, 0, 50],
+                'humus_N':[1,False, 0, 3000],
 
-                'net_primary_production':[1*365,False, None, None],
-                'soil_decomposition_C':[1*365,False, None, None],
-                'soil_respiration_C':[1*365,False, None, None],
-                'plant_C':[1,False, None, None],
-                'fast_C':[1,False, None, None],
-                'humus_C':[1,False, None, None],
+                'net_primary_production':[1*365,False, 0, 1500],
+                'litter_fall_C':[1*365,False, 0, 1000],
+                'soil_respiration_C':[1*365,False, 0, 1000],
+                'plant_C':[1,False, 0, 3000],
+                'fast_C':[1,False, 1000, 3000],
+                'humus_C':[1,False, 5000, 30000],
+
+                'respiration_river_C':[1*365,False, 0, 10],
+                'deni_river':[1*365,False, 0, 2],
+                
                 
                 }
     
@@ -129,12 +147,10 @@ def plot_spatial_maps(sim_path, plot_path, catchment_ID, nchains, suffix=''):
         else:
             chanmask_plot = None
         
-
         locals()['im'+str(i)] = ax[i//ncol, i%ncol].imshow(read_spatial_data(sim_path+var+'_map.bin', mask, nchains, chanmask_plot, weight=weight), vmin=vmin, vmax=vmax)
 
-        if 'doc' in var:
-            tmppp = read_spatial_data(sim_path+var+'_map.bin', mask, nchains, chanmask_plot, weight=weight)
-            print(var, tmppp.shape, np.nanmin(tmppp), np.nanmax(tmppp), np.nanmean(tmppp), flush=True)
+        tmppp = read_spatial_data(sim_path+var+'_map.bin', mask, nchains, chanmask_plot, weight=weight)
+        print(var, tmppp.shape, np.nanmin(tmppp), np.nanmax(tmppp), np.nanmean(tmppp), flush=True)
 
         ax[i//ncol, i%ncol].set_title(var)
         i += 1
@@ -150,6 +166,44 @@ def plot_spatial_maps(sim_path, plot_path, catchment_ID, nchains, suffix=''):
             except:
                 pass
     fig.savefig(plot_path+'spatial_maps_'+str(catchment_ID)+suffix+'.png', transparent=False)
+
+
+    # Plot differences between 1992-1997 to last 5 years
+    fig, ax = plt.subplots(nrow, ncol, figsize=(20,20), dpi=300)
+    plt.subplots_adjust(left=0.05, right=0.95, bottom=0.05, top=0.95, wspace=0.1, hspace=0.2)
+    i = 0
+    for key, value in dict_all.items():
+        var = key
+        weight = value[0]
+        is_chan = value[1]
+        vmin = value[2]
+        vmax = value[3]
+
+        if is_chan:
+            chanmask_plot = chanmask>0
+        else:
+            chanmask_plot = None
+        
+
+        locals()['im'+str(i)] = ax[i//ncol, i%ncol].imshow(read_spatial_data_diff(sim_path+var+'_map.bin', mask, nchains, chanmask_plot, weight=weight), vmin=-vmax/3, vmax=vmax/3, cmap='coolwarm')
+
+        tmppp = read_spatial_data_diff(sim_path+var+'_map.bin', mask, nchains, chanmask_plot, weight=weight)
+        #print(var, tmppp.shape, np.nanmin(tmppp), np.nanmax(tmppp), np.nanmean(tmppp), flush=True)
+
+        ax[i//ncol, i%ncol].set_title(var)
+        i += 1
+
+    for r in range(nrow):
+        for c in range(ncol):
+            ax[r,c].axis('off')
+
+    for r in range(nrow):
+        for c in range(ncol):
+            try:
+                fig.colorbar(locals()['im'+str(r*ncol+c)], ax=ax[r,c])
+            except:
+                pass
+    fig.savefig(plot_path+'spatial_maps_diff_'+str(catchment_ID)+suffix+'.png', transparent=False)
 
 
     # Time series

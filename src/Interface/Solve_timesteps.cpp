@@ -27,6 +27,7 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
         //if (_sortedGrid.row[j]==41 and _sortedGrid.col[j]==60) cout << j<< endl; 
     //}
+    
 
 
     Initialisation_each_timestep(ctrl);
@@ -42,6 +43,9 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     }
 
     Statistic_summary(ctrl, par);
+
+
+
 
     return EXIT_SUCCESS;
 }

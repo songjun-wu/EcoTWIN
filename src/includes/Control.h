@@ -285,6 +285,7 @@ struct Control{
 
   /* Phenology */
   string fn__NPP;  // Net primary production [gC/(m2*Ts)] 
+  string fn__canopy_conductance;  // Stomatal conductance for whole canopy  [m s-1]
   /* end of Phenology */
 
   /* Nitrogen */
@@ -373,7 +374,7 @@ struct Control{
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
   string fn__delta_no3_init_GW;  // Initial no3 of GW storage [‰]
-  string fn__denitrification_river;  // Reference rates of aquatic denitrification [-]
+  string fn__denitrification_river;  // Reference rates of aquatic denitrification [day-1]
   string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
   string fn__deni_soil_moisture_thres;  // The moisture threshold of soil denitrification
   string fn__C_in_LeafArea;  // Carbon content per leaf area in [m2(leaf)/mol(Carbon)]
@@ -395,6 +396,7 @@ struct Control{
   string fn__frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
   string fn__decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
   string fn__decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
+  string fn__respiration_river;  // Reference rates of aquatic heterotrophic respiration [day-1]
   string fn__NC_ratio_plant_green;  // Nitrogen carbon ratio in vegetation green pool  [gN/gC] 
   string fn__NC_ratio_plant_wood;  // Nitrogen carbon ratio in vegetation wood pool  [gN/gC] 
   string fn__NC_ratio_fast_pool_nonwood;  // Nitrogen carbon ratio in non-wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] 
@@ -425,12 +427,8 @@ struct Control{
   int report__rPerc2;  // report Repercolation into layer 3 due to overland flow routing [m]
   int report__rPerc3;  // report Repercolation into gw reservior due to overland flow routing [m]
   int report__rPerc_vadose;  // report Repercolation from vadose storage into gw reservior [m]
-  int report__Ei;  // report Canopy evaporation [m]
   int report__Es;  // report Soil evaporation [m]
   int report__Tr;  // report Total transpiration in three layers [m]
-  int report__Tr1;  // report Transpiration in layer 1 [m]
-  int report__Tr2;  // report Transpiration in layer 2 [m]
-  int report__Tr3;  // report Transpiration in layer 3 [m]
   int report__irrigation_from_river;  // report Water extraction from river [m]
   int report__irrigation_from_GW;  // report Water extraction from GW [m]
   int report__drainage_from_soil;  // report Total drainage from all soil layers [m]
@@ -488,8 +486,10 @@ struct Control{
   int report__doc_vadose;  // report DOC in vadose storage [mgN/L]
   int report__doc_GW;  // report DOC in Groundwater storage [mgN/L]
   int report__doc_chanS;  // report DOC in Channel storage [mgN/L]
+  int report__litter_fall_C;  // report Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
   int report__soil_respiration_C;  // report Soil respiration summarised in carbon [gC/m2]
   int report__soil_decomposition_C;  // report Soil decomposition summarised in carbon [gC/m2]
+  int report__respiration_river_C;  // report Aquatic heterotrophic respiration summarised in carbon [gC/m2]
   int report__no3_I;  // report no3 in Canopy storage [mgN/L]
   int report__no3_snow;  // report no3 in Snow depth in [mgN/L]
   int report__no3_pond;  // report no3 in Ponding water in [mgN/L]
@@ -504,7 +504,6 @@ struct Control{
   int report__deni_soil;  // report Soil denitrification [mgN/L*m = gN/m2]
   int report__minerl_soil;  // report Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
   int report__deni_river;  // report Aquatic denitrification [mgN/L*m = gN/m2]
-  int report__n2o_emission;  // report N2O emission from soil due to soil decomposition and denitrification [mgN/L*m = gN/m2]
   int report__humus_N;  // report Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
   int report__fast_N;  // report Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
   /* end of Report */

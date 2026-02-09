@@ -136,9 +136,9 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
         if (ST2 > 0){
             _no3_layer2->val[j] = (ST2 * _no3_layer2->val[j] + fertN_add_layer2_IN) / ST2;
         } else {
-            _fast_NP2->val[j] += fertN_add_layer2_IN;
+            _fast_NP1_nonwood->val[j] += fertN_add_layer2_IN;
         }
-        _fast_NP2->val[j]  += fertN_add_layer2_fast_NP;
+        _fast_NP1_nonwood->val[j]  += fertN_add_layer2_fast_NP;  // The fast pool addtion will only be added to the nonwood pool in layer 1
 
 
         // Only counts the Nitrogen addition to IN and fast_NP pools

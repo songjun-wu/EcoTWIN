@@ -6,7 +6,6 @@
 CPP_SRCS += \
 ../src/Hydrology/Canopy_evaporation.cpp \
 ../src/Hydrology/Channel_evaporation.cpp \
-../src/Hydrology/Check_mass_balance.cpp \
 ../src/Hydrology/Evapotranspiration.cpp \
 ../src/Hydrology/GWrecharge.cpp \
 ../src/Hydrology/Infiltration.cpp \
@@ -32,7 +31,6 @@ CPP_SRCS += \
 OBJS += \
 ./Hydrology/Canopy_evaporation.o \
 ./Hydrology/Channel_evaporation.o \
-./Hydrology/Check_mass_balance.o \
 ./Hydrology/Evapotranspiration.o \
 ./Hydrology/GWrecharge.o \
 ./Hydrology/Infiltration.o \
@@ -58,7 +56,6 @@ OBJS += \
 CPP_DEPS += \
 ./Hydrology/Canopy_evaporation.d \
 ./Hydrology/Channel_evaporation.d \
-./Hydrology/Check_mass_balance.d \
 ./Hydrology/Evapotranspiration.d \
 ./Hydrology/GWrecharge.d \
 ./Hydrology/Infiltration.d \

@@ -255,12 +255,8 @@ int Control::ReadConfigFile(string fname){
   readInto(report__rPerc2, "report_rperc_layer2", lines);
   readInto(report__rPerc3, "report_rperc_layer3", lines);
   readInto(report__rPerc_vadose, "report_rperc_vadose", lines);
-  readInto(report__Ei, "report_canopy_evap", lines);
   readInto(report__Es, "report_soil_evap", lines);
   readInto(report__Tr, "report_transp", lines);
-  readInto(report__Tr1, "report_transp_layer1", lines);
-  readInto(report__Tr2, "report_transp_layer2", lines);
-  readInto(report__Tr3, "report_transp_layer3", lines);
   readInto(report__irrigation_from_river, "report_irrigation_from_river", lines);
   readInto(report__irrigation_from_GW, "report_irrigation_from_GW", lines);
   readInto(report__drainage_from_soil, "report_drainage_from_soil", lines);
@@ -318,8 +314,10 @@ int Control::ReadConfigFile(string fname){
   readInto(report__doc_vadose, "report_doc_vadose", lines);
   readInto(report__doc_GW, "report_doc_groundwater_storage", lines);
   readInto(report__doc_chanS, "report_doc_chanS", lines);
+  readInto(report__litter_fall_C, "report_litter_fall_C", lines);
   readInto(report__soil_respiration_C, "report_soil_respiration_C", lines);
   readInto(report__soil_decomposition_C, "report_soil_decomposition_C", lines);
+  readInto(report__respiration_river_C, "report_respiration_river_C", lines);
   readInto(report__no3_I, "report_no3_canopy_storage", lines);
   readInto(report__no3_snow, "report_no3_snow_depth", lines);
   readInto(report__no3_pond, "report_no3_pond", lines);
@@ -334,7 +332,6 @@ int Control::ReadConfigFile(string fname){
   readInto(report__deni_soil, "report_deni_soil", lines);
   readInto(report__minerl_soil, "report_minerl_soil", lines);
   readInto(report__deni_river, "report_deni_river", lines);
-  readInto(report__n2o_emission, "report_n2o_emission", lines);
   readInto(report__humus_N, "report_humus_N", lines);
   readInto(report__fast_N, "report_fast_N", lines);
   /* end of Report */
