@@ -9,7 +9,6 @@ CPP_SRCS += \
 ../src/Hydrology/Evapotranspiration.cpp \
 ../src/Hydrology/GWrecharge.cpp \
 ../src/Hydrology/Infiltration.cpp \
-../src/Hydrology/Initialisation.cpp \
 ../src/Hydrology/Interception.cpp \
 ../src/Hydrology/Irrigation.cpp \
 ../src/Hydrology/Percolation.cpp \
@@ -26,6 +25,7 @@ CPP_SRCS += \
 ../src/Hydrology/Drainage.cpp \
 ../src/Hydrology/Routing_drainage.cpp \
 ../src/Hydrology/Hydrology_summary.cpp \
+../src/Hydrology/Capillary_flow.cpp \
 
 
 OBJS += \
@@ -34,7 +34,6 @@ OBJS += \
 ./Hydrology/Evapotranspiration.o \
 ./Hydrology/GWrecharge.o \
 ./Hydrology/Infiltration.o \
-./Hydrology/Initialisation.o \
 ./Hydrology/Interception.o \
 ./Hydrology/Irrigation.o \
 ./Hydrology/Percolation.o \
@@ -51,6 +50,7 @@ OBJS += \
 ./Hydrology/Drainage.o \
 ./Hydrology/Routing_drainage.o \
 ./Hydrology/Hydrology_summary.o \
+./Hydrology/Capillary_flow.o \
 
 
 CPP_DEPS += \
@@ -59,7 +59,6 @@ CPP_DEPS += \
 ./Hydrology/Evapotranspiration.d \
 ./Hydrology/GWrecharge.d \
 ./Hydrology/Infiltration.d \
-./Hydrology/Initialisation.d \
 ./Hydrology/Interception.d \
 ./Hydrology/Irrigation.d \
 ./Hydrology/Percolation.d \
@@ -76,6 +75,7 @@ CPP_DEPS += \
 ./Hydrology/Drainage.d \
 ./Hydrology/Routing_drainage.d \
 ./Hydrology/Hydrology_summary.d \
+./Hydrology/Capillary_flow.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

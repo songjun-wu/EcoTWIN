@@ -25,7 +25,6 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
     double interflow_toTrestrial;
 
     double dx = ctrl._dx;
-    double dx_square = dx * dx;
     double dtdx = ctrl.Simul_tstep / dx;
     double alpha = 0;
     double interflow_in;
@@ -41,6 +40,8 @@ int Basin::Routing_interflow_1(Control &ctrl, Param &par){
         interflow_toChn = 0;   // Output of interflow to stream
     
         from_j = _sortedGrid.to_cell[j];
+
+        
        
         // Available interflow = interflow from upstream + excess water above field capacity
         // Should interflow_in be included here, or after stream recharge?

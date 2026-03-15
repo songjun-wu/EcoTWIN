@@ -39,9 +39,15 @@ class Opt:
     cond['nitrogen_sim_1'] = {'key':'opt_nitrogen_sim', 'value':1,
                                   'general_description':'Enable nitrogen simulation?\n# 0: disabled\n# 1: enabled',
                                   'description':'Nitrogen simulation'}
+    cond['summary_statistics_1'] = {'key':'opt_summary_statistics', 'value':1,
+                                  'general_description':'Enable summary statistics?\n# 0: disabled\n# 1: enabled',
+                                  'description':'Summary statistics'}
     cond['irrigation_1']   = {'key':'opt_irrigation', 'value':1, 
                         'general_description':'Agricultural irrigation\n# 0: disabled\n# 1: enabled',
                         'description':'Irrigation Enabled'}
+    cond['irrigation_0']   = {'key':'opt_irrigation', 'value':0, 
+                        'general_description':'Agricultural irrigation\n# 0: disabled\n# 1: enabled',
+                        'description':'Irrigation disabled'}
     cond['drainage_1']   = {'key':'opt_drainage', 'value':1, 
                         'general_description':'Drainage\n# 0: disabled\n# 1: enabled',
                         'description':'Drainage Enabled'}
@@ -116,9 +122,12 @@ class Opt:
     cond['canopy_evap_1']   = {'key':'opt_canopy_evap', 'value':1, 
                         'general_description':'Canopy evaporation function\n# 0: Disabled\n#1: based on PET and a exponential function Liang et al. (1994)',
                         'description':'Canopy evaporation based on PET and a exponential function Liang et al. (1994)'}
-    
+
+    cond['evap_2']   = {'key':'opt_evap', 'value':2, 
+                        'general_description':'Evapotranspiration function\n# 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)\n# 2: based on Penman-Monteith equation',
+                        'description':'Evapotranspiration calculation based on Penman-Monteith equation'}
     cond['evap_1']   = {'key':'opt_evap', 'value':1, 
-                        'general_description':'Evapotranspiration function\n# 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)',
+                        'general_description':'Evapotranspiration function\n# 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)\n# 2: based on Penman-Monteith equation',
                         'description':'Evapotranspiration calculation based on Feddes et al., (1976)'}
     
 
@@ -137,6 +146,9 @@ class Opt:
                         \n# 3: based on soil deficit',
                         'description':'Percolation based on soil deficit. Percolation exists after soil saturation'}          
     
+    cond['init_GW_0']   = {'key':'opt_init_GW', 'value':0, 
+                        'general_description':'Include initial GW storage into calibration \n# 0: Read from asc inputs\n# 1: Included for calibration',
+                        'description':'Read initial GW storage from asc inputs'}
 
     cond['init_GW_1']   = {'key':'opt_init_GW', 'value':1, 
                         'general_description':'Include initial GW storage into calibration \n# 0: Read from asc inputs\n# 1: Included for calibration',

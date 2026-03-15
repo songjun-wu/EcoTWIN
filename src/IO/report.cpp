@@ -52,6 +52,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__Th==2) _Th_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__snowmelt==2) _snowmelt_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__infilt==2) _infilt_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__preferential_flow==2) _preferential_flow_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Perc1==2) _Perc1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Perc2==2) _Perc2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Perc3==2) _Perc3_acc = new svector(ctrl._sortedGrid.size);
@@ -61,6 +62,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__rPerc2==2) _rPerc2_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__rPerc3==2) _rPerc3_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__rPerc_vadose==2) _rPerc_vadose_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__capillary_flow==2) _capillary_flow_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Es==2) _Es_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__Tr==2) _Tr_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__irrigation_from_river==2) _irrigation_from_river_acc = new svector(ctrl._sortedGrid.size);
@@ -111,6 +113,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__plant_C==2) _plant_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__humus_C==2) _humus_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__fast_C==2) _fast_C_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__soluble_C==2) _soluble_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_I==2) _doc_I_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_snow==2) _doc_snow_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_pond==2) _doc_pond_acc = new svector(ctrl._sortedGrid.size);
@@ -124,6 +127,8 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__soil_respiration_C==2) _soil_respiration_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__soil_decomposition_C==2) _soil_decomposition_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__respiration_river_C==2) _respiration_river_C_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__leaching_mass_doc==2) _leaching_mass_doc_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__drainage_mass_doc==2) _drainage_mass_doc_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_I==2) _no3_I_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_snow==2) _no3_snow_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_pond==2) _no3_pond_acc = new svector(ctrl._sortedGrid.size);
@@ -140,6 +145,8 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__deni_river==2) _deni_river_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__humus_N==2) _humus_N_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__fast_N==2) _fast_N_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__leaching_mass_no3==2) _leaching_mass_no3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__drainage_mass_no3==2) _drainage_mass_no3_acc = new svector(ctrl._sortedGrid.size);
   /* end of Create maps */
   return EXIT_SUCCESS;
 }
@@ -159,6 +166,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Th==2) _Th_acc->plus(*Bsn._Th);
   if (ctrl.report__snowmelt==2) _snowmelt_acc->plus(*Bsn._snowmelt);
   if (ctrl.report__infilt==2) _infilt_acc->plus(*Bsn._infilt);
+  if (ctrl.report__preferential_flow==2) _preferential_flow_acc->plus(*Bsn._preferential_flow);
   if (ctrl.report__Perc1==2) _Perc1_acc->plus(*Bsn._Perc1);
   if (ctrl.report__Perc2==2) _Perc2_acc->plus(*Bsn._Perc2);
   if (ctrl.report__Perc3==2) _Perc3_acc->plus(*Bsn._Perc3);
@@ -168,6 +176,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__rPerc2==2) _rPerc2_acc->plus(*Bsn._rPerc2);
   if (ctrl.report__rPerc3==2) _rPerc3_acc->plus(*Bsn._rPerc3);
   if (ctrl.report__rPerc_vadose==2) _rPerc_vadose_acc->plus(*Bsn._rPerc_vadose);
+  if (ctrl.report__capillary_flow==2) _capillary_flow_acc->plus(*Bsn._capillary_flow);
   if (ctrl.report__Es==2) _Es_acc->plus(*Bsn._Es);
   if (ctrl.report__Tr==2) _Tr_acc->plus(*Bsn._Tr);
   if (ctrl.report__irrigation_from_river==2) _irrigation_from_river_acc->plus(*Bsn._irrigation_from_river);
@@ -218,6 +227,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__plant_C==2) _plant_C_acc->plus(*Bsn._plant_C);
   if (ctrl.report__humus_C==2) _humus_C_acc->plus(*Bsn._humus_C);
   if (ctrl.report__fast_C==2) _fast_C_acc->plus(*Bsn._fast_C);
+  if (ctrl.report__soluble_C==2) _soluble_C_acc->plus(*Bsn._soluble_C);
   if (ctrl.report__doc_I==2) _doc_I_acc->plus(*Bsn._doc_I);
   if (ctrl.report__doc_snow==2) _doc_snow_acc->plus(*Bsn._doc_snow);
   if (ctrl.report__doc_pond==2) _doc_pond_acc->plus(*Bsn._doc_pond);
@@ -231,6 +241,8 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__soil_respiration_C==2) _soil_respiration_C_acc->plus(*Bsn._soil_respiration_C);
   if (ctrl.report__soil_decomposition_C==2) _soil_decomposition_C_acc->plus(*Bsn._soil_decomposition_C);
   if (ctrl.report__respiration_river_C==2) _respiration_river_C_acc->plus(*Bsn._respiration_river_C);
+  if (ctrl.report__leaching_mass_doc==2) _leaching_mass_doc_acc->plus(*Bsn._leaching_mass_doc);
+  if (ctrl.report__drainage_mass_doc==2) _drainage_mass_doc_acc->plus(*Bsn._drainage_mass_doc);
   if (ctrl.report__no3_I==2) _no3_I_acc->plus(*Bsn._no3_I);
   if (ctrl.report__no3_snow==2) _no3_snow_acc->plus(*Bsn._no3_snow);
   if (ctrl.report__no3_pond==2) _no3_pond_acc->plus(*Bsn._no3_pond);
@@ -247,6 +259,8 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__deni_river==2) _deni_river_acc->plus(*Bsn._deni_river);
   if (ctrl.report__humus_N==2) _humus_N_acc->plus(*Bsn._humus_N);
   if (ctrl.report__fast_N==2) _fast_N_acc->plus(*Bsn._fast_N);
+  if (ctrl.report__leaching_mass_no3==2) _leaching_mass_no3_acc->plus(*Bsn._leaching_mass_no3);
+  if (ctrl.report__drainage_mass_no3==2) _drainage_mass_no3_acc->plus(*Bsn._drainage_mass_no3);
   /* end of Update maps */
 
   return EXIT_SUCCESS;
@@ -291,6 +305,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__infilt==1)  report_create(ctrl.path_ResultsFolder+"infiltration_TS.bin", of__infilt);
   else if (ctrl.report__infilt==2)  report_create(ctrl.path_ResultsFolder+"infiltration_map.bin", of__infilt);
 
+  if (ctrl.report__preferential_flow==1)  report_create(ctrl.path_ResultsFolder+"preferential_flow_TS.bin", of__preferential_flow);
+  else if (ctrl.report__preferential_flow==2)  report_create(ctrl.path_ResultsFolder+"preferential_flow_map.bin", of__preferential_flow);
+
   if (ctrl.report__Perc1==1)  report_create(ctrl.path_ResultsFolder+"perc_layer1_TS.bin", of__Perc1);
   else if (ctrl.report__Perc1==2)  report_create(ctrl.path_ResultsFolder+"perc_layer1_map.bin", of__Perc1);
 
@@ -317,6 +334,9 @@ int Report::Report_Initialisation(Control &ctrl){
 
   if (ctrl.report__rPerc_vadose==1)  report_create(ctrl.path_ResultsFolder+"rperc_vadose_TS.bin", of__rPerc_vadose);
   else if (ctrl.report__rPerc_vadose==2)  report_create(ctrl.path_ResultsFolder+"rperc_vadose_map.bin", of__rPerc_vadose);
+
+  if (ctrl.report__capillary_flow==1)  report_create(ctrl.path_ResultsFolder+"capillary_flow_TS.bin", of__capillary_flow);
+  else if (ctrl.report__capillary_flow==2)  report_create(ctrl.path_ResultsFolder+"capillary_flow_map.bin", of__capillary_flow);
 
   if (ctrl.report__Es==1)  report_create(ctrl.path_ResultsFolder+"soil_evap_TS.bin", of__Es);
   else if (ctrl.report__Es==2)  report_create(ctrl.path_ResultsFolder+"soil_evap_map.bin", of__Es);
@@ -468,6 +488,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__fast_C==1)  report_create(ctrl.path_ResultsFolder+"fast_C_TS.bin", of__fast_C);
   else if (ctrl.report__fast_C==2)  report_create(ctrl.path_ResultsFolder+"fast_C_map.bin", of__fast_C);
 
+  if (ctrl.report__soluble_C==1)  report_create(ctrl.path_ResultsFolder+"soluble_C_TS.bin", of__soluble_C);
+  else if (ctrl.report__soluble_C==2)  report_create(ctrl.path_ResultsFolder+"soluble_C_map.bin", of__soluble_C);
+
   if (ctrl.report__doc_I==1)  report_create(ctrl.path_ResultsFolder+"doc_canopy_storage_TS.bin", of__doc_I);
   else if (ctrl.report__doc_I==2)  report_create(ctrl.path_ResultsFolder+"doc_canopy_storage_map.bin", of__doc_I);
 
@@ -506,6 +529,12 @@ int Report::Report_Initialisation(Control &ctrl){
 
   if (ctrl.report__respiration_river_C==1)  report_create(ctrl.path_ResultsFolder+"respiration_river_C_TS.bin", of__respiration_river_C);
   else if (ctrl.report__respiration_river_C==2)  report_create(ctrl.path_ResultsFolder+"respiration_river_C_map.bin", of__respiration_river_C);
+
+  if (ctrl.report__leaching_mass_doc==1)  report_create(ctrl.path_ResultsFolder+"leaching_mass_doc_TS.bin", of__leaching_mass_doc);
+  else if (ctrl.report__leaching_mass_doc==2)  report_create(ctrl.path_ResultsFolder+"leaching_mass_doc_map.bin", of__leaching_mass_doc);
+
+  if (ctrl.report__drainage_mass_doc==1)  report_create(ctrl.path_ResultsFolder+"drainage_mass_doc_TS.bin", of__drainage_mass_doc);
+  else if (ctrl.report__drainage_mass_doc==2)  report_create(ctrl.path_ResultsFolder+"drainage_mass_doc_map.bin", of__drainage_mass_doc);
 
   if (ctrl.report__no3_I==1)  report_create(ctrl.path_ResultsFolder+"no3_canopy_storage_TS.bin", of__no3_I);
   else if (ctrl.report__no3_I==2)  report_create(ctrl.path_ResultsFolder+"no3_canopy_storage_map.bin", of__no3_I);
@@ -555,6 +584,12 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__fast_N==1)  report_create(ctrl.path_ResultsFolder+"fast_N_TS.bin", of__fast_N);
   else if (ctrl.report__fast_N==2)  report_create(ctrl.path_ResultsFolder+"fast_N_map.bin", of__fast_N);
 
+  if (ctrl.report__leaching_mass_no3==1)  report_create(ctrl.path_ResultsFolder+"leaching_mass_no3_TS.bin", of__leaching_mass_no3);
+  else if (ctrl.report__leaching_mass_no3==2)  report_create(ctrl.path_ResultsFolder+"leaching_mass_no3_map.bin", of__leaching_mass_no3);
+
+  if (ctrl.report__drainage_mass_no3==1)  report_create(ctrl.path_ResultsFolder+"drainage_mass_no3_TS.bin", of__drainage_mass_no3);
+  else if (ctrl.report__drainage_mass_no3==2)  report_create(ctrl.path_ResultsFolder+"drainage_mass_no3_map.bin", of__drainage_mass_no3);
+
   /* end of Init Report */
   return EXIT_SUCCESS;
 }
@@ -581,6 +616,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__Th==1) {reportTS(ctrl, Bsn._Th, of__Th);}
   if (ctrl.report__snowmelt==1) {reportTS(ctrl, Bsn._snowmelt, of__snowmelt);}
   if (ctrl.report__infilt==1) {reportTS(ctrl, Bsn._infilt, of__infilt);}
+  if (ctrl.report__preferential_flow==1) {reportTS(ctrl, Bsn._preferential_flow, of__preferential_flow);}
   if (ctrl.report__Perc1==1) {reportTS(ctrl, Bsn._Perc1, of__Perc1);}
   if (ctrl.report__Perc2==1) {reportTS(ctrl, Bsn._Perc2, of__Perc2);}
   if (ctrl.report__Perc3==1) {reportTS(ctrl, Bsn._Perc3, of__Perc3);}
@@ -590,6 +626,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__rPerc2==1) {reportTS(ctrl, Bsn._rPerc2, of__rPerc2);}
   if (ctrl.report__rPerc3==1) {reportTS(ctrl, Bsn._rPerc3, of__rPerc3);}
   if (ctrl.report__rPerc_vadose==1) {reportTS(ctrl, Bsn._rPerc_vadose, of__rPerc_vadose);}
+  if (ctrl.report__capillary_flow==1) {reportTS(ctrl, Bsn._capillary_flow, of__capillary_flow);}
   if (ctrl.report__Es==1) {reportTS(ctrl, Bsn._Es, of__Es);}
   if (ctrl.report__Tr==1) {reportTS(ctrl, Bsn._Tr, of__Tr);}
   if (ctrl.report__irrigation_from_river==1) {reportTS(ctrl, Bsn._irrigation_from_river, of__irrigation_from_river);}
@@ -640,6 +677,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__plant_C==1) {reportTS(ctrl, Bsn._plant_C, of__plant_C);}
   if (ctrl.report__humus_C==1) {reportTS(ctrl, Bsn._humus_C, of__humus_C);}
   if (ctrl.report__fast_C==1) {reportTS(ctrl, Bsn._fast_C, of__fast_C);}
+  if (ctrl.report__soluble_C==1) {reportTS(ctrl, Bsn._soluble_C, of__soluble_C);}
   if (ctrl.report__doc_I==1) {reportTS(ctrl, Bsn._doc_I, of__doc_I);}
   if (ctrl.report__doc_snow==1) {reportTS(ctrl, Bsn._doc_snow, of__doc_snow);}
   if (ctrl.report__doc_pond==1) {reportTS(ctrl, Bsn._doc_pond, of__doc_pond);}
@@ -653,6 +691,8 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__soil_respiration_C==1) {reportTS(ctrl, Bsn._soil_respiration_C, of__soil_respiration_C);}
   if (ctrl.report__soil_decomposition_C==1) {reportTS(ctrl, Bsn._soil_decomposition_C, of__soil_decomposition_C);}
   if (ctrl.report__respiration_river_C==1) {reportTS(ctrl, Bsn._respiration_river_C, of__respiration_river_C);}
+  if (ctrl.report__leaching_mass_doc==1) {reportTS(ctrl, Bsn._leaching_mass_doc, of__leaching_mass_doc);}
+  if (ctrl.report__drainage_mass_doc==1) {reportTS(ctrl, Bsn._drainage_mass_doc, of__drainage_mass_doc);}
   if (ctrl.report__no3_I==1) {reportTS(ctrl, Bsn._no3_I, of__no3_I);}
   if (ctrl.report__no3_snow==1) {reportTS(ctrl, Bsn._no3_snow, of__no3_snow);}
   if (ctrl.report__no3_pond==1) {reportTS(ctrl, Bsn._no3_pond, of__no3_pond);}
@@ -669,6 +709,8 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__deni_river==1) {reportTS(ctrl, Bsn._deni_river, of__deni_river);}
   if (ctrl.report__humus_N==1) {reportTS(ctrl, Bsn._humus_N, of__humus_N);}
   if (ctrl.report__fast_N==1) {reportTS(ctrl, Bsn._fast_N, of__fast_N);}
+  if (ctrl.report__leaching_mass_no3==1) {reportTS(ctrl, Bsn._leaching_mass_no3, of__leaching_mass_no3);}
+  if (ctrl.report__drainage_mass_no3==1) {reportTS(ctrl, Bsn._drainage_mass_no3, of__drainage_mass_no3);}
   /* end of Report to time series */
   return EXIT_SUCCESS;
   }
@@ -689,6 +731,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__Th==2) {reportMap(ctrl, _Th_acc, ctrl._sortedGrid, of__Th);}
   if (ctrl.report__snowmelt==2) {reportMap(ctrl, _snowmelt_acc, ctrl._sortedGrid, of__snowmelt);}
   if (ctrl.report__infilt==2) {reportMap(ctrl, _infilt_acc, ctrl._sortedGrid, of__infilt);}
+  if (ctrl.report__preferential_flow==2) {reportMap(ctrl, _preferential_flow_acc, ctrl._sortedGrid, of__preferential_flow);}
   if (ctrl.report__Perc1==2) {reportMap(ctrl, _Perc1_acc, ctrl._sortedGrid, of__Perc1);}
   if (ctrl.report__Perc2==2) {reportMap(ctrl, _Perc2_acc, ctrl._sortedGrid, of__Perc2);}
   if (ctrl.report__Perc3==2) {reportMap(ctrl, _Perc3_acc, ctrl._sortedGrid, of__Perc3);}
@@ -698,6 +741,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__rPerc2==2) {reportMap(ctrl, _rPerc2_acc, ctrl._sortedGrid, of__rPerc2);}
   if (ctrl.report__rPerc3==2) {reportMap(ctrl, _rPerc3_acc, ctrl._sortedGrid, of__rPerc3);}
   if (ctrl.report__rPerc_vadose==2) {reportMap(ctrl, _rPerc_vadose_acc, ctrl._sortedGrid, of__rPerc_vadose);}
+  if (ctrl.report__capillary_flow==2) {reportMap(ctrl, _capillary_flow_acc, ctrl._sortedGrid, of__capillary_flow);}
   if (ctrl.report__Es==2) {reportMap(ctrl, _Es_acc, ctrl._sortedGrid, of__Es);}
   if (ctrl.report__Tr==2) {reportMap(ctrl, _Tr_acc, ctrl._sortedGrid, of__Tr);}
   if (ctrl.report__irrigation_from_river==2) {reportMap(ctrl, _irrigation_from_river_acc, ctrl._sortedGrid, of__irrigation_from_river);}
@@ -748,6 +792,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__plant_C==2) {reportMap(ctrl, _plant_C_acc, ctrl._sortedGrid, of__plant_C);}
   if (ctrl.report__humus_C==2) {reportMap(ctrl, _humus_C_acc, ctrl._sortedGrid, of__humus_C);}
   if (ctrl.report__fast_C==2) {reportMap(ctrl, _fast_C_acc, ctrl._sortedGrid, of__fast_C);}
+  if (ctrl.report__soluble_C==2) {reportMap(ctrl, _soluble_C_acc, ctrl._sortedGrid, of__soluble_C);}
   if (ctrl.report__doc_I==2) {reportMap(ctrl, _doc_I_acc, ctrl._sortedGrid, of__doc_I);}
   if (ctrl.report__doc_snow==2) {reportMap(ctrl, _doc_snow_acc, ctrl._sortedGrid, of__doc_snow);}
   if (ctrl.report__doc_pond==2) {reportMap(ctrl, _doc_pond_acc, ctrl._sortedGrid, of__doc_pond);}
@@ -761,6 +806,8 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__soil_respiration_C==2) {reportMap(ctrl, _soil_respiration_C_acc, ctrl._sortedGrid, of__soil_respiration_C);}
   if (ctrl.report__soil_decomposition_C==2) {reportMap(ctrl, _soil_decomposition_C_acc, ctrl._sortedGrid, of__soil_decomposition_C);}
   if (ctrl.report__respiration_river_C==2) {reportMap(ctrl, _respiration_river_C_acc, ctrl._sortedGrid, of__respiration_river_C);}
+  if (ctrl.report__leaching_mass_doc==2) {reportMap(ctrl, _leaching_mass_doc_acc, ctrl._sortedGrid, of__leaching_mass_doc);}
+  if (ctrl.report__drainage_mass_doc==2) {reportMap(ctrl, _drainage_mass_doc_acc, ctrl._sortedGrid, of__drainage_mass_doc);}
   if (ctrl.report__no3_I==2) {reportMap(ctrl, _no3_I_acc, ctrl._sortedGrid, of__no3_I);}
   if (ctrl.report__no3_snow==2) {reportMap(ctrl, _no3_snow_acc, ctrl._sortedGrid, of__no3_snow);}
   if (ctrl.report__no3_pond==2) {reportMap(ctrl, _no3_pond_acc, ctrl._sortedGrid, of__no3_pond);}
@@ -777,6 +824,8 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__deni_river==2) {reportMap(ctrl, _deni_river_acc, ctrl._sortedGrid, of__deni_river);}
   if (ctrl.report__humus_N==2) {reportMap(ctrl, _humus_N_acc, ctrl._sortedGrid, of__humus_N);}
   if (ctrl.report__fast_N==2) {reportMap(ctrl, _fast_N_acc, ctrl._sortedGrid, of__fast_N);}
+  if (ctrl.report__leaching_mass_no3==2) {reportMap(ctrl, _leaching_mass_no3_acc, ctrl._sortedGrid, of__leaching_mass_no3);}
+  if (ctrl.report__drainage_mass_no3==2) {reportMap(ctrl, _drainage_mass_no3_acc, ctrl._sortedGrid, of__drainage_mass_no3);}
   /* end of Report to maps */
   advance_report = 0;
   return EXIT_SUCCESS;

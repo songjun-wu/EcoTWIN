@@ -72,7 +72,8 @@ int Basin::Solve_soil_profile_carbon(Control &ctrl, Atmosphere &atm, Param &par)
         ST3 = _theta3_old->val[j] * depth3;
 
         /* Mixing */
-        // Mix ponding water with top layer storage
+        // Mix ponding water with top layer storage (not used in current version)
+        /*
         pond_old = _pond->val[j] + _infilt->val[j];
         if (pond_old > roundoffERR and ST1 > roundoffERR){
             doc_pond_old = doc_pond;
@@ -81,6 +82,7 @@ int Basin::Solve_soil_profile_carbon(Control &ctrl, Atmosphere &atm, Param &par)
             doc_pond = (doc_pond_old * (pond_old - pond_to_mix) + doc_layer1_old * pond_to_mix) / pond_old;
             doc_layer1 = (doc_pond_old * pond_to_mix + doc_layer1_old * (ST1 - pond_to_mix)) / ST1;
         }
+        */
         
         // Mixing layer 1
         Mixing_full(ST1, doc_layer1, _infilt->val[j], doc_pond);

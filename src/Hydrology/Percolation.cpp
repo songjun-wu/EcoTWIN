@@ -27,9 +27,13 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         double theta2 = _theta2->val[j];
         double theta3 = _theta3->val[j];
 
-        double thetaFC1 = _thetaFC1->val[j];
-        double thetaFC2 = _thetaFC2->val[j];
-        double thetaFC3 = _thetaFC3->val[j];
+        double perc_optimal_theta = par._perc_optimal_theta->val[j];  // The specific threshold between field capacity and saturated content for percolation [0-1]
+        double thetaFC1 = _thetaS1->val[j] * perc_optimal_theta + _thetaFC1->val[j] * (1 - perc_optimal_theta);
+        double thetaFC2 = _thetaS2->val[j] * perc_optimal_theta + _thetaFC2->val[j] * (1 - perc_optimal_theta);
+        double thetaFC3 = _thetaS3->val[j] * perc_optimal_theta + _thetaFC3->val[j] * (1 - perc_optimal_theta);
+        //double thetaFC1 = _thetaFC1->val[j];
+        //double thetaFC2 = _thetaFC2->val[j];
+        //double thetaFC3 = _thetaFC3->val[j];
 
         double depth1 = _depth1->val[j];
         double depth2 = _depth2->val[j];
@@ -41,6 +45,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
 
         // Drainage variables
         double drainage_depth =  _drainage_depth->val[j];;  // Drainage depth [m]
+        double drainage_intensity = par._drainage_intensity->val[j];  // Drainage intensity [0-1] = parameter Drainage intensity [0-1] * reference drainage density [length-1] (in parameterisation)
         double relative_drainage_depth;  // Drainage depth relative to the bottom of soil layer [0-1]
         double relative_grounwater_table;  // Groundwater table relative to the bottom of soil layer [0-1]
         double drainage1, drainage2, drainage3;  // Drainage amount for each soil layer [m]
@@ -61,7 +66,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
             relative_drainage_depth =  max(0.0, (depth1 - drainage_depth) / depth1);  
             relative_grounwater_table = theta1 > thetaFC1 ? (theta1 - thetaFC1) / (_thetaS1->val[j] - thetaFC1) : 0.0;
             if (relative_grounwater_table > relative_drainage_depth) {
-                drainage1 = (relative_grounwater_table - relative_drainage_depth) * (theta1 - thetaFC1) * depth1 * par._drainage_intensity->val[j];
+                drainage1 = (relative_grounwater_table - relative_drainage_depth) * (theta1 - thetaFC1) * depth1 * drainage_intensity;
                 theta1 = (theta1 * depth1 - drainage1) / depth1;
             }
         }  // End of drainage from soil layer 1
@@ -80,7 +85,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
             if (relative_drainage_depth < 1.0) {
                 relative_grounwater_table = theta2 > thetaFC2 ? (theta2 - thetaFC2) / (_thetaS2->val[j] - thetaFC2) : 0.0;
                 if (relative_grounwater_table > relative_drainage_depth) {
-                    drainage2 = (relative_grounwater_table - relative_drainage_depth) * (theta2 - thetaFC2) * depth2 * par._drainage_intensity->val[j];
+                    drainage2 = (relative_grounwater_table - relative_drainage_depth) * (theta2 - thetaFC2) * depth2 * drainage_intensity;
                     theta2 = (theta2 * depth2 - drainage2) / depth2;
                 }
             }
@@ -100,7 +105,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
             if (relative_drainage_depth < 1.0) {
                 relative_grounwater_table = theta3 > thetaFC3 ? (theta3 - thetaFC3) / (_thetaS3->val[j] - thetaFC3) : 0.0;
                 if (relative_grounwater_table > relative_drainage_depth) {
-                    drainage3 = (relative_grounwater_table - relative_drainage_depth) * (theta3 - thetaFC3) * depth3 * par._drainage_intensity->val[j];
+                    drainage3 = (relative_grounwater_table - relative_drainage_depth) * (theta3 - thetaFC3) * depth3 * drainage_intensity;
                     theta3 = (theta3 * depth3 - drainage3) / depth3;
                 }
             }

@@ -18,24 +18,8 @@
 #include "Basin.h"
 
 int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){
-   
-    // Hydraulic proporties
-    if (par.param_category->sort_PTF == 0){
-        // Estimate saturated hydraulic conductivity, field capacity, and wilting point
-        Soil_proporty(ctrl, par);
-        par.param_category->sort_PTF = 1;
-    }
-    // Root fraction
-    if (ctrl.opt_evap == 1 or ctrl.opt_nitrogen_sim==1){
-        Sort_root_fraction(ctrl, par);
-    }
-    // Travel time of percolation
-    if (ctrl.opt_percolation == 1){
-        Sort_percolation_travel_time(ctrl, par);
-    }
+    
 
-    
-    
     // Infiltration
     if (ctrl.opt_infil == 1){
         Infiltration_1(ctrl, par);
@@ -45,18 +29,20 @@ int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){
     // Percolation (and drainage if activated)
     if (ctrl.opt_percolation == 1){
         Percolation_1(ctrl, par);
+        Capillary_flow(ctrl, par);
         GWrecharge_1(ctrl, par);
     } else if (ctrl.opt_percolation == 2){
         Percolation_2(ctrl, par);
+        Capillary_flow(ctrl, par);
         GWrecharge_2(ctrl, par);
     } else if (ctrl.opt_percolation == 3){
         Percolation_3(ctrl, par);
+        Capillary_flow(ctrl, par);
         GWrecharge_2(ctrl, par);  // todo
     }
 
     
 
-    ctrl.opt_evap=2;  // todo
     // Evapotranspiratioin
     if (ctrl.opt_evap==1){
         Seperate_PET(par, atm);

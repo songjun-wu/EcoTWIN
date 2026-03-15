@@ -148,7 +148,7 @@ int Basin::Solve_routing_transport(Control &ctrl, Param &par, \
             if (ctrl.opt_baseflow_mixing == 0) Mixing_full(_GW_old->val[j], _sv_conc_GW.val[j], rPerc_vadose, _sv_conc_vadose.val[j]);
         }
 
-        
+
         // Interflow mixing with lateral inflow
         if(_interf_in->val[j] > roundoffERR) {
             Mixing_full(_vadose_old->val[j] + rPerc3 - rPerc_vadose, _sv_conc_vadose.val[j], _interf_in->val[j], _flux_interf_in_acc->val[j] / _interf_in->val[j]);
@@ -156,6 +156,7 @@ int Basin::Solve_routing_transport(Control &ctrl, Param &par, \
         if (lat_ok == 1){  // Add 18O in interflow outflow to the inferflow inflow of downstream cell
             _flux_interf_in_acc->val[from_j] += _sv_conc_vadose.val[j] * _interf_out->val[j];
         }
+
 
         // GW mixing with lateral inflow
         if (ctrl.opt_baseflow_mixing == 0){  // Still use full mixing

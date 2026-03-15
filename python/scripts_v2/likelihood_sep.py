@@ -1,5 +1,5 @@
 import os
-import GEM_tools
+import GEM_tools_v2
 import shutil
 import subprocess
 import numpy as np
@@ -22,8 +22,8 @@ def likelihood(param, chainID, modelID):
 
         
         # Sort env
-        GEM_tools.gen_param(runpath, Info, Param, param)
-        GEM_tools.gen_no3_addtion(runpath, Info)
+        GEM_tools_v2.gen_param(runpath, Info, Param, param)
+        GEM_tools_v2.gen_no3_addtion(runpath, Info)
 
         # Model run        
         os.chdir(runpath)
@@ -56,10 +56,10 @@ def likelihood(param, chainID, modelID):
                 for i in range(_obs.shape[0]):
                     sim = _sim[dict['sim_idx'][kk][i], :]
                     obs = _obs[i,:]
-                    err += (1 - GEM_tools.kge(sim, obs)) * dict['weights'][kk][i]
+                    err += (1 - GEM_tools_v2.kge(sim, obs)) * dict['weights'][kk][i]
                     # todo
                     #if chainID==0 and modelID==0:
-                    #    print('   ', Output.Catchment_ID[kk], key, i, GEM_tools.kge_modified(sim, obs), dict['weights'][kk][i], np.nanmean(sim), np.nanmean(obs) )
+                    #    print('   ', Output.Catchment_ID[kk], key, i, GEM_tools_v2.kge_modified(sim, obs), dict['weights'][kk][i], np.nanmean(sim), np.nanmean(obs) )
                     #    np.savetxt('/data/scratch/wusongj/paper4/cali/chain_0/param.txt', param)
                 
         #stop1 = time.time()

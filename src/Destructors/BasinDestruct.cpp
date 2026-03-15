@@ -32,6 +32,9 @@ int Basin::dtor(Control &ctrl){
   if(_clay1) delete _clay1;
   if(_organic1) delete _organic1;
   if(_bulkdensity1) delete _bulkdensity1;
+  if (ctrl.opt_drainage == 1){
+    if(_drainage_depth) delete _drainage_depth;
+  }
   if (ctrl.opt_depthprofile == 3){
     if(_sand2) delete _sand2;
     if(_sand3) delete _sand3;
@@ -61,10 +64,6 @@ int Basin::dtor(Control &ctrl){
   /* end of GroundTs */
 
   /* ManagementTs */
-  if (ctrl.opt_drainage == 1){
-    if (if__drainage_depth.is_open())  if__drainage_depth.close();
-    if(_drainage_depth) delete _drainage_depth;
-  }
   /* end of ManagementTs */
 
   /* Storages */
@@ -97,11 +96,13 @@ int Basin::dtor(Control &ctrl){
   if(_Th) delete _Th;
   if(_snowmelt) delete _snowmelt;
   if(_infilt) delete _infilt;
+  if(_preferential_flow) delete _preferential_flow;
   if(_Perc1) delete _Perc1;
   if(_Perc2) delete _Perc2;
   if(_Perc3) delete _Perc3;
   if(_Perc_vadose) delete _Perc_vadose;
   if(_rPerc_vadose) delete _rPerc_vadose;
+  if(_capillary_flow) delete _capillary_flow;
   if(_Ei) delete _Ei;
   if(_Es) delete _Es;
   if(_Tr) delete _Tr;
@@ -149,17 +150,19 @@ int Basin::dtor(Control &ctrl){
     if(_drainage_from_layer2) delete _drainage_from_layer2;
     if(_drainage_from_layer3) delete _drainage_from_layer3;
   }
-  if (ctrl.opt_evap == 1){
+  if (ctrl.opt_evap == 1 or ctrl.opt_evap == 2){
     if(_froot_layer1) delete _froot_layer1;
     if(_froot_layer2) delete _froot_layer2;
     if(_froot_layer3) delete _froot_layer3;
-    if(_PE) delete _PE;
-    if(_PT) delete _PT;
   }
   if (ctrl.opt_percolation == 1){
     if(_p_perc1) delete _p_perc1;
     if(_p_perc2) delete _p_perc2;
     if(_p_perc3) delete _p_perc3;
+  }
+  if (ctrl.opt_evap == 1){
+    if(_PE) delete _PE;
+    if(_PT) delete _PT;
   }
   if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
     if(_flux_ovf_in_acc) delete _flux_ovf_in_acc;
@@ -224,15 +227,6 @@ int Basin::dtor(Control &ctrl){
     if(_no3_vadose) delete _no3_vadose;
     if(_no3_GW) delete _no3_GW;
     if(_no3_chanS) delete _no3_chanS;
-    if(_don_I) delete _don_I;
-    if(_don_snow) delete _don_snow;
-    if(_don_pond) delete _don_pond;
-    if(_don_layer1) delete _don_layer1;
-    if(_don_layer2) delete _don_layer2;
-    if(_don_layer3) delete _don_layer3;
-    if(_don_vadose) delete _don_vadose;
-    if(_don_GW) delete _don_GW;
-    if(_don_chanS) delete _don_chanS;
     if(_nitrogen_add) delete _nitrogen_add;
     if(_plant_uptake) delete _plant_uptake;
     if(_deni_soil) delete _deni_soil;
@@ -242,6 +236,8 @@ int Basin::dtor(Control &ctrl){
     if(_fast_NP1) delete _fast_NP1;
     if(_humus_N) delete _humus_N;
     if(_fast_N) delete _fast_N;
+    if(_leaching_mass_no3) delete _leaching_mass_no3;
+    if(_drainage_mass_no3) delete _drainage_mass_no3;
   }
   /* end of Nitrogen */
 
@@ -254,20 +250,25 @@ int Basin::dtor(Control &ctrl){
     if(_acid_CP1_nonwood) delete _acid_CP1_nonwood;
     if(_ethanol_CP1_nonwood) delete _ethanol_CP1_nonwood;
     if(_nonsoluble_CP1_nonwood) delete _nonsoluble_CP1_nonwood;
+    if(_soluble_CP1_nonwood) delete _soluble_CP1_nonwood;
     if(_acid_CP1_wood) delete _acid_CP1_wood;
     if(_ethanol_CP1_wood) delete _ethanol_CP1_wood;
     if(_nonsoluble_CP1_wood) delete _nonsoluble_CP1_wood;
+    if(_soluble_CP1_wood) delete _soluble_CP1_wood;
     if(_humus_CP1) delete _humus_CP1;
     if(_acid_CP2_wood) delete _acid_CP2_wood;
     if(_ethanol_CP2_wood) delete _ethanol_CP2_wood;
     if(_nonsoluble_CP2_wood) delete _nonsoluble_CP2_wood;
+    if(_soluble_CP2_wood) delete _soluble_CP2_wood;
     if(_humus_CP2) delete _humus_CP2;
     if(_acid_CP3_wood) delete _acid_CP3_wood;
     if(_ethanol_CP3_wood) delete _ethanol_CP3_wood;
     if(_nonsoluble_CP3_wood) delete _nonsoluble_CP3_wood;
+    if(_soluble_CP3_wood) delete _soluble_CP3_wood;
     if(_humus_CP3) delete _humus_CP3;
     if(_humus_C) delete _humus_C;
     if(_fast_C) delete _fast_C;
+    if(_soluble_C) delete _soluble_C;
     if(_doc_I) delete _doc_I;
     if(_doc_snow) delete _doc_snow;
     if(_doc_pond) delete _doc_pond;
@@ -283,6 +284,8 @@ int Basin::dtor(Control &ctrl){
     if(_respiration_river_C) delete _respiration_river_C;
     if(_C4_flag) delete _C4_flag;
     if(_doc_rain) delete _doc_rain;
+    if(_leaching_mass_doc) delete _leaching_mass_doc;
+    if(_drainage_mass_doc) delete _drainage_mass_doc;
   }
   /* end of Carbon */
 

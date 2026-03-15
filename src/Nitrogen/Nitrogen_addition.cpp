@@ -92,7 +92,6 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
     int idx;
 
     double day_of_year = ctrl.day_of_year;;  // Day of year
-    double DT = ctrl.Simul_tstep / 86400;  // all rates are calculated at daily timesteps
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         ST1 = _theta1->val[j] * _depth1->val[j];

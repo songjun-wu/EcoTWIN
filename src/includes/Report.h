@@ -45,6 +45,7 @@ class Report {
     ofstream of__Th;  // Throughfall [m]
     ofstream of__snowmelt;  // Snow melt [m]
     ofstream of__infilt;  // Inflitration into soil layer 1 [m]
+    ofstream of__preferential_flow;  // Preferential flow to vadose storage due to exstenice of macropores in rock landscapes [m]
     ofstream of__Perc1;  // Percolation into layer 2 [m]
     ofstream of__Perc2;  // Percolation into layer 3 [m]
     ofstream of__Perc3;  // Percolation into vadose storage [m]
@@ -54,6 +55,7 @@ class Report {
     ofstream of__rPerc2;  // Repercolation into layer 3 due to overland flow routing [m]
     ofstream of__rPerc3;  // Repercolation into gw reservior due to overland flow routing [m]
     ofstream of__rPerc_vadose;  // Repercolation from vadose storage into gw reservior [m]
+    ofstream of__capillary_flow;  // Capillary flow from shallow GW zone to bottom soil layer [m]
     ofstream of__Ei;  // Canopy evaporation [m]
     ofstream of__Es;  // Soil evaporation [m]
     ofstream of__Tr;  // Total transpiration in three layers [m]
@@ -113,20 +115,25 @@ class Report {
     ofstream of__acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
     ofstream of__ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
     ofstream of__nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
+    ofstream of__soluble_CP1_nonwood;  // Soluble carbon pool (non-wood) in layer 1
     ofstream of__acid_CP1_wood;  // Acid hydrolyzable carbon pool (wood) in layer 1
     ofstream of__ethanol_CP1_wood;  // Ethanol soluble carbon pool (wood) in layer 1
     ofstream of__nonsoluble_CP1_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 1
+    ofstream of__soluble_CP1_wood;  // Soluble carbon pool (wood) in layer 1
     ofstream of__humus_CP1;  // Humus carbon pool (wood and non-wood) in layer 1
     ofstream of__acid_CP2_wood;  // Acid hydrolyzable carbon pool (wood) in layer 2
     ofstream of__ethanol_CP2_wood;  // Ethanol soluble carbon pool (wood) in layer 2
     ofstream of__nonsoluble_CP2_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 2
+    ofstream of__soluble_CP2_wood;  // Soluble carbon pool (wood) in layer 2
     ofstream of__humus_CP2;  // Humus carbon pool (wood) in layer 2
     ofstream of__acid_CP3_wood;  // Acid hydrolyzable carbon pool (wood) in layer 3
     ofstream of__ethanol_CP3_wood;  // Ethanol soluble carbon pool (wood) in layer 3
     ofstream of__nonsoluble_CP3_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 3
+    ofstream of__soluble_CP3_wood;  // Soluble carbon pool (wood) in layer 3
     ofstream of__humus_CP3;  // Humus carbon pool (wood) in layer 3
     ofstream of__humus_C;  // Humus carbon storage in all soil layers [mgN/L*m = gN/m2]
     ofstream of__fast_C;  // Fast carbon storage in all soil layers [mgN/L*m = gN/m2]
+    ofstream of__soluble_C;  // Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]
     ofstream of__doc_I;  // DOC in Canopy storage [mgN/L]
     ofstream of__doc_snow;  // DOC in Snow depth in [mgN/L]
     ofstream of__doc_pond;  // DOC in Ponding water in [mgN/L]
@@ -142,6 +149,8 @@ class Report {
     ofstream of__respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     ofstream of__C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     ofstream of__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
+    ofstream of__leaching_mass_doc;  // Leaching of DOC [gC/m2]
+    ofstream of__drainage_mass_doc;  // Drainage of DOC [gC/m2]
     ofstream of__plant_mobile_N;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
     ofstream of__no3_I;  // no3 in Canopy storage [mgN/L]
     ofstream of__no3_snow;  // no3 in Snow depth in [mgN/L]
@@ -152,15 +161,6 @@ class Report {
     ofstream of__no3_vadose;  // no3 in vadose storage [mgN/L]
     ofstream of__no3_GW;  // no3 in Groundwater storage [mgN/L]
     ofstream of__no3_chanS;  // no3 in Channel storage [mgN/L]
-    ofstream of__don_I;  // Dissolved organic nitrogen in Canopy storage [mgN/L]
-    ofstream of__don_snow;  // Dissolved organic nitrogen in Snow depth in [mgN/L]
-    ofstream of__don_pond;  // Dissolved organic nitrogen in Ponding water in [mgN/L]
-    ofstream of__don_layer1;  // Dissolved organic nitrogen in Soil moisture in layer 1 [mgN/L]
-    ofstream of__don_layer2;  // Dissolved organic nitrogen in Soil moisture in layer 2 [mgN/L]
-    ofstream of__don_layer3;  // Dissolved organic nitrogen in Soil moisture in layer 3 [mgN/L]
-    ofstream of__don_vadose;  // Dissolved organic nitrogen in vadose storage [mgN/L]
-    ofstream of__don_GW;  // Dissolved organic nitrogen in Groundwater storage [mgN/L]
-    ofstream of__don_chanS;  // Dissolved organic nitrogen in Channel storage [mgN/L]
     ofstream of__nitrogen_add;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
     ofstream of__plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
     ofstream of__deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
@@ -170,6 +170,8 @@ class Report {
     ofstream of__fast_NP1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
     ofstream of__humus_N;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
     ofstream of__fast_N;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
+    ofstream of__leaching_mass_no3;  // Leaching of NO3 [gN/m2]
+    ofstream of__drainage_mass_no3;  // Drainage of NO3 [gN/m2]
 
     svector *_I_acc;  // Canopy storage [m]
     svector *_snow_acc;  // Snow depth in [m]
@@ -183,6 +185,7 @@ class Report {
     svector *_Th_acc;  // Throughfall [m]
     svector *_snowmelt_acc;  // Snow melt [m]
     svector *_infilt_acc;  // Inflitration into soil layer 1 [m]
+    svector *_preferential_flow_acc;  // Preferential flow to vadose storage due to exstenice of macropores in rock landscapes [m]
     svector *_Perc1_acc;  // Percolation into layer 2 [m]
     svector *_Perc2_acc;  // Percolation into layer 3 [m]
     svector *_Perc3_acc;  // Percolation into vadose storage [m]
@@ -192,6 +195,7 @@ class Report {
     svector *_rPerc2_acc;  // Repercolation into layer 3 due to overland flow routing [m]
     svector *_rPerc3_acc;  // Repercolation into gw reservior due to overland flow routing [m]
     svector *_rPerc_vadose_acc;  // Repercolation from vadose storage into gw reservior [m]
+    svector *_capillary_flow_acc;  // Capillary flow from shallow GW zone to bottom soil layer [m]
     svector *_Ei_acc;  // Canopy evaporation [m]
     svector *_Es_acc;  // Soil evaporation [m]
     svector *_Tr_acc;  // Total transpiration in three layers [m]
@@ -251,20 +255,25 @@ class Report {
     svector *_acid_CP1_nonwood_acc;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
     svector *_ethanol_CP1_nonwood_acc;  // Ethanol soluble carbon pool (non-wood) in layer 1
     svector *_nonsoluble_CP1_nonwood_acc;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
+    svector *_soluble_CP1_nonwood_acc;  // Soluble carbon pool (non-wood) in layer 1
     svector *_acid_CP1_wood_acc;  // Acid hydrolyzable carbon pool (wood) in layer 1
     svector *_ethanol_CP1_wood_acc;  // Ethanol soluble carbon pool (wood) in layer 1
     svector *_nonsoluble_CP1_wood_acc;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 1
+    svector *_soluble_CP1_wood_acc;  // Soluble carbon pool (wood) in layer 1
     svector *_humus_CP1_acc;  // Humus carbon pool (wood and non-wood) in layer 1
     svector *_acid_CP2_wood_acc;  // Acid hydrolyzable carbon pool (wood) in layer 2
     svector *_ethanol_CP2_wood_acc;  // Ethanol soluble carbon pool (wood) in layer 2
     svector *_nonsoluble_CP2_wood_acc;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 2
+    svector *_soluble_CP2_wood_acc;  // Soluble carbon pool (wood) in layer 2
     svector *_humus_CP2_acc;  // Humus carbon pool (wood) in layer 2
     svector *_acid_CP3_wood_acc;  // Acid hydrolyzable carbon pool (wood) in layer 3
     svector *_ethanol_CP3_wood_acc;  // Ethanol soluble carbon pool (wood) in layer 3
     svector *_nonsoluble_CP3_wood_acc;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 3
+    svector *_soluble_CP3_wood_acc;  // Soluble carbon pool (wood) in layer 3
     svector *_humus_CP3_acc;  // Humus carbon pool (wood) in layer 3
     svector *_humus_C_acc;  // Humus carbon storage in all soil layers [mgN/L*m = gN/m2]
     svector *_fast_C_acc;  // Fast carbon storage in all soil layers [mgN/L*m = gN/m2]
+    svector *_soluble_C_acc;  // Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]
     svector *_doc_I_acc;  // DOC in Canopy storage [mgN/L]
     svector *_doc_snow_acc;  // DOC in Snow depth in [mgN/L]
     svector *_doc_pond_acc;  // DOC in Ponding water in [mgN/L]
@@ -280,6 +289,8 @@ class Report {
     svector *_respiration_river_C_acc;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     svector *_C4_flag_acc;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     svector *_doc_rain_acc;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
+    svector *_leaching_mass_doc_acc;  // Leaching of DOC [gC/m2]
+    svector *_drainage_mass_doc_acc;  // Drainage of DOC [gC/m2]
     svector *_plant_mobile_N_acc;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
     svector *_no3_I_acc;  // no3 in Canopy storage [mgN/L]
     svector *_no3_snow_acc;  // no3 in Snow depth in [mgN/L]
@@ -290,15 +301,6 @@ class Report {
     svector *_no3_vadose_acc;  // no3 in vadose storage [mgN/L]
     svector *_no3_GW_acc;  // no3 in Groundwater storage [mgN/L]
     svector *_no3_chanS_acc;  // no3 in Channel storage [mgN/L]
-    svector *_don_I_acc;  // Dissolved organic nitrogen in Canopy storage [mgN/L]
-    svector *_don_snow_acc;  // Dissolved organic nitrogen in Snow depth in [mgN/L]
-    svector *_don_pond_acc;  // Dissolved organic nitrogen in Ponding water in [mgN/L]
-    svector *_don_layer1_acc;  // Dissolved organic nitrogen in Soil moisture in layer 1 [mgN/L]
-    svector *_don_layer2_acc;  // Dissolved organic nitrogen in Soil moisture in layer 2 [mgN/L]
-    svector *_don_layer3_acc;  // Dissolved organic nitrogen in Soil moisture in layer 3 [mgN/L]
-    svector *_don_vadose_acc;  // Dissolved organic nitrogen in vadose storage [mgN/L]
-    svector *_don_GW_acc;  // Dissolved organic nitrogen in Groundwater storage [mgN/L]
-    svector *_don_chanS_acc;  // Dissolved organic nitrogen in Channel storage [mgN/L]
     svector *_nitrogen_add_acc;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
     svector *_plant_uptake_acc;  // Plant uptake [mgN/L*m = gN/m2]
     svector *_deni_soil_acc;  // Soil denitrification [mgN/L*m = gN/m2]
@@ -308,6 +310,8 @@ class Report {
     svector *_fast_NP1_acc;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
     svector *_humus_N_acc;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
     svector *_fast_N_acc;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
+    svector *_leaching_mass_no3_acc;  // Leaching of NO3 [gN/m2]
+    svector *_drainage_mass_no3_acc;  // Drainage of NO3 [gN/m2]
     /* end of Report */
 
     //ctor

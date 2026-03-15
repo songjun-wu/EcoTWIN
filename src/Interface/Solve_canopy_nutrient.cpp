@@ -37,7 +37,7 @@ int Basin::Solve_canopy_nutrient(Control &ctrl, Atmosphere &atm){
       Solve_canopy_transport(atm, *_no3_I, *_no3_rain, *_no3_pond, true); // erich_flag = true
       _tmp->equals(*_no3_rain);
       _tmp->multiply_by_double(0.5);  // Assumption: DOC concentration in rainwater is half of NO3 concentration
-      Solve_canopy_transport(atm, *_don_I, *_tmp, *_don_pond, true); // erich_flag = true
+      //Solve_canopy_transport(atm, *_don_I, *_tmp, *_don_pond, true); // erich_flag = true
     }
     
     

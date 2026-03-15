@@ -17,9 +17,26 @@
 
 #include "Basin.h"
 
-int Basin::Initialisation_each_timestep(Control &ctrl) {
+int Basin::Initialisation_each_timestep(Control &ctrl, Param &par) {
 
-    // Hydrological variables
+    // ===== Update internal parameters (only needed when parameters are updated) =====
+    // Hydraulic proporties
+      if (par.param_category->sort_PTF == 0){
+        // Estimate saturated hydraulic conductivity, field capacity, and wilting point
+        Soil_proporty(ctrl, par);
+        par.param_category->sort_PTF = 1;
+    }
+    // Root fraction
+    if (ctrl.opt_evap == 1 or ctrl.opt_evap == 2 or ctrl.opt_nitrogen_sim==1){
+        Sort_root_fraction(ctrl, par);
+    }
+    // Travel time of percolation
+    if (ctrl.opt_percolation == 1){
+        Sort_percolation_travel_time(ctrl, par);
+    }
+
+
+    // ===== Hydrological variables =====
     // Vars for drainage
     _drainage_from_soil->reset();
     _drainage_from_layer1->reset();
@@ -40,13 +57,17 @@ int Basin::Initialisation_each_timestep(Control &ctrl) {
     }
 
     
-    // Nitrogen variables
-    if (ctrl.opt_nitrogen_sim==1) {
+    // ===== Carbon and Nitrogen variables =====
+    if (ctrl.opt_carbon_sim==1) {
         _NPP->reset();
         _canopy_conductance->reset();
         //_plant_uptake->reset();
-        _minerl_soil->reset();
+        _soil_respiration_C->reset();
+        _soil_decomposition_C->reset();
         //_n2o_emission->reset();
+    }
+    if (ctrl.opt_nitrogen_sim==1) {
+      _minerl_soil->reset();
     }
 
     return EXIT_SUCCESS;

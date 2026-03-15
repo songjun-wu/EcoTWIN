@@ -17,6 +17,7 @@
 
 #include "Basin.h"
 
+/*
 double Basin::Temp_factor(double T){
 
     double f_T; // Temperature factor [-, decimal]
@@ -33,18 +34,24 @@ double Basin::Temp_factor(double T){
     return f_T;
 
 }
+*/
 
 
+double Basin::Temp_factor(double T){
+    // Temperature dependence of decomposition in YASSO and JSbach
+    return exp(0.095 * T - 0.0014 * T * T);
+}
+
+
+/*
 double Basin::Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaS, const double db_depth){
 
-    /* 
-    double fct_thetaS = 0.6;
-    double fct_theta_up = 0.12;
-    double fct_theta_low = 0.08;
-    double fct_theta_pow = 1.0;
-    double db_depth in m;
-    */
-
+    //double fct_thetaS = 0.6;
+    //double fct_theta_up = 0.12;
+    //double fct_theta_low = 0.08;
+    //double fct_theta_pow = 1.0;
+    //double db_depth in m;
+    
     double fct_theta;
     if (db_theta >= db_thetaS) {
         fct_theta = 0.0;
@@ -56,7 +63,24 @@ double Basin::Moist_factor(const double db_theta, const double db_thetaWP, const
         fct_theta = min(1.0, 1.0 * (db_thetaS - db_theta) / (1.2) + 0.0);
         fct_theta = min(fct_theta, (db_theta - db_thetaWP) / (0.8));
     }
+    return fct_theta;
+}
+*/
+
+
+
+double Basin::Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaFC, const double db_thetaS, const double db_depth){
+
+    double fct_theta;
+    double theta_optimal = 0.8 * db_thetaFC;
+
+    if (db_theta >= theta_optimal) {
+        fct_theta = (db_thetaS - db_theta) / (db_thetaS - theta_optimal);
+    } else {
+        fct_theta = (db_theta - 0.0) / (theta_optimal - 0.0);
+    } 
+
+    fct_theta = max(0.0, min(fct_theta, 1.0));
 
     return fct_theta;
-
 }

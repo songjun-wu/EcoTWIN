@@ -25,7 +25,7 @@ int Basin::Sort_root_fraction(Control &ctrl, Param &par) {
         double root_tmp_layer1, root_tmp_layer12, root_tmp_layer123;
         double root1, root2, root3, root_total;
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-            double froot_coeff = par._froot_coeff->val[j];
+            double froot_coeff = (1 - par._froot_coeff->val[j]);
             double depth1 = _depth1->val[j];
             double depth2 = _depth2->val[j];
             double depth3 = par._depth3->val[j]; // The lower boundary is included for calibration 

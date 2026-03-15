@@ -11,6 +11,7 @@ CPP_SRCS += \
 ../src/Carbon/Carbon_summary.cpp \
 ../src/Carbon/Carbon_addition.cpp \
 ../src/Carbon/Carbon_instream_transformation.cpp \
+../src/Carbon/Carbon_management.cpp \
 
 
 OBJS += \
@@ -21,6 +22,7 @@ OBJS += \
 ./Carbon/Carbon_summary.o \
 ./Carbon/Carbon_addition.o \
 ./Carbon/Carbon_instream_transformation.o \
+./Carbon/Carbon_management.o \
 
 
 CPP_DEPS += \
@@ -31,6 +33,7 @@ CPP_DEPS += \
 ./Carbon/Carbon_summary.d \
 ./Carbon/Carbon_addition.d \
 ./Carbon/Carbon_instream_transformation.d \
+./Carbon/Carbon_management.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -19,7 +19,7 @@
 
 int Basin::Nitrogen_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
-    double no3_chanS, IN_chanS, fct_TchanS, fct_conc, chanS_m3, deni_river;
+    double no3_chanS, IN_chanS, fct_TchanS, fct_conc, deni_river;
     double DT = ctrl.Simul_tstep / 86400;  // all rates are calculated at daily timesteps
 
 

@@ -83,7 +83,7 @@ int Basin::Pedo_transfer_1(Control &ctrl, Param &par, svector &sv_sand,  svector
 
         // Calculate wilting point based on Van Genuchten model
         // theta_r is set to 0.0
-        sv_thetaWP.val[j] = thetaS / pow(1 + pow(VG_alpha * 15000, VG_n), VG_m);
+        sv_thetaWP.val[j] = min(0.15, thetaS / pow(1 + pow(VG_alpha * 15000, VG_n), VG_m));
 
         sv_thetaS.val[j] = thetaS;
 
@@ -93,7 +93,6 @@ int Basin::Pedo_transfer_1(Control &ctrl, Param &par, svector &sv_sand,  svector
 
 int Basin::Pedo_transfer_2(Control &ctrl, Param &par, svector &sv_sand,  svector &sv_clay,  svector &sv_silt,  svector &sv_organic_content, svector &sv_bulk_density, svector &sv_Ks, svector &sv_thetaS, svector &sv_thetaFC, svector &sv_thetaWP){
     
-    const int topsoil_factor = 0; // Topsoil = 1; subsoil = 0
     const int opt_fieldcapacity = ctrl.opt_fieldcapacity;
     double VG_alpha, VG_n, VG_m; // Van Genuchten parameters
     double thetaS;
@@ -103,13 +102,8 @@ int Basin::Pedo_transfer_2(Control &ctrl, Param &par, svector &sv_sand,  svector
 
         double sand = sv_sand.val[j] * 100;  // percent
         double clay = sv_clay.val[j] * 100;  // percent
-        double silt = sv_silt.val[j] * 100;  // percent
         double organic_content = sv_organic_content.val[j] * 100; 
         double bulk_density = sv_bulk_density.val[j]; // g/cm3
-
-        double organic_content_pow = organic_content * organic_content;
-        double bulk_density_square = bulk_density * bulk_density;
-        double silt_log = log(silt);
         double organic_content_log = log(organic_content);
         
         // Calculate Van Genuchten parameters
@@ -157,7 +151,6 @@ int Basin::Pedo_transfer_2(Control &ctrl, Param &par, svector &sv_sand,  svector
 
 int Basin::Pedo_transfer_3(Control &ctrl, Param &par, svector &sv_sand,  svector &sv_clay,  svector &sv_bulk_density, svector &sv_Ks, svector &sv_thetaS, svector &sv_thetaFC, svector &sv_thetaWP){
     
-    const int topsoil_factor = 0; // Topsoil = 1; subsoil = 0
     const int opt_fieldcapacity = ctrl.opt_fieldcapacity;
     double VG_alpha, VG_n, VG_m; // Van Genuchten parameters
     double thetaS;
@@ -252,7 +245,6 @@ int Basin::Soil_proporty(Control &ctrl, Param &par){
 
         double Ks0 = _Ks1->val[j];
         double thetaS0 = _thetaS1->val[j];
-        double thetaFC0 = _thetaFC1->val[j];
         double thetaWP0 = _thetaWP1->val[j];
 
         double KKs = par._KKs->val[j];

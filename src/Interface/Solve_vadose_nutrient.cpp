@@ -21,6 +21,7 @@ int Basin::Solve_vadose_nutrient(Control &ctrl, Atmosphere &atm){
     /*
     ### vadose:
         (_vadose_old)
+        + preferential_flow (need to mix)
         + percolation3      (need to mix)
         - percolation_vadose
         (_vadose)
@@ -31,17 +32,27 @@ int Basin::Solve_vadose_nutrient(Control &ctrl, Atmosphere &atm){
         - interf_toChn                            
     */
 
+    double input_water, input_mass, input_conc;
+
+
     
     // Mixing vadose storage with percolation from layer 3
     if (ctrl.opt_carbon_sim==1){
       for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          Mixing_full(_vadose_old->val[j], _doc_vadose->val[j], _Perc3->val[j], _doc_layer3->val[j]);
+          input_water = _preferential_flow->val[j] + _Perc3->val[j];
+          input_mass = _doc_pond->val[j] * _preferential_flow->val[j] + _doc_layer3->val[j] * _Perc3->val[j];
+          input_conc = input_mass / input_water;
+          Mixing_full(_vadose_old->val[j], _doc_vadose->val[j], input_water, input_conc);
+          _leaching_mass_doc->val[j] = input_mass;  // Summary statistics of leaching mass
       }
     }
     if (ctrl.opt_nitrogen_sim==1){
       for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          Mixing_full(_vadose_old->val[j], _no3_vadose->val[j], _Perc3->val[j], _no3_layer3->val[j]);
-          Mixing_full(_vadose_old->val[j], _don_vadose->val[j], _Perc3->val[j], _don_layer3->val[j]);
+          input_water = _preferential_flow->val[j] + _Perc3->val[j];
+          input_mass = _no3_pond->val[j] * _preferential_flow->val[j] + _no3_layer3->val[j] * _Perc3->val[j];
+          input_conc = input_mass / input_water;
+          Mixing_full(_vadose_old->val[j], _no3_vadose->val[j], input_water, input_conc);
+          _leaching_mass_no3->val[j] = input_mass;  // Summary statistics of leaching mass
       }
     }  
 

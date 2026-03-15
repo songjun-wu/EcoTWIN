@@ -53,12 +53,16 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(KKs, "KKs", lines);
   readIntoParam(Ksat, "Ksat", lines);
   readIntoParam(BClambda, "BClambda", lines);
+  readIntoParam(preferential_flow_coeff, "preferential_flow_coeff", lines);
+  readIntoParam(perc_optimal_theta, "perc_optimal_theta", lines);
   readIntoParam(percExp, "percExp", lines);
+  readIntoParam(capillary_flow_rate, "capillary_flow_rate", lines);
   readIntoParam(froot_coeff, "froot_coeff", lines);
-  readIntoParam(ET_reduction, "ET_reduction", lines);
+  readIntoParam(ET_weight, "ET_weight", lines);
   readIntoParam(init_GW, "init_GW", lines);
   readIntoParam(perc_vadose_coeff, "perc_vadose_coeff", lines);
   readIntoParam(pOvf_toChn, "pOvf_toChn", lines);
+  readIntoParam(Ks_surface, "Ks_surface", lines);
   readIntoParam(Ks_vadose, "Ks_vadose", lines);
   readIntoParam(Ks_GW, "Ks_GW", lines);
   readIntoParam(lat_to_Chn_vadose, "lat_to_Chn_vadose", lines);
@@ -70,7 +74,9 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(irrigation_FC_thres, "irrigation_FC_thres", lines);
   readIntoParam(irrigation_coeff, "irrigation_coeff", lines);
   readIntoParam(drainage_intensity, "drainage_intensity", lines);
-  readIntoParam(nearsurface_mixing, "nearsurface_mixing", lines);
+  readIntoParam(herbivory_uptake_coeff, "herbivory_uptake_coeff", lines);
+  readIntoParam(harvest_coeff, "harvest_coeff", lines);
+  readIntoParam(diffuse_molecular_coefficient, "diffuse_molecular_coefficient", lines);
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
   readIntoParam(CG_n_soil, "CG_n_soil", lines);
   readIntoParam(delta_d18o_init_GW, "delta_d18o_init_GW", lines);
@@ -97,6 +103,8 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(frac_litter_to_nonsoluble_wood, "frac_litter_to_nonsoluble_wood", lines);
   readIntoParam(decomposition_weight_fast_pool, "decomposition_weight_fast_pool", lines);
   readIntoParam(decomposition_weight_humus_pool, "decomposition_weight_humus_pool", lines);
+  readIntoParam(ref_decomp_rate_doc, "ref_decomp_rate_doc", lines);
+  readIntoParam(ref_frac_soluble_to_doc, "ref_frac_soluble_to_doc", lines);
   readIntoParam(respiration_river, "respiration_river", lines);
   readIntoParam(NC_ratio_plant_green, "NC_ratio_plant_green", lines);
   readIntoParam(NC_ratio_plant_wood, "NC_ratio_plant_wood", lines);

@@ -27,6 +27,7 @@
 
   _sortedGrid = ctrl._sortedGrid;
 
+  
   /* GIS */
   _chnwidth = new svector(ctrl.path_BasinFolder + ctrl.fn__chnwidth, _rowNum, _colNum, _sortedGrid);
   _chndepth = new svector(ctrl.path_BasinFolder + ctrl.fn__chndepth, _rowNum, _colNum, _sortedGrid);
@@ -38,6 +39,9 @@
   _clay1 = new svector(ctrl.path_BasinFolder + ctrl.fn__clay1, _rowNum, _colNum, _sortedGrid);
   _organic1 = new svector(ctrl.path_BasinFolder + ctrl.fn__organic1, _rowNum, _colNum, _sortedGrid);
   _bulkdensity1 = new svector(ctrl.path_BasinFolder + ctrl.fn__bulkdensity1, _rowNum, _colNum, _sortedGrid);
+  if (ctrl.opt_drainage == 1){
+    _drainage_depth = new svector(ctrl.path_BasinFolder + ctrl.fn__drainage_depth, _rowNum, _colNum, _sortedGrid);
+  }
   if (ctrl.opt_depthprofile == 3){
     _sand2 = new svector(ctrl.path_BasinFolder + ctrl.fn__sand2, _rowNum, _colNum, _sortedGrid);
     _sand3 = new svector(ctrl.path_BasinFolder + ctrl.fn__sand3, _rowNum, _colNum, _sortedGrid);
@@ -66,9 +70,6 @@
   /* end of GroundTs */
 
   /* ManagementTs */
-  if (ctrl.opt_drainage == 1){
-    _drainage_depth = new svector(_sortedGrid.size);
-  }
   /* end of ManagementTs */
 
   /* Storages */
@@ -101,11 +102,13 @@
   _Th = new svector(_sortedGrid.size);
   _snowmelt = new svector(_sortedGrid.size);
   _infilt = new svector(_sortedGrid.size);
+  _preferential_flow = new svector(_sortedGrid.size);
   _Perc1 = new svector(_sortedGrid.size);
   _Perc2 = new svector(_sortedGrid.size);
   _Perc3 = new svector(_sortedGrid.size);
   _Perc_vadose = new svector(_sortedGrid.size);
   _rPerc_vadose = new svector(_sortedGrid.size);
+  _capillary_flow = new svector(_sortedGrid.size);
   _Ei = new svector(_sortedGrid.size);
   _Es = new svector(_sortedGrid.size);
   _Tr = new svector(_sortedGrid.size);
@@ -153,17 +156,19 @@
     _drainage_from_layer2 = new svector(_sortedGrid.size);
     _drainage_from_layer3 = new svector(_sortedGrid.size);
   }
-  if (ctrl.opt_evap == 1){
+  if (ctrl.opt_evap == 1 or ctrl.opt_evap == 2){
     _froot_layer1 = new svector(_sortedGrid.size);
     _froot_layer2 = new svector(_sortedGrid.size);
     _froot_layer3 = new svector(_sortedGrid.size);
-    _PE = new svector(_sortedGrid.size);
-    _PT = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_percolation == 1){
     _p_perc1 = new svector(_sortedGrid.size);
     _p_perc2 = new svector(_sortedGrid.size);
     _p_perc3 = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_evap == 1){
+    _PE = new svector(_sortedGrid.size);
+    _PT = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
     _flux_ovf_in_acc = new svector(_sortedGrid.size);
@@ -228,15 +233,6 @@
     _no3_vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_vadose, _rowNum, _colNum, _sortedGrid);
     _no3_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_GW, _rowNum, _colNum, _sortedGrid);
     _no3_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_chanS, _rowNum, _colNum, _sortedGrid);
-    _don_I = new svector(_sortedGrid.size);
-    _don_snow = new svector(_sortedGrid.size);
-    _don_pond = new svector(_sortedGrid.size);
-    _don_layer1 = new svector(_sortedGrid.size);
-    _don_layer2 = new svector(_sortedGrid.size);
-    _don_layer3 = new svector(_sortedGrid.size);
-    _don_vadose = new svector(_sortedGrid.size);
-    _don_GW = new svector(_sortedGrid.size);
-    _don_chanS = new svector(_sortedGrid.size);
     _nitrogen_add = new svector(_sortedGrid.size);
     _plant_uptake = new svector(_sortedGrid.size);
     _deni_soil = new svector(_sortedGrid.size);
@@ -246,6 +242,8 @@
     _fast_NP1 = new svector(_sortedGrid.size);
     _humus_N = new svector(_sortedGrid.size);
     _fast_N = new svector(_sortedGrid.size);
+    _leaching_mass_no3 = new svector(_sortedGrid.size);
+    _drainage_mass_no3 = new svector(_sortedGrid.size);
   }
   /* end of Nitrogen */
 
@@ -258,20 +256,25 @@
     _acid_CP1_nonwood = new svector(ctrl.path_BasinFolder + ctrl.fn__acid_CP1_nonwood, _rowNum, _colNum, _sortedGrid);
     _ethanol_CP1_nonwood = new svector(ctrl.path_BasinFolder + ctrl.fn__ethanol_CP1_nonwood, _rowNum, _colNum, _sortedGrid);
     _nonsoluble_CP1_nonwood = new svector(ctrl.path_BasinFolder + ctrl.fn__nonsoluble_CP1_nonwood, _rowNum, _colNum, _sortedGrid);
+    _soluble_CP1_nonwood = new svector(ctrl.path_BasinFolder + ctrl.fn__soluble_CP1_nonwood, _rowNum, _colNum, _sortedGrid);
     _acid_CP1_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__acid_CP1_wood, _rowNum, _colNum, _sortedGrid);
     _ethanol_CP1_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__ethanol_CP1_wood, _rowNum, _colNum, _sortedGrid);
     _nonsoluble_CP1_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__nonsoluble_CP1_wood, _rowNum, _colNum, _sortedGrid);
+    _soluble_CP1_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__soluble_CP1_wood, _rowNum, _colNum, _sortedGrid);
     _humus_CP1 = new svector(ctrl.path_BasinFolder + ctrl.fn__humus_CP1, _rowNum, _colNum, _sortedGrid);
     _acid_CP2_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__acid_CP2_wood, _rowNum, _colNum, _sortedGrid);
     _ethanol_CP2_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__ethanol_CP2_wood, _rowNum, _colNum, _sortedGrid);
     _nonsoluble_CP2_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__nonsoluble_CP2_wood, _rowNum, _colNum, _sortedGrid);
+    _soluble_CP2_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__soluble_CP2_wood, _rowNum, _colNum, _sortedGrid);
     _humus_CP2 = new svector(ctrl.path_BasinFolder + ctrl.fn__humus_CP2, _rowNum, _colNum, _sortedGrid);
     _acid_CP3_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__acid_CP3_wood, _rowNum, _colNum, _sortedGrid);
     _ethanol_CP3_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__ethanol_CP3_wood, _rowNum, _colNum, _sortedGrid);
     _nonsoluble_CP3_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__nonsoluble_CP3_wood, _rowNum, _colNum, _sortedGrid);
+    _soluble_CP3_wood = new svector(ctrl.path_BasinFolder + ctrl.fn__soluble_CP3_wood, _rowNum, _colNum, _sortedGrid);
     _humus_CP3 = new svector(ctrl.path_BasinFolder + ctrl.fn__humus_CP3, _rowNum, _colNum, _sortedGrid);
     _humus_C = new svector(_sortedGrid.size);
     _fast_C = new svector(_sortedGrid.size);
+    _soluble_C = new svector(_sortedGrid.size);
     _doc_I = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_I, _rowNum, _colNum, _sortedGrid);
     _doc_snow = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_snow, _rowNum, _colNum, _sortedGrid);
     _doc_pond = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_pond, _rowNum, _colNum, _sortedGrid);
@@ -287,6 +290,8 @@
     _respiration_river_C = new svector(_sortedGrid.size);
     _C4_flag = new svector(ctrl.path_BasinFolder + ctrl.fn__C4_flag, _rowNum, _colNum, _sortedGrid);
     _doc_rain = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_rain, _rowNum, _colNum, _sortedGrid);
+    _leaching_mass_doc = new svector(_sortedGrid.size);
+    _drainage_mass_doc = new svector(_sortedGrid.size);
   }
   /* end of Carbon */
 
@@ -317,6 +322,13 @@
 
   if (ctrl.opt_carbon_sim==1){
     Set_carbon_constant();
+  }
+
+  // Some attributes need to be adjusted
+  if (ctrl.opt_nitrogen_sim == 1){
+    for (int i = 0; i < num_landuse; i++) {
+      fert_IN[landuse_idx[i]] = 1.0;  // All fertilisation is forced to applied to IN pool
+    }
   }
   
  

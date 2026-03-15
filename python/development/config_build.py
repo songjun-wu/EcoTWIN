@@ -145,6 +145,7 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                     text.append('\n### '+signs[i]+'\n')
                     if signs[i] == 'Parameters':
                         text.append('num_category = 14 # The number of categories for parameterisation ...\n' + \
+                                    'rock_category = 6 # The category of rock landscapes\n' + \
                                     '#The categories should include the land use types, soil types, or any other types for parameterisation ...\n' + \
                                     '#The distribution of each category (in decimal proportion) should be specified in cat_id.asc ...\n' + \
                                     '#The first category (column) represents global parameter (i.e., cat_0.bin should be filled with 1)\n' )

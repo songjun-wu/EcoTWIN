@@ -50,6 +50,7 @@ struct Control{
   int Report_interval;
   int Update_interval;
   int num_category;  // Number of categories for parameterisation
+  int rock_category;  // Category of rock landscapes
   /* end of Settings */
 
   /* Year month day */
@@ -93,6 +94,10 @@ struct Control{
   // 0: disabled
   // 1: enabled
   int opt_nitrogen_sim;
+  // Enable summary statistics?
+  // 0: disabled
+  // 1: enabled
+  int opt_summary_statistics;
   // Agricultural irrigation
   // 0: disabled
   // 1: enabled
@@ -134,6 +139,7 @@ struct Control{
   int opt_canopy_evap;
   // Evapotranspiration function
   // 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)
+  // 2: based on Penman-Monteith equation
   int opt_evap;
   // Percolation model
   // 1: based on travel time and excess water above FC; SWAT
@@ -193,6 +199,7 @@ struct Control{
   string fn__slope;  // Slope [m/m]
   string fn__depth1;  // Depth of soil layer 1 [m]
   string fn__depth2;  // Depth of soil layer 2 [m]
+  string fn__drainage_depth;  // The depth of drainage [m]
   string fn__sand1;  // Sand content of layer 1 [decimal]
   string fn__sand2;  // Sand content of layer 2 [decimal], only needed when opt_depthprofile = 3
   string fn__sand3;  // Sand content of layer 3 [decimal], only needed when opt_depthprofile = 3
@@ -223,7 +230,6 @@ struct Control{
   /* end of GroundTs */
 
   /* ManagementTs */
-  string fn__drainage_depth;  // The depth of drainage [m]
   /* end of ManagementTs */
 
   /* Climate */
@@ -307,17 +313,21 @@ struct Control{
   string fn__acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
   string fn__ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
   string fn__nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
+  string fn__soluble_CP1_nonwood;  // Soluble carbon pool (non-wood) in layer 1
   string fn__acid_CP1_wood;  // Acid hydrolyzable carbon pool (wood) in layer 1
   string fn__ethanol_CP1_wood;  // Ethanol soluble carbon pool (wood) in layer 1
   string fn__nonsoluble_CP1_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 1
+  string fn__soluble_CP1_wood;  // Soluble carbon pool (wood) in layer 1
   string fn__humus_CP1;  // Humus carbon pool (wood and non-wood) in layer 1
   string fn__acid_CP2_wood;  // Acid hydrolyzable carbon pool (wood) in layer 2
   string fn__ethanol_CP2_wood;  // Ethanol soluble carbon pool (wood) in layer 2
   string fn__nonsoluble_CP2_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 2
+  string fn__soluble_CP2_wood;  // Soluble carbon pool (wood) in layer 2
   string fn__humus_CP2;  // Humus carbon pool (wood) in layer 2
   string fn__acid_CP3_wood;  // Acid hydrolyzable carbon pool (wood) in layer 3
   string fn__ethanol_CP3_wood;  // Ethanol soluble carbon pool (wood) in layer 3
   string fn__nonsoluble_CP3_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 3
+  string fn__soluble_CP3_wood;  // Soluble carbon pool (wood) in layer 3
   string fn__humus_CP3;  // Humus carbon pool (wood) in layer 3
   string fn__doc_I;  // DOC in Canopy storage [mgN/L]
   string fn__doc_snow;  // DOC in Snow depth in [mgN/L]
@@ -331,6 +341,9 @@ struct Control{
   string fn__C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   string fn__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
   /* end of Carbon */
+
+  /* Reference states or fluxes parameterisation */
+  string fn__reference_drainage_density;  // Reference drainage density [length-1]
 
   /* Parameters */
   string fn__depth3;  // Depth of soil layer 3 [m]
@@ -352,12 +365,16 @@ struct Control{
   string fn__KKs;  // The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2
   string fn__Ksat;  // The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2
   string fn__BClambda;  // The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2
+  string fn__preferential_flow_coeff;  // The coefficient parameter for preferential flow [-]
+  string fn__perc_optimal_theta;  // The specific threshold between field capacity and saturated content for percolation [0-1]
   string fn__percExp;  // The exponential parameter for percolation [-], only needed when opt_percolation = 2
+  string fn__capillary_flow_rate;  // The reference conductivity of capillary flow from shallow GW zone to bottom soil layer [m/s]
   string fn__froot_coeff;  // Root fraction coefficient [-]
-  string fn__ET_reduction;  // ET reduction (weight) [-]
+  string fn__ET_weight;  // Evaporation and Transpiration should be adjusted due to potential underestimation of daily simulaton compared to integral of hourly simulatont [-]
   string fn__init_GW;  // The initial GW storage [m], only needed when opt_init_GW = 1
   string fn__perc_vadose_coeff;  // The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2
   string fn__pOvf_toChn;  // The weighting linear parameter for overland flow routing towards channel  [-]
+  string fn__Ks_surface;  // The reference conductivity of surface for overland flow routing [m/s]
   string fn__Ks_vadose;  // The reference conductivity of vadose zone for interflow routing [m/s]
   string fn__Ks_GW;  // The reference conductivity of GW zone for interflow routing [m/s]
   string fn__lat_to_Chn_vadose;  // The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]
@@ -369,7 +386,9 @@ struct Control{
   string fn__irrigation_FC_thres;  // The soil moisture threshold for irrigation [-]
   string fn__irrigation_coeff;  // Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled
   string fn__drainage_intensity;  // The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
-  string fn__nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
+  string fn__herbivory_uptake_coeff;  // The coefficient for herbivory uptake [-]
+  string fn__harvest_coeff;  // The coefficient for crop harvest [-]
+  string fn__diffuse_molecular_coefficient;  // The coefficient for Fickian diffusion [m2/s]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
@@ -396,6 +415,8 @@ struct Control{
   string fn__frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
   string fn__decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
   string fn__decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
+  string fn__ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
+  string fn__ref_frac_soluble_to_doc;  // Reference fraction of soluble carbon going to DOC pool [-]
   string fn__respiration_river;  // Reference rates of aquatic heterotrophic respiration [day-1]
   string fn__NC_ratio_plant_green;  // Nitrogen carbon ratio in vegetation green pool  [gN/gC] 
   string fn__NC_ratio_plant_wood;  // Nitrogen carbon ratio in vegetation wood pool  [gN/gC] 
@@ -418,6 +439,7 @@ struct Control{
   int report__Th;  // report Throughfall [m]
   int report__snowmelt;  // report Snow melt [m]
   int report__infilt;  // report Inflitration into soil layer 1 [m]
+  int report__preferential_flow;  // report Preferential flow to vadose storage due to exstenice of macropores in rock landscapes [m]
   int report__Perc1;  // report Percolation into layer 2 [m]
   int report__Perc2;  // report Percolation into layer 3 [m]
   int report__Perc3;  // report Percolation into vadose storage [m]
@@ -427,6 +449,7 @@ struct Control{
   int report__rPerc2;  // report Repercolation into layer 3 due to overland flow routing [m]
   int report__rPerc3;  // report Repercolation into gw reservior due to overland flow routing [m]
   int report__rPerc_vadose;  // report Repercolation from vadose storage into gw reservior [m]
+  int report__capillary_flow;  // report Capillary flow from shallow GW zone to bottom soil layer [m]
   int report__Es;  // report Soil evaporation [m]
   int report__Tr;  // report Total transpiration in three layers [m]
   int report__irrigation_from_river;  // report Water extraction from river [m]
@@ -477,6 +500,7 @@ struct Control{
   int report__plant_C;  // report  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
   int report__humus_C;  // report Humus carbon storage in all soil layers [mgN/L*m = gN/m2]
   int report__fast_C;  // report Fast carbon storage in all soil layers [mgN/L*m = gN/m2]
+  int report__soluble_C;  // report Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]
   int report__doc_I;  // report DOC in Canopy storage [mgN/L]
   int report__doc_snow;  // report DOC in Snow depth in [mgN/L]
   int report__doc_pond;  // report DOC in Ponding water in [mgN/L]
@@ -490,6 +514,8 @@ struct Control{
   int report__soil_respiration_C;  // report Soil respiration summarised in carbon [gC/m2]
   int report__soil_decomposition_C;  // report Soil decomposition summarised in carbon [gC/m2]
   int report__respiration_river_C;  // report Aquatic heterotrophic respiration summarised in carbon [gC/m2]
+  int report__leaching_mass_doc;  // report Leaching of DOC [gC/m2]
+  int report__drainage_mass_doc;  // report Drainage of DOC [gC/m2]
   int report__no3_I;  // report no3 in Canopy storage [mgN/L]
   int report__no3_snow;  // report no3 in Snow depth in [mgN/L]
   int report__no3_pond;  // report no3 in Ponding water in [mgN/L]
@@ -506,6 +532,8 @@ struct Control{
   int report__deni_river;  // report Aquatic denitrification [mgN/L*m = gN/m2]
   int report__humus_N;  // report Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
   int report__fast_N;  // report Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
+  int report__leaching_mass_no3;  // report Leaching of NO3 [gN/m2]
+  int report__drainage_mass_no3;  // report Drainage of NO3 [gN/m2]
   /* end of Report */
 
   public:

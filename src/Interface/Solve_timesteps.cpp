@@ -21,22 +21,20 @@
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     
     // For debug
-    //int i = 1127;
-    //int j = 858;  // todo; 858 forest, 1127 cropland, 3433 Alpine
-    //cout <<ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
+    //int j = 1127;
+    //int j = 858;  // todo; 858 forest, 1127 cropland, 3367 Alpine
+    //cout <<endl<<ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
     //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
-        //if (_sortedGrid.row[j]==41 and _sortedGrid.col[j]==60) cout << j<< endl; 
     //}
     
 
 
-    Initialisation_each_timestep(ctrl);
+    Initialisation_each_timestep(ctrl, par);
     Solve_canopy(ctrl, par, atm);
     Solve_surface(ctrl, par, atm);
     Solve_soil_profile(ctrl, par, atm);
     Solve_routing(ctrl, par);
     Solve_channel(ctrl, par, atm);
-
 
     if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1 or ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){
         Store_states();  // Store all water storages for mixing
@@ -45,7 +43,6 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     Statistic_summary(ctrl, par);
 
 
-
-
+    
     return EXIT_SUCCESS;
 }

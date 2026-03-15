@@ -27,10 +27,8 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
     double GWflow_toTrestrial; // Output of GWflow to downstream cell (terrestrial only)
 
     double dx = ctrl._dx;
-    double dx_square = dx * dx;
     double dtdx = ctrl.Simul_tstep / dx;
     double alpha = 0;
-    double Ks3 = 0;
     double chnlength;
 
 
@@ -53,7 +51,6 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
               
         if (GWflow_to_go > roundoffERR)  {
 
-            Ks3 = _Ks3->val[j];  // [m/s]
             // GWflow to channel
             if (chnlength > 0){  // If there is channel in this grid cell
                 // Here Ks3 is not used because GW routing should be independent from soil proporties

@@ -9,6 +9,7 @@ CPP_SRCS += \
 ../src/Functions/Sort_root_fraction.cpp \
 ../src/Functions/Sort_soil_transformation_factors.cpp \
 ../src/Functions/Initialisation_each_timestep.cpp \
+../src/Functions/Initialisation.cpp \
 
 
 OBJS += \
@@ -17,6 +18,7 @@ OBJS += \
 ./Functions/Sort_root_fraction.o \
 ./Functions/Sort_soil_transformation_factors.o \
 ./Functions/Initialisation_each_timestep.o \
+./Functions/Initialisation.o \
 
 
 CPP_DEPS += \
@@ -25,6 +27,7 @@ CPP_DEPS += \
 ./Functions/Sort_root_fraction.d \
 ./Functions/Sort_soil_transformation_factors.d \
 ./Functions/Initialisation_each_timestep.d \
+./Functions/Initialisation.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

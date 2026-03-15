@@ -36,5 +36,23 @@ Control::Control(){
   _Gauge_to_Report = new svector(path_BasinFolder + fn__Gauge_to_Report, _rowNum, _colNum, _sortedGrid);
   _Tsmask = sortTSmask();
 
+
+  // ===== Option correction =====
+  // Nitrogen simulation is dependent on carbon simulation
+  if (opt_nitrogen_sim==1){
+    opt_carbon_sim = 1;
+  }
+  // Summary statistics
+  if (opt_summary_statistics==0){
+    if (opt_carbon_sim==1){
+      report__plant_C = 0;
+      report__soluble_C = 0;
+    }
+    if (opt_nitrogen_sim==1){
+      report__fast_N = 0;
+      report__humus_N = 0;
+    }
+  }
+
   
 }

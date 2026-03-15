@@ -7,7 +7,7 @@ Moreover, EcoTWIN has dynamical parameterisation scheme, which allows the model 
 ## Model strucutre
 The model conceptualisation derived from multiple models.  
 
-![Strucuture of EcoTWIN](docs/model_structure.jpg)
+![Strucuture of EcoTWIN](docs/model_structure_v2.0.png)
 
 The hydrological conceptualisation are adopted and modified from EcoPlot ([Landgraf et al., 2024](https://onlinelibrary.wiley.com/doi/10.1002/esp.5691)), EcH2O ([Maneta and Silverman, 2013](https://journals.ametsoc.org/view/journals/eint/17/11/2012ei000472.1.xml)), mHM ([Samaniego et al., 2010](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2008WR007327)).  
 

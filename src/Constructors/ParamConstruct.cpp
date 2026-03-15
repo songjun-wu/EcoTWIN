@@ -34,13 +34,13 @@ Param::Param(Control &ctrl){
   /* Parameters */
   _depth3 = new svector(_sortedGrid.size);
   _alpha = new svector(_sortedGrid.size);
+  _rE = new svector(_sortedGrid.size);
+  _preferential_flow_coeff = new svector(_sortedGrid.size);
+  _capillary_flow_rate = new svector(_sortedGrid.size);
   _perc_vadose_coeff = new svector(_sortedGrid.size);
   _irrigation_FC_thres = new svector(_sortedGrid.size);
-  _nearsurface_mixing = new svector(_sortedGrid.size);
+  _diffuse_molecular_coefficient = new svector(_sortedGrid.size);
   _ratio_to_interf = new svector(_sortedGrid.size);
-  if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){
-    _rE = new svector(_sortedGrid.size);
-  }
   if (ctrl.opt_snow == 1){
     _snow_rain_thre = new svector(_sortedGrid.size);
     _deg_day_min = new svector(_sortedGrid.size);
@@ -67,18 +67,22 @@ Param::Param(Control &ctrl){
     _Ksat = new svector(_sortedGrid.size);
     _BClambda = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_percolation == 1){
+    _perc_optimal_theta = new svector(_sortedGrid.size);
+  }
   if (ctrl.opt_percolation == 2){
     _percExp = new svector(_sortedGrid.size);
   }
-  if (ctrl.opt_evap == 1){
+  if (ctrl.opt_evap == 1 or ctrl.opt_evap == 2){
     _froot_coeff = new svector(_sortedGrid.size);
-    _ET_reduction = new svector(_sortedGrid.size);
+    _ET_weight = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_init_GW == 1){
     _init_GW = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_routinterf == 1){
     _pOvf_toChn = new svector(_sortedGrid.size);
+    _Ks_surface = new svector(_sortedGrid.size);
     _Ks_vadose = new svector(_sortedGrid.size);
     _lat_to_Chn_vadose = new svector(_sortedGrid.size);
     _interfExp = new svector(_sortedGrid.size);
@@ -100,6 +104,30 @@ Param::Param(Control &ctrl){
   if (ctrl.opt_drainage == 1){
     _drainage_intensity = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_carbon_sim == 1){
+    _herbivory_uptake_coeff = new svector(_sortedGrid.size);
+    _harvest_coeff = new svector(_sortedGrid.size);
+    _C_in_LeafArea = new svector(_sortedGrid.size);
+    _tau_wood_C = new svector(_sortedGrid.size);
+    _plant_wood_CP_max = new svector(_sortedGrid.size);
+    _plant_reserve_CP_max = new svector(_sortedGrid.size);
+    _carboxylation_rate = new svector(_sortedGrid.size);
+    _ETransport = new svector(_sortedGrid.size);
+    _frac_NPP_to_green = new svector(_sortedGrid.size);
+    _frac_NPP_to_wood = new svector(_sortedGrid.size);
+    _frac_litter_to_soluble_nonwood = new svector(_sortedGrid.size);
+    _frac_litter_to_acid_nonwood = new svector(_sortedGrid.size);
+    _frac_litter_to_ethanol_nonwood = new svector(_sortedGrid.size);
+    _frac_litter_to_nonsoluble_nonwood = new svector(_sortedGrid.size);
+    _frac_litter_to_soluble_wood = new svector(_sortedGrid.size);
+    _frac_litter_to_acid_wood = new svector(_sortedGrid.size);
+    _frac_litter_to_ethanol_wood = new svector(_sortedGrid.size);
+    _frac_litter_to_nonsoluble_wood = new svector(_sortedGrid.size);
+    _decomposition_weight_fast_pool = new svector(_sortedGrid.size);
+    _decomposition_weight_humus_pool = new svector(_sortedGrid.size);
+    _ref_decomp_rate_doc = new svector(_sortedGrid.size);
+    _ref_frac_soluble_to_doc = new svector(_sortedGrid.size);
+  }
   if (ctrl.opt_tracking_isotope == 1){
     _CG_n_soil = new svector(_sortedGrid.size);
   }
@@ -120,26 +148,6 @@ Param::Param(Control &ctrl){
     _NC_ratio_fast_pool_wood = new svector(_sortedGrid.size);
     _NC_ratio_humus_pool = new svector(_sortedGrid.size);
   }
-  if (ctrl.opt_carbon_sim == 1){
-    _C_in_LeafArea = new svector(_sortedGrid.size);
-    _tau_wood_C = new svector(_sortedGrid.size);
-    _plant_wood_CP_max = new svector(_sortedGrid.size);
-    _plant_reserve_CP_max = new svector(_sortedGrid.size);
-    _carboxylation_rate = new svector(_sortedGrid.size);
-    _ETransport = new svector(_sortedGrid.size);
-    _frac_NPP_to_green = new svector(_sortedGrid.size);
-    _frac_NPP_to_wood = new svector(_sortedGrid.size);
-    _frac_litter_to_soluble_nonwood = new svector(_sortedGrid.size);
-    _frac_litter_to_acid_nonwood = new svector(_sortedGrid.size);
-    _frac_litter_to_ethanol_nonwood = new svector(_sortedGrid.size);
-    _frac_litter_to_nonsoluble_nonwood = new svector(_sortedGrid.size);
-    _frac_litter_to_soluble_wood = new svector(_sortedGrid.size);
-    _frac_litter_to_acid_wood = new svector(_sortedGrid.size);
-    _frac_litter_to_ethanol_wood = new svector(_sortedGrid.size);
-    _frac_litter_to_nonsoluble_wood = new svector(_sortedGrid.size);
-    _decomposition_weight_fast_pool = new svector(_sortedGrid.size);
-    _decomposition_weight_humus_pool = new svector(_sortedGrid.size);
-  }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
     _LAI_shed_coef = new svector(_sortedGrid.size);
   }
@@ -149,6 +157,8 @@ Param::Param(Control &ctrl){
   ReadParamFile(ctrl, fname);
 
   param_category = new svector_2d(ctrl.num_category , _sortedGrid);
+
+  _reference_drainage_density = new svector(ctrl.path_BasinFolder + ctrl.fn__reference_drainage_density, _rowNum, _colNum, ctrl._sortedGrid);
 
   // Assign parameter spatially
   Parameterisation(ctrl);

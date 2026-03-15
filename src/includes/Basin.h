@@ -49,6 +49,7 @@ class Basin {
   svector *_clay1;  // Clay content of layer 1 [decimal]
   svector *_organic1;  // Organic content of layer 1 [decimal]
   svector *_bulkdensity1;  // Bulk density of layer 1 [g/cm3]
+  svector *_drainage_depth;  // The depth of drainage [m]
   svector *_sand2;  // Sand content of layer 2 [decimal], only needed when opt_depthprofile = 3
   svector *_sand3;  // Sand content of layer 3 [decimal], only needed when opt_depthprofile = 3
   svector *_clay2;  // Clay content of layer 2 [decimal], only needed when opt_depthprofile = 3
@@ -70,8 +71,6 @@ class Basin {
   /* end of GroundTs */
 
   /* ManagementTs */
-  svector *_drainage_depth;  // The depth of drainage [m]
-  ifstream if__drainage_depth;  // The depth of drainage [m]
   /* end of ManagementTs */
 
   /* Storages */ 
@@ -101,11 +100,13 @@ class Basin {
   svector *_Th;  // Throughfall [m]
   svector *_snowmelt;  // Snow melt [m]
   svector *_infilt;  // Inflitration into soil layer 1 [m]
+  svector *_preferential_flow;  // Preferential flow to vadose storage due to exstenice of macropores in rock landscapes [m]
   svector *_Perc1;  // Percolation into layer 2 [m]
   svector *_Perc2;  // Percolation into layer 3 [m]
   svector *_Perc3;  // Percolation into vadose storage [m]
   svector *_Perc_vadose;  // Percolation from vadose storage into gw reservior [m]
   svector *_rPerc_vadose;  // Repercolation from vadose storage into gw reservior [m]
+  svector *_capillary_flow;  // Capillary flow from shallow GW zone to bottom soil layer [m]
   svector *_Ei;  // Canopy evaporation [m]
   svector *_Es;  // Soil evaporation [m]
   svector *_Tr;  // Total transpiration in three layers [m]
@@ -152,11 +153,11 @@ class Basin {
   svector *_froot_layer1;  // froot coefficient for all soil profile
   svector *_froot_layer2;  // froot coefficient for layer 2
   svector *_froot_layer3;  // froot coefficient for layer 3
-  svector *_PE;  // Potential evaporation [m]
-  svector *_PT;  // Potential transpiration [m]
   svector *_p_perc1;  // Percolation proportion in layer 1
   svector *_p_perc2;  // Percolation proportion in layer 2
   svector *_p_perc3;  // Percolation proportion in layer 3
+  svector *_PE;  // Potential evaporation [m]
+  svector *_PT;  // Potential transpiration [m]
   svector *_flux_ovf_in_acc;  // Total amount of solutes in overland inflow [original unit * m]
   svector *_flux_interf_in_acc;  // Total amount of solutes in inter-inflow [original unit * m]
   svector *_flux_GWf_in_acc;  // Total amount of solutes in GW inflow [original unit * m]
@@ -254,15 +255,6 @@ class Basin {
   svector *_no3_vadose;  // no3 in vadose storage [mgN/L]
   svector *_no3_GW;  // no3 in Groundwater storage [mgN/L]
   svector *_no3_chanS;  // no3 in Channel storage [mgN/L]
-  svector *_don_I;  // Dissolved organic nitrogen in Canopy storage [mgN/L]
-  svector *_don_snow;  // Dissolved organic nitrogen in Snow depth in [mgN/L]
-  svector *_don_pond;  // Dissolved organic nitrogen in Ponding water in [mgN/L]
-  svector *_don_layer1;  // Dissolved organic nitrogen in Soil moisture in layer 1 [mgN/L]
-  svector *_don_layer2;  // Dissolved organic nitrogen in Soil moisture in layer 2 [mgN/L]
-  svector *_don_layer3;  // Dissolved organic nitrogen in Soil moisture in layer 3 [mgN/L]
-  svector *_don_vadose;  // Dissolved organic nitrogen in vadose storage [mgN/L]
-  svector *_don_GW;  // Dissolved organic nitrogen in Groundwater storage [mgN/L]
-  svector *_don_chanS;  // Dissolved organic nitrogen in Channel storage [mgN/L]
   svector *_nitrogen_add;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
   svector *_plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
   svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
@@ -272,6 +264,8 @@ class Basin {
   svector *_fast_NP1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
   svector *_humus_N;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
   svector *_fast_N;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
+  svector *_leaching_mass_no3;  // Leaching of NO3 [gN/m2]
+  svector *_drainage_mass_no3;  // Drainage of NO3 [gN/m2]
   /* end of Nitrogen */
 
 
@@ -283,20 +277,25 @@ class Basin {
   svector *_acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
   svector *_ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
   svector *_nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
+  svector *_soluble_CP1_nonwood;  // Soluble carbon pool (non-wood) in layer 1
   svector *_acid_CP1_wood;  // Acid hydrolyzable carbon pool (wood) in layer 1
   svector *_ethanol_CP1_wood;  // Ethanol soluble carbon pool (wood) in layer 1
   svector *_nonsoluble_CP1_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 1
+  svector *_soluble_CP1_wood;  // Soluble carbon pool (wood) in layer 1
   svector *_humus_CP1;  // Humus carbon pool (wood and non-wood) in layer 1
   svector *_acid_CP2_wood;  // Acid hydrolyzable carbon pool (wood) in layer 2
   svector *_ethanol_CP2_wood;  // Ethanol soluble carbon pool (wood) in layer 2
   svector *_nonsoluble_CP2_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 2
+  svector *_soluble_CP2_wood;  // Soluble carbon pool (wood) in layer 2
   svector *_humus_CP2;  // Humus carbon pool (wood) in layer 2
   svector *_acid_CP3_wood;  // Acid hydrolyzable carbon pool (wood) in layer 3
   svector *_ethanol_CP3_wood;  // Ethanol soluble carbon pool (wood) in layer 3
   svector *_nonsoluble_CP3_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 3
+  svector *_soluble_CP3_wood;  // Soluble carbon pool (wood) in layer 3
   svector *_humus_CP3;  // Humus carbon pool (wood) in layer 3
   svector *_humus_C;  // Humus carbon storage in all soil layers [mgN/L*m = gN/m2]
   svector *_fast_C;  // Fast carbon storage in all soil layers [mgN/L*m = gN/m2]
+  svector *_soluble_C;  // Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]
   svector *_doc_I;  // DOC in Canopy storage [mgN/L]
   svector *_doc_snow;  // DOC in Snow depth in [mgN/L]
   svector *_doc_pond;  // DOC in Ponding water in [mgN/L]
@@ -312,6 +311,8 @@ class Basin {
   svector *_respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
   svector *_C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   svector *_doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
+  svector *_leaching_mass_doc;  // Leaching of DOC [gC/m2]
+  svector *_drainage_mass_doc;  // Drainage of DOC [gC/m2]
   /* end of Carbon */
 
   /* Unit transformer */
@@ -446,6 +447,8 @@ class Basin {
   int GWrecharge_2(Control &ctrl, Param &par);
   int ReGWrecharge_1(Control &ctrl, Param &par, int j, double &db_vadose, double &db_GW, double &db_rPerc_vadose);
   int ReGWrecharge_2(Control &ctrl, Param &par, int j, double &db_vadose, double &db_GW, double &db_rPerc_vadose);
+  // Capillary flow
+  int Capillary_flow(Control &ctrl, Param &par);
   /* Lateral routing */
   int Routing_drainage(); // Drainage routing to channel
   int Routing_ovf_1(Control &ctrl, Param &par); // overland flow routing; All ponding water goes to next cell
@@ -479,25 +482,30 @@ class Basin {
   int Advance_age(); // Advance water ages by 1
   int Advance_trans_age(); // Advance transient water ages by 1
 
-  /* ===== Solute transport module ===== */
+  /* ===== Solute mixing and transport module ===== */
   int Solve_canopy_transport(Atmosphere &atm, svector &_sv_conc_I, svector &_sv_conc_P, svector &_sv_conc_pond, bool enrich_flag);
   int Solve_surface_transport(Control &ctrl, Atmosphere &atm, Param &par, svector &sv_conc_I, svector &sv_conc_snow, svector &sv_conc_pond, svector &sv_conc_chanS, svector &sv_conc_GW, bool enrich_flag);                             
-  int Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_conc_layer1, svector &sv_conc_layer2, svector &sv_conc_layer3, svector &sv_conc_chanS, bool enrich_flag, double drainage_flag);
+  int Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_conc_layer1, svector &sv_conc_layer2, svector &sv_conc_layer3, svector &sv_conc_vadose, svector &sv_conc_chanS, svector &sv_drainage_mass, bool enrich_flag, double drainage_flag, bool diffuse_flag);
   int Solve_routing_transport(Control &ctrl, Param &par, svector &_sv_conc_pond, svector &_sv_conc_layer1, svector &_sv_conc_layer2, svector &_sv_conc_layer3, svector &_sv_conc_vadose, svector &_sv_conc_GW, svector &_sv_conc_chanS);
   
    
-
-
   /* ===== Carbon module ===== */
   int Assimilation(Control &ctrl, Atmosphere &atm, Param &par);  // GPP and NPP calculation
-  int Photosynthesis_C3(int j, int timestep, double PAR_mol, double LAI, double Ta_k, double TC_c, double air_pressure, double energy_scaling_factor, double co2_mol, double co2_leaf_mol, 
+  int Photosynthesis_C3(int j, int timestep, double PAR_mol, double RH, double LAI, double Ta_k, double TC_c, double air_pressure, double energy_scaling_factor, double co2_mol, double co2_leaf_mol, 
     double KC, double KO, double VC_max, double Jmax, double gamma, double water_limitation_factor, double carboxylation_rate, svector &sv_NPP, svector &sv_canopy_conductance);  // C3 photosynthesis based on Farquhar (1980)
   int Set_carbon_constant();  // Set constants for carbon simulation (tansformation rates between different carbon pools)
   int Solve_soil_profile_carbon(Control &ctrl, Atmosphere &atm, Param &par);  // Solve soil carbon processes (addition, transport, decomposition)
-  int Carbon_addition(Control &ctrl, Param &par);
+  int Carbon_addition(Control &ctrl, Param &par);  // Carbon addition process (from vegetation pools to litter pools)
+  int Carbon_management(Control &ctrl, Param &par);  // Carbon management process (harvest and herbivory loss)
   int Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par);   // Solve soil carbon decomposition
+  int Carbon_transformation_process(  Control &ctrl, Atmosphere &atm, Param &par, int j,
+    double &db_soluble_CP, double &db_humus_CP, double &db_acid_CP, double &db_ethanol_CP, double &db_nonsoluble_CP,
+    double &db_soil_respiration_C, double &db_soil_decomposition_C,
+    double &db_available_N, double &db_minerl_soil,
+    double db_fct_Ts, double db_fct_theta, double db_fct_size, double db_NC_ratio_fast);  // Carbon transformation process for soil profile
   int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC
-  int Carbon_summary();  // Summary carbon states and fluxes
+  int Carbon_summary(Control &ctrl, Param &par);  // Summary carbon states and fluxes
+  double Calculate_fraction_soluble_CP_to_DOC(double soil_storage, double percolation, double ref_frac_soluble_to_doc);
 
   /* Nitrogen module */
   int Sort_nitrogen_addition(Control &ctrl, Param &par);  // Sort 366 days at first iteration
@@ -507,17 +515,17 @@ class Basin {
   int Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par);
   //int Soil_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // Disabled in v2.0
   int Nitrogen_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);
-  int Nitrogen_summary(Param &par);  // Summary nitrogen states and fluxes
+  int Nitrogen_summary(Control &ctrl, Param &par);  // Summary nitrogen states and fluxes
 
   /* ===== Global functions ===== */
   int Sort_percolation_travel_time(Control &ctrl, Param &par);
   int Sort_root_fraction(Control &ctrl,Param &par);  // Estimate root fraction
   double Temp_factor(double T);  // Temperature factor of nitrogen transformation
-  double Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaS, const double db_depth); // Moisture factor of nitrogen transformation
+  double Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaFC, const double db_thetaS, const double db_depth); // Moisture factor of nitrogen transformation
 
   /* ===== Initialisation ===== */
   int Initialisation(Control &ctrl, Param &par, Atmosphere &atm);
-  int Initialisation_each_timestep(Control &ctrl);
+  int Initialisation_each_timestep(Control &ctrl, Param &par);
   int Store_states();  // Store all water storages for mixing
 
   /* ===== IO functions ===== */

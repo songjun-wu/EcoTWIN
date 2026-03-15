@@ -20,7 +20,7 @@
 int Basin::Routing_Q_1(Control &ctrl, Param &par){
 
     int from_j, count;
-    double chnwidth, chnlength, Qall, Qupstream;
+    double chnwidth, Qall, Qupstream;
     double sqrtS, Manningn, a;
     double avQ, abQ, Qk, Qk1, fQj1i1, dfQj1i1, C;  // Variables used in Kinematic water solver
     
@@ -37,7 +37,6 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
         
         if (chnwidth>0){
 
-            chnlength = _chnlength->val[j];  // [m]
             from_j = _sortedGrid.to_cell[j];
 
             //dtdx = dt / chnlength;  // todo

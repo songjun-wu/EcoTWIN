@@ -31,12 +31,17 @@ int Basin::Mixing_vadose_tracking(Control &ctrl, Atmosphere &atm){
     - interf_toChn                         
     */
 
+    double input_water, input_mass, input_conc;
+
     // Isotopes
     if (ctrl.opt_tracking_isotope==1) {
 
         // Mixing vadose storage with percolation from layer 3
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-            Mixing_full(_vadose_old->val[j], _d18o_vadose->val[j], _Perc3->val[j], _d18o_layer3->val[j]);
+            input_water = _preferential_flow->val[j] + _Perc3->val[j];
+            input_mass = _d18o_pond->val[j] * _preferential_flow->val[j] + _d18o_layer3->val[j] * _Perc3->val[j];
+            input_conc = input_mass / input_water;
+            Mixing_full(_vadose_old->val[j], _d18o_vadose->val[j], input_water, input_conc);
         }
     }
 
@@ -45,7 +50,11 @@ int Basin::Mixing_vadose_tracking(Control &ctrl, Atmosphere &atm){
 
         // Mixing vadose storage with percolation from layer 3
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-            Mixing_full(_vadose_old->val[j], _age_vadose->val[j], _Perc3->val[j], _age_layer3->val[j]);
+            input_water = _preferential_flow->val[j] + _Perc3->val[j];
+            input_mass = _age_pond->val[j] * _preferential_flow->val[j] + _age_layer3->val[j] * _Perc3->val[j];
+            input_conc = input_mass / input_water;
+            Mixing_full(_vadose_old->val[j], _age_vadose->val[j], input_water, input_conc);
+
         }
     }
 
@@ -54,7 +63,8 @@ int Basin::Mixing_vadose_tracking(Control &ctrl, Atmosphere &atm){
 
         // Mixing vadose storage with percolation from layer 3
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-            Mixing_full(_vadose_old->val[j], _trans_age_vadose->val[j], _Perc3->val[j], 0.0);
+            input_water = _preferential_flow->val[j] + _Perc3->val[j];
+            Mixing_full(_vadose_old->val[j], _trans_age_vadose->val[j], input_water, 0.0);
         }
     }
 

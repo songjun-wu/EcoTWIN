@@ -98,6 +98,7 @@ int Basin::Mixing_routing_tracking(Control &ctrl, Param &par){
     if (ctrl.opt_tracking_isotope==1) {
         Solve_routing_transport(ctrl, par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_vadose, *_d18o_GW, *_d18o_chanS);
     }
+            
 
     // Cumulative Age
     if (ctrl.opt_tracking_age==1) {
@@ -129,7 +130,6 @@ int Basin::Mixing_routing_tracking(Control &ctrl, Param &par){
             } else {
                 rPerc2 = rPerc3 = rPerc_vadose = 0;
             }
-
 
             // Ponding water mixing with overland flow
             Mixing_full(_pond_old->val[j], _trans_age_pond->val[j], _ovf_in->val[j], 0.0);

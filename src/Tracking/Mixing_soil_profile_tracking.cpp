@@ -43,6 +43,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     (_theta3_old)           
     + percolation2          (need to mix)
     - percolation3
+    + Capillary flow        (need to mix)
     - Transp3
     (_theta3)          
     + repercolation2
@@ -53,7 +54,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     // Isotope tracking
     if (ctrl.opt_tracking_isotope==1) {
         // Mixing layer 1-3
-        Solve_soil_transport(par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_chanS, false, ctrl.opt_drainage);  // false: no enrichment due to evaportranspiration
+        Solve_soil_transport(par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_vadose, *_d18o_chanS, *_tmp, false, ctrl.opt_drainage, false);  // false1: no enrichment due to evaportranspiration; false2: no Fickian diffusion
 
         // Fractionation due to soil evaporation (only for layer 1 but happens after percolation)
         _tmp->equals(*_theta1_old);
@@ -69,7 +70,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     // Cumulative age tracking
     if (ctrl.opt_tracking_age==1) {
         // Mixing layer 1-3
-        Solve_soil_transport(par, *_age_pond, *_age_layer1, *_age_layer2, *_age_layer3, *_age_chanS, false, ctrl.opt_drainage);  // false: no enrichment due to evaportranspiration
+        Solve_soil_transport(par, *_age_pond, *_age_layer1, *_age_layer2, *_age_layer3, *_age_vadose, *_age_chanS, *_tmp, false, ctrl.opt_drainage, false);  // false1: no enrichment due to evaportranspiration; false2: no Fickian diffusion
     }
 
 
@@ -91,6 +92,11 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         // Mixing layer 3
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
             Mixing_full(_theta3_old->val[j] * par._depth3->val[j], _trans_age_layer3->val[j], _Perc2->val[j], 0.0);
+        }
+
+        // Mixing capillary flow with layer 3
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+            Mixing_full(_theta3_old->val[j] * par._depth3->val[j] + _Perc2->val[j] - _Perc3->val[j], _trans_age_layer3->val[j], _capillary_flow->val[j], 0.0);
         }
 
     }

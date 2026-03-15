@@ -32,7 +32,7 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             #['_Tmin', [Opt.cond['none']], 'Minimum air temperature [degree C]', 'grid', 'spatial_TS', 'Minimal_air_temperature', 0],
             #['_Tmax', [Opt.cond['none']], 'Maximum air temperature [degree C]', 'grid', 'spatial_TS', 'Maximum_air_temperature', 0],
             ['_RH', [Opt.cond['none']], 'Relative humidity [decimal]', 'grid', 'spatial_TS', 'Relative_humidity', 0],
-            ['_PET', [Opt.cond['evap_1']], 'Potential evapotranspiration [m]', 'grid', 'spatial_TS', 'Potential_evapotranspiration', 0],
+            ['_PET', [Opt.cond['none']], 'Potential evapotranspiration [m]', 'grid', 'spatial_TS', 'Potential_evapotranspiration', 0],
 
             ['_airpressure', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Air pressure [Pa]', 'grid', 'spatial_TS', 'Air_pressure', 0],
             ['_windspeed', [Opt.cond['chanE_1']], 'Wind speed at 2 m [m/s]', 'grid', 'spatial_TS', 'Wind_speed', 0],
@@ -49,8 +49,7 @@ GroundTs = [
             ['_LAI', [Opt.cond['none']], 'Leaf area index [-]', 'grid', 'spatial_TS', 'Leaf_area_index', 0],
         ]
 
-ManagementTs = [
-                ['_drainage_depth', [Opt.cond['drainage_1']], 'The depth of drainage [m]', 'grid', 'spatial_TS', 'drainage_depth', 0],
+ManagementTs = [             
                 ]
         
 GIS = [ #['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial', 'Ground_elevation', 0],
@@ -61,6 +60,8 @@ GIS = [ #['_dem', [Opt.cond['none']], 'Surface evelation [m]', 'grid', 'spatial'
         ['_slope', [Opt.cond['none']], 'Slope [m/m]', 'grid', 'spatial', 'slope', 0],
         ['_depth1', [Opt.cond['none']], 'Depth of soil layer 1 [m]', 'grid', 'spatial', 'Soil_depth1', 0],
         ['_depth2', [Opt.cond['none']], 'Depth of soil layer 2 [m]', 'grid', 'spatial', 'Soil_depth2', 0],
+        ['_drainage_depth', [Opt.cond['drainage_1']], 'The depth of drainage [m]', 'grid', 'spatial', 'drainage_depth', 0],
+        #['_reference_drainage_density', [Opt.cond['none']], 'The reference drainage density [length-1]', 'grid', 'spatial', 'reference_drainage_density', 0],
         #['_Gauge_to_Report', [Opt.cond['none']], 'Gauges that require outputs', 'grid', 'spatial', 'Gauge_mask', 0],
         ['_sand1', [Opt.cond['none']], 'Sand content of layer 1 [decimal]', 'grid', 'spatial', 'sand1', 0],
         ['_sand2', [Opt.cond['depthprofile_3']], 'Sand content of layer 2 [decimal], only needed when opt_depthprofile = 3', 'grid', 'spatial', 'sand2', 0],
@@ -145,6 +146,7 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_Th', [Opt.cond['none']], 'Throughfall [m]', 'grid', 'new', 'throufall', 1],
             ['_snowmelt', [Opt.cond['none']], 'Snow melt [m]', 'grid', 'new', 'snowmelt', 1],
             ['_infilt', [Opt.cond['none']], 'Inflitration into soil layer 1 [m]', 'grid', 'new', 'infiltration', 1],
+            ['_preferential_flow', [Opt.cond['none']], 'Preferential flow to vadose storage due to exstenice of macropores in rock landscapes [m]', 'grid', 'new', 'preferential_flow', 1],
             ['_Perc1', [Opt.cond['none']], 'Percolation into layer 2 [m]', 'grid', 'new', 'perc_layer1', 1],
             ['_Perc2', [Opt.cond['none']], 'Percolation into layer 3 [m]', 'grid', 'new', 'perc_layer2', 1],
             ['_Perc3', [Opt.cond['none']], 'Percolation into vadose storage [m]', 'grid', 'new', 'perc_layer3', 1],
@@ -155,7 +157,7 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_rPerc2', [Opt.cond['reinfil_1']], 'Repercolation into layer 3 due to overland flow routing [m]', 'grid', 'new', 'rperc_layer2', 1],
             ['_rPerc3', [Opt.cond['reinfil_1']], 'Repercolation into gw reservior due to overland flow routing [m]', 'grid', 'new', 'rperc_layer3', 1],
             ['_rPerc_vadose', [Opt.cond['none']], 'Repercolation from vadose storage into gw reservior [m]', 'grid', 'new', 'rperc_vadose', 1],
-            #['_rrPerc3', [Opt.cond['none']], 'Repercolation into gw reservior due to interflow routing [m]', 'grid', 'new', 'rrperc_layer3', 1],  # to be delete!
+            ['_capillary_flow', [Opt.cond['none']], 'Capillary flow from shallow GW zone to bottom soil layer [m]', 'grid', 'new', 'capillary_flow', 1],
 
 
             
@@ -175,9 +177,9 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_drainage_from_layer3', [Opt.cond['drainage_1']], 'Drainage from layer 3 [m]', 'grid', 'new', 'drainage_from_layer3', 1],
 
             # Other internal variables
-            ['_froot_layer1', [Opt.cond['evap_1']], 'froot coefficient for all soil profile', 'grid', 'new', None, 0],
-            ['_froot_layer2', [Opt.cond['evap_1']], 'froot coefficient for layer 2', 'grid', 'new', None, 0],
-            ['_froot_layer3', [Opt.cond['evap_1']], 'froot coefficient for layer 3', 'grid', 'new', None, 0],
+            ['_froot_layer1', [Opt.cond['evap_1'], Opt.cond['evap_2']], 'froot coefficient for all soil profile', 'grid', 'new', None, 0],
+            ['_froot_layer2', [Opt.cond['evap_1'], Opt.cond['evap_2']], 'froot coefficient for layer 2', 'grid', 'new', None, 0],
+            ['_froot_layer3', [Opt.cond['evap_1'], Opt.cond['evap_2']], 'froot coefficient for layer 3', 'grid', 'new', None, 0],
 
             ['_Ks1', [Opt.cond['none']], 'Saturated hydraulic conductivity in layer 1', 'grid', 'new', None, 0],
             ['_Ks2', [Opt.cond['none']], 'Saturated hydraulic conductivity in layer 2', 'grid', 'new', None, 0],
@@ -235,7 +237,7 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
 Parameters = [# ======= Hydrology =======
               ['_depth3', [Opt.cond['none']], 'Depth of soil layer 3 [m]', 'grid', 'spatial_param', 'Soil_depth3', 0],
               ['_alpha', [Opt.cond['none']], 'The weighting parameter that links LAI and maximum canopy storage [-]', 'grid', 'spatial_param', 'alpha', 0],
-              ['_rE', [Opt.cond['intecept_2'], Opt.cond['evap_1']], 'Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)', 'grid', 'spatial_param', 'rE', 0],
+              ['_rE', [Opt.cond['none']], 'Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)', 'grid', 'spatial_param', 'rE', 0],
               ['_snow_rain_thre', [Opt.cond['snow_1']], 'The temperature for snow melt  [m]', 'grid', 'spatial_param', 'snow_rain_threshold', 0],
               ['_deg_day_min', [Opt.cond['snow_1']], 'Degree-day factor with no precipitation [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_min', 0],
               ['_deg_day_max', [Opt.cond['snow_1']], 'Maximum Degree-day factor [m-1 degreeC-1]', 'grid', 'spatial_param', 'deg_day_max', 0],
@@ -255,16 +257,21 @@ Parameters = [# ======= Hydrology =======
               ['_KKs', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent saturated hydraulic conductivity [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'Ksat', 0],
               ['_Ksat', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent saturated moisture content  [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'Kporos', 0],
               ['_BClambda', [Opt.cond['depthprofile_2']], 'The exponential parameter for depth-dependent field capacity  [-], only needed when opt_depthprofile = 2', 'grid', 'spatial_param', 'BClambda', 0],
+              ['_preferential_flow_coeff', [Opt.cond['none']], 'The coefficient parameter for preferential flow [-]', 'grid', 'spatial_param', 'preferential_flow_coeff', 0],
               # Percolation
+              ['_perc_optimal_theta', [Opt.cond['perc_1']], 'The specific threshold between field capacity and saturated content for percolation [0-1]', 'grid', 'spatial_param', 'perc_optimal_theta', 0],
               ['_percExp', [Opt.cond['perc_2']], 'The exponential parameter for percolation [-], only needed when opt_percolation = 2', 'grid', 'spatial_param', 'percExp', 0],
+              # Capillary flow
+              ['_capillary_flow_rate', [Opt.cond['none']], 'The reference conductivity of capillary flow from shallow GW zone to bottom soil layer [m/s]', 'grid', 'spatial_param', 'capillary_flow_rate', 0],
               # Evapotranspiration
-              ['_froot_coeff', [Opt.cond['evap_1']], 'Root fraction coefficient [-]', 'grid', 'spatial_param', 'froot_coeff', 0],
-              ['_ET_reduction', [Opt.cond['evap_1']], 'ET reduction (weight) [-]', 'grid', 'spatial_param', 'ET_reduction', 0],
+              ['_froot_coeff', [Opt.cond['evap_1'], Opt.cond['evap_2']], 'Root fraction coefficient [-]', 'grid', 'spatial_param', 'froot_coeff', 0],
+              ['_ET_weight', [Opt.cond['evap_1'], Opt.cond['evap_2']], 'Evaporation and Transpiration should be adjusted due to potential underestimation of daily simulaton compared to integral of hourly simulatont [-]', 'grid', 'spatial_param', 'ET_weight', 0],
               # GW
               ['_init_GW', [Opt.cond['init_GW_1']], 'The initial GW storage [m], only needed when opt_init_GW = 1', 'grid', 'spatial_param', 'init_GW', 0],
               ['_perc_vadose_coeff', [Opt.cond['none']], 'The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2', 'grid', 'spatial_param', 'perc_vadose_coeff', 0],
               # Routing
               ['_pOvf_toChn', [Opt.cond['routinterf_1']], 'The weighting linear parameter for overland flow routing towards channel  [-]', 'grid', 'spatial_param', 'pOvf_toChn', 0],
+              ['_Ks_surface', [Opt.cond['routinterf_1']], 'The reference conductivity of surface for overland flow routing [m/s]', 'grid', 'spatial_param', 'Ks_surface', 0],
               ['_Ks_vadose', [Opt.cond['routinterf_1']], 'The reference conductivity of vadose zone for interflow routing [m/s]', 'grid', 'spatial_param', 'Ks_vadose', 0],
               ['_Ks_GW', [Opt.cond['routGWf_1']], 'The reference conductivity of GW zone for interflow routing [m/s]', 'grid', 'spatial_param', 'Ks_GW', 0],
               ['_lat_to_Chn_vadose', [Opt.cond['routinterf_1']], 'The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]', 'grid', 'spatial_param', 'lat_to_Chn_vadose', 0],
@@ -280,9 +287,12 @@ Parameters = [# ======= Hydrology =======
               ['_irrigation_FC_thres', [Opt.cond['none']], 'The soil moisture threshold for irrigation [-]', 'grid', 'spatial_param', 'irrigation_FC_thres', 0],
               ['_irrigation_coeff', [Opt.cond['irrigation_1']], 'Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled', 'grid', 'spatial_param', 'irrigation_coeff', 0],
               ['_drainage_intensity', [Opt.cond['drainage_1']], 'The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled', 'grid', 'spatial_param', 'drainage_intensity', 0],
+              ['_herbivory_uptake_coeff', [Opt.cond['carbon_sim_1']], 'The coefficient for herbivory uptake [-]', 'grid', 'spatial_param', 'herbivory_uptake_coeff', 0],
+              ['_harvest_coeff', [Opt.cond['carbon_sim_1']], 'The coefficient for crop harvest [-]', 'grid', 'spatial_param', 'harvest_coeff', 0],
 
               # # ======= Mixing =======
-              ['_nearsurface_mixing', [Opt.cond['none']], 'The proportion of pond to mix with layer1  [decimal]', 'grid', 'spatial_param', 'nearsurface_mixing', 0],
+              ['_diffuse_molecular_coefficient', [Opt.cond['none']], 'The coefficient for Fickian diffusion [m2/s]', 'grid', 'spatial_param', 'diffuse_molecular_coefficient', 0],
+              #['_nearsurface_mixing', [Opt.cond['none']], 'The proportion of pond to mix with layer1  [decimal]', 'grid', 'spatial_param', 'nearsurface_mixing', 0],
               ['_ratio_to_interf', [Opt.cond['none']], 'The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]', 'grid', 'spatial_param', 'ratio_to_interf', 0],
 
 
@@ -328,6 +338,8 @@ Parameters = [# ======= Hydrology =======
               # Correction of decomposition rates based on the magnitudes of carbon storages
               ['_decomposition_weight_fast_pool', [Opt.cond['carbon_sim_1']], 'Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]', 'grid', 'spatial_param', '_decomposition_weight_fast_pool', 0],
               ['_decomposition_weight_humus_pool', [Opt.cond['carbon_sim_1']], 'Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]', 'grid', 'spatial_param', '_decomposition_weight_humus_pool', 0],
+              ['_ref_decomp_rate_doc', [Opt.cond['carbon_sim_1']], 'Reference decomposition rate of DOC pool [day-1]', 'grid', 'spatial_param', '_ref_decomp_rate_doc', 0],
+              ['_ref_frac_soluble_to_doc', [Opt.cond['carbon_sim_1']], 'Reference fraction of soluble carbon going to DOC pool [-]', 'grid', 'spatial_param', '_ref_frac_soluble_to_doc', 0],
               ['_respiration_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic heterotrophic respiration [day-1]', 'grid', 'spatial_param', 'respiration_river', 0],
               # ======= Nitrogen =======
               ['_NC_ratio_plant_green', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in vegetation green pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_plant_green', 0],
@@ -354,19 +366,23 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           ['_acid_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'acid_CP1_nonwood', 0],
           ['_ethanol_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'ethanol_CP1_nonwood', 0],
           ['_nonsoluble_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'nonsoluble_CP1_nonwood', 0],
+          ['_soluble_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'soluble_CP1_nonwood', 0],
           ['_acid_CP1_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 1', 'grid', 'spatial', 'acid_CP1_wood', 0],
           ['_ethanol_CP1_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'ethanol_CP1_wood', 0],
           ['_nonsoluble_CP1_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'nonsoluble_CP1_wood', 0],
+          ['_soluble_CP1_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'soluble_CP1_wood', 0],
           ['_humus_CP1', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood and non-wood) in layer 1', 'grid', 'spatial', 'humus_CP1_nonwood', 0],
 
           ['_acid_CP2_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 2', 'grid', 'spatial', 'acid_CP2_wood', 0],
           ['_ethanol_CP2_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'ethanol_CP2_wood', 0],
           ['_nonsoluble_CP2_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'nonsoluble_CP2_wood', 0],
+          ['_soluble_CP2_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'soluble_CP2_wood', 0],
           ['_humus_CP2', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 2', 'grid', 'spatial', 'humus_CP2_nonwood', 0],
         
           ['_acid_CP3_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 3', 'grid', 'spatial', 'acid_CP3_wood', 0],
           ['_ethanol_CP3_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'ethanol_CP3_wood', 0],
           ['_nonsoluble_CP3_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'nonsoluble_CP3_wood', 0],
+          ['_soluble_CP3_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'soluble_CP3_wood', 0],
           ['_humus_CP3', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 3', 'grid', 'spatial', 'humus_CP3_nonwood', 0],
 
           #['_fast_C1',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 1 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C1', 0],
@@ -375,6 +391,7 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
 
           ['_humus_C',  [Opt.cond['carbon_sim_1']], 'Humus carbon storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_C', 1],
           ['_fast_C',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_C', 1],
+          ['_soluble_C',  [Opt.cond['carbon_sim_1']], 'Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'soluble_C', 1],
 
 
           ['_doc_I',   [Opt.cond['carbon_sim_1']], 'DOC in Canopy storage [mgN/L]', 'grid', 'spatial', 'doc_canopy_storage', 1],
@@ -396,8 +413,14 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           
           ['_C4_flag', [Opt.cond['carbon_sim_1']], ' C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)', 'grid', 'spatial', 'C4_flag', 0],
           ['_doc_rain', [Opt.cond['carbon_sim_1']], 'The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1', 'grid', 'spatial', 'doc_rain', 0],
-        
+
+
+          # Statistics of carbon storages and fluxes
+          ['_leaching_mass_doc', [Opt.cond['carbon_sim_1']], 'Leaching of DOC [gC/m2]', 'grid', 'new', 'leaching_mass_doc', 1],
+          ['_drainage_mass_doc', [Opt.cond['carbon_sim_1']], 'Drainage of DOC [gC/m2]', 'grid', 'new', 'drainage_mass_doc', 1],
+             
         ]
+
 
 Nitrogen = [['_plant_mobile_N', [Opt.cond['nitrogen_sim_1']], 'Plant mobile nitrogen [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_mobile_N', 0],
             ['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mgN/L]', 'grid', 'spatial', 'no3_canopy_storage', 1],
@@ -410,15 +433,15 @@ Nitrogen = [['_plant_mobile_N', [Opt.cond['nitrogen_sim_1']], 'Plant mobile nitr
             ['_no3_GW',  [Opt.cond['nitrogen_sim_1']], 'no3 in Groundwater storage [mgN/L]', 'grid', 'spatial', 'no3_groundwater_storage', 1],
             ['_no3_chanS',  [Opt.cond['nitrogen_sim_1']], 'no3 in Channel storage [mgN/L]', 'grid', 'spatial', 'no3_chanS', 1],
 
-            ['_don_I',   [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Canopy storage [mgN/L]', 'grid', 'new', 'don_canopy_storage', 0],
-            ['_don_snow',    [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Snow depth in [mgN/L]', 'grid', 'new', 'don_snow_depth', 0],
-            ['_don_pond',    [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Ponding water in [mgN/L]', 'grid', 'new', 'don_pond', 0],
-            ['_don_layer1',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 1 [mgN/L]', 'grid', 'new', 'don_SMC_layer1', 0],
-            ['_don_layer2',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 2 [mgN/L]', 'grid', 'new', 'don_SMC_layer2', 0],
-            ['_don_layer3',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 3 [mgN/L]', 'grid', 'new', 'don_SMC_layer3', 0],
-            ['_don_vadose',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in vadose storage [mgN/L]', 'grid', 'new', 'don_vadose', 0],
-            ['_don_GW',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Groundwater storage [mgN/L]', 'grid', 'new', 'don_groundwater_storage', 0],
-            ['_don_chanS',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Channel storage [mgN/L]', 'grid', 'new', 'don_chanS', 0],
+            #['_don_I',   [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Canopy storage [mgN/L]', 'grid', 'new', 'don_canopy_storage', 0],
+            #['_don_snow',    [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Snow depth in [mgN/L]', 'grid', 'new', 'don_snow_depth', 0],
+            #['_don_pond',    [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Ponding water in [mgN/L]', 'grid', 'new', 'don_pond', 0],
+            #['_don_layer1',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 1 [mgN/L]', 'grid', 'new', 'don_SMC_layer1', 0],
+            #['_don_layer2',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 2 [mgN/L]', 'grid', 'new', 'don_SMC_layer2', 0],
+            #['_don_layer3',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Soil moisture in layer 3 [mgN/L]', 'grid', 'new', 'don_SMC_layer3', 0],
+            #['_don_vadose',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in vadose storage [mgN/L]', 'grid', 'new', 'don_vadose', 0],
+            #['_don_GW',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Groundwater storage [mgN/L]', 'grid', 'new', 'don_groundwater_storage', 0],
+            #['_don_chanS',  [Opt.cond['nitrogen_sim_1']], 'Dissolved organic nitrogen in Channel storage [mgN/L]', 'grid', 'new', 'don_chanS', 0],
 
             # Nitrogen
             ['_nitrogen_add', [Opt.cond['nitrogen_sim_1']], 'Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]', 'grid', 'new', 'nitrogen_addition', 1],
@@ -441,6 +464,11 @@ Nitrogen = [['_plant_mobile_N', [Opt.cond['nitrogen_sim_1']], 'Plant mobile nitr
             #['_humus_NP3',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP3', 0],
             ['_humus_N',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_N', 1],
             ['_fast_N',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_N', 1],
+
+            # Statistics of nitrogen storages and fluxes
+          ['_leaching_mass_no3', [Opt.cond['nitrogen_sim_1']], 'Leaching of NO3 [gN/m2]', 'grid', 'new', 'leaching_mass_no3', 1],
+          ['_drainage_mass_no3', [Opt.cond['nitrogen_sim_1']], 'Drainage of NO3 [gN/m2]', 'grid', 'new', 'drainage_mass_no3', 1],
+
             ]
 
 
@@ -474,6 +502,7 @@ Nitrogen_addition = [['is_crop', [Opt.cond['nitrogen_sim_1']], 'Crop flag [], th
                      ['plant_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation planting [day]', 'vector', 'vector', None, 0],
                      ['emerge_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation emeregence [day]', 'vector', 'vector', None, 0],
                      ['harvest_day', [Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation harvest [day]', 'vector', 'vector', None, 0],
+                     #['harvest_period', [Opt.cond['nitrogen_sim_1']], 'The duration of harvest [day]', 'vector', 'vector', None, 0],
                     ]
 
 Irrigation  = [

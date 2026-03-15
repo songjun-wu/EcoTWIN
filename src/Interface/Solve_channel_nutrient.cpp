@@ -60,10 +60,10 @@ int Basin::Solve_channel_nutrient(Control &ctrl, Atmosphere &atm, Param &par){
                 if (_Echan->val[j] > roundoffERR){
                     if (_chanS->val[j] > roundoffERR){
                         _no3_chanS->val[j] *= (_chanS->val[j] + _Echan->val[j]) / _chanS->val[j];  // Enrichment due to channel evaporation
-                        _don_chanS->val[j] *= (_chanS->val[j] + _Echan->val[j]) / _chanS->val[j];  // Enrichment due to channel evaporation
+                        //_don_chanS->val[j] *= (_chanS->val[j] + _Echan->val[j]) / _chanS->val[j];  // Enrichment due to channel evaporation
                     } else {
                         _no3_chanS->val[j] = 0.0;
-                        _don_chanS->val[j] = 0.0;
+                        //_don_chanS->val[j] = 0.0;
                     }   
                 }
             }

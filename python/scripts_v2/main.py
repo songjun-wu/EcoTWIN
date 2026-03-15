@@ -6,9 +6,8 @@ import numpy as np
 import time
 
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/run_model')
-import GEM_tools
-import post_plot
+#sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/run_model')
+import GEM_tools_v2
 
 
 #  OPTIONS
@@ -21,20 +20,24 @@ parser.add_option("--def_py",dest="def_py",metavar="def_py",
 (options, args) = parser.parse_args()
 mode = options.mode
 
+sys.path.insert(0, current_path+'/')
+
 if options.def_py == None:
     options.def_py = 'def_GEM_v2'
 if (mode == 'DREAM_cali') or (mode == 'check'):
     options.def_py = 'def_GEM_v2_cali'
 elif (mode == 'cali_sep') or (mode == 'check_sep'):
     options.def_py = 'def_GEM_v2_cali_sep'
+    shutil.copyfile('def_GEM_v2.py', 'def_GEM_v2_cali_sep.py')  # todo
 
-sys.path.insert(0, current_path+'/')
+
 exec('from ' + options.def_py + ' import *')
 
 
 # Calibrate seperate catchments
 if mode == 'cali_sep':
-    catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
+    #catchment_to_cali = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list','rb'))
+    catchment_to_cali = Output.Catchment_ID
 
 
     for catchment in catchment_to_cali:
@@ -46,8 +49,8 @@ if mode == 'cali_sep':
     print(max_nodes, Cali.niterations)
     os.makedirs(Path.work_path+'/scripts', exist_ok=True)
     
-    shutil.copyfile('def_GEM_v2.py', 'def_GEM_v2_cali_sep.py')  # todo
 
+    # Copy and modify def_GEM_v2.py
     with open('def_GEM_v2_cali_sep.py', 'r') as f:
         lines = f.readlines()
     for i in range(len(lines)):
@@ -58,7 +61,22 @@ if mode == 'cali_sep':
     
     shutil.copyfile('def_GEM_v2_cali_sep.py', Path.work_path+'/scripts/def_GEM_v2_cali_sep.py')
 
-    
+    # Copy and modify DREAM_cali.py
+    shutil.copyfile('DREAM_cali.py', Path.work_path+'/scripts/DREAM_cali.py')
+    with open('DREAM_cali.py', 'r') as f:
+        lines = f.readlines()
+    new_line = "import sys\nsys.path.append('" + os.path.dirname(os.path.dirname(Path.model_path)) + "/python/scripts_v2/')\nsys.path.append('" + os.path.dirname(os.path.dirname(Path.model_path)) + "/python/run_model/')\n"
+    lines = [new_line] + lines
+    with open('DREAM_cali_tmp.py', 'w') as f:
+        f.writelines(lines)
+    shutil.copyfile('DREAM_cali_tmp.py', Path.work_path+'/scripts/DREAM_cali.py')
+    os.remove('DREAM_cali_tmp.py')
+
+    # Copy and modify likelihood_sep.py
+    shutil.copyfile('likelihood_sep.py', Path.work_path+'/scripts/likelihood_sep.py')
+
+
+
     # Construct cmd for each catchment
     for batchID in range(max_nodes):
         nbatch = Cali.nbatchs
@@ -134,7 +152,7 @@ if mode == 'cali_sep':
             if completed_tasks_for_each_catchment[batchID]==-1:
                 continue
 
-            if (GEM_tools.checkTaskStatus('c' + str(batchID)) <= 0):
+            if (GEM_tools_v2.checkTaskStatus('c' + str(batchID)) <= 0):
                 completed_tasks_for_each_catchment[batchID] += 1
                 # To next task
                 if completed_tasks_for_each_catchment[batchID] < Cali.nbatchs:
@@ -195,24 +213,34 @@ if mode == 'cali_sep':
 
 
 
+
 elif mode == 'forward_sep':
     # Model structure update
     os.chdir('/home/wusongj/EcoTWIN/python/development')    
     os.system('python3 develop.py')
 
     # set the env
-    GEM_tools.sort_directory(mode, Path, Cali, Output)
-    GEM_tools.set_env(mode, Path, Cali, Output)
-    GEM_tools.set_config(mode, Path, Cali, Output)
+    GEM_tools_v2.sort_directory(mode, Path, Cali, Output)
+    GEM_tools_v2.set_env(mode, Path, Cali, Output)
+    GEM_tools_v2.set_config(mode, Path, Info, Cali, Output)
    
     nchains = 20
 
     counter = 0
     
     #catchment_ID_list = ['831616_001']
-    catchment_ID_list = ['291110_001']
+    #catchment_ID_list = ['291110_001']
+    catchment_ID_list = ['83749_001']
 
-    for catchment_ID in catchment_ID_list:
+    catchment_dicts = {
+        '831616_001': 9,
+        '291110_001': 1,
+        '83749_001': 3,
+        '1034724_001': 12,
+        '95_001': 16,
+    }
+
+    for catchment_ID in catchment_dicts.keys():
         run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
         seconds_since_1980 = np.loadtxt(Path.data_path + 'catchment_info/cali/'+str(catchment_ID)+'/obs/seconds_from_1980.txt')
         with open(run_path+'config.ini', 'r') as f:
@@ -221,25 +249,30 @@ elif mode == 'forward_sep':
         with open(run_path+'config.ini', 'w') as f:
             f.writelines(lines)
         
-        param_all = np.array([])
+        #param_all = np.array([])
         # Delete the existing outputs from the previous run
         if os.path.exists(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID):
             shutil.rmtree(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID)  
-        
+
         # Get best parameters
         param_path = Path.work_path+'/cali_sep/best_param/best_param_'+catchment_ID+'.bin'
-        param_N = GEM_tools.get_param_N(Info, Param) # Get the number of parameters
+        param_N = GEM_tools_v2.get_param_N(Info, Param) # Get the number of parameters
+
+
+
+        # todo
+        #param_all = np.full((nchains, param_N), 0.5)
         param_all = np.fromfile(param_path).reshape(-1, param_N)
 
         #for chainID in range(nchains):
-        for chainID in [7]:  # TODO
+        for chainID in [catchment_dicts[catchment_ID]]:  # TODO
             print(catchment_ID, chainID)
             
 
             param = param_all[chainID,:]
  
-            GEM_tools.gen_param(run_path, Info, Param, param)
-            GEM_tools.gen_no3_addtion(run_path, Info)
+            GEM_tools_v2.gen_param(run_path, Info, Param, param)
+            GEM_tools_v2.gen_no3_addtion(run_path, Info)
             
             # Model run
             os.chdir(run_path)           
@@ -247,31 +280,31 @@ elif mode == 'forward_sep':
             os.chdir(current_path)
 
             # Save outputs for each catchment
-            GEM_tools.save_outputs(run_path+'outputs/', Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/')
+            GEM_tools_v2.save_outputs(run_path+'outputs/', Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/')
         
 
 
-        #post_plot.plot_performance_all(Path.work_path + mode +'/outputs/cali_sep/' + catchment_ID + '/',Path.work_path+'/data/catchment_info/cali/'+catchment_ID+'/obs/', Path.work_path+'/plots/', catchment_ID, nchains)
-        #post_plot.plot_param_all(param_path, Path.work_path+'plots/', nchains, catchment_ID)
 
 
 
 
 elif mode == 'check_sep':
     print('')
-    param_N = GEM_tools.get_param_N(Info, Param) # Get the number of parameters
+    param_N = GEM_tools_v2.get_param_N(Info, Param) # Get the number of parameters
 
     for catchment_ID in os.listdir(Path.work_path+'/cali_sep'):
         if catchment_ID == 'best_param':
             continue
         if not os.path.isdir(Path.work_path+'/cali_sep/'+catchment_ID):
             continue
+
         try:
             best_param = np.array([])
             arr = []
             lengths = []
             niterations = []
             n_batch = 0
+            
             for i in range(Cali.nchains):
                 flag = True
                 for niteration in np.arange(0, 2e5, Cali.niterations)[::-1]:

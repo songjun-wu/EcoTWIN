@@ -4,8 +4,8 @@ from optparse import OptionParser
 import numpy as np
 from mpi4py import MPI
 from scipy.stats import uniform
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/run_model')
-import GEM_tools
+#sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/run_model')
+import GEM_tools_v2
 import time
 
 # Initialize MPI
@@ -63,7 +63,6 @@ def build_history(TASK_name, nchains, total_iterations, param_N, history_thin):
 try:
     # Import configuration
     sys.path.insert(0, os.getcwd())
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/run_model')
     config = __import__(options.def_py)
     Path = config.Path
     Cali = config.Cali
@@ -96,10 +95,10 @@ try:
         if rank == 0:
             try:
                 os.chdir(Path.work_path)
-                GEM_tools.sort_directory(options.mode, Path, Cali, Output)
-                GEM_tools.set_env(options.mode, Path, nchains, Output)
-                GEM_tools.set_config(options.mode, Path, Cali, Output)
-                param_N = GEM_tools.get_param_N(Info, Param)
+                GEM_tools_v2.sort_directory(options.mode, Path, Cali, Output)
+                GEM_tools_v2.set_env(options.mode, Path, nchains, Output)
+                GEM_tools_v2.set_config(options.mode, Path, Info, Cali, Output)
+                param_N = GEM_tools_v2.get_param_N(Info, Param)
                 print(f"Rank 0: Initialization complete. Starting {nchains} chains, param_N={param_N}", flush=True)
             except Exception as e:
                 print(f"Rank 0: Initialization failed: {e}", flush=True)
@@ -122,7 +121,7 @@ try:
             try:
                 #print(f"Rank {rank}: Starting initial DREAM run", flush=True)
                 run_dream(
-                    savePath=Path.result_path,
+                    savePath=Path.work_path+'/results/',
                     parameters=[parameters_to_sample],
                     likelihood=likelihood,
                     niterations=int(options.niterations),
@@ -148,7 +147,7 @@ try:
             total_iterations = int(options.restart_niteration)
             if rank==0:
                 build_history(Cali.TASK_name, nchains, total_iterations, param_N, history_thin)
-            starts = GEM_tools.get_restart_param(Path, Cali, param_N, total_iterations)
+            starts = GEM_tools_v2.get_restart_param(Path, Cali, param_N, total_iterations)
             total_iterations += int(options.niterations)
             comm.Barrier()
             """"""
@@ -186,11 +185,11 @@ except Exception as e:
 
 
 if options.mode == 'test':
-    param_N = GEM_tools.get_param_N(Info, Param)
+    param_N = GEM_tools_v2.get_param_N(Info, Param)
     total_iterations = int(options.restart_niteration)
     #if rank==0:
     #    build_history(Cali.TASK_name, 50, total_iterations, param_N, history_thin)
-    starts = GEM_tools.get_restart_param(Path, Cali, param_N, total_iterations)
+    starts = GEM_tools_v2.get_restart_param(Path, Cali, param_N, total_iterations)
     print(len(starts), starts[49])
 
 

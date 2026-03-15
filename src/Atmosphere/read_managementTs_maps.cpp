@@ -18,30 +18,18 @@
 #include "Basin.h"
 
 int Basin::open_managementTs(Control &ctrl){
-  if (ctrl.opt_drainage == 1){
-    open_groundTs_maps(ctrl.path_ClimateFolder + ctrl.fn__drainage_depth, if__drainage_depth);
-  }
   return EXIT_SUCCESS;
 }
 
 int Basin::read_managementTs(Control &ctrl){
-  if (ctrl.opt_drainage == 1){
-    read_groundTs_maps(if__drainage_depth, *_drainage_depth);
-  }
   return EXIT_SUCCESS;
 }
 
 int Basin::init_managementTs(Control &ctrl){
-  if (ctrl.opt_drainage == 1){
-    init_groundTs_maps(ctrl.path_ClimateFolder + ctrl.fn__drainage_depth, if__drainage_depth);
-  }
   return EXIT_SUCCESS;
 }
 
 int Basin::update_managementTs(Control &ctrl, Param &par){
-  if (ctrl.opt_drainage == 1){
-    update_groundTs_maps(if__drainage_depth, par, *_drainage_depth);
-  }
   return EXIT_SUCCESS;
 }
 

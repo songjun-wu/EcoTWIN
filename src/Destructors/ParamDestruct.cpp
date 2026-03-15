@@ -20,17 +20,20 @@
 Param::~Param(){}
 
 int Param::dtor(Control &ctrl){
+
+  /* Reference states or fluxes parameterisation */
+  if(_reference_drainage_density) delete _reference_drainage_density;
   
   /* Parameters */
   if(_depth3) delete _depth3;
   if(_alpha) delete _alpha;
+  if(_rE) delete _rE;
+  if(_preferential_flow_coeff) delete _preferential_flow_coeff;
+  if(_capillary_flow_rate) delete _capillary_flow_rate;
   if(_perc_vadose_coeff) delete _perc_vadose_coeff;
   if(_irrigation_FC_thres) delete _irrigation_FC_thres;
-  if(_nearsurface_mixing) delete _nearsurface_mixing;
+  if(_diffuse_molecular_coefficient) delete _diffuse_molecular_coefficient;
   if(_ratio_to_interf) delete _ratio_to_interf;
-  if (ctrl.opt_intecept == 2 or ctrl.opt_evap == 1){
-    if(_rE) delete _rE;
-  }
   if (ctrl.opt_snow == 1){
     if(_snow_rain_thre) delete _snow_rain_thre;
     if(_deg_day_min) delete _deg_day_min;
@@ -57,18 +60,22 @@ int Param::dtor(Control &ctrl){
     if(_Ksat) delete _Ksat;
     if(_BClambda) delete _BClambda;
   }
+  if (ctrl.opt_percolation == 1){
+    if(_perc_optimal_theta) delete _perc_optimal_theta;
+  }
   if (ctrl.opt_percolation == 2){
     if(_percExp) delete _percExp;
   }
-  if (ctrl.opt_evap == 1){
+  if (ctrl.opt_evap == 1 or ctrl.opt_evap == 2){
     if(_froot_coeff) delete _froot_coeff;
-    if(_ET_reduction) delete _ET_reduction;
+    if(_ET_weight) delete _ET_weight;
   }
   if (ctrl.opt_init_GW == 1){
     if(_init_GW) delete _init_GW;
   }
   if (ctrl.opt_routinterf == 1){
     if(_pOvf_toChn) delete _pOvf_toChn;
+    if(_Ks_surface) delete _Ks_surface;
     if(_Ks_vadose) delete _Ks_vadose;
     if(_lat_to_Chn_vadose) delete _lat_to_Chn_vadose;
     if(_interfExp) delete _interfExp;
@@ -90,6 +97,30 @@ int Param::dtor(Control &ctrl){
   if (ctrl.opt_drainage == 1){
     if(_drainage_intensity) delete _drainage_intensity;
   }
+  if (ctrl.opt_carbon_sim == 1){
+    if(_herbivory_uptake_coeff) delete _herbivory_uptake_coeff;
+    if(_harvest_coeff) delete _harvest_coeff;
+    if(_C_in_LeafArea) delete _C_in_LeafArea;
+    if(_tau_wood_C) delete _tau_wood_C;
+    if(_plant_wood_CP_max) delete _plant_wood_CP_max;
+    if(_plant_reserve_CP_max) delete _plant_reserve_CP_max;
+    if(_carboxylation_rate) delete _carboxylation_rate;
+    if(_ETransport) delete _ETransport;
+    if(_frac_NPP_to_green) delete _frac_NPP_to_green;
+    if(_frac_NPP_to_wood) delete _frac_NPP_to_wood;
+    if(_frac_litter_to_soluble_nonwood) delete _frac_litter_to_soluble_nonwood;
+    if(_frac_litter_to_acid_nonwood) delete _frac_litter_to_acid_nonwood;
+    if(_frac_litter_to_ethanol_nonwood) delete _frac_litter_to_ethanol_nonwood;
+    if(_frac_litter_to_nonsoluble_nonwood) delete _frac_litter_to_nonsoluble_nonwood;
+    if(_frac_litter_to_soluble_wood) delete _frac_litter_to_soluble_wood;
+    if(_frac_litter_to_acid_wood) delete _frac_litter_to_acid_wood;
+    if(_frac_litter_to_ethanol_wood) delete _frac_litter_to_ethanol_wood;
+    if(_frac_litter_to_nonsoluble_wood) delete _frac_litter_to_nonsoluble_wood;
+    if(_decomposition_weight_fast_pool) delete _decomposition_weight_fast_pool;
+    if(_decomposition_weight_humus_pool) delete _decomposition_weight_humus_pool;
+    if(_ref_decomp_rate_doc) delete _ref_decomp_rate_doc;
+    if(_ref_frac_soluble_to_doc) delete _ref_frac_soluble_to_doc;
+  }
   if (ctrl.opt_tracking_isotope == 1){
     if(_CG_n_soil) delete _CG_n_soil;
   }
@@ -109,26 +140,6 @@ int Param::dtor(Control &ctrl){
     if(_NC_ratio_fast_pool_nonwood) delete _NC_ratio_fast_pool_nonwood;
     if(_NC_ratio_fast_pool_wood) delete _NC_ratio_fast_pool_wood;
     if(_NC_ratio_humus_pool) delete _NC_ratio_humus_pool;
-  }
-  if (ctrl.opt_carbon_sim == 1){
-    if(_C_in_LeafArea) delete _C_in_LeafArea;
-    if(_tau_wood_C) delete _tau_wood_C;
-    if(_plant_wood_CP_max) delete _plant_wood_CP_max;
-    if(_plant_reserve_CP_max) delete _plant_reserve_CP_max;
-    if(_carboxylation_rate) delete _carboxylation_rate;
-    if(_ETransport) delete _ETransport;
-    if(_frac_NPP_to_green) delete _frac_NPP_to_green;
-    if(_frac_NPP_to_wood) delete _frac_NPP_to_wood;
-    if(_frac_litter_to_soluble_nonwood) delete _frac_litter_to_soluble_nonwood;
-    if(_frac_litter_to_acid_nonwood) delete _frac_litter_to_acid_nonwood;
-    if(_frac_litter_to_ethanol_nonwood) delete _frac_litter_to_ethanol_nonwood;
-    if(_frac_litter_to_nonsoluble_nonwood) delete _frac_litter_to_nonsoluble_nonwood;
-    if(_frac_litter_to_soluble_wood) delete _frac_litter_to_soluble_wood;
-    if(_frac_litter_to_acid_wood) delete _frac_litter_to_acid_wood;
-    if(_frac_litter_to_ethanol_wood) delete _frac_litter_to_ethanol_wood;
-    if(_frac_litter_to_nonsoluble_wood) delete _frac_litter_to_nonsoluble_wood;
-    if(_decomposition_weight_fast_pool) delete _decomposition_weight_fast_pool;
-    if(_decomposition_weight_humus_pool) delete _decomposition_weight_humus_pool;
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
     if(_LAI_shed_coef) delete _LAI_shed_coef;

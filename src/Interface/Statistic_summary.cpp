@@ -25,12 +25,12 @@ int Basin::Statistic_summary(Control &ctrl, Param &par) {
 
     // Summary carbon statistics
     if (ctrl.opt_carbon_sim==1){
-      Carbon_summary();
+      Carbon_summary(ctrl, par);
     }
 
     // Summary nitrogen statistics
     if (ctrl.opt_nitrogen_sim==1){
-      Nitrogen_summary(par);
+      Nitrogen_summary(ctrl, par);
     }
 
 

@@ -46,7 +46,7 @@ int Basin::Solve_GW_nutrient(Control &ctrl, Atmosphere &atm){
       if (ctrl.opt_baseflow_mixing == 0){
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
             Mixing_full(_GW_old->val[j], _no3_GW->val[j], _Perc_vadose->val[j], _no3_vadose->val[j]);
-            Mixing_full(_GW_old->val[j], _don_GW->val[j], _Perc_vadose->val[j], _don_vadose->val[j]);
+            //Mixing_full(_GW_old->val[j], _don_GW->val[j], _Perc_vadose->val[j], _don_vadose->val[j]);
         }
       }
     }

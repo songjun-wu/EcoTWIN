@@ -43,6 +43,7 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         // If soil is too saturated for further infiltration
         if (dtheta < 0){
             _infilt->val[j] = 0.0;
+            _preferential_flow->val[j] = 0.0;
             continue;
         }
 
@@ -89,9 +90,17 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         }
 
         deltaF = deltaF > input ? input : deltaF;
-        _infilt->val[j] = deltaF;
-        _theta1->val[j] += deltaF / depth1;
-        _pond->val[j] -= deltaF;        
+        double fraction_preferential_flow = par.param_category->val[ctrl.rock_category][j] * par._preferential_flow_coeff->val[j];
+        _pond->val[j] -= deltaF;
+        // Infiltration to soil matrix
+        _infilt->val[j] = deltaF * (1 - fraction_preferential_flow);
+        _theta1->val[j] += _infilt->val[j] / depth1;
+        // Preferential flow due to exstenice of macropores in rock landscapes
+        _preferential_flow->val[j] = deltaF * fraction_preferential_flow;
+        _vadose->val[j] += _preferential_flow->val[j];
+
+        
+             
 
     }
     return EXIT_SUCCESS;
