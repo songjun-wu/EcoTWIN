@@ -101,7 +101,8 @@ class Cali:
 
 class Output:
     # WOS-ID of each catchment
-    Catchment_ID    = ['95_001', '291110_001', '831616_001', '83749_001', '1034724_001']
+    #Catchment_ID    = ['95_001', '291110_001', '831616_001', '83749_001', '1034724_001']
+    Catchment_ID = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list', 'rb'))
     #Catchment_ID    = ['95_001']
     N_catchments    = len(Catchment_ID)     # Number of catchments
     

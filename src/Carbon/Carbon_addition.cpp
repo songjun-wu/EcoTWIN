@@ -44,7 +44,6 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
 
     
     // Variables for nitrogen simulation
-    double N_biological_fixiation;  // Biological nitrogen fixation [gN/m2]
     double mineral_N_layer1, mineral_N_layer2, mineral_N_layer3;  // Mineral N pools in each layer [gN/m2]
     double potential_N_for_plant_growth_layer1, potential_N_for_plant_growth_layer2, potential_N_for_plant_growth_layer3; // Potential nitrogen uptake by vegetation for plant growth in each layer [gN/m2]
     double actual_N_for_plant_growth; // Actual nitrogen uptake by vegetation for plant growth in all layers [gN/m2]
@@ -53,6 +52,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
 
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      
 
 
       depth1 = _depth1->val[j];
@@ -169,21 +169,12 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
 
       /* ===================================================== */
       /* ================ Nitrogen simulation ================ */
-      /* ======= Biological fixation and Plant uptake ======== */
       /* ===================================================== */
-      
-
-      /* ======= Biological fixiation of nitrogen ============ */
-      
-
       if (ctrl.opt_nitrogen_sim){
-        N_biological_fixiation = max(0.0, 0.7 * (1 - exp(-0.003 * NPP)) * 14 / 12);
-
         // Get and update mineral N pools in each layer
-        mineral_N_layer1 = _no3_layer1->val[j] * _theta1->val[j] * depth1 + N_biological_fixiation * froot_layer1;
-        mineral_N_layer2 = _no3_layer2->val[j] * _theta2->val[j] * depth2 + N_biological_fixiation * froot_layer2;
-        mineral_N_layer3 = _no3_layer3->val[j] * _theta3->val[j] * depth3 + N_biological_fixiation * froot_layer3;
-
+        mineral_N_layer1 = _no3_layer1->val[j] * _theta1->val[j] * depth1;
+        mineral_N_layer2 = _no3_layer2->val[j] * _theta2->val[j] * depth2;
+        mineral_N_layer3 = _no3_layer3->val[j] * _theta3->val[j] * depth3;
 
       /* ======= For carbon: Nitrogen limitation of vegetation growth ======= */
       /* ======= For nitrogen: mineral N uptake to sustain vegetation growth ======= */

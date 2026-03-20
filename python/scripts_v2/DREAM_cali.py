@@ -85,7 +85,7 @@ try:
         from pydream.parameters import SampledParam
 
         # Set number of chains equal to number of processes
-        nchains = size // Cali.cores_for_each_chain
+        nchains = min(size // Cali.cores_for_each_chain, Cali.nchains)
         Cali.nchains = nchains
 
         if rank != 0:
@@ -96,7 +96,7 @@ try:
             try:
                 os.chdir(Path.work_path)
                 GEM_tools_v2.sort_directory(options.mode, Path, Cali, Output)
-                GEM_tools_v2.set_env(options.mode, Path, nchains, Output)
+                GEM_tools_v2.set_env(options.mode, Path, Cali, Output)
                 GEM_tools_v2.set_config(options.mode, Path, Info, Cali, Output)
                 param_N = GEM_tools_v2.get_param_N(Info, Param)
                 print(f"Rank 0: Initialization complete. Starting {nchains} chains, param_N={param_N}", flush=True)
@@ -114,6 +114,24 @@ try:
 
         # Create parameter objects (all ranks need this)
         parameters_to_sample = SampledParam(uniform, loc=np.full(param_N, 0.0), scale=1)
+
+        if rank == 0:
+            print("============================================================", flush=True)
+            print("DREAM calibration inputs : ", flush=True)
+            print("savePath: ", Path.work_path+'/results/', flush=True)
+            print("parameters: ", parameters_to_sample, flush=True)
+            print("likelihood: ", likelihood, flush=True)
+            print("niterations: ", int(options.niterations), flush=True)
+            print("nchains: ", nchains, flush=True)
+            print("cores_for_each_chain: ", Cali.cores_for_each_chain, flush=True)
+            print("multitry: ", False, flush=True)
+            print("gamma_levels: ", 4, flush=True)
+            print("adapt_gamma: ", True, flush=True)
+            print("history_thin: ", history_thin, flush=True)
+            print("model_name: ", Cali.TASK_name, flush=True)
+            print("verbose: ", False, flush=True)
+            print("restart: ", options.restart, flush=True)
+            print("============================================================", flush=True)
         
         # Main DREAM execution (all ranks participate)
         if not options.restart:

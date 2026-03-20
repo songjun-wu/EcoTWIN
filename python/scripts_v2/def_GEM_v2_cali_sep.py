@@ -101,7 +101,8 @@ class Cali:
 
 class Output:
     # WOS-ID of each catchment
-    Catchment_ID    = ['95_001', '291110_001', '831616_001', '83749_001', '1034724_001']
+    #Catchment_ID    = ['95_001', '291110_001', '831616_001', '83749_001', '1034724_001']
+    Catchment_ID = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list', 'rb'))
     #Catchment_ID    = ['95_001']
     N_catchments    = len(Catchment_ID)     # Number of catchments
     
@@ -259,7 +260,7 @@ class Param:
     ref['ET_weight'] = {'type':'global',   'log':0, 'file':'ET_weight',   'min':[1.0], 'max':[2.0], 'fix_value':None} # Evaporation and Transpiration should be adjusted due to potential underestimation of daily simulaton compared to integral of hourly simulatont [-]
 
     # === GW recharge === 
-    ref['perc_vadose_coeff']   = {'type':'global_soil',   'log':1, 'file':'perc_vadose_coeff',   'min':[1e-3], 'max':[1], 'fix_value':[1,1,1,1,1,1,1,0.5]} # Coefficient parameter for GW recharge [1e-5, 1]
+    ref['perc_vadose_coeff']   = {'type':'global_soil',   'log':1, 'file':'perc_vadose_coeff',   'min':[1e-3], 'max':[1], 'fix_value':[1,1,1,1,1,1,0.5]} # Coefficient parameter for GW recharge [1e-5, 1]
     #ref['init_GW'] = {'type':'global',   'log':0, 'file':'init_GW',   'min':[1], 'max':[50], 'fix_value':[30]} # Initial GW storage in m
 
     # === Routing === 
@@ -315,7 +316,7 @@ class Param:
     # Reference decomposition rates of carbon pools
     ref['decomposition_weight_fast_pool'] = {'type':'global_soil',   'log':1, 'file':'decomposition_weight_fast_pool',   'min':[1e-1], 'max':[1e1], 'fix_value':[1,1,1,1,1,0.7,0.7]} # Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
     ref['decomposition_weight_humus_pool'] = {'type':'global_soil',   'log':1, 'file':'decomposition_weight_humus_pool',   'min':[1e-1], 'max':[1e1], 'fix_value':[1,1,1,1,1,0.7,0.7]} # Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
-    ref['ref_decomp_rate_doc'] = {'type':'global_soil',   'log':1, 'file':'ref_decomp_rate_doc',   'min':[1e-3], 'max':[1e-1], 'fix_value':[1,1,1,1,1,0.7,0.7]} # Reference decomposition rate of DOC pool [day-1]
+    ref['ref_decomp_rate_doc'] = {'type':'global_soil',   'log':1, 'file':'ref_decomp_rate_doc',   'min':[1e-3], 'max':[1e-1], 'fix_value':[1,1,1,1,1,0.6,0.6]} # Reference decomposition rate of DOC pool [day-1]
     ref['respiration_river'] = {'type':'global',   'log':1, 'file':'respiration_river',   'min':[1e-3], 'max':[1e-1], 'fix_value':None} # Reference rates of aquatic heterotrophic respiration [gC m-2 day-1]
 
     # === Nitrogen simulation ===

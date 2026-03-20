@@ -169,7 +169,7 @@ class Dream:
         #Set the number of seedchains to 10*dimensions to fit
         if self.nseedchains == None:
             #self.nseedchains = self.total_var_dimension*10
-            self.nseedchains = self.total_var_dimension * 2
+            self.nseedchains = self.total_var_dimension * 3
 
         #Set array of gamma values (decreasing step size with increasing level)
         gamma_array = np.zeros((self.ngamma, DEpairs, self.total_var_dimension))

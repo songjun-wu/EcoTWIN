@@ -407,7 +407,7 @@ class Basin {
   int Solve_canopy_nutrient(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing with precipitation and erichment due to evaporation
   int Solve_surface_nutrient(Control &ctrl, Atmosphere &atm, Param &par);  // Ponding water mixing with snow melt
   int Solve_soil_profile_nutrient(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and transformation
-  int Solve_vadose_nutrient(Control &ctrl, Atmosphere &atm);  // vadose storage mixing
+  //int Solve_vadose_nutrient(Control &ctrl, Atmosphere &atm);  // vadose storage mixing; merged to Solve_soil_profile_nutrient in v2.0
   int Solve_GW_nutrient(Control &ctrl, Atmosphere &atm);  // GW storage mixing
   int Solve_routing_nutrient(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
   int Solve_channel_nutrient(Control &ctrl, Atmosphere &atm, Param &par);  // Enrichment due to channel evaporation, and instream nutrient transformation
@@ -474,7 +474,7 @@ class Basin {
   int Mixing_canopy_tracking(Control &ctrl, Atmosphere &atm);  // Canopy storage mixing and fractionaton
   int Mixing_surface_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Canopy snowpack and throughfall
   int Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Soil storage mixing and fractionaton
-  int Mixing_vadose_tracking(Control &ctrl, Atmosphere &atm);  // Vadose storage mixing
+  //int Mixing_vadose_tracking(Control &ctrl, Atmosphere &atm);  // Vadose storage mixing; merged to Solve_soil_profile_nutrient in v2.0
   int Mixing_GW_tracking(Control &ctrl, Atmosphere &atm);  // GW storage mixing
   int Mixing_routing_tracking(Control &ctrl, Param &par);  // Mixing of overland flow, interflow, and GW flow
   int Mixing_channel_tracking(Control &ctrl, Atmosphere &atm, Param &par);  // Fractionation due to channel evaporation

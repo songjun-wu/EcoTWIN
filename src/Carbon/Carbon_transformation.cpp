@@ -34,6 +34,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
     // Variables for DOC pool decomposition
     double ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
+    double delta_doc_layer1, delta_doc_layer2, delta_doc_layer3;
 
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -58,6 +59,8 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       CP1_wood_nonwood_ratio = (total_CP1_nonwood + total_CP1_wood > roundoffERR) ? total_CP1_nonwood / (total_CP1_nonwood + total_CP1_wood) : 0.5;
       fct_theta1 = Moist_factor(theta1, _thetaWP1->val[j], _thetaFC1->val[j], _thetaS1->val[j], depth1);
       
+      
+
       // =============== Layer 1 (wood pool)  ===============
       humus_CP = _humus_CP1->val[j] * CP1_wood_nonwood_ratio;
       available_N = _no3_layer1->val[j] * theta1 * depth1;
@@ -72,7 +75,6 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
       /* =============== Layer 1 (non-wood pool)  =============== */
       humus_CP = _humus_CP1->val[j] * (1 - CP1_wood_nonwood_ratio);
-      available_N = _no3_layer1->val[j] * theta1 * depth1;
       NC_ratio_fast_pool_nonwood = (total_CP1_nonwood > roundoffERR) ? _fast_NP1_nonwood->val[j] / total_CP1_nonwood : 1e3;  // Maximum NC ratio is 1e3
       Carbon_transformation_process(ctrl, atm, par, j,
                                     _acid_CP1_nonwood->val[j], _ethanol_CP1_nonwood->val[j], _soluble_CP1_nonwood->val[j], _nonsoluble_CP1_nonwood->val[j], humus_CP, 
@@ -86,6 +88,8 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       if (ctrl.opt_nitrogen_sim==1){
         _no3_layer1->val[j] = available_N / (theta1 * depth1);
       }
+
+      
 
 
       /* ========================= Layer 2 ========================= */
@@ -137,11 +141,10 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       _soluble_CP3_wood->val[j] *= (1 - frac_soluble_CP_to_doc);
 
       // Decomposition of DOC pool
-      double delta_doc_layer1, delta_doc_layer2, delta_doc_layer3;
+      ref_decomp_rate_doc = par._ref_decomp_rate_doc->val[j];
       delta_doc_layer1 = _doc_layer1->val[j] * ref_decomp_rate_doc * fct_Ts * fct_theta1;
       delta_doc_layer2 = _doc_layer2->val[j] * ref_decomp_rate_doc * fct_Ts * fct_theta2;
       delta_doc_layer3 = _doc_layer3->val[j] * ref_decomp_rate_doc * fct_Ts * fct_theta3;
-      ref_decomp_rate_doc = par._ref_decomp_rate_doc->val[j];
       _doc_layer1->val[j] -= delta_doc_layer1;
       _doc_layer2->val[j] -= delta_doc_layer2;
       _doc_layer3->val[j] -= delta_doc_layer3;

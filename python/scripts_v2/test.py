@@ -100,6 +100,9 @@ def save_cumulative_outputs_memmap(output_path, save_path, save_all_flag=False, 
 
 def model_test(mode, catchment_ID):
 
+    #os.chdir('/home/wusongj/EcoTWIN/release_linux')
+    #os.system('make clean')
+
     os.chdir('/home/wusongj/EcoTWIN/python/development')    
     os.system('python3 develop.py')
 
@@ -134,7 +137,7 @@ def model_test(mode, catchment_ID):
             param_N = GEM_tools_v2.get_param_N(Info, Param)
             #param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_831616_001_failed.bin').reshape(nchains,-1)[xxxx, :]
             #param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_831616_001.bin').reshape(nchains,-1)[xxxx, :]
-            #param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_'+catchment_ID+'.bin').reshape(nchains,-1)[xxxx, :]
+            param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_'+catchment_ID+'.bin').reshape(nchains,-1)[xxxx, :]
             #param = np.fromfile('/data/scratch/wusongj/paper6/cali_sep/best_param/best_param_291110_001.bin').reshape(nchains,-1)[xxxx, :]
 
             #_param = np.fromfile('/data/scratch/wusongj/paper4/cali/best_param_all.bin').reshape(nchains,-1)
@@ -153,7 +156,8 @@ def model_test(mode, catchment_ID):
                             'opt_carbon_sim = 1\n' + \
                             'opt_init_no3 = 0\n' + \
                             #'Simul_end = '+str(int(seconds_from_1980))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
-                            'Simul_end = '+str(int(86400*365*1))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
+                            'Simul_end = '+str(int(86400*365*5))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
+                            #'Simul_end = '+str(86400*30)+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n' + \
                             'Clim_Maps_Folder = /data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/climate/\n' + \
                             'Maps_Folder = /data/scratch/wusongj/paper6/data/catchment_info/cali/'+catchment_ID+'/spatial/\n']
             with open(run_path + 'config.ini', 'r') as f:

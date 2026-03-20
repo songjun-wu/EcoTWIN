@@ -293,9 +293,9 @@ def sort_directory(mode, Path, Cali, Output, catchment_list=None):
         
  
 
-def set_env(mode, Path, nchains, Output, catchment_list=None):
+def set_env(mode, Path, Cali, Output, catchment_list=None):
     if mode == 'DREAM_cali' or mode=='cali_sep':
-        for i in range(nchains):
+        for i in range(Cali.nchains):
             dir_for_each_chain = Path.work_path + '/chain_' +str(i) + '/'    # Working directory for each chain
 
             for kk in range(Output.N_catchments):
@@ -550,14 +550,14 @@ def gen_param(run_path, Info, Param, param_arr):
         
         elif dict['type'] == 'global_landuse':
             norm_param = assign_param_value(param_to_go, [None], mins, maxs, dict['log'])
-            param_values[landuse_index] = norm_param * fix_value
+            param_values[landuse_index] = norm_param * np.array(fix_value)
         elif dict['type'] == 'global_soil':
             norm_param = assign_param_value(param_to_go, [None], mins, maxs, dict['log'])
-            param_values[soil_index] = norm_param * fix_value
+            param_values[soil_index] = norm_param * np.array(fix_value)
         
 
         counter += valid_count
-        text = key + ',' + (',').join(param_values.astype(np.str)) + '\n'
+        text = key + ',' + (',').join(param_values.astype(str)) + '\n'
         lines.append(text)
     with open(run_path+'param.ini', 'w') as f:
         f.writelines(lines)
@@ -590,9 +590,10 @@ def assign_param_value(param_arr, fix_value, mins, maxs, log):
                 param_values[i] = np.exp( log_mins[i] + param_arr[param_counter] * (log_maxs[i] - log_mins[i]))
             elif log==2:
                 param_values[i] = 1 / (mins[i] + (maxs[i] - mins[i]) * param_arr[param_counter])
-
-            
             param_counter += 1
+            
+    if len(param_values) == 1:
+        param_values = param_values[0]
     return param_values
 
   
@@ -608,11 +609,11 @@ def gen_no3_addtion(run_path, Info):
 
     lines = []
     text_arr[landuse_index] = 1
-    lines.append('is_landuse,' + (',').join(text_arr.astype(np.str)) + '\n')
+    lines.append('is_landuse,' + (',').join(text_arr.astype(str)) + '\n')
 
     for key in Info.nadd.keys():
         text_arr[landuse_index] = Info.nadd[key]['value']
-        lines.append(key + ',' + (',').join(text_arr.astype(np.str)) + '\n')
+        lines.append(key + ',' + (',').join(text_arr.astype(str)) + '\n')
     
     with open(run_path+'Crop_info.ini', 'w') as f:
         f.writelines(lines)

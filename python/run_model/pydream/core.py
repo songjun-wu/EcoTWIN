@@ -19,7 +19,7 @@ def run_dream(parameters, likelihood, nchains=5, cores_for_each_chain=1, niterat
     if size < nchains:
         if rank == 0:
             print(f"Warning: Number of MPI processes ({size}) is less than requested chains ({nchains}). Adjusting nchains to {size}.")
-    nchains = size // cores_for_each_chain  # Two cores for each chain
+    nchains = min(size // cores_for_each_chain, nchains)
 
     if restart:
         if start is None:

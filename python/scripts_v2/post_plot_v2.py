@@ -9,6 +9,8 @@ import time
 from collections import deque, defaultdict
 from matplotlib.colors import LinearSegmentedColormap
 
+
+
 import datetime
 
 def read_spatial_data(path, mask, nchains, chanmask=None, weight=1, warming_period=2):
@@ -256,7 +258,10 @@ def plot_spatial_maps(sim_path, plot_path, catchment_ID, warming_period, nchains
     if flag_TS_maps:
         fig, ax = plt.subplots(nrow, ncol, figsize=(20,20), dpi=300)
         ref_data = read_temporal_data(sim_path+'SMC_layer1_map.bin', mask, nchains, warming_period=warming_period)
-        tindex = pd.date_range('1980-1-1', '2024-12-31', freq='Y')[:len(ref_data)]
+        try:
+            tindex = pd.date_range('1980-1-1', '2024-12-31', freq='YE')[:len(ref_data)]
+        except:
+            tindex = pd.date_range('1980-1-1', '2024-12-31', freq='Y')[:len(ref_data)]
         plt.subplots_adjust(left=0.1, right=0.95, bottom=0.05, top=0.95, wspace=0.2, hspace=0.25)
 
         i = 0
@@ -313,7 +318,10 @@ def plot_spatial_maps(sim_path, plot_path, catchment_ID, warming_period, nchains
     if flag_correlation_maps:
         fig, ax = plt.subplots(nrow, ncol, figsize=(20,20), dpi=300)
         ref_data = read_temporal_data(sim_path+'SMC_layer1_map.bin', mask, nchains, warming_period=warming_period)
-        tindex = pd.date_range('1980-1-1', '2024-12-31', freq='Y')[:len(ref_data)]
+        try:
+            tindex = pd.date_range('1980-1-1', '2024-12-31', freq='YE')[:len(ref_data)]
+        except:
+            tindex = pd.date_range('1980-1-1', '2024-12-31', freq='Y')[:len(ref_data)]
         plt.subplots_adjust(left=0.1, right=0.95, bottom=0.05, top=0.95, wspace=0.2, hspace=0.25)
 
         mask = np.loadtxt(Path.data_path+'catchment_info/cali/'+catchment_ID+'/spatial/dem.asc', skiprows=6)
@@ -471,6 +479,8 @@ def plot_performance_sep(sim_path, obs_path, output_path, catchment_ID, nchains,
 
     catchment_idx = np.squeeze(np.argwhere(np.array(Output.Catchment_ID)==catchment_ID))
 
+    
+
     dict_vmins = {'q':None, 'iso_stream':None, 'no3':None, 'doc':None}
     dict_vmaxs = {'q':None, 'iso_stream':None, 'no3':None, 'doc':None}
 
@@ -479,15 +489,15 @@ def plot_performance_sep(sim_path, obs_path, output_path, catchment_ID, nchains,
 
     nrow = 10
     ncol = 5
-
     fig, ax = plt.subplots(nrow, ncol, figsize=(12,8), dpi=300)
     plt.subplots_adjust(left=0.05, right=0.95, bottom=0.05, top=0.95, wspace=0.3, hspace=0.2)
     _tindex = pd.date_range('1980-1-1', '2024-12-31')[Info.spin_up:]
 
     
-
+    
     counter_key = 0
     counter = 0
+
 
     n_subplots = np.sum([len(Output.sim[key]['sim_idx'][catchment_idx]) for key in Output.sim.keys()])
     
@@ -497,7 +507,7 @@ def plot_performance_sep(sim_path, obs_path, output_path, catchment_ID, nchains,
         N_sites = Output.N_sites[catchment_idx]
 
         
-
+        
         if len(sim_idx) > 0:
             obs_all = np.fromfile(obs_path+dict['obs_file']).reshape(len(sim_idx), -1)
             sim_all = np.fromfile(sim_path+dict['sim_file']).reshape(nchains, -1, N_sites)

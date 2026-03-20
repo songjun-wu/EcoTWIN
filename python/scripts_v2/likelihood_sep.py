@@ -56,7 +56,10 @@ def likelihood(param, chainID, modelID):
                 for i in range(_obs.shape[0]):
                     sim = _sim[dict['sim_idx'][kk][i], :]
                     obs = _obs[i,:]
-                    err += (1 - GEM_tools_v2.kge(sim, obs)) * dict['weights'][kk][i]
+                    kge_tmp = GEM_tools_v2.kge(sim, obs)
+                    if kge_tmp < -10:
+                        kge_tmp = -10
+                    err += (1 - kge_tmp) * dict['weights'][kk][i]
                     # todo
                     #if chainID==0 and modelID==0:
                     #    print('   ', Output.Catchment_ID[kk], key, i, GEM_tools_v2.kge_modified(sim, obs), dict['weights'][kk][i], np.nanmean(sim), np.nanmean(obs) )

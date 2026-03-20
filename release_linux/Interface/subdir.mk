@@ -16,7 +16,6 @@ CPP_SRCS += \
 ../src/Interface/Solve_routing.cpp \
 ../src/Interface/Solve_routing_nutrient.cpp \
 ../src/Interface/Solve_channel_nutrient.cpp \
-../src/Interface/Solve_vadose_nutrient.cpp \
 ../src/Interface/Statistic_summary.cpp \
 
 
@@ -33,7 +32,6 @@ OBJS += \
 ./Interface/Solve_routing.o \
 ./Interface/Solve_routing_nutrient.o \
 ./Interface/Solve_channel_nutrient.o \
-./Interface/Solve_vadose_nutrient.o \
 ./Interface/Statistic_summary.o \
 
 
@@ -50,7 +48,6 @@ CPP_DEPS += \
 ./Interface/Solve_routing.d \
 ./Interface/Solve_routing_nutrient.d \
 ./Interface/Solve_channel_nutrient.d \
-./Interface/Solve_vadose_nutrient.d \
 ./Interface/Statistic_summary.d \
 
 

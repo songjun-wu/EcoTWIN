@@ -13,7 +13,6 @@ CPP_SRCS += \
 ../src/Tracking/Mixing_routing_tracking.cpp \
 ../src/Tracking/Mixing_soil_profile_tracking.cpp \
 ../src/Tracking/Mixing_surface_tracking.cpp \
-../src/Tracking/Mixing_vadose_tracking.cpp \
 
 
 OBJS += \
@@ -26,7 +25,6 @@ OBJS += \
 ./Tracking/Mixing_routing_tracking.o \
 ./Tracking/Mixing_soil_profile_tracking.o \
 ./Tracking/Mixing_surface_tracking.o \
-./Tracking/Mixing_vadose_tracking.o \
 
 
 CPP_DEPS += \
@@ -39,7 +37,6 @@ CPP_DEPS += \
 ./Tracking/Mixing_routing_tracking.d \
 ./Tracking/Mixing_soil_profile_tracking.d \
 ./Tracking/Mixing_surface_tracking.d \
-./Tracking/Mixing_vadose_tracking.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

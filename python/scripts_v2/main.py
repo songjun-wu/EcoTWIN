@@ -212,6 +212,92 @@ if mode == 'cali_sep':
 
 
 
+elif mode == 'forward_cali':
+    import pickle
+    import subprocess
+
+    # Model structure update
+    os.chdir('/home/wusongj/EcoTWIN/python/development')    
+    os.system('python3 develop.py')
+
+    # set the env
+    GEM_tools_v2.sort_directory(mode, Path, Cali, Output)
+    GEM_tools_v2.set_env(mode, Path, Cali, Output)
+    GEM_tools_v2.set_config(mode, Path, Info, Cali, Output)
+   
+    nchains = 20
+
+    counter = 0
+    
+    #catchment_ID_list = ['831616_001']
+    #catchment_ID_list = ['291110_001']
+    catchment_ID_list = ['83749_001']
+
+    catchment_dicts = {
+        '831616_001': 12,
+        '291110_001': 13,
+        '83749_001': 13,
+        '1034724_001': 16,
+        '95_001': 0,
+    }
+
+    catchment_runtime_dict = {}
+
+    catchment_list_all = pickle.load(open(Path.data_path+'catchment_info/cali/sub_catchment_ID_list', 'rb'))
+
+    for catchment_ID in catchment_list_all[:2]:
+
+        
+
+        run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'
+        seconds_since_1980 = np.loadtxt(Path.data_path + 'catchment_info/cali/'+str(catchment_ID)+'/obs/seconds_from_1980.txt')
+        with open(run_path+'config.ini', 'r') as f:
+            lines = f.readlines()
+        lines = np.append('Simul_end = '+str(int(seconds_since_1980))+' # in second  # Seconds from 1980-1-1 to 2024-12-31\n', lines)
+        with open(run_path+'config.ini', 'w') as f:
+            f.writelines(lines)
+        
+        #param_all = np.array([])
+        # Delete the existing outputs from the previous run
+        if os.path.exists(Path.work_path + mode +'/outputs/' + catchment_ID):
+            shutil.rmtree(Path.work_path + mode +'/outputs/' + catchment_ID)  
+
+        # Get best parameters
+        param_path = Path.work_path+'/cali_sep/best_param/best_param_'+catchment_ID+'.bin'
+        param_N = GEM_tools_v2.get_param_N(Info, Param) # Get the number of parameters
+        # todo
+        param_all = np.full((nchains, param_N), 0.5)
+        chainID = 0  # todo
+
+
+        #for chainID in range(nchains):
+        
+        print(catchment_ID, chainID)
+        
+
+        param = param_all[chainID,:]
+
+        GEM_tools_v2.gen_param(run_path, Info, Param, param)
+        GEM_tools_v2.gen_no3_addtion(run_path, Info)
+        
+        # Model run
+        start_time = time.time()
+        os.chdir(run_path)           
+        screen_output = subprocess.run(
+            ["./EcoTWIN"],
+            capture_output=True,
+            text=True
+        )
+        end_time = time.time()
+        catchment_runtime_dict[catchment_ID] = end_time - start_time
+        print(screen_output.stdout)
+        os.chdir(current_path)
+
+        # Save outputs for each catchment
+        GEM_tools_v2.save_outputs(run_path+'outputs/', Path.work_path + mode +'/outputs/' + catchment_ID + '/')
+
+    # Save the runtime dictionary
+    pickle.dump(catchment_runtime_dict, open(Path.work_path+'/catchment_runtime_dict.pkl', 'wb'))
 
 
 elif mode == 'forward_sep':
@@ -233,12 +319,13 @@ elif mode == 'forward_sep':
     catchment_ID_list = ['83749_001']
 
     catchment_dicts = {
-        '831616_001': 9,
-        '291110_001': 1,
-        '83749_001': 3,
-        '1034724_001': 12,
-        '95_001': 16,
+        '831616_001': 12,
+        '291110_001': 13,
+        '83749_001': 13,
+        '1034724_001': 16,
+        '95_001': 0,
     }
+
 
     for catchment_ID in catchment_dicts.keys():
         run_path = Path.work_path + mode + '/' + str(catchment_ID) + '/run/'

@@ -1,5 +1,6 @@
 import os
 import shutil
+from tkinter import E
 import GEM_tools
 import sys
 from optparse import OptionParser
@@ -545,6 +546,33 @@ elif mode == 'check':
     print('Average :  ', np.mean(arr))
     print('Maximum :  ', np.max(arr))
     #print(arr, np.argwhere(arr==np.max(arr)))
+
+
+elif mode == 'check_test':
+    
+
+
+    
+    for niteration in np.arange(0, 5500, Cali.niterations)[::-1]:
+        arr = []
+        lengths = []
+        niterations = []
+        param_all = np.array([])
+        flag = False
+        for i in range(Cali.nchains):
+            try:
+                loglikes = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_logps_chain_'+str(i)+'_'+str(int(niteration))+'.bin')
+                param = np.fromfile('/data/scratch/wusongj/paper4/cali/results/DREAM_cali_sampled_params_chain_'+str(i)+'_'+str(int(niteration))+'.bin').reshape(len(loglikes), -1)
+                param_all = np.append(param_all, param[np.argwhere(loglikes==np.max(loglikes))[0][0],:])
+                arr.append(np.nanmax(loglikes))
+                lengths.append(len(loglikes))
+                niterations.append(niteration)
+                flag = True
+            except Exception as e:
+                pass
+        if flag:
+            print(int(np.mean(niterations)), np.mean(lengths), np.mean(arr), np.max(arr))
+
 
 elif mode == 'check_sep':
     print('')
