@@ -32,7 +32,6 @@ int Param::dtor(Control &ctrl){
   if(_capillary_flow_rate) delete _capillary_flow_rate;
   if(_perc_vadose_coeff) delete _perc_vadose_coeff;
   if(_irrigation_FC_thres) delete _irrigation_FC_thres;
-  if(_diffuse_molecular_coefficient) delete _diffuse_molecular_coefficient;
   if(_ratio_to_interf) delete _ratio_to_interf;
   if (ctrl.opt_snow == 1){
     if(_snow_rain_thre) delete _snow_rain_thre;
@@ -116,9 +115,11 @@ int Param::dtor(Control &ctrl){
     if(_frac_litter_to_acid_wood) delete _frac_litter_to_acid_wood;
     if(_frac_litter_to_ethanol_wood) delete _frac_litter_to_ethanol_wood;
     if(_frac_litter_to_nonsoluble_wood) delete _frac_litter_to_nonsoluble_wood;
+    if(_fdepth_decay_Exp) delete _fdepth_decay_Exp;
     if(_decomposition_weight_fast_pool) delete _decomposition_weight_fast_pool;
     if(_decomposition_weight_humus_pool) delete _decomposition_weight_humus_pool;
     if(_ref_decomp_rate_doc) delete _ref_decomp_rate_doc;
+    if(_C_trans_ratio_fast_2_humus) delete _C_trans_ratio_fast_2_humus;
     if(_ref_frac_soluble_to_doc) delete _ref_frac_soluble_to_doc;
   }
   if (ctrl.opt_tracking_isotope == 1){
@@ -139,7 +140,6 @@ int Param::dtor(Control &ctrl){
     if(_NC_ratio_plant_wood) delete _NC_ratio_plant_wood;
     if(_NC_ratio_fast_pool_nonwood) delete _NC_ratio_fast_pool_nonwood;
     if(_NC_ratio_fast_pool_wood) delete _NC_ratio_fast_pool_wood;
-    if(_NC_ratio_humus_pool) delete _NC_ratio_humus_pool;
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
     if(_LAI_shed_coef) delete _LAI_shed_coef;

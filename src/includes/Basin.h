@@ -260,6 +260,7 @@ class Basin {
   svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
   svector *_minerl_soil;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
   svector *_deni_river;  // Aquatic denitrification [mgN/L*m = gN/m2]
+  svector *_humus_NC_ratio;  // Initial nitrogen carbon ratio of humus pools []
   svector *_fast_NP1_nonwood;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
   svector *_fast_NP1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
   svector *_humus_N;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
@@ -365,16 +366,20 @@ class Basin {
   double C_trans_ratio_nonsoluble_2_acid;
   double C_trans_ratio_nonsoluble_2_soluble;
   double C_trans_ratio_nonsoluble_2_ethanol;
-  double C_trans_ratio_all_2_humus;
+  double C_to_go_acid;
+  double C_to_go_ethanol;
+  double C_to_go_soluble;
+  double C_to_go_nonsoluble;
+  //double C_trans_ratio_all_2_humus;
   double ref_decomp_rate_acid;
   double ref_decomp_rate_soluble;
   double ref_decomp_rate_ethanol;
   double ref_decomp_rate_nonsoluble;
   double ref_decomp_rate_humus;
-  double C_respiration_ratio_acid;
-  double C_respiration_ratio_soluble;
-  double C_respiration_ratio_ethanol;
-  double C_respiration_ratio_nonsoluble;
+  //double C_respiration_ratio_acid;
+  //double C_respiration_ratio_soluble;
+  //double C_respiration_ratio_ethanol;
+  //double C_respiration_ratio_nonsoluble;
 
 
   
@@ -485,7 +490,7 @@ class Basin {
   /* ===== Solute mixing and transport module ===== */
   int Solve_canopy_transport(Atmosphere &atm, svector &_sv_conc_I, svector &_sv_conc_P, svector &_sv_conc_pond, bool enrich_flag);
   int Solve_surface_transport(Control &ctrl, Atmosphere &atm, Param &par, svector &sv_conc_I, svector &sv_conc_snow, svector &sv_conc_pond, svector &sv_conc_chanS, svector &sv_conc_GW, bool enrich_flag);                             
-  int Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_conc_layer1, svector &sv_conc_layer2, svector &sv_conc_layer3, svector &sv_conc_vadose, svector &sv_conc_chanS, svector &sv_drainage_mass, bool enrich_flag, double drainage_flag, bool diffuse_flag);
+  int Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_conc_layer1, svector &sv_conc_layer2, svector &sv_conc_layer3, svector &sv_conc_vadose, svector &sv_conc_chanS, svector &sv_leaching_mass, svector &sv_drainage_mass, bool enrich_flag, double drainage_flag, bool diffuse_flag);
   int Solve_routing_transport(Control &ctrl, Param &par, svector &_sv_conc_pond, svector &_sv_conc_layer1, svector &_sv_conc_layer2, svector &_sv_conc_layer3, svector &_sv_conc_vadose, svector &_sv_conc_GW, svector &_sv_conc_chanS);
   
    
@@ -502,7 +507,8 @@ class Basin {
     double &db_soluble_CP, double &db_humus_CP, double &db_acid_CP, double &db_ethanol_CP, double &db_nonsoluble_CP,
     double &db_soil_respiration_C, double &db_soil_decomposition_C,
     double &db_available_N, double &db_minerl_soil,
-    double db_fct_Ts, double db_fct_theta, double db_fct_size, double db_NC_ratio_fast);  // Carbon transformation process for soil profile
+    double db_fct_Ts, double db_fct_theta, double db_fct_size, double db_fct_depth, double db_NC_ratio_fast,
+    double db_C_trans_ratio_fast_2_humus, double db_C_respiration_ratio_acid, double db_C_respiration_ratio_soluble, double db_C_respiration_ratio_ethanol, double db_C_respiration_ratio_nonsoluble);  // Carbon transformation process for soil profile
   int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC
   int Carbon_summary(Control &ctrl, Param &par);  // Summary carbon states and fluxes
   double Calculate_fraction_soluble_CP_to_DOC(double soil_storage, double percolation, double ref_frac_soluble_to_doc);

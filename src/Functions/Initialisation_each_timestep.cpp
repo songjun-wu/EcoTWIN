@@ -67,6 +67,7 @@ int Basin::Initialisation_each_timestep(Control &ctrl, Param &par) {
         //_n2o_emission->reset();
     }
     if (ctrl.opt_nitrogen_sim==1) {
+      _nitrogen_add->reset();
       _minerl_soil->reset();
     }
 

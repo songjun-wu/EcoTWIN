@@ -304,6 +304,7 @@ struct Control{
   string fn__no3_vadose;  // no3 in vadose storage [mgN/L]
   string fn__no3_GW;  // no3 in Groundwater storage [mgN/L]
   string fn__no3_chanS;  // no3 in Channel storage [mgN/L]
+  string fn__humus_NC_ratio;  // Initial nitrogen carbon ratio of humus pools []
   /* end of Nitrogen */
 
   /* Carbon */
@@ -388,7 +389,6 @@ struct Control{
   string fn__drainage_intensity;  // The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
   string fn__herbivory_uptake_coeff;  // The coefficient for herbivory uptake [-]
   string fn__harvest_coeff;  // The coefficient for crop harvest [-]
-  string fn__diffuse_molecular_coefficient;  // The coefficient for Fickian diffusion [m2/s]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
@@ -413,16 +413,17 @@ struct Control{
   string fn__frac_litter_to_acid_wood;  // The fraction of wood litter going to soil acid pool  [-] 
   string fn__frac_litter_to_ethanol_wood;  // The fraction of wood litter going to soil ethano pool  [-] 
   string fn__frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
+  string fn__fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   string fn__decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
   string fn__decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
   string fn__ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
+  string fn__C_trans_ratio_fast_2_humus;  // Fraction of decomposed fast pool that goes into humus pool [decimal]
   string fn__ref_frac_soluble_to_doc;  // Reference fraction of soluble carbon going to DOC pool [-]
   string fn__respiration_river;  // Reference rates of aquatic heterotrophic respiration [day-1]
   string fn__NC_ratio_plant_green;  // Nitrogen carbon ratio in vegetation green pool  [gN/gC] 
   string fn__NC_ratio_plant_wood;  // Nitrogen carbon ratio in vegetation wood pool  [gN/gC] 
   string fn__NC_ratio_fast_pool_nonwood;  // Nitrogen carbon ratio in non-wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] 
   string fn__NC_ratio_fast_pool_wood;  // Nitrogen carbon ratio in wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] 
-  string fn__NC_ratio_humus_pool;  // Nitrogen carbon ratio in humus pool  [gN/gC] 
   /* end of Parameters */
 
   /* Report */

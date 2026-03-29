@@ -232,6 +232,7 @@ int Basin::dtor(Control &ctrl){
     if(_deni_soil) delete _deni_soil;
     if(_minerl_soil) delete _minerl_soil;
     if(_deni_river) delete _deni_river;
+    if(_humus_NC_ratio) delete _humus_NC_ratio;
     if(_fast_NP1_nonwood) delete _fast_NP1_nonwood;
     if(_fast_NP1) delete _fast_NP1;
     if(_humus_N) delete _humus_N;

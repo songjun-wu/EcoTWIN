@@ -166,6 +166,7 @@ class Report {
     ofstream of__deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
     ofstream of__minerl_soil;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
     ofstream of__deni_river;  // Aquatic denitrification [mgN/L*m = gN/m2]
+    ofstream of__humus_NC_ratio;  // Initial nitrogen carbon ratio of humus pools []
     ofstream of__fast_NP1_nonwood;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
     ofstream of__fast_NP1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
     ofstream of__humus_N;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
@@ -306,6 +307,7 @@ class Report {
     svector *_deni_soil_acc;  // Soil denitrification [mgN/L*m = gN/m2]
     svector *_minerl_soil_acc;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
     svector *_deni_river_acc;  // Aquatic denitrification [mgN/L*m = gN/m2]
+    svector *_humus_NC_ratio_acc;  // Initial nitrogen carbon ratio of humus pools []
     svector *_fast_NP1_nonwood_acc;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
     svector *_fast_NP1_acc;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
     svector *_humus_N_acc;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]

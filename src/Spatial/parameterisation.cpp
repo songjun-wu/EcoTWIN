@@ -93,17 +93,6 @@ int Param::Parameterisation(Control &ctrl){
     _irrigation_FC_thres->val[j] = exp(_irrigation_FC_thres->val[j]);
    }
 
-  _diffuse_molecular_coefficient->reset();
-  for (int k=0; k<param_category->n_category; k++){
-    if (diffuse_molecular_coefficient[k]!=nodata) {
-      double logp = log(diffuse_molecular_coefficient[k]);
-      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        _diffuse_molecular_coefficient->val[j] += param_category->val[k][j] * logp;
-   }}}
-  for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-    _diffuse_molecular_coefficient->val[j] = exp(_diffuse_molecular_coefficient->val[j]);
-   }
-
   _ratio_to_interf->reset();
   for (int k=0; k<param_category->n_category; k++){
     if (ratio_to_interf[k]!=nodata) {
@@ -582,6 +571,13 @@ int Param::Parameterisation(Control &ctrl){
           _frac_litter_to_nonsoluble_wood->val[j] += param_category->val[k][j] * frac_litter_to_nonsoluble_wood[k];
      }}}
   
+  _fdepth_decay_Exp->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (fdepth_decay_Exp[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          _fdepth_decay_Exp->val[j] += param_category->val[k][j] * fdepth_decay_Exp[k];
+     }}}
+  
   _decomposition_weight_fast_pool->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (decomposition_weight_fast_pool[k]!=nodata) {
@@ -614,6 +610,13 @@ int Param::Parameterisation(Control &ctrl){
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
       _ref_decomp_rate_doc->val[j] = exp(_ref_decomp_rate_doc->val[j]);
      }
+  
+  _C_trans_ratio_fast_2_humus->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (C_trans_ratio_fast_2_humus[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          _C_trans_ratio_fast_2_humus->val[j] += param_category->val[k][j] * C_trans_ratio_fast_2_humus[k];
+     }}}
   
   _ref_frac_soluble_to_doc->reset();
     for (int k=0; k<param_category->n_category; k++){
@@ -725,13 +728,6 @@ int Param::Parameterisation(Control &ctrl){
       if (NC_ratio_fast_pool_wood[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
           _NC_ratio_fast_pool_wood->val[j] += param_category->val[k][j] * NC_ratio_fast_pool_wood[k];
-     }}}
-  
-  _NC_ratio_humus_pool->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (NC_ratio_humus_pool[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _NC_ratio_humus_pool->val[j] += param_category->val[k][j] * NC_ratio_humus_pool[k];
      }}}
 
   }

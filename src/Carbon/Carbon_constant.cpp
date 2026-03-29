@@ -46,12 +46,20 @@ int Basin::Set_carbon_constant(){
     C_trans_ratio_nonsoluble_2_acid      = 0.83;
     C_trans_ratio_nonsoluble_2_soluble   = 0.01;
     C_trans_ratio_nonsoluble_2_ethanol   = 0.02;
-    C_trans_ratio_all_2_humus            = 0.0045;
+
+    // The remaining litter carbon will go to either humus pool or respired
+    C_to_go_acid = 1 - C_trans_ratio_acid_2_soluble - C_trans_ratio_acid_2_ethanol - C_trans_ratio_acid_2_nonsoluble;
+    C_to_go_soluble = 1 - C_trans_ratio_soluble_2_acid - C_trans_ratio_soluble_2_ethanol - C_trans_ratio_soluble_2_nonsoluble;
+    C_to_go_ethanol = 1 - C_trans_ratio_ethanol_2_acid - C_trans_ratio_ethanol_2_soluble - C_trans_ratio_ethanol_2_nonsoluble;
+    C_to_go_nonsoluble = 1 - C_trans_ratio_nonsoluble_2_acid - C_trans_ratio_nonsoluble_2_soluble - C_trans_ratio_nonsoluble_2_ethanol;
+
+    
+    //C_trans_ratio_all_2_humus            = 0.0045;
     // The respiration ratios
-    C_respiration_ratio_acid = 1 - C_trans_ratio_acid_2_soluble - C_trans_ratio_acid_2_ethanol - C_trans_ratio_acid_2_nonsoluble - C_trans_ratio_all_2_humus;
-    C_respiration_ratio_soluble = 1 - C_trans_ratio_soluble_2_acid - C_trans_ratio_soluble_2_ethanol - C_trans_ratio_soluble_2_nonsoluble - C_trans_ratio_all_2_humus;
-    C_respiration_ratio_ethanol = 1 - C_trans_ratio_ethanol_2_acid - C_trans_ratio_ethanol_2_soluble - C_trans_ratio_ethanol_2_nonsoluble - C_trans_ratio_all_2_humus;
-    C_respiration_ratio_nonsoluble = 1 - C_trans_ratio_nonsoluble_2_acid - C_trans_ratio_nonsoluble_2_soluble - C_trans_ratio_nonsoluble_2_ethanol - C_trans_ratio_all_2_humus;
+    //C_respiration_ratio_acid = 1 - C_trans_ratio_acid_2_soluble - C_trans_ratio_acid_2_ethanol - C_trans_ratio_acid_2_nonsoluble - C_trans_ratio_all_2_humus;
+    //C_respiration_ratio_soluble = 1 - C_trans_ratio_soluble_2_acid - C_trans_ratio_soluble_2_ethanol - C_trans_ratio_soluble_2_nonsoluble - C_trans_ratio_all_2_humus;
+    //C_respiration_ratio_ethanol = 1 - C_trans_ratio_ethanol_2_acid - C_trans_ratio_ethanol_2_soluble - C_trans_ratio_ethanol_2_nonsoluble - C_trans_ratio_all_2_humus;
+    //C_respiration_ratio_nonsoluble = 1 - C_trans_ratio_nonsoluble_2_acid - C_trans_ratio_nonsoluble_2_soluble - C_trans_ratio_nonsoluble_2_ethanol - C_trans_ratio_all_2_humus;
 
     // ======= Decomposition rates of different carbon pools =======
     ref_decomp_rate_acid = 0.72 / 365;  // Reference docomposition rate of acid pool [1/day]

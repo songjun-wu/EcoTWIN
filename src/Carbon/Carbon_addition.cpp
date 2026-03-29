@@ -49,7 +49,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
     double actual_N_for_plant_growth; // Actual nitrogen uptake by vegetation for plant growth in all layers [gN/m2]
     double plant_uptake; // Plant uptake in each layer [gN/m2]
     double fct_N_limitation_green, fct_N_limitation_wood;  // Limitation of vegetation growth of green and wood pools based on N availability; plant_reserve_CP pool is not affected; Set to 1 if nitrogen simulation is not enabled is not activated
-
+    double N_biological_fixiation; // Nitrogen biological fixiation [gN/m2]
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
       
@@ -177,14 +177,22 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
         mineral_N_layer3 = _no3_layer3->val[j] * _theta3->val[j] * depth3;
 
       /* ======= For carbon: Nitrogen limitation of vegetation growth ======= */
-      /* ======= For nitrogen: mineral N uptake to sustain vegetation growth ======= */
+      /* ======= For nitrogen: Nitrogen biological fixiation and mineral N uptake to sustain vegetation growth ======= */
         double potential_N_for_green_growth = NPP_2_green * par._NC_ratio_plant_green->val[j];
         double potential_N_for_wood_growth = NPP_2_wood * par._NC_ratio_plant_wood->val[j];
         double plant_uptake_cumulative = 0.0;  // Cumulative nitrogen uptake by vegetation for plant growth in all layers
         double plant_mobile_N = _plant_mobile_N->val[j];  // Plant mobile N availability [gN/m2]
 
-        
 
+        // === Nitrogen biological fixiation ===
+        N_biological_fixiation = max(0.0, 0.7 * (1 - exp(-0.003 * _NPP->val[j])) * 14 / 12);  // Note that here fixation is proportional to potential NPP; the real NPP is constrained by nitrogen limitation
+        mineral_N_layer1 += N_biological_fixiation * _froot_layer1->val[j];
+        mineral_N_layer2 += N_biological_fixiation * _froot_layer2->val[j];
+        mineral_N_layer3 += N_biological_fixiation * _froot_layer3->val[j];
+        //_N_biological_fixiation->val[j] = N_biological_fixiation;  // [gN/m2]
+
+        
+        // === Plant uptake ===
         // First sort green pool growth
         if (potential_N_for_green_growth > roundoffERR) {
           // Green pool growth is supplied by Plant mobile N availability and soil mobile N
@@ -200,7 +208,6 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
             // Use up all plant mobile N for green pool growth
             actual_N_for_plant_growth += plant_mobile_N;
             plant_mobile_N = 0.0;
-            //
             
             // The remaining nitrogen are taken from soil mobile N in each layer
             if (mineral_N_layer1 > roundoffERR) {
@@ -222,6 +229,8 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
               mineral_N_layer3 -= plant_uptake;
             }
 
+            
+
             // fct_N_limitation is calculated as the ratio between actual and potential nitrogen uptake
             fct_N_limitation_green = actual_N_for_plant_growth / potential_N_for_green_growth;  // Limitation of vegetation growth of green pool based on N availability
           } 
@@ -236,6 +245,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
           potential_N_for_plant_growth_layer1 = (potential_N_for_wood_growth) * froot_layer1;
           potential_N_for_plant_growth_layer2 = (potential_N_for_wood_growth) * froot_layer2;
           potential_N_for_plant_growth_layer3 = (potential_N_for_wood_growth) * froot_layer3;
+
 
           actual_N_for_plant_growth = 0.0;  // Cumulative nitrogen uptake by vegetation for wood growth in all layers
           // Nitrogen uptake from soil mobile N in each layer
@@ -362,6 +372,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       double soluble_DIN_NP2 = _no3_layer2->val[j] * _theta2->val[j] * depth2;
       double soluble_DIN_NP3 = _no3_layer3->val[j] * _theta3->val[j] * depth3;
 
+
       double C_wood_2_litter_wood_each_layer;
 
       double mineralisation_soil = 0.0; // Cumulative mineralisation of plant N to dissovled inorganic pools in soil
@@ -371,7 +382,6 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       // From green pool to litter pools
       _fast_NP1_nonwood->val[j] += (C_green_2_litter_nonwood) * par._NC_ratio_fast_pool_nonwood->val[j];  // Only green pool contains ntrogen (reserve pool is nitrogen free)
       _plant_mobile_N->val[j] += (C_green_2_litter_nonwood) * (par._NC_ratio_plant_green->val[j] - par._NC_ratio_fast_pool_nonwood->val[j]); // Excess N goes to plant mobile N pool
-
       
      
       // Wood pools in the first layer
@@ -380,7 +390,6 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       mineralisation_soil_each_layer = C_wood_2_litter_wood_each_layer * (par._NC_ratio_plant_wood->val[j] - par._NC_ratio_fast_pool_wood->val[j]);  // Excess N goes to soil mobile N pool
       soluble_DIN_NP1 += mineralisation_soil_each_layer;
       mineralisation_soil += mineralisation_soil_each_layer;
-      
       // Wood pools in the second layer
       // No need to update fast_NP1_wood because all wood pools have consistent NC ratio as par._NC_ratio_fast_pool_wood->val[j]; so we only need to track fast carbon pools
       C_wood_2_litter_wood_each_layer = C_wood_2_litter_wood * froot_layer2; 

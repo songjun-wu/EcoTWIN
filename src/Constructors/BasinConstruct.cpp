@@ -238,6 +238,7 @@
     _deni_soil = new svector(_sortedGrid.size);
     _minerl_soil = new svector(_sortedGrid.size);
     _deni_river = new svector(_sortedGrid.size);
+    _humus_NC_ratio = new svector(ctrl.path_BasinFolder + ctrl.fn__humus_NC_ratio, _rowNum, _colNum, _sortedGrid);
     _fast_NP1_nonwood = new svector(_sortedGrid.size);
     _fast_NP1 = new svector(_sortedGrid.size);
     _humus_N = new svector(_sortedGrid.size);

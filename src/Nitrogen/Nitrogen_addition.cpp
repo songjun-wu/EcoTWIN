@@ -141,7 +141,7 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
 
 
         // Only counts the Nitrogen addition to IN and fast_NP pools
-        _nitrogen_add->val[j] = fertN_add_layer1_IN + fertN_add_layer2_IN + fertN_add_layer1_fast_NP + fertN_add_layer2_fast_NP;
+        _nitrogen_add->val[j] += fertN_add_layer1_IN + fertN_add_layer2_IN + fertN_add_layer1_fast_NP + fertN_add_layer2_fast_NP;
         //_nitrogen_add->val[j] = fertN_add_layer1_IN + fertN_add_layer2_IN;
 
     }

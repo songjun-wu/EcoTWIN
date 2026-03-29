@@ -232,6 +232,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__no3_vadose, "no3_vadose", lines);
   readInto(fn__no3_GW, "no3_groundwater_storage", lines);
   readInto(fn__no3_chanS, "no3_chanS", lines);
+  readInto(fn__humus_NC_ratio, "humus_NC_ratio", lines);
   /* end of Nitrogen */
 
   /* Reference states or fluxes parameterisation */

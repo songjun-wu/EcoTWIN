@@ -20,7 +20,8 @@
 int Basin::Carbon_management(Control &ctrl, Param &par){
 
 
-  double plant_green_CP, plant_wood_CP, plant_reserve_CP;  // Vegetation pools [gC/m2]
+  double plant_green_CP, plant_reserve_CP;  // Vegetation pools [gC/m2]
+  double plant_mobile_N;  // Plant mobile nitrogen [gN/m2]
   int idx_last_land_use;  // Index of last land use category
   double N_biological_fixiation;  // Biological nitrogen fixation [gN/m2]
 
@@ -28,34 +29,29 @@ int Basin::Carbon_management(Control &ctrl, Param &par){
   for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
     
     plant_green_CP = _plant_green_CP->val[j];
-    plant_wood_CP = _plant_wood_CP->val[j];
     plant_reserve_CP = _plant_reserve_CP->val[j];
+    plant_mobile_N = _plant_mobile_N->val[j];
 
     // Harvest and Herbivory loss: loss from plant_green_CP due to harvest and herbivory [gC/m2]
-    // Herbivory loss
+    // === Herbivory loss ===
     plant_green_CP *= (1 - par._herbivory_uptake_coeff->val[j]);
     plant_reserve_CP *= (1 - par._herbivory_uptake_coeff->val[j]);
+    plant_mobile_N *= (1 - par._herbivory_uptake_coeff->val[j]);
 
-    // Crop harvest loss
+    // === Crop harvest loss ===
     idx_last_land_use = ctrl.num_category - 1;
     if (ctrl.day_of_year==harvest_day[idx_last_land_use]){
       plant_green_CP *= (1 - par._harvest_coeff->val[j]);
       plant_reserve_CP *= (1 - par._harvest_coeff->val[j]);
+      plant_mobile_N *= (1 - par._harvest_coeff->val[j]);
     }
 
     // Update vegetation carbon pools    
     _plant_green_CP->val[j] = plant_green_CP;
-    _plant_wood_CP->val[j] = plant_wood_CP;
     _plant_reserve_CP->val[j] = plant_reserve_CP;
+    _plant_mobile_N->val[j] = plant_mobile_N;
 
 
-    if (ctrl.opt_nitrogen_sim==1){
-      // Biological nitrogen fixation based on NPP
-      N_biological_fixiation = max(0.0, 0.7 * (1 - exp(-0.003 * _NPP->val[j])) * 14 / 12);
-      _no3_layer1->val[j] += N_biological_fixiation * _froot_layer1->val[j] / (_theta1->val[j] * _depth1->val[j]);
-      _no3_layer2->val[j] += N_biological_fixiation * _froot_layer2->val[j] / (_theta2->val[j] * _depth2->val[j]);
-      _no3_layer3->val[j] += N_biological_fixiation * _froot_layer3->val[j] / (_theta3->val[j] * par._depth3->val[j]);
-    }
 
   }  // end for (unsigned int j = 0; j < _sortedGrid.row.size(); j++)
 

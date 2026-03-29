@@ -18,7 +18,7 @@
 #include "Basin.h"
 
 int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_conc_layer1, svector &sv_conc_layer2, svector &sv_conc_layer3, svector &sv_conc_vadose, svector &sv_conc_chanS,
-                                svector &sv_drainage_mass,
+                                svector &sv_leaching_mass, svector &sv_drainage_mass,
                                 bool enrich_flag, double drainage_flag, bool diffuse_flag){
 
     /* 
@@ -127,6 +127,7 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         input_water = _preferential_flow->val[j] + _Perc3->val[j];
         input_mass = conc_pond * _preferential_flow->val[j] + conc_layer3 * _Perc3->val[j];
         input_conc = input_mass / input_water;
+        sv_leaching_mass.val[j] = input_mass;
         Mixing_full(_vadose_old->val[j], conc_vadose, input_water, input_conc);
         
         
@@ -139,7 +140,9 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
             sv_conc_chanS.val[to_channel] = (sv_conc_chanS.val[to_channel] * _tmp->val[to_channel] + mass_drainage) / (_tmp->val[to_channel] + _drainage_from_soil->val[j]);
             _tmp->val[to_channel] += _drainage_from_soil->val[j];
             sv_drainage_mass.val[j] = mass_drainage;   // Summary statistics of drainage mass
-          }  // End of if (_drainage_from_soil->val[j] > roundoffERR)
+          } else {
+            sv_drainage_mass.val[j] = 0;
+          } // End of if (_drainage_from_soil->val[j] > roundoffERR)
         }  // End of if (drainage_flag == 1)
 
 
@@ -152,20 +155,21 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
           // Evapotranspiration happens after percolation
           // Layer 1: erichment due to evaporation and transpiration
           conc_layer1 = (ST1 - _Es->val[j] - _Tr1->val[j])>roundoffERR ? ST1 * conc_layer1 / (ST1 - _Es->val[j] - _Tr1->val[j]) : 0;
-          //ST1 -= (_Es.val[j] + _Tr1.val[j]);
+          ST1 -= (_Es->val[j] + _Tr1->val[j]);
 
           // Layer 2: erichment due to transpiration
           conc_layer2 = (ST2 - _Tr2->val[j])>roundoffERR ? ST2 * conc_layer2 / (ST2 - _Tr2->val[j]) : 0;
-          //ST2 -= (_Tr2.val[j]);
+          ST2 -= (_Tr2->val[j]);
 
           // Layer 3: erichment due to transpiration
           conc_layer3 = (ST3 - _Tr3->val[j])>roundoffERR ? ST3 * conc_layer3 / (ST3 - _Tr3->val[j]) : 0;
-          //ST3 -= (_Tr3.val[j]);
+          ST3 -= (_Tr3->val[j]);
         }
 
 
         // Mixing layers due to potential capillary flow exchange
         // Fickian diffusion: diffuse_molecular * concentration gradient (Fick's first law)
+        /*
         if (diffuse_flag){
           diffuse_molecular  = par._diffuse_molecular_coefficient->val[j];
           // Layer 1 and 2        
@@ -176,7 +180,8 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
           mass_layer_diffusion = diffuse_molecular * (conc_layer2 - conc_layer3)/(min(_depth2->val[j], par._depth3->val[j]));
           conc_layer2 -= mass_layer_diffusion /ST2;
           conc_layer3 += mass_layer_diffusion /ST3;
-        }  
+        } 
+          */
        
         
         // Update global variables

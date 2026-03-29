@@ -4,24 +4,24 @@
 
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
-../src/Transport/Solve_soil_transport.cpp \
-../src/Transport/Solve_surface_transport.cpp \
 ../src/Transport/Solve_canopy_transport.cpp \
 ../src/Transport/Solve_routing_transport.cpp \
+../src/Transport/Solve_soil_transport.cpp \
+../src/Transport/Solve_surface_transport.cpp \
 
 
 OBJS += \
-./Transport/Solve_soil_transport.o \
-./Transport/Solve_surface_transport.o \
 ./Transport/Solve_canopy_transport.o \
 ./Transport/Solve_routing_transport.o \
+./Transport/Solve_soil_transport.o \
+./Transport/Solve_surface_transport.o \
 
 
 CPP_DEPS += \
-./Transport/Solve_soil_transport.d \
-./Transport/Solve_surface_transport.d \
 ./Transport/Solve_canopy_transport.d \
 ./Transport/Solve_routing_transport.d \
+./Transport/Solve_soil_transport.d \
+./Transport/Solve_surface_transport.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -54,7 +54,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     // Isotope tracking
     if (ctrl.opt_tracking_isotope==1) {
         // Mixing layer 1-3
-        Solve_soil_transport(par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_vadose, *_d18o_chanS, *_tmp, false, ctrl.opt_drainage, false);  // false1: no enrichment due to evaportranspiration; false2: no Fickian diffusion
+        Solve_soil_transport(par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_vadose, *_d18o_chanS, *_tmp, *_tmp, false, ctrl.opt_drainage, false);  // false1: no enrichment due to evaportranspiration; false2: no Fickian diffusion
 
         // Fractionation due to soil evaporation (only for layer 1 but happens after percolation)
         _tmp->equals(*_theta1_old);
@@ -70,7 +70,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
     // Cumulative age tracking
     if (ctrl.opt_tracking_age==1) {
         // Mixing layer 1-3
-        Solve_soil_transport(par, *_age_pond, *_age_layer1, *_age_layer2, *_age_layer3, *_age_vadose, *_age_chanS, *_tmp, false, ctrl.opt_drainage, false);  // false1: no enrichment due to evaportranspiration; false2: no Fickian diffusion
+        Solve_soil_transport(par, *_age_pond, *_age_layer1, *_age_layer2, *_age_layer3, *_age_vadose, *_age_chanS, *_tmp, *_tmp, false, ctrl.opt_drainage, false);  // false1: no enrichment due to evaportranspiration; false2: no Fickian diffusion
     }
 
 

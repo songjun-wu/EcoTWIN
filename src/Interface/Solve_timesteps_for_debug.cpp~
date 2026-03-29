@@ -63,6 +63,16 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
 
     Statistic_summary(ctrl, par);
 
+
+    double no3_pool_new = _no3_layer1->val[j] * _theta1->val[j] * _depth1->val[j] + 
+                      _no3_layer2->val[j] * _theta2->val[j] * _depth2->val[j] + 
+                      _no3_layer3->val[j] * _theta3->val[j] * par._depth3->val[j];
+    double nitrogen_in = _nitrogen_add->val[j] + _minerl_soil->val[j] + _no3_hydro_input_mass->val[j];  # _no3_hydro_input_mass = infil * no3_pond
+    double nitrogen_out = _plant_uptake->val[j] + _deni_soil->val[j] + _leaching_mass_no3->val[j] + _drainage_mass_no3->val[j];
+    double nitrogen_balance = no3_pool_new - no3_pool_old - (nitrogen_in - nitrogen_out);
+
+    if (nitrogen_balance>roundoffERR) cout << nitrogen_balance<<"  "<<_no3_layer1->val[j]<<"  "<<_theta1->val[j];
+
     
 
     

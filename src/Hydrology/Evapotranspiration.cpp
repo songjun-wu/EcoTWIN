@@ -184,7 +184,6 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
 
     double DT = ctrl.Simul_tstep;  // Timestep length in seconds
 
-    double f_rock;  // Fraction of rock landscapes
     
 
 
@@ -264,7 +263,6 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
         // Set par._ET_weight->val[j] to 1 for subdaily simulation
         transp *= par._ET_weight->val[j] * DT / 1000;  // Unit transformation from kg m-2 s-1 to m per timestep
         soil_evap *= evaporation_weight_by_depth * par._ET_weight->val[j] * DT / 1000;  // Evaporation only happens in first 10 cm of soil; Unit transformation from kg m-2 s-1 to m per timestep
-        soil_evap *= ((1 - f_rock) + 0.5*f_rock);
         transp = transp < 0 ? 0 : transp;
         soil_evap = soil_evap < 0 ? 0 : soil_evap;
         

@@ -90,7 +90,7 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
         }
 
         deltaF = deltaF > input ? input : deltaF;
-        double fraction_preferential_flow = par.param_category->val[ctrl.rock_category][j] * par._preferential_flow_coeff->val[j];
+        double fraction_preferential_flow = par._preferential_flow_coeff->val[j];
         _pond->val[j] -= deltaF;
         // Infiltration to soil matrix
         _infilt->val[j] = deltaF * (1 - fraction_preferential_flow);

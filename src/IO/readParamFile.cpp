@@ -76,7 +76,6 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(drainage_intensity, "drainage_intensity", lines);
   readIntoParam(herbivory_uptake_coeff, "herbivory_uptake_coeff", lines);
   readIntoParam(harvest_coeff, "harvest_coeff", lines);
-  readIntoParam(diffuse_molecular_coefficient, "diffuse_molecular_coefficient", lines);
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
   readIntoParam(CG_n_soil, "CG_n_soil", lines);
   readIntoParam(delta_d18o_init_GW, "delta_d18o_init_GW", lines);
@@ -101,16 +100,17 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(frac_litter_to_acid_wood, "frac_litter_to_acid_wood", lines);
   readIntoParam(frac_litter_to_ethanol_wood, "frac_litter_to_ethanol_wood", lines);
   readIntoParam(frac_litter_to_nonsoluble_wood, "frac_litter_to_nonsoluble_wood", lines);
+  readIntoParam(fdepth_decay_Exp, "fdepth_decay_Exp", lines);
   readIntoParam(decomposition_weight_fast_pool, "decomposition_weight_fast_pool", lines);
   readIntoParam(decomposition_weight_humus_pool, "decomposition_weight_humus_pool", lines);
   readIntoParam(ref_decomp_rate_doc, "ref_decomp_rate_doc", lines);
+  readIntoParam(C_trans_ratio_fast_2_humus, "C_trans_ratio_fast_2_humus", lines);
   readIntoParam(ref_frac_soluble_to_doc, "ref_frac_soluble_to_doc", lines);
   readIntoParam(respiration_river, "respiration_river", lines);
   readIntoParam(NC_ratio_plant_green, "NC_ratio_plant_green", lines);
   readIntoParam(NC_ratio_plant_wood, "NC_ratio_plant_wood", lines);
   readIntoParam(NC_ratio_fast_pool_nonwood, "NC_ratio_fast_pool_nonwood", lines);
   readIntoParam(NC_ratio_fast_pool_wood, "NC_ratio_fast_pool_wood", lines);
-  readIntoParam(NC_ratio_humus_pool, "NC_ratio_humus_pool", lines);
   /* end of Parameters */
 
   input.close();

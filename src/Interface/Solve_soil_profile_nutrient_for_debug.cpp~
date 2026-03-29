@@ -52,6 +52,16 @@ int Basin::Solve_soil_profile_nutrient(Control &ctrl, Atmosphere &atm, Param &pa
     - interflow_out
     - interflow_toChn   
     */
+
+    // todo: only for debug
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _no3_hydro_input_mass->val[j] = _infilt->val[j] * _no3_pond->val[j];  
+    }
+
+    int j = 3488;  // todo
+
+    double no3_pool_old = _no3_layer1->val[j]*_theta1_old->val[j]*_depth1->val[j] + _no3_layer2->val[j]*_theta2_old->val[j]*_depth2->val[j] + _no3_layer3->val[j]*_theta3_old->val[j]*par._depth3->val[j];
+    double SM_old = _theta1_old->val[j]*_depth1->val[j] + _theta2_old->val[j]*_depth2->val[j] + _theta3_old->val[j]*par._depth3->val[j];
     
     
     // ======= Mixing through layer 1-3 =======
@@ -63,6 +73,16 @@ int Basin::Solve_soil_profile_nutrient(Control &ctrl, Atmosphere &atm, Param &pa
       Solve_soil_transport(par, *_no3_pond, *_no3_layer1, *_no3_layer2, *_no3_layer3, *_no3_vadose, *_no3_chanS, *_drainage_mass_no3, true, ctrl.opt_drainage, true);  // True1: enrichment due to evaportranspiration; True2: Fickian diffusion
     }
 
+    double SM_new = _theta1->val[j]*_depth1->val[j] + _theta2->val[j]*_depth2->val[j] + _theta3->val[j]*par._depth3->val[j];
+    double no3_pool_new = _no3_layer1->val[j]*_theta1->val[j]*_depth1->val[j] + _no3_layer2->val[j]*_theta2->val[j]*_depth2->val[j] + _no3_layer3->val[j]*_theta3->val[j]*par._depth3->val[j];
+    double nitrogen_balance = no3_pool_new - no3_pool_old - (_no3_hydro_input_mass->val[j] - _drainage_mass_no3->val[j] - _preferential_flow->val[j]*_no3_pond->val[j]);
+    double hydro_balance = SM_new - SM_old - (_infilt->val[j] - _drainage_from_soil->val[j] - _Es->val[j] - _Tr->val[j]);
+    //cout << hydro_balance<<"  ";
+    cout << nitrogen_balance<<"                 "<<"  ";
+    
+
+    //int j = 3488;  // todo
+    //double no3_pool_old = _no3_layer1->val[j]*_theta1->val[j]*_depth1->val[j] + _no3_layer2->val[j]*_theta2->val[j]*_depth2->val[j] + _no3_layer3->val[j]*_theta3->val[j]*par._depth3->val[j];
     
     // ======= Carbon/nitrogen biogeochemical processes =======
     if (ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){
@@ -72,7 +92,7 @@ int Basin::Solve_soil_profile_nutrient(Control &ctrl, Atmosphere &atm, Param &pa
       //Carbon_summary();
     }
 
-    /*
+    
     // Mass balance check (passed)
     // Delta fast_N + humus_N + DON = litter_fall_N - minerl_soil;
     // Delta fast_C + humus_C + DOC = litter_fall_C - soil_respiration_C + carbon_management;
@@ -87,12 +107,12 @@ int Basin::Solve_soil_profile_nutrient(Control &ctrl, Atmosphere &atm, Param &pa
     double humus_C_new = _humus_CP1->val[j] + _humus_CP2->val[j] + _humus_CP3->val[j];
     double humus_N_new = humus_C_new * par._NC_ratio_humus_pool->val[j];
     double doc_pool_new = _doc_layer1->val[j]*_theta1->val[j]*_depth1->val[j] + _doc_layer2->val[j]*_theta2->val[j]*_depth2->val[j] + _doc_layer3->val[j]*_theta3->val[j]*par._depth3->val[j];
-    double no3_pool_new = _no3_layer1->val[j]*_theta1->val[j]*_depth1->val[j] + _no3_layer2->val[j]*_theta2->val[j]*_depth2->val[j] + _no3_layer3->val[j]*_theta3->val[j]*par._depth3->val[j];
-    double carbon_balance = fast_C_new + humus_C_new + doc_pool_new - fast_C_old - humus_C_old - doc_pool_old - (_litter_fall_C->val[j] - _soil_respiration_C->val[j]);
-    double N_fixation = max(0.0, 0.7 * (1 - exp(-0.003 * _NPP->val[j])) * 14 / 12);
-    double no3_balance = no3_pool_new - no3_pool_old - (_minerl_soil->val[j] + N_fixation - _plant_uptake->val[j]);
-    cout << "carbon and no3 balance: " << carbon_balance <<"  "<<no3_balance<<endl;
-    */
+    //double no3_pool_new = _no3_layer1->val[j]*_theta1->val[j]*_depth1->val[j] + _no3_layer2->val[j]*_theta2->val[j]*_depth2->val[j] + _no3_layer3->val[j]*_theta3->val[j]*par._depth3->val[j];
+    //double carbon_balance = fast_C_new + humus_C_new + doc_pool_new - fast_C_old - humus_C_old - doc_pool_old - (_litter_fall_C->val[j] - _soil_respiration_C->val[j]);
+    //double N_fixation = max(0.0, 0.7 * (1 - exp(-0.003 * _NPP->val[j])) * 14 / 12);
+    //double no3_balance = no3_pool_new - no3_pool_old - (_minerl_soil->val[j] - _plant_uptake->val[j]);
+    //cout << "carbon and no3 balance: " << "  " <<"  "<<no3_balance<<endl;
+    
 
 
     // ======= Nitrogen biogeochemical processes =======

@@ -21,7 +21,9 @@ int Atmosphere::open_climate(Control &ctrl){
   open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__P, if__P);
   open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__Ta, if__Ta);
   open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__RH, if__RH);
-  open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__PET, if__PET);
+  if (ctrl.opt_evap == 1){
+    open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__PET, if__PET);
+  }
   if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
     open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__airpressure, if__airpressure);
     open_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__Rnet, if__Rnet);
@@ -42,7 +44,9 @@ int Atmosphere::read_climate(Control &ctrl){
   read_climate_maps(if__P, *_P);
   read_climate_maps(if__Ta, *_Ta);
   read_climate_maps(if__RH, *_RH);
-  read_climate_maps(if__PET, *_PET);
+  if (ctrl.opt_evap == 1){
+    read_climate_maps(if__PET, *_PET);
+  }
   if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
     read_climate_maps(if__airpressure, *_airpressure);
     read_climate_maps(if__Rnet, *_Rnet);
@@ -89,7 +93,9 @@ int Atmosphere::init_climate(Control &ctrl){
   init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__P, if__P);
   init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__Ta, if__Ta);
   init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__RH, if__RH);
-  init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__PET, if__PET);
+  if (ctrl.opt_evap == 1){
+    init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__PET, if__PET);
+  }
   if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
     init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__airpressure, if__airpressure);
     init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn__Rnet, if__Rnet);
@@ -110,7 +116,9 @@ int Atmosphere::update_climate(Control &ctrl){
   update_climate_maps(if__P, *_P);
   update_climate_maps(if__Ta, *_Ta);
   update_climate_maps(if__RH, *_RH);
-  update_climate_maps(if__PET, *_PET);
+  if (ctrl.opt_evap == 1){
+    update_climate_maps(if__PET, *_PET);
+  }
   if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
     update_climate_maps(if__airpressure, *_airpressure);
     update_climate_maps(if__Rnet, *_Rnet);

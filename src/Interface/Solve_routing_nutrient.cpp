@@ -92,6 +92,8 @@ int Basin::Solve_routing_nutrient(Control &ctrl, Param &par){
     (_chanS)
     */
 
+    
+
     if (ctrl.opt_carbon_sim==1){
       Solve_routing_transport(ctrl, par, *_doc_pond, *_doc_layer1, *_doc_layer2, *_doc_layer3, *_doc_vadose, *_doc_GW, *_doc_chanS);
     }
