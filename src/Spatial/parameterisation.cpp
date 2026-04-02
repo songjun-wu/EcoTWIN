@@ -574,9 +574,13 @@ int Param::Parameterisation(Control &ctrl){
   _fdepth_decay_Exp->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (fdepth_decay_Exp[k]!=nodata) {
+        double logp = log(fdepth_decay_Exp[k]);
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _fdepth_decay_Exp->val[j] += param_category->val[k][j] * fdepth_decay_Exp[k];
+          _fdepth_decay_Exp->val[j] += param_category->val[k][j] * logp;
      }}}
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _fdepth_decay_Exp->val[j] = exp(_fdepth_decay_Exp->val[j]);
+     }
   
   _decomposition_weight_fast_pool->reset();
     for (int k=0; k<param_category->n_category; k++){

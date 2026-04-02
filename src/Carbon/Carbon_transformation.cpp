@@ -161,12 +161,13 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
       // Decomposition of DOC pool
       ref_decomp_rate_doc = par._ref_decomp_rate_doc->val[j];
-      delta_doc_layer1 = _doc_layer1->val[j] * ref_decomp_rate_doc * fct_Ts * fct_theta1 * fct_depth_layer1;
-      delta_doc_layer2 = _doc_layer2->val[j] * ref_decomp_rate_doc * fct_Ts * fct_theta2 * fct_depth_layer2;
-      delta_doc_layer3 = _doc_layer3->val[j] * ref_decomp_rate_doc * fct_Ts * fct_theta3 * fct_depth_layer3;
+      delta_doc_layer1 = _doc_layer1->val[j] * ref_decomp_rate_doc * fct_Ts * fct_depth_layer1;
+      delta_doc_layer2 = _doc_layer2->val[j] * ref_decomp_rate_doc * fct_Ts * fct_depth_layer2;
+      delta_doc_layer3 = _doc_layer3->val[j] * ref_decomp_rate_doc * fct_Ts * fct_depth_layer3;
       _doc_layer1->val[j] -= delta_doc_layer1;
       _doc_layer2->val[j] -= delta_doc_layer2;
       _doc_layer3->val[j] -= delta_doc_layer3;
+
 
       // DOC composition is also considered as a part of soil respiration
       _soil_respiration_C->val[j] += delta_doc_layer1 * theta1 * depth1 + delta_doc_layer2 * theta2 * depth2 + delta_doc_layer3 * theta3 * depth3;

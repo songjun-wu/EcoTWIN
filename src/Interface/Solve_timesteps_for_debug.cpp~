@@ -19,15 +19,9 @@
 
 
 int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
-    
-    // For debug
-    //int j = _sortedGrid.row.size()-1;
-    //int j = 858;  // todo; 858 forest, 1127 cropland, 3367 Alpine
-    //cout <<endl<<ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
-    //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
-    //}
 
-    // We want to check the mass balance of particle routing
+
+  // We want to check the mass balance of particle routing
     // 1. set isotope composition in all storages inputs to 100
     // 2. Disable all the fractionation processes
     // Only for the first timestep
@@ -46,6 +40,15 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++){
       atm._d18o_P->val[j] = 100;
     }
+    
+    // For debug
+    //int j = _sortedGrid.row.size()-1;
+    int j = 953;  // todo; 858 forest, 1127 cropland, 3367 Alpine
+    cout <<endl<<ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
+    //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
+    //}
+
+    
      
 
 
@@ -64,14 +67,23 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     Statistic_summary(ctrl, par);
 
 
-    double no3_pool_new = _no3_layer1->val[j] * _theta1->val[j] * _depth1->val[j] + 
-                      _no3_layer2->val[j] * _theta2->val[j] * _depth2->val[j] + 
-                      _no3_layer3->val[j] * _theta3->val[j] * par._depth3->val[j];
-    double nitrogen_in = _nitrogen_add->val[j] + _minerl_soil->val[j] + _no3_hydro_input_mass->val[j];  # _no3_hydro_input_mass = infil * no3_pond
-    double nitrogen_out = _plant_uptake->val[j] + _deni_soil->val[j] + _leaching_mass_no3->val[j] + _drainage_mass_no3->val[j];
-    double nitrogen_balance = no3_pool_new - no3_pool_old - (nitrogen_in - nitrogen_out);
+    //double no3_pool_new = _no3_layer1->val[j] * _theta1->val[j] * _depth1->val[j] + 
+    //                  _no3_layer2->val[j] * _theta2->val[j] * _depth2->val[j] + 
+    //                  _no3_layer3->val[j] * _theta3->val[j] * par._depth3->val[j];
+    //double nitrogen_in = _nitrogen_add->val[j] + _minerl_soil->val[j] + _no3_hydro_input_mass->val[j];  # _no3_hydro_input_mass = infil * no3_pond
+    //double nitrogen_out = _plant_uptake->val[j] + _deni_soil->val[j] + _leaching_mass_no3->val[j] + _drainage_mass_no3->val[j];
+    //double nitrogen_balance = no3_pool_new - no3_pool_old - (nitrogen_in - nitrogen_out);
+    //if (nitrogen_balance>roundoffERR) cout << nitrogen_balance<<"  "<<_no3_layer1->val[j]<<"  "<<_theta1->val[j];
 
-    if (nitrogen_balance>roundoffERR) cout << nitrogen_balance<<"  "<<_no3_layer1->val[j]<<"  "<<_theta1->val[j];
+
+    /*
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
+      if (abs(_d18o_chanS->val[j] - 100) > 0.0001) {
+        cout<<j<<"  "<<_d18o_chanS->val[j]<<"  "<<abs(_d18o_chanS->val[j] - 100)<<endl;
+        exit(1);
+      }
+    }
+    */
 
     
 

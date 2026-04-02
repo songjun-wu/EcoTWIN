@@ -19,6 +19,7 @@
 
 time_t Control::Set_reference_timestep(){
     // Base date: 1900-01-01 00:00:00
+    /*
     tm base_tm = {};
     base_tm.tm_year = 0;  // 1900
     base_tm.tm_mon = 0;   // January
@@ -29,6 +30,10 @@ time_t Control::Set_reference_timestep(){
     base_tm.tm_isdst = -1;
 
     time_t basetime = std::mktime(&base_tm);
+    //time_t basetime = timegm(&base_tm);
+    */
+    
+    time_t basetime = -2208992400;  // Second since 1990-01-01
 
     return basetime;
 }
