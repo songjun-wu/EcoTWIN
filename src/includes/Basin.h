@@ -255,6 +255,7 @@ class Basin {
   svector *_no3_vadose;  // no3 in vadose storage [mgN/L]
   svector *_no3_GW;  // no3 in Groundwater storage [mgN/L]
   svector *_no3_chanS;  // no3 in Channel storage [mgN/L]
+  svector *_biological_fixiation_N;  // Nitrogen biological fixiation [gN/m2]
   svector *_nitrogen_add;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
   svector *_plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
   svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]

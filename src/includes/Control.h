@@ -526,6 +526,7 @@ struct Control{
   int report__no3_vadose;  // report no3 in vadose storage [mgN/L]
   int report__no3_GW;  // report no3 in Groundwater storage [mgN/L]
   int report__no3_chanS;  // report no3 in Channel storage [mgN/L]
+  int report__biological_fixiation_N;  // report Nitrogen biological fixiation [gN/m2]
   int report__nitrogen_add;  // report Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
   int report__plant_uptake;  // report Plant uptake [mgN/L*m = gN/m2]
   int report__deni_soil;  // report Soil denitrification [mgN/L*m = gN/m2]

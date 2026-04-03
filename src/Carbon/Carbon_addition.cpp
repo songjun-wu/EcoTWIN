@@ -189,7 +189,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
         mineral_N_layer1 += N_biological_fixiation * _froot_layer1->val[j];
         mineral_N_layer2 += N_biological_fixiation * _froot_layer2->val[j];
         mineral_N_layer3 += N_biological_fixiation * _froot_layer3->val[j];
-        //_N_biological_fixiation->val[j] = N_biological_fixiation;  // [gN/m2]
+        _biological_fixiation_N->val[j] = N_biological_fixiation;  // [gN/m2]
 
         
         // === Plant uptake ===

@@ -22,10 +22,10 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     
     // For debug
     //int j = _sortedGrid.row.size()-1;
-    //int j = 0;  // todo; 858 forest, 1127 cropland, 3367 Alpine
+    //int j = 1;  // todo; 858 forest, 1127 cropland, 3367 Alpine
     //cout <<endl<<ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
     //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
-    //  if (_sortedGrid.row[j] == 54 and _sortedGrid.col[j] == 37) cout << j<<"  "; // todo
+      //if (_sortedGrid.row[j] == 1 and _sortedGrid.col[j] == 11) cout << j<<"  "; // todo
     //}
 
 
@@ -44,6 +44,8 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     }
 
     Statistic_summary(ctrl, par);
+
+
 
     
     return EXIT_SUCCESS;

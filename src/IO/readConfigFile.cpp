@@ -342,6 +342,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__no3_vadose, "report_no3_vadose", lines);
   readInto(report__no3_GW, "report_no3_groundwater_storage", lines);
   readInto(report__no3_chanS, "report_no3_chanS", lines);
+  readInto(report__biological_fixiation_N, "report_biological_fixiation_N", lines);
   readInto(report__nitrogen_add, "report_nitrogen_addition", lines);
   readInto(report__plant_uptake, "report_plant_uptake", lines);
   readInto(report__deni_soil, "report_deni_soil", lines);

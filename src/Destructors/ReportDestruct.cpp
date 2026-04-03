@@ -121,6 +121,7 @@ int Report::dtor(Control &ctrl){
   if (of__no3_vadose.is_open())  of__no3_vadose.close();
   if (of__no3_GW.is_open())  of__no3_GW.close();
   if (of__no3_chanS.is_open())  of__no3_chanS.close();
+  if (of__biological_fixiation_N.is_open())  of__biological_fixiation_N.close();
   if (of__nitrogen_add.is_open())  of__nitrogen_add.close();
   if (of__plant_uptake.is_open())  of__plant_uptake.close();
   if (of__deni_soil.is_open())  of__deni_soil.close();
@@ -228,6 +229,7 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__no3_vadose==2) delete _no3_vadose_acc;
   if (ctrl.report__no3_GW==2) delete _no3_GW_acc;
   if (ctrl.report__no3_chanS==2) delete _no3_chanS_acc;
+  if (ctrl.report__biological_fixiation_N==2) delete _biological_fixiation_N_acc;
   if (ctrl.report__nitrogen_add==2) delete _nitrogen_add_acc;
   if (ctrl.report__plant_uptake==2) delete _plant_uptake_acc;
   if (ctrl.report__deni_soil==2) delete _deni_soil_acc;

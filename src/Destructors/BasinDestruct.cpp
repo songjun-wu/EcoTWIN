@@ -227,6 +227,7 @@ int Basin::dtor(Control &ctrl){
     if(_no3_vadose) delete _no3_vadose;
     if(_no3_GW) delete _no3_GW;
     if(_no3_chanS) delete _no3_chanS;
+    if(_biological_fixiation_N) delete _biological_fixiation_N;
     if(_nitrogen_add) delete _nitrogen_add;
     if(_plant_uptake) delete _plant_uptake;
     if(_deni_soil) delete _deni_soil;

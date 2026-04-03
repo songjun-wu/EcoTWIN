@@ -138,6 +138,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__no3_vadose==2) _no3_vadose_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_GW==2) _no3_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_chanS==2) _no3_chanS_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__biological_fixiation_N==2) _biological_fixiation_N_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__nitrogen_add==2) _nitrogen_add_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__plant_uptake==2) _plant_uptake_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__deni_soil==2) _deni_soil_acc = new svector(ctrl._sortedGrid.size);
@@ -252,6 +253,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__no3_vadose==2) _no3_vadose_acc->plus(*Bsn._no3_vadose);
   if (ctrl.report__no3_GW==2) _no3_GW_acc->plus(*Bsn._no3_GW);
   if (ctrl.report__no3_chanS==2) _no3_chanS_acc->plus(*Bsn._no3_chanS);
+  if (ctrl.report__biological_fixiation_N==2) _biological_fixiation_N_acc->plus(*Bsn._biological_fixiation_N);
   if (ctrl.report__nitrogen_add==2) _nitrogen_add_acc->plus(*Bsn._nitrogen_add);
   if (ctrl.report__plant_uptake==2) _plant_uptake_acc->plus(*Bsn._plant_uptake);
   if (ctrl.report__deni_soil==2) _deni_soil_acc->plus(*Bsn._deni_soil);
@@ -563,6 +565,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__no3_chanS==1)  report_create(ctrl.path_ResultsFolder+"no3_chanS_TS.bin", of__no3_chanS);
   else if (ctrl.report__no3_chanS==2)  report_create(ctrl.path_ResultsFolder+"no3_chanS_map.bin", of__no3_chanS);
 
+  if (ctrl.report__biological_fixiation_N==1)  report_create(ctrl.path_ResultsFolder+"biological_fixiation_N_TS.bin", of__biological_fixiation_N);
+  else if (ctrl.report__biological_fixiation_N==2)  report_create(ctrl.path_ResultsFolder+"biological_fixiation_N_map.bin", of__biological_fixiation_N);
+
   if (ctrl.report__nitrogen_add==1)  report_create(ctrl.path_ResultsFolder+"nitrogen_addition_TS.bin", of__nitrogen_add);
   else if (ctrl.report__nitrogen_add==2)  report_create(ctrl.path_ResultsFolder+"nitrogen_addition_map.bin", of__nitrogen_add);
 
@@ -702,6 +707,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__no3_vadose==1) {reportTS(ctrl, Bsn._no3_vadose, of__no3_vadose);}
   if (ctrl.report__no3_GW==1) {reportTS(ctrl, Bsn._no3_GW, of__no3_GW);}
   if (ctrl.report__no3_chanS==1) {reportTS(ctrl, Bsn._no3_chanS, of__no3_chanS);}
+  if (ctrl.report__biological_fixiation_N==1) {reportTS(ctrl, Bsn._biological_fixiation_N, of__biological_fixiation_N);}
   if (ctrl.report__nitrogen_add==1) {reportTS(ctrl, Bsn._nitrogen_add, of__nitrogen_add);}
   if (ctrl.report__plant_uptake==1) {reportTS(ctrl, Bsn._plant_uptake, of__plant_uptake);}
   if (ctrl.report__deni_soil==1) {reportTS(ctrl, Bsn._deni_soil, of__deni_soil);}
@@ -817,6 +823,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__no3_vadose==2) {reportMap(ctrl, _no3_vadose_acc, ctrl._sortedGrid, of__no3_vadose);}
   if (ctrl.report__no3_GW==2) {reportMap(ctrl, _no3_GW_acc, ctrl._sortedGrid, of__no3_GW);}
   if (ctrl.report__no3_chanS==2) {reportMap(ctrl, _no3_chanS_acc, ctrl._sortedGrid, of__no3_chanS);}
+  if (ctrl.report__biological_fixiation_N==2) {reportMap(ctrl, _biological_fixiation_N_acc, ctrl._sortedGrid, of__biological_fixiation_N);}
   if (ctrl.report__nitrogen_add==2) {reportMap(ctrl, _nitrogen_add_acc, ctrl._sortedGrid, of__nitrogen_add);}
   if (ctrl.report__plant_uptake==2) {reportMap(ctrl, _plant_uptake_acc, ctrl._sortedGrid, of__plant_uptake);}
   if (ctrl.report__deni_soil==2) {reportMap(ctrl, _deni_soil_acc, ctrl._sortedGrid, of__deni_soil);}

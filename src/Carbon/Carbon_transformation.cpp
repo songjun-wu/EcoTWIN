@@ -36,6 +36,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
     // Variables for DOC pool decomposition
     double ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
     double delta_doc_layer1, delta_doc_layer2, delta_doc_layer3;
+    double delta_no3_layer1, delta_no3_layer2, delta_no3_layer3;
 
     double C_trans_ratio_fast_2_humus, C_respiration_ratio_acid, C_respiration_ratio_soluble, C_respiration_ratio_ethanol, C_respiration_ratio_nonsoluble;
 
@@ -65,7 +66,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       C_respiration_ratio_ethanol = C_to_go_ethanol - C_trans_ratio_fast_2_humus;
       C_respiration_ratio_nonsoluble = C_to_go_nonsoluble - C_trans_ratio_fast_2_humus;
 
-
+      
       /* ========================= Layer 1 ========================= */
       // Initialisation for layer 1
       humus_CP1_cumu = 0;
@@ -167,6 +168,20 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       _doc_layer1->val[j] -= delta_doc_layer1;
       _doc_layer2->val[j] -= delta_doc_layer2;
       _doc_layer3->val[j] -= delta_doc_layer3;
+
+      if (ctrl.opt_nitrogen_sim==1){
+        // The accompani organic nitrogen is mineralised and goes to DIN pool
+        // Note that in EcoTWIN DOC only comes from dissolution of soluble DOC pool; therefore the CN ratio of DOC pool is identical to the CN ratio of fast pool
+        delta_no3_layer1 = delta_doc_layer1 * par._NC_ratio_fast_pool_wood->val[j];
+        delta_no3_layer2 = delta_doc_layer2 * par._NC_ratio_fast_pool_wood->val[j];
+        delta_no3_layer3 = delta_doc_layer3 * par._NC_ratio_fast_pool_wood->val[j];
+        _no3_layer1->val[j] += delta_no3_layer1;
+        _no3_layer2->val[j] += delta_no3_layer2;
+        _no3_layer3->val[j] += delta_no3_layer3;
+        // Update total mineralization amount
+        _minerl_soil->val[j] += delta_no3_layer1*theta1*depth1 + delta_no3_layer2*theta2*depth2 + delta_no3_layer3*theta3*depth3; 
+      }
+
 
 
       // DOC composition is also considered as a part of soil respiration

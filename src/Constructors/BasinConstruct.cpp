@@ -233,6 +233,7 @@
     _no3_vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_vadose, _rowNum, _colNum, _sortedGrid);
     _no3_GW = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_GW, _rowNum, _colNum, _sortedGrid);
     _no3_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__no3_chanS, _rowNum, _colNum, _sortedGrid);
+    _biological_fixiation_N = new svector(_sortedGrid.size);
     _nitrogen_add = new svector(_sortedGrid.size);
     _plant_uptake = new svector(_sortedGrid.size);
     _deni_soil = new svector(_sortedGrid.size);
