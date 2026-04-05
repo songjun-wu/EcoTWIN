@@ -134,8 +134,10 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
 
         // Mixing drainage with channel storage if activated
         if (drainage_flag == 1) {
-          if (_drainage_from_soil->val[j] > roundoffERR) {
-            to_channel = _sortedGrid.to_channel[j];
+          to_channel = _sortedGrid.to_channel[j];
+          // There is no need for mixing if this is the outlet or there is not stream network within the catchment
+          // In this context, drainage just routes beyond catchment boundary without further tracking
+          if (_drainage_from_soil->val[j] > roundoffERR and to_channel != -1) { 
             mass_drainage = _drainage_from_layer1->val[j] * conc_layer1 + _drainage_from_layer2->val[j] * conc_layer2 + _drainage_from_layer3->val[j] * conc_layer3;
             sv_conc_chanS.val[to_channel] = (sv_conc_chanS.val[to_channel] * _tmp->val[to_channel] + mass_drainage) / (_tmp->val[to_channel] + _drainage_from_soil->val[j]);
             _tmp->val[to_channel] += _drainage_from_soil->val[j];

@@ -106,7 +106,7 @@ int svector_2d::update(string fname, int num_category, int rowNum, int colNum, s
       val[k][j] = data[r*colNum + c];
       
     }
-    delete data;
+    delete[] data;
     input.close();
     }
 

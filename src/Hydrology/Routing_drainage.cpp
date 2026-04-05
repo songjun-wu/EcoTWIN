@@ -19,9 +19,12 @@
 
 int Basin::Routing_drainage(){
 
+    double to_channel;  // The closest channel index of the current cell; -1 if there is no stream network within the catchment or at outlet cell
+
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        to_channel = _sortedGrid.to_channel[j];
         // Drainage is directly routed to the channel (similar to overland flow routing yet without reinfiltration and repercolation)
-        if (_drainage_from_soil->val[j] > roundoffERR) {
+        if (_drainage_from_soil->val[j] > roundoffERR and to_channel != -1) {
             _chanS->val[_sortedGrid.to_channel[j]] += _drainage_from_soil->val[j];
         }
 
