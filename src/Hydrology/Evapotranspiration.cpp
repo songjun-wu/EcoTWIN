@@ -268,7 +268,7 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
         transp = transp < 0 ? 0 : transp;
         soil_evap = soil_evap < 0 ? 0 : soil_evap;
         f_rock = par.param_category->val[ctrl.rock_category][j];
-        soil_evap *= (1- f_rock * 0.5);  // Assumption: rock has 50% evaporation capacity
+        soil_evap *= (1- f_rock * 0.8);  // Assumption: rock has 80% evaporation capacity
 
         
   

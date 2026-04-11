@@ -76,6 +76,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(drainage_intensity, "drainage_intensity", lines);
   readIntoParam(herbivory_uptake_coeff, "herbivory_uptake_coeff", lines);
   readIntoParam(harvest_coeff, "harvest_coeff", lines);
+  readIntoParam(diffuse_molecular_coefficient, "diffuse_molecular_coefficient", lines);
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
   readIntoParam(CG_n_soil, "CG_n_soil", lines);
   readIntoParam(delta_d18o_init_GW, "delta_d18o_init_GW", lines);

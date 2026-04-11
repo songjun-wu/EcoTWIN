@@ -21,8 +21,6 @@ Param::~Param(){}
 
 int Param::dtor(Control &ctrl){
 
-  /* Reference states or fluxes parameterisation */
-  if(_reference_drainage_density) delete _reference_drainage_density;
   
   /* Parameters */
   if(_depth3) delete _depth3;
@@ -32,6 +30,7 @@ int Param::dtor(Control &ctrl){
   if(_capillary_flow_rate) delete _capillary_flow_rate;
   if(_perc_vadose_coeff) delete _perc_vadose_coeff;
   if(_irrigation_FC_thres) delete _irrigation_FC_thres;
+  if(_diffuse_molecular_coefficient) delete _diffuse_molecular_coefficient;
   if(_ratio_to_interf) delete _ratio_to_interf;
   if (ctrl.opt_snow == 1){
     if(_snow_rain_thre) delete _snow_rain_thre;

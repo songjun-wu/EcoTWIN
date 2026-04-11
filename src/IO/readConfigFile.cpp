@@ -94,6 +94,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__depth1, "Soil_depth1", lines);
   readInto(fn__depth2, "Soil_depth2", lines);
   readInto(fn__drainage_depth, "drainage_depth", lines);
+  readInto(fn__reference_drainage_density, "reference_drainage_density", lines);
   readInto(fn__sand1, "sand1", lines);
   readInto(fn__sand2, "sand2", lines);
   readInto(fn__sand3, "sand3", lines);
@@ -189,6 +190,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__plant_green_CP, "plant_green_CP", lines);
   readInto(fn__plant_wood_CP, "plant_wood_CP", lines);
   readInto(fn__plant_reserve_CP, "plant_reserve_CP", lines);
+  readInto(fn__plant_wood_CP_forest_max, "plant_wood_CP_forest_max", lines);
   readInto(fn__acid_CP1_nonwood, "acid_CP1_nonwood", lines);
   readInto(fn__ethanol_CP1_nonwood, "ethanol_CP1_nonwood", lines);
   readInto(fn__nonsoluble_CP1_nonwood, "nonsoluble_CP1_nonwood", lines);

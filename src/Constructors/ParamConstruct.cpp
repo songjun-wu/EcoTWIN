@@ -39,6 +39,7 @@ Param::Param(Control &ctrl){
   _capillary_flow_rate = new svector(_sortedGrid.size);
   _perc_vadose_coeff = new svector(_sortedGrid.size);
   _irrigation_FC_thres = new svector(_sortedGrid.size);
+  _diffuse_molecular_coefficient = new svector(_sortedGrid.size);
   _ratio_to_interf = new svector(_sortedGrid.size);
   if (ctrl.opt_snow == 1){
     _snow_rain_thre = new svector(_sortedGrid.size);
@@ -157,8 +158,6 @@ Param::Param(Control &ctrl){
   ReadParamFile(ctrl, fname);
 
   param_category = new svector_2d(ctrl.num_category , _sortedGrid);
-
-  _reference_drainage_density = new svector(ctrl.path_BasinFolder + ctrl.fn__reference_drainage_density, _rowNum, _colNum, ctrl._sortedGrid);
 
   // Assign parameter spatially
   Parameterisation(ctrl);

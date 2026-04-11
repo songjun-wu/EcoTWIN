@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
 ../src/Spatial/grid.cpp \
+../src/Spatial/parameter_correction.cpp \
 ../src/Spatial/parameterisation.cpp \
 ../src/Spatial/sortGridLDD.cpp \
 ../src/Spatial/sortTSmask.cpp \
@@ -12,6 +13,7 @@ CPP_SRCS += \
 
 OBJS += \
 ./Spatial/grid.o \
+./Spatial/parameter_correction.o \
 ./Spatial/parameterisation.o \
 ./Spatial/sortGridLDD.o \
 ./Spatial/sortTSmask.o \
@@ -19,6 +21,7 @@ OBJS += \
 
 CPP_DEPS += \
 ./Spatial/grid.d \
+./Spatial/parameter_correction.d \
 ./Spatial/parameterisation.d \
 ./Spatial/sortGridLDD.d \
 ./Spatial/sortTSmask.d \

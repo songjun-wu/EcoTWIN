@@ -112,6 +112,7 @@ class Report {
     ofstream of__plant_wood_CP;  //   Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]
     ofstream of__plant_reserve_CP;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
     ofstream of__plant_C;  //  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
+    ofstream of__plant_wood_CP_forest_max;  // The maximum carbon content in wood pool for forest species [molC/m2] 
     ofstream of__acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
     ofstream of__ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
     ofstream of__nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
@@ -254,6 +255,7 @@ class Report {
     svector *_plant_wood_CP_acc;  //   Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]
     svector *_plant_reserve_CP_acc;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
     svector *_plant_C_acc;  //  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
+    svector *_plant_wood_CP_forest_max_acc;  // The maximum carbon content in wood pool for forest species [molC/m2] 
     svector *_acid_CP1_nonwood_acc;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
     svector *_ethanol_CP1_nonwood_acc;  // Ethanol soluble carbon pool (non-wood) in layer 1
     svector *_nonsoluble_CP1_nonwood_acc;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1

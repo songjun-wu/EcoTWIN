@@ -50,6 +50,7 @@ class Basin {
   svector *_organic1;  // Organic content of layer 1 [decimal]
   svector *_bulkdensity1;  // Bulk density of layer 1 [g/cm3]
   svector *_drainage_depth;  // The depth of drainage [m]
+  svector *_reference_drainage_density;  // The reference drainage density [length-1]
   svector *_sand2;  // Sand content of layer 2 [decimal], only needed when opt_depthprofile = 3
   svector *_sand3;  // Sand content of layer 3 [decimal], only needed when opt_depthprofile = 3
   svector *_clay2;  // Clay content of layer 2 [decimal], only needed when opt_depthprofile = 3
@@ -276,6 +277,7 @@ class Basin {
   svector *_plant_wood_CP;  //   Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]
   svector *_plant_reserve_CP;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
   svector *_plant_C;  //  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
+  svector *_plant_wood_CP_forest_max;  // The maximum carbon content in wood pool for forest species [molC/m2] 
   svector *_acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
   svector *_ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
   svector *_nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
@@ -534,6 +536,9 @@ class Basin {
   int Initialisation(Control &ctrl, Param &par, Atmosphere &atm);
   int Initialisation_each_timestep(Control &ctrl, Param &par);
   int Store_states();  // Store all water storages for mixing
+
+  /* ===== Parameter correction ===== */
+  int Parameter_correction(Control &ctrl, Param &par);
 
   /* ===== IO functions ===== */
   int ReadCropFile(Control &ctrl, Param &par, string fname);

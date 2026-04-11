@@ -43,9 +43,8 @@ class Param {
   int sort_root_fraction_OK;  
   int sort_plant_uptake_OK;  // The plant uptake only needs to be calculated once (or once within each change)
   int sort_nitrogen_addition_OK;  // The nitrogen addtion only needs to be calculated once (or once within each change)
+  int sort_parameter_correction_OK;  // The parameter correction only needs to be calculated once (or once within each change)
 
-  /* Reference states or fluxes parameterisation */
-  svector *_reference_drainage_density;  // Reference drainage density [length-1]
 
   /* Parameters */
   vector<double> depth3;
@@ -90,6 +89,7 @@ class Param {
   vector<double> drainage_intensity;
   vector<double> herbivory_uptake_coeff;
   vector<double> harvest_coeff;
+  vector<double> diffuse_molecular_coefficient;
   vector<double> ratio_to_interf;
   vector<double> CG_n_soil;
   vector<double> delta_d18o_init_GW;
@@ -132,6 +132,7 @@ class Param {
   svector *_capillary_flow_rate;  // The reference conductivity of capillary flow from shallow GW zone to bottom soil layer [m/s]
   svector *_perc_vadose_coeff;  // The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2
   svector *_irrigation_FC_thres;  // The soil moisture threshold for irrigation [-]
+  svector *_diffuse_molecular_coefficient;  // The coefficient for Fickian diffusion [m2/s]
   svector *_ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   svector *_snow_rain_thre;  // The temperature for snow melt  [m]
   svector *_deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]

@@ -41,6 +41,7 @@
   _bulkdensity1 = new svector(ctrl.path_BasinFolder + ctrl.fn__bulkdensity1, _rowNum, _colNum, _sortedGrid);
   if (ctrl.opt_drainage == 1){
     _drainage_depth = new svector(ctrl.path_BasinFolder + ctrl.fn__drainage_depth, _rowNum, _colNum, _sortedGrid);
+    _reference_drainage_density = new svector(ctrl.path_BasinFolder + ctrl.fn__reference_drainage_density, _rowNum, _colNum, _sortedGrid);
   }
   if (ctrl.opt_depthprofile == 3){
     _sand2 = new svector(ctrl.path_BasinFolder + ctrl.fn__sand2, _rowNum, _colNum, _sortedGrid);
@@ -255,6 +256,7 @@
     _plant_wood_CP = new svector(ctrl.path_BasinFolder + ctrl.fn__plant_wood_CP, _rowNum, _colNum, _sortedGrid);
     _plant_reserve_CP = new svector(ctrl.path_BasinFolder + ctrl.fn__plant_reserve_CP, _rowNum, _colNum, _sortedGrid);
     _plant_C = new svector(_sortedGrid.size);
+    _plant_wood_CP_forest_max = new svector(ctrl.path_BasinFolder + ctrl.fn__plant_wood_CP_forest_max, _rowNum, _colNum, _sortedGrid);
     _acid_CP1_nonwood = new svector(ctrl.path_BasinFolder + ctrl.fn__acid_CP1_nonwood, _rowNum, _colNum, _sortedGrid);
     _ethanol_CP1_nonwood = new svector(ctrl.path_BasinFolder + ctrl.fn__ethanol_CP1_nonwood, _rowNum, _colNum, _sortedGrid);
     _nonsoluble_CP1_nonwood = new svector(ctrl.path_BasinFolder + ctrl.fn__nonsoluble_CP1_nonwood, _rowNum, _colNum, _sortedGrid);

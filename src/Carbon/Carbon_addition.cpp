@@ -77,31 +77,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
       fct_N_limitation_wood = 1.0;  
 
 
-      
-
-      /* ================================================================================================= */
-      /* ======= Distribute vegetation pools to litter pools (leaf sheding, wood, and plant_reserve_CP tau) ======= */
-      /* ================================================================================================= */
-      // Leaf sheding: from vegetation green pool to non-woody litter pool
-      // TODO: Autumn sheding needs to be added
-      leaf_shedding = max(_LAI->val[j] * par._LAI_shed_coef->val[j], _LAI_old->val[j] - _LAI->val[j]);  // Normal shedding or due to plant mortality
-      C_green_2_litter_nonwood = min(ratio_green_2_leaf * leaf_shedding / par._C_in_LeafArea->val[j], plant_green_CP); 
-      plant_green_CP -= C_green_2_litter_nonwood;
-      // The green carbon pool cannot exceed the LAI-scaled maximum (ratio_green_2_leaf * _LAI->val[j] / par._C_in_LeafArea->val[j])
-      excess_C = plant_green_CP - plant_green_CP_max;
-      if (excess_C > 0) {
-        C_green_2_litter_nonwood += excess_C;
-        plant_green_CP -= excess_C;
-      }
-
-
-      // Wood sheding: from vegetation wood pool to wood litter pool
-      C_wood_2_litter_wood = plant_wood_CP / par._tau_wood_C->val[j];
-      plant_wood_CP -= C_wood_2_litter_wood;
-
-      // Depletion of plant_reserve_CP pool: from plant_reserve_CP pool to green litter pool
-      C_plant_reserve_CP_2_litter_nonwood = plant_reserve_CP / 365;  // _tau_plant_reserve_CP_C = 365 days; depletion of plant_reserve_CP pool
-      plant_reserve_CP -= C_plant_reserve_CP_2_litter_nonwood;
+    
       
 
       /* ================================================== */
@@ -302,11 +278,38 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
     _NPP->val[j] = NPP_2_green + NPP_2_wood + NPP_2_reserve + NPP_2_root_exudates;
 
 
-    
-    
-    /* ============================================================= */
+
+    /* ================================================================================================= */
+    /* ======= Distribute vegetation pools to litter pools (leaf sheding, wood, and plant_reserve_CP tau) ======= */
+    /* ================================================================================================= */
+    // Leaf sheding: from vegetation green pool to non-woody litter pool
+    // TODO: Autumn sheding needs to be added
+    leaf_shedding = max(_LAI->val[j] * par._LAI_shed_coef->val[j], _LAI_old->val[j] - _LAI->val[j]);  // Normal shedding or due to plant mortality
+    C_green_2_litter_nonwood = min(ratio_green_2_leaf * leaf_shedding / par._C_in_LeafArea->val[j], plant_green_CP); 
+    plant_green_CP -= C_green_2_litter_nonwood;
+    // The green carbon pool cannot exceed the LAI-scaled maximum (ratio_green_2_leaf * _LAI->val[j] / par._C_in_LeafArea->val[j])
+    excess_C = plant_green_CP - plant_green_CP_max;
+    if (excess_C > 0) {
+      C_green_2_litter_nonwood += excess_C;
+      plant_green_CP -= excess_C;
+    }
+
+
+    // Wood sheding: from vegetation wood pool to wood litter pool
+    C_wood_2_litter_wood = plant_wood_CP / par._tau_wood_C->val[j];
+    plant_wood_CP -= C_wood_2_litter_wood;
+
+    // Depletion of plant_reserve_CP pool: from plant_reserve_CP pool to green litter pool
+    C_plant_reserve_CP_2_litter_nonwood = plant_reserve_CP / 365;  // _tau_plant_reserve_CP_C = 365 days; depletion of plant_reserve_CP pool
+    plant_reserve_CP -= C_plant_reserve_CP_2_litter_nonwood;
+
+    /* ======= Update carbon variables ======= */
+    _plant_green_CP->val[j] = plant_green_CP;
+    _plant_wood_CP->val[j] = plant_wood_CP;
+    _plant_reserve_CP->val[j] = plant_reserve_CP;
+
+
     /* ======= Distribute carbon fluxes to soil litter pools ======= */
-    /* ============================================================= */
     // From non-woody litter to non-woody pools (only exists in top soil layer)
     litter_nonwood = C_green_2_litter_nonwood + C_plant_reserve_CP_2_litter_nonwood + NPP_2_root_exudates;  // Nonwood litter contains addition from vegetation green pool, plant_reserve_CP pool, and root exudates from excess NPP
     _acid_CP1_nonwood->val[j] += litter_nonwood * par._frac_litter_to_acid_nonwood->val[j];

@@ -24,6 +24,7 @@ int Param::Parameterisation(Control &ctrl){
   sort_root_fraction_OK = 0;  
   sort_plant_uptake_OK = 0;  // The plant uptake only needs to be calculated once (or once within each change)
   sort_nitrogen_addition_OK = 0;  // The nitrogen addtion only needs to be calculated once (or once within each change)
+  sort_parameter_correction_OK = 0;  // The parameter correction only needs to be calculated once (or once within each change)
 
   // Update the parameterisation due to the changes in land use types
   param_category->update(ctrl.path_BasinFolder+"category_", ctrl.num_category ,_rowNum, _colNum, _sortedGrid);
@@ -91,6 +92,17 @@ int Param::Parameterisation(Control &ctrl){
    }}}
   for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
     _irrigation_FC_thres->val[j] = exp(_irrigation_FC_thres->val[j]);
+   }
+
+  _diffuse_molecular_coefficient->reset();
+  for (int k=0; k<param_category->n_category; k++){
+    if (diffuse_molecular_coefficient[k]!=nodata) {
+      double logp = log(diffuse_molecular_coefficient[k]);
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _diffuse_molecular_coefficient->val[j] += param_category->val[k][j] * logp;
+   }}}
+  for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+    _diffuse_molecular_coefficient->val[j] = exp(_diffuse_molecular_coefficient->val[j]);
    }
 
   _ratio_to_interf->reset();
@@ -607,13 +619,9 @@ int Param::Parameterisation(Control &ctrl){
   _ref_decomp_rate_doc->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (ref_decomp_rate_doc[k]!=nodata) {
-        double logp = log(ref_decomp_rate_doc[k]);
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _ref_decomp_rate_doc->val[j] += param_category->val[k][j] * logp;
+          _ref_decomp_rate_doc->val[j] += param_category->val[k][j] * ref_decomp_rate_doc[k];
      }}}
-    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-      _ref_decomp_rate_doc->val[j] = exp(_ref_decomp_rate_doc->val[j]);
-     }
   
   _C_trans_ratio_fast_2_humus->reset();
     for (int k=0; k<param_category->n_category; k++){
@@ -749,11 +757,6 @@ int Param::Parameterisation(Control &ctrl){
   /* end of Parameters */
 
 
-  /* Some parameters need to re-examined after parameterisation */
-  // Drainage intensity needs to be corrected by reference drainage density
-  for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-    _drainage_intensity->val[j] = min(1.0, _drainage_intensity->val[j]*_reference_drainage_density->val[j]);
-  }
   
   return EXIT_SUCCESS;
 }

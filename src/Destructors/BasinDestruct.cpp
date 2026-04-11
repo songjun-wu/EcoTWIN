@@ -34,6 +34,7 @@ int Basin::dtor(Control &ctrl){
   if(_bulkdensity1) delete _bulkdensity1;
   if (ctrl.opt_drainage == 1){
     if(_drainage_depth) delete _drainage_depth;
+    if(_reference_drainage_density) delete _reference_drainage_density;
   }
   if (ctrl.opt_depthprofile == 3){
     if(_sand2) delete _sand2;
@@ -249,6 +250,7 @@ int Basin::dtor(Control &ctrl){
     if(_plant_wood_CP) delete _plant_wood_CP;
     if(_plant_reserve_CP) delete _plant_reserve_CP;
     if(_plant_C) delete _plant_C;
+    if(_plant_wood_CP_forest_max) delete _plant_wood_CP_forest_max;
     if(_acid_CP1_nonwood) delete _acid_CP1_nonwood;
     if(_ethanol_CP1_nonwood) delete _ethanol_CP1_nonwood;
     if(_nonsoluble_CP1_nonwood) delete _nonsoluble_CP1_nonwood;

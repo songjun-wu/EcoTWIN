@@ -171,7 +171,6 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
 
         // Mixing layers due to potential capillary flow exchange
         // Fickian diffusion: diffuse_molecular * concentration gradient (Fick's first law)
-        /*
         if (diffuse_flag){
           diffuse_molecular  = par._diffuse_molecular_coefficient->val[j];
           // Layer 1 and 2        
@@ -183,7 +182,6 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
           conc_layer2 -= mass_layer_diffusion /ST2;
           conc_layer3 += mass_layer_diffusion /ST3;
         } 
-          */
        
         
         // Update global variables

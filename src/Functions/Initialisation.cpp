@@ -68,6 +68,10 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
       }  // end of opt_init_d18o
     }  // end of opt_tracking_isotope
 
+
+    // Here we did parameter correction because par._plant_wood_CP_max is used for plant CP initialisation
+    Parameter_correction(ctrl, par);
+    
     /* Carbon initialisation */
     if (ctrl.opt_carbon_sim==1){
     _plant_wood_CP->lower_than(*par._plant_wood_CP_max);

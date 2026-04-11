@@ -20,13 +20,9 @@
 int Basin::Nitrogen_summary(Control &ctrl, Param &par){
 
     // Summary carbon pools
-    double fast_NP1_wood;
-    double fast_NP1;
     if (ctrl.opt_summary_statistics==1){
       for (int j = 0; j < _sortedGrid.row.size(); j++){
-        fast_NP1_wood = (_acid_CP1_wood->val[j] + _ethanol_CP1_wood->val[j] +  _soluble_CP1_wood->val[j] + _nonsoluble_CP1_wood->val[j]) * par._NC_ratio_fast_pool_wood->val[j];
-        fast_NP1 =  _fast_NP1_nonwood->val[j] + fast_NP1_wood;
-        _fast_N->val[j] = fast_NP1 + 
+        _fast_N->val[j] = _fast_NP1_nonwood->val[j] + 
                           (_acid_CP1_wood->val[j] + _ethanol_CP1_wood->val[j] + _soluble_CP1_wood->val[j] + _nonsoluble_CP1_wood->val[j] +
                           _acid_CP2_wood->val[j] + _ethanol_CP2_wood->val[j] + _soluble_CP2_wood->val[j] + _nonsoluble_CP2_wood->val[j] +
                           _acid_CP3_wood->val[j] + _ethanol_CP3_wood->val[j] + _soluble_CP3_wood->val[j] + _nonsoluble_CP3_wood->val[j]) * par._NC_ratio_fast_pool_wood->val[j];   // Fast nitrogen [gN/m2]; NC ratio is constant in wood pools in layer 2 and 3

@@ -56,7 +56,7 @@ int Basin::Channel_evaporation_1(Control &ctrl, Atmosphere &atm, Param &par) {
             6430000 * Ea / Lambda);  // [mm]
             Echan *= (_chnwidth->val[j] * _chnlength->val[j]) / dx_square / 1000;  // Corrected with actual channel area; [m]
             Echan = max(par._Echan_alpha->val[j]* Echan, 0.0);
-            Echan = min(0.5*Echan, _chanS->val[j]);
+            Echan = min(Echan, 0.5*_chanS->val[j]);
                         
             _Echan->val[j] = Echan;     // Correct negative evaporation [m]
             _chanS->val[j] -= Echan;    // Update Channel storage [m]

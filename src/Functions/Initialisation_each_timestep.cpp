@@ -35,7 +35,11 @@ int Basin::Initialisation_each_timestep(Control &ctrl, Param &par) {
         Sort_percolation_travel_time(ctrl, par);
     }
 
-
+    // Parameter correction
+    if (par.sort_parameter_correction_OK == 0){
+      Parameter_correction(ctrl, par);
+    }
+    
     // ===== Hydrological variables =====
     // Vars for drainage
     _drainage_from_soil->reset();

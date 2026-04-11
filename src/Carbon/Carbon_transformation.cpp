@@ -172,7 +172,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       if (ctrl.opt_nitrogen_sim==1){
         // The accompani organic nitrogen is mineralised and goes to DIN pool
         // Note that in EcoTWIN DOC only comes from dissolution of soluble DOC pool; therefore the CN ratio of DOC pool is identical to the CN ratio of fast pool
-        delta_no3_layer1 = delta_doc_layer1 * par._NC_ratio_fast_pool_wood->val[j];
+        delta_no3_layer1 = delta_doc_layer1 * (par._NC_ratio_fast_pool_wood->val[j] + NC_ratio_fast_pool_nonwood) / 2;
         delta_no3_layer2 = delta_doc_layer2 * par._NC_ratio_fast_pool_wood->val[j];
         delta_no3_layer3 = delta_doc_layer3 * par._NC_ratio_fast_pool_wood->val[j];
         _no3_layer1->val[j] += delta_no3_layer1;

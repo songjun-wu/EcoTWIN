@@ -200,6 +200,7 @@ struct Control{
   string fn__depth1;  // Depth of soil layer 1 [m]
   string fn__depth2;  // Depth of soil layer 2 [m]
   string fn__drainage_depth;  // The depth of drainage [m]
+  string fn__reference_drainage_density;  // The reference drainage density [length-1]
   string fn__sand1;  // Sand content of layer 1 [decimal]
   string fn__sand2;  // Sand content of layer 2 [decimal], only needed when opt_depthprofile = 3
   string fn__sand3;  // Sand content of layer 3 [decimal], only needed when opt_depthprofile = 3
@@ -311,6 +312,7 @@ struct Control{
   string fn__plant_green_CP;  //  Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]
   string fn__plant_wood_CP;  //   Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]
   string fn__plant_reserve_CP;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
+  string fn__plant_wood_CP_forest_max;  // The maximum carbon content in wood pool for forest species [molC/m2] 
   string fn__acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
   string fn__ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
   string fn__nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
@@ -343,8 +345,6 @@ struct Control{
   string fn__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
   /* end of Carbon */
 
-  /* Reference states or fluxes parameterisation */
-  string fn__reference_drainage_density;  // Reference drainage density [length-1]
 
   /* Parameters */
   string fn__depth3;  // Depth of soil layer 3 [m]
@@ -389,6 +389,7 @@ struct Control{
   string fn__drainage_intensity;  // The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
   string fn__herbivory_uptake_coeff;  // The coefficient for herbivory uptake [-]
   string fn__harvest_coeff;  // The coefficient for crop harvest [-]
+  string fn__diffuse_molecular_coefficient;  // The coefficient for Fickian diffusion [m2/s]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
