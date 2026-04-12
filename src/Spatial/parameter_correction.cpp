@@ -32,8 +32,10 @@ int Basin::Parameter_correction(Control &ctrl, Param &par){
     // Maximum carbon content in wood pool needs to be corrected by spatial maps of forest biomass (in gC/m2)
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
       par._plant_wood_CP_max->val[j] *= _plant_wood_CP_forest_max->val[j];
+      par._decomposition_weight_humus_pool->val[j] *= _humus_decomposition_spatial_weights->val[j];  // Correction of decomposition rates of humus pool based on the spatial pattern of soil carbon storage [-]
     }
   }
+
 
 
   par.sort_parameter_correction_OK = 1;

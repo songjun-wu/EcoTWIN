@@ -269,6 +269,13 @@ class Basin {
   svector *_fast_N;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
   svector *_leaching_mass_no3;  // Leaching of NO3 [gN/m2]
   svector *_drainage_mass_no3;  // Drainage of NO3 [gN/m2]
+  svector *_litter_fall_N;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gN/m2]
+  svector *_plant_uptake_from_all_sources;  // Plant uptake summarised from all sources [gN/m2]
+  svector *_fast_pool_N_release_by_respiration;  // Fast pool nitrogen from respiration [gN/m2]
+  svector *_fast_pool_N_immob_by_decomposition;  // Fast pool nitrogen immobilised by decomposition [gN/m2]
+  svector *_fast_pool_N_dissolved_to_DIN;  // Fast pool nitrogen dissolved to DIN [gN/m2]
+  svector *_humus_N_release_by_respiration;  // Humus nitrogen released by respiration [gN/m2]
+  svector *_no3_hydro_input_mass;  // Hydrological input of NO3 [gN/m2]
   /* end of Nitrogen */
 
 
@@ -311,8 +318,10 @@ class Basin {
   svector *_doc_chanS;  // DOC in Channel storage [mgN/L]
   svector *_litter_fall_C;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
   svector *_soil_respiration_C;  // Soil respiration summarised in carbon [gC/m2]
+  svector *_ref_C_from_humus;  // Reference humus soil respiration summarised in carbon [gC/m2]
   svector *_soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
   svector *_respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
+  svector *_humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
   svector *_C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   svector *_doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
   svector *_leaching_mass_doc;  // Leaching of DOC [gC/m2]
@@ -506,12 +515,17 @@ class Basin {
   int Carbon_addition(Control &ctrl, Param &par);  // Carbon addition process (from vegetation pools to litter pools)
   int Carbon_management(Control &ctrl, Param &par);  // Carbon management process (harvest and herbivory loss)
   int Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par);   // Solve soil carbon decomposition
-  int Carbon_transformation_process(  Control &ctrl, Atmosphere &atm, Param &par, int j,
-    double &db_soluble_CP, double &db_humus_CP, double &db_acid_CP, double &db_ethanol_CP, double &db_nonsoluble_CP,
+  int Carbon_transformation_process_fast_pool(  Control &ctrl, Atmosphere &atm, Param &par, int j,  // Carbon transformation process for fast pool
+    double &db_acid_CP, double &db_ethanol_CP, double &db_soluble_CP, double &db_nonsoluble_CP, double &db_humus_CP,
     double &db_soil_respiration_C, double &db_soil_decomposition_C,
     double &db_available_N, double &db_minerl_soil,
     double db_fct_Ts, double db_fct_theta, double db_fct_size, double db_fct_depth, double db_NC_ratio_fast,
-    double db_C_trans_ratio_fast_2_humus, double db_C_respiration_ratio_acid, double db_C_respiration_ratio_soluble, double db_C_respiration_ratio_ethanol, double db_C_respiration_ratio_nonsoluble);  // Carbon transformation process for soil profile
+    double db_C_trans_ratio_fast_2_humus, double db_C_respiration_ratio_acid, double db_C_respiration_ratio_soluble, double db_C_respiration_ratio_ethanol, double db_C_respiration_ratio_nonsoluble);
+  int Carbon_transformation_process_humus_pool(  Control &ctrl, Atmosphere &atm, Param &par, int j,  // Carbon transformation process for humus pool
+    double &db_humus_CP,
+    double &db_soil_respiration_C, double &db_soil_decomposition_C,
+    double &db_available_N, double &db_minerl_soil,
+    double db_fct_Ts, double db_fct_theta, double db_fct_size, double fct_depth);
   int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC
   int Carbon_summary(Control &ctrl, Param &par);  // Summary carbon states and fluxes
   double Calculate_fraction_soluble_CP_to_DOC(double soil_storage, double percolation, double ref_frac_soluble_to_doc);

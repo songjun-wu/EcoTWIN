@@ -219,6 +219,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__doc_vadose, "doc_vadose", lines);
   readInto(fn__doc_GW, "doc_groundwater_storage", lines);
   readInto(fn__doc_chanS, "doc_chanS", lines);
+  readInto(fn__humus_decomposition_spatial_weights, "humus_decomposition_spatial_weights", lines);
   readInto(fn__C4_flag, "C4_flag", lines);
   readInto(fn__doc_rain, "doc_rain", lines);
   /* end of Carbon */

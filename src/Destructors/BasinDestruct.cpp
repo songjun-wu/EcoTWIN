@@ -241,6 +241,13 @@ int Basin::dtor(Control &ctrl){
     if(_fast_N) delete _fast_N;
     if(_leaching_mass_no3) delete _leaching_mass_no3;
     if(_drainage_mass_no3) delete _drainage_mass_no3;
+    if(_litter_fall_N) delete _litter_fall_N;
+    if(_plant_uptake_from_all_sources) delete _plant_uptake_from_all_sources;
+    if(_fast_pool_N_release_by_respiration) delete _fast_pool_N_release_by_respiration;
+    if(_fast_pool_N_immob_by_decomposition) delete _fast_pool_N_immob_by_decomposition;
+    if(_fast_pool_N_dissolved_to_DIN) delete _fast_pool_N_dissolved_to_DIN;
+    if(_humus_N_release_by_respiration) delete _humus_N_release_by_respiration;
+    if(_no3_hydro_input_mass) delete _no3_hydro_input_mass;
   }
   /* end of Nitrogen */
 
@@ -284,8 +291,10 @@ int Basin::dtor(Control &ctrl){
     if(_doc_chanS) delete _doc_chanS;
     if(_litter_fall_C) delete _litter_fall_C;
     if(_soil_respiration_C) delete _soil_respiration_C;
+    if(_ref_C_from_humus) delete _ref_C_from_humus;
     if(_soil_decomposition_C) delete _soil_decomposition_C;
     if(_respiration_river_C) delete _respiration_river_C;
+    if(_humus_decomposition_spatial_weights) delete _humus_decomposition_spatial_weights;
     if(_C4_flag) delete _C4_flag;
     if(_doc_rain) delete _doc_rain;
     if(_leaching_mass_doc) delete _leaching_mass_doc;

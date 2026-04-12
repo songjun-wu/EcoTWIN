@@ -341,6 +341,7 @@ struct Control{
   string fn__doc_vadose;  // DOC in vadose storage [mgN/L]
   string fn__doc_GW;  // DOC in Groundwater storage [mgN/L]
   string fn__doc_chanS;  // DOC in Channel storage [mgN/L]
+  string fn__humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
   string fn__C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   string fn__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
   /* end of Carbon */

@@ -19,7 +19,7 @@
 
 int Basin::Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
-    double doc_chanS, doc_CP_chanS, fct_TchanS, fct_conc, chanS_m3, respiration_river;
+    double doc_chanS, doc_CP_chanS, fct_TchanS, respiration_river;
     double dx = ctrl._dx;
     double DT = ctrl.Simul_tstep / 86400;  // all rates are calculated at daily timesteps
 
@@ -42,7 +42,6 @@ int Basin::Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param 
 
                 
                 fct_TchanS = Temp_factor(_TchanS->val[j]);  // Instream temperature factor [-]
-                //fct_conc = no3_chanS / (no3_chanS + 1.5);  // Concentration factor [-]
 
                 // Instream heterotrophic respiration during the timestep DT; scaled by river temperature and channel length
                 respiration_river = doc_CP_chanS * min(par._respiration_river->val[j] * fct_TchanS * (_chnlength->val[j] / dx) * DT, 1.0);  // [gC/m2]

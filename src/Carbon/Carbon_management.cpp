@@ -23,7 +23,6 @@ int Basin::Carbon_management(Control &ctrl, Param &par){
   double plant_green_CP, plant_reserve_CP;  // Vegetation pools [gC/m2]
   double plant_mobile_N;  // Plant mobile nitrogen [gN/m2]
   int idx_last_land_use;  // Index of last land use category
-  double N_biological_fixiation;  // Biological nitrogen fixation [gN/m2]
 
 
   for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
