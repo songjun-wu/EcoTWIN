@@ -146,7 +146,6 @@ class Report {
     ofstream of__doc_chanS;  // DOC in Channel storage [mgN/L]
     ofstream of__litter_fall_C;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
     ofstream of__soil_respiration_C;  // Soil respiration summarised in carbon [gC/m2]
-    ofstream of__ref_C_from_humus;  // Reference humus soil respiration summarised in carbon [gC/m2]
     ofstream of__soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
     ofstream of__respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     ofstream of__humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
@@ -177,13 +176,6 @@ class Report {
     ofstream of__fast_N;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
     ofstream of__leaching_mass_no3;  // Leaching of NO3 [gN/m2]
     ofstream of__drainage_mass_no3;  // Drainage of NO3 [gN/m2]
-    ofstream of__litter_fall_N;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gN/m2]
-    ofstream of__plant_uptake_from_all_sources;  // Plant uptake summarised from all sources [gN/m2]
-    ofstream of__fast_pool_N_release_by_respiration;  // Fast pool nitrogen from respiration [gN/m2]
-    ofstream of__fast_pool_N_immob_by_decomposition;  // Fast pool nitrogen immobilised by decomposition [gN/m2]
-    ofstream of__fast_pool_N_dissolved_to_DIN;  // Fast pool nitrogen dissolved to DIN [gN/m2]
-    ofstream of__humus_N_release_by_respiration;  // Humus nitrogen released by respiration [gN/m2]
-    ofstream of__no3_hydro_input_mass;  // Hydrological input of NO3 [gN/m2]
 
     svector *_I_acc;  // Canopy storage [m]
     svector *_snow_acc;  // Snow depth in [m]
@@ -298,7 +290,6 @@ class Report {
     svector *_doc_chanS_acc;  // DOC in Channel storage [mgN/L]
     svector *_litter_fall_C_acc;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
     svector *_soil_respiration_C_acc;  // Soil respiration summarised in carbon [gC/m2]
-    svector *_ref_C_from_humus_acc;  // Reference humus soil respiration summarised in carbon [gC/m2]
     svector *_soil_decomposition_C_acc;  // Soil decomposition summarised in carbon [gC/m2]
     svector *_respiration_river_C_acc;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     svector *_humus_decomposition_spatial_weights_acc;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
@@ -329,13 +320,6 @@ class Report {
     svector *_fast_N_acc;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
     svector *_leaching_mass_no3_acc;  // Leaching of NO3 [gN/m2]
     svector *_drainage_mass_no3_acc;  // Drainage of NO3 [gN/m2]
-    svector *_litter_fall_N_acc;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gN/m2]
-    svector *_plant_uptake_from_all_sources_acc;  // Plant uptake summarised from all sources [gN/m2]
-    svector *_fast_pool_N_release_by_respiration_acc;  // Fast pool nitrogen from respiration [gN/m2]
-    svector *_fast_pool_N_immob_by_decomposition_acc;  // Fast pool nitrogen immobilised by decomposition [gN/m2]
-    svector *_fast_pool_N_dissolved_to_DIN_acc;  // Fast pool nitrogen dissolved to DIN [gN/m2]
-    svector *_humus_N_release_by_respiration_acc;  // Humus nitrogen released by respiration [gN/m2]
-    svector *_no3_hydro_input_mass_acc;  // Hydrological input of NO3 [gN/m2]
     /* end of Report */
 
     //ctor

@@ -62,8 +62,14 @@ int Basin::Pedo_transfer_1(Control &ctrl, Param &par, svector &sv_sand,  svector
         // Calculate Van Genuchten's n
         VG_m = 1 - 1 / VG_n;
 
-        // Calculate saturated theta
-        thetaS = par._ref_thetaS->val[j] - par._PTF_VG_clay->val[j] * clay - par._PTF_VG_Db->val[j] * bulk_density;
+        // Calculate saturated theta following Zacharias and Wessolek, 2007; https://doi.org/10.2136/sssaj2006.0098
+        //thetaS = par._ref_thetaS->val[j] - par._PTF_VG_clay->val[j] * clay - par._PTF_VG_Db->val[j] * bulk_density;
+        if (sand < 66.5){
+            thetaS = par._ref_thetaS->val[j] + par._PTF_VG_clay->val[j] * clay - par._PTF_VG_Db->val[j] * bulk_density;
+        }
+        else{
+            thetaS = par._ref_thetaS->val[j] - par._PTF_VG_clay->val[j] * clay - par._PTF_VG_Db->val[j] * bulk_density;
+        }
         thetaS = max(thetaS, 0.1);   // To avoid negative saturated moisture content  
 
         // Calculate saturated hydraulic conductivity based on Cosby et al., (1984); https://doi.org/10.1029/WR020i006p00682
@@ -77,9 +83,13 @@ int Basin::Pedo_transfer_1(Control &ctrl, Param &par, svector &sv_sand,  svector
         // Field capacity cannot exceed the saturated moisture content (porosity)
         if (opt_fieldcapacity == 1){  // Based on Van Genuchten model
             sv_thetaFC.val[j] = min(thetaS / pow(1 + pow(VG_alpha * par._SWP->val[j], VG_n), VG_m), thetaS);
+            sv_thetaFC.val[j] = max(sv_thetaFC.val[j], 0.7*thetaS);
         } else if (opt_fieldcapacity == 2) { // Based on Equation (7) in Twarakavi et al., (2007); https://doi.org/10.1029/2009WR007944
             sv_thetaFC.val[j] = min(thetaS * pow(VG_n, -0.6 * (2 + log10(Ks * 8640000))), thetaS);  // The unit of Ks in original formula is cm/day
+            sv_thetaFC.val[j] = max(sv_thetaFC.val[j], 0.7*thetaS);
         }
+
+
 
         // Calculate wilting point based on Van Genuchten model
         // theta_r is set to 0.0

@@ -184,7 +184,7 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
 
     double DT = ctrl.Simul_tstep;  // Timestep length in seconds
     
-    double f_rock;  // Fraction of rock in the grid cell [0, 1]
+    //double f_rock;  // Fraction of rock in the grid cell [0, 1]
 
     
 
@@ -267,8 +267,8 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
         soil_evap *= evaporation_weight_by_depth * par._ET_weight->val[j] * DT / 1000;  // Evaporation only happens in first 10 cm of soil; Unit transformation from kg m-2 s-1 to m per timestep
         transp = transp < 0 ? 0 : transp;
         soil_evap = soil_evap < 0 ? 0 : soil_evap;
-        f_rock = par.param_category->val[ctrl.rock_category][j];
-        soil_evap *= (1- f_rock * 0.8);  // Assumption: rock has 80% evaporation capacity
+        //f_rock = par.param_category->val[ctrl.rock_category][j];
+        //soil_evap *= (1- f_rock * 0.8);  // Assumption: rock has 80% evaporation capacity
 
         
   

@@ -27,10 +27,14 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         double theta2 = _theta2->val[j];
         double theta3 = _theta3->val[j];
 
+        double thetaS1 = _thetaS1->val[j];
+        double thetaS2 = _thetaS2->val[j];
+        double thetaS3 = _thetaS3->val[j];
+
         double perc_optimal_theta = par._perc_optimal_theta->val[j];  // The specific threshold between field capacity and saturated content for percolation [0-1]
-        double thetaFC1 = _thetaS1->val[j] * perc_optimal_theta + _thetaFC1->val[j] * (1 - perc_optimal_theta);
-        double thetaFC2 = _thetaS2->val[j] * perc_optimal_theta + _thetaFC2->val[j] * (1 - perc_optimal_theta);
-        double thetaFC3 = _thetaS3->val[j] * perc_optimal_theta + _thetaFC3->val[j] * (1 - perc_optimal_theta);
+        double thetaFC1 = thetaS1 * perc_optimal_theta + _thetaFC1->val[j] * (1 - perc_optimal_theta);
+        double thetaFC2 = thetaS2 * perc_optimal_theta + _thetaFC2->val[j] * (1 - perc_optimal_theta);
+        double thetaFC3 = thetaS3 * perc_optimal_theta + _thetaFC3->val[j] * (1 - perc_optimal_theta);
         //double thetaFC1 = _thetaFC1->val[j];
         //double thetaFC2 = _thetaFC2->val[j];
         //double thetaFC3 = _thetaFC3->val[j];
@@ -64,12 +68,12 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
 
             // Drainage from layer 1 if activated
             relative_drainage_depth =  max(0.0, (depth1 - drainage_depth) / depth1);  
-            relative_grounwater_table = theta1 > thetaFC1 ? (theta1 - thetaFC1) / (_thetaS1->val[j] - thetaFC1) : 0.0;
+            relative_grounwater_table = theta1 > thetaFC1 ? (theta1 - thetaFC1) / (thetaS1 - thetaFC1) : 0.0;
             if (relative_grounwater_table > relative_drainage_depth) {
-                drainage1 = (relative_grounwater_table - relative_drainage_depth) * (theta1 - thetaFC1) * depth1 * drainage_intensity;
+                drainage1 = (relative_grounwater_table - relative_drainage_depth) * (thetaS1 - thetaFC1) * depth1 * drainage_intensity;
                 theta1 = (theta1 * depth1 - drainage1) / depth1;
             }
-        }  // End of drainage from soil layer 1
+        }  // End of drainage from soil layer 1        
 
         // Percolation from layer 1 to layer 2
         if (theta1 > thetaFC1) {
@@ -83,9 +87,9 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         if (ctrl.opt_drainage == 1 and drainage_depth > roundoffERR) {
             relative_drainage_depth =  max(0.0, (depth2 - (drainage_depth - depth1)) / depth2);
             if (relative_drainage_depth < 1.0) {
-                relative_grounwater_table = theta2 > thetaFC2 ? (theta2 - thetaFC2) / (_thetaS2->val[j] - thetaFC2) : 0.0;
+                relative_grounwater_table = theta2 > thetaFC2 ? (theta2 - thetaFC2) / (thetaS2 - thetaFC2) : 0.0;
                 if (relative_grounwater_table > relative_drainage_depth) {
-                    drainage2 = (relative_grounwater_table - relative_drainage_depth) * (theta2 - thetaFC2) * depth2 * drainage_intensity;
+                    drainage2 = (relative_grounwater_table - relative_drainage_depth) * (thetaS2 - thetaFC2) * depth2 * drainage_intensity;
                     theta2 = (theta2 * depth2 - drainage2) / depth2;
                 }
             }
@@ -103,9 +107,9 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         if (ctrl.opt_drainage == 1 and drainage_depth > roundoffERR) {
             relative_drainage_depth =  max(0.0, (depth3 - (drainage_depth - depth1 - depth2)) / depth3);
             if (relative_drainage_depth < 1.0) {
-                relative_grounwater_table = theta3 > thetaFC3 ? (theta3 - thetaFC3) / (_thetaS3->val[j] - thetaFC3) : 0.0;
+                relative_grounwater_table = theta3 > thetaFC3 ? (theta3 - thetaFC3) / (thetaS3 - thetaFC3) : 0.0;
                 if (relative_grounwater_table > relative_drainage_depth) {
-                    drainage3 = (relative_grounwater_table - relative_drainage_depth) * (theta3 - thetaFC3) * depth3 * drainage_intensity;
+                    drainage3 = (relative_grounwater_table - relative_drainage_depth) * (thetaS3 - thetaFC3) * depth3 * drainage_intensity;
                     theta3 = (theta3 * depth3 - drainage3) / depth3;
                 }
             }

@@ -157,16 +157,14 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
           // Evapotranspiration happens after percolation
           // Layer 1: erichment due to evaporation and transpiration
           conc_layer1 = (ST1 - _Es->val[j] - _Tr1->val[j])>roundoffERR ? ST1 * conc_layer1 / (ST1 - _Es->val[j] - _Tr1->val[j]) : 0;
-          ST1 -= (_Es->val[j] + _Tr1->val[j]);
-
           // Layer 2: erichment due to transpiration
           conc_layer2 = (ST2 - _Tr2->val[j])>roundoffERR ? ST2 * conc_layer2 / (ST2 - _Tr2->val[j]) : 0;
-          ST2 -= (_Tr2->val[j]);
-
           // Layer 3: erichment due to transpiration
-          conc_layer3 = (ST3 - _Tr3->val[j])>roundoffERR ? ST3 * conc_layer3 / (ST3 - _Tr3->val[j]) : 0;
-          ST3 -= (_Tr3->val[j]);
+          conc_layer3 = (ST3 - _Tr3->val[j])>roundoffERR ? ST3 * conc_layer3 / (ST3 - _Tr3->val[j]) : 0;  
         }
+        ST1 -= (_Es->val[j] + _Tr1->val[j]);
+        ST2 -= (_Tr2->val[j]);
+        ST3 -= (_Tr3->val[j]);
 
 
         // Mixing layers due to potential capillary flow exchange

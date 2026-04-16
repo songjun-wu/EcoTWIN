@@ -247,13 +247,6 @@
     _fast_N = new svector(_sortedGrid.size);
     _leaching_mass_no3 = new svector(_sortedGrid.size);
     _drainage_mass_no3 = new svector(_sortedGrid.size);
-    _litter_fall_N = new svector(_sortedGrid.size);
-    _plant_uptake_from_all_sources = new svector(_sortedGrid.size);
-    _fast_pool_N_release_by_respiration = new svector(_sortedGrid.size);
-    _fast_pool_N_immob_by_decomposition = new svector(_sortedGrid.size);
-    _fast_pool_N_dissolved_to_DIN = new svector(_sortedGrid.size);
-    _humus_N_release_by_respiration = new svector(_sortedGrid.size);
-    _no3_hydro_input_mass = new svector(_sortedGrid.size);
   }
   /* end of Nitrogen */
 
@@ -297,7 +290,6 @@
     _doc_chanS = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_chanS, _rowNum, _colNum, _sortedGrid);
     _litter_fall_C = new svector(_sortedGrid.size);
     _soil_respiration_C = new svector(_sortedGrid.size);
-    _ref_C_from_humus = new svector(_sortedGrid.size);
     _soil_decomposition_C = new svector(_sortedGrid.size);
     _respiration_river_C = new svector(_sortedGrid.size);
     _humus_decomposition_spatial_weights = new svector(ctrl.path_BasinFolder + ctrl.fn__humus_decomposition_spatial_weights, _rowNum, _colNum, _sortedGrid);
