@@ -123,6 +123,7 @@ Param::Param(Control &ctrl){
     _frac_litter_to_acid_wood = new svector(_sortedGrid.size);
     _frac_litter_to_ethanol_wood = new svector(_sortedGrid.size);
     _frac_litter_to_nonsoluble_wood = new svector(_sortedGrid.size);
+    _transformation_exp_base = new svector(_sortedGrid.size);
     _fdepth_decay_Exp = new svector(_sortedGrid.size);
     _decomposition_weight_fast_pool = new svector(_sortedGrid.size);
     _decomposition_weight_humus_pool = new svector(_sortedGrid.size);

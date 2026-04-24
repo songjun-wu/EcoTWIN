@@ -535,7 +535,7 @@ class Basin {
   /* ===== Global functions ===== */
   int Sort_percolation_travel_time(Control &ctrl, Param &par);
   int Sort_root_fraction(Control &ctrl,Param &par);  // Estimate root fraction
-  double Temp_factor(double T);  // Temperature factor of nitrogen transformation
+  double Temp_factor(double T, double transformation_exp_base);  // Temperature factor of nitrogen transformation
   double Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaFC, const double db_thetaS, const double db_depth); // Moisture factor of nitrogen transformation
 
   /* ===== Initialisation ===== */

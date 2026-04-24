@@ -415,6 +415,7 @@ struct Control{
   string fn__frac_litter_to_acid_wood;  // The fraction of wood litter going to soil acid pool  [-] 
   string fn__frac_litter_to_ethanol_wood;  // The fraction of wood litter going to soil ethano pool  [-] 
   string fn__frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
+  string fn__transformation_exp_base;  // Exponential base for temperature function of soil decomposition and denitrification [-]
   string fn__fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   string fn__decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
   string fn__decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]

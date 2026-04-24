@@ -73,7 +73,7 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
 
     // Variables for Fickian diffusion
     double diffuse_molecular;
-    double mass_layer_diffusion;
+    double diffusion_flux;
 
     // Variables for drainage
     double mass_drainage;
@@ -172,13 +172,23 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         if (diffuse_flag){
           diffuse_molecular  = par._diffuse_molecular_coefficient->val[j];
           // Layer 1 and 2        
-          mass_layer_diffusion = diffuse_molecular * (conc_layer1 - conc_layer2)/(min(_depth1->val[j], _depth2->val[j]));
-          conc_layer1 -= mass_layer_diffusion / ST1;
-          conc_layer2 += mass_layer_diffusion / ST2;
+          diffusion_flux = diffuse_molecular * (conc_layer1 - conc_layer2)/(min(_depth1->val[j], _depth2->val[j]));
+          if (diffusion_flux > 0) {
+              diffusion_flux = min(diffusion_flux, conc_layer1 * ST1 * 0.5);
+          } else {
+              diffusion_flux = max(diffusion_flux, -conc_layer2 * ST2 * 0.5);
+          }
+          conc_layer1 -= diffusion_flux / ST1;
+          conc_layer2 += diffusion_flux / ST2;
           // Layer 2 and 3
-          mass_layer_diffusion = diffuse_molecular * (conc_layer2 - conc_layer3)/(min(_depth2->val[j], par._depth3->val[j]));
-          conc_layer2 -= mass_layer_diffusion /ST2;
-          conc_layer3 += mass_layer_diffusion /ST3;
+          diffusion_flux = diffuse_molecular * (conc_layer2 - conc_layer3)/(min(_depth2->val[j], par._depth3->val[j]));
+          if (diffusion_flux > 0) {
+            diffusion_flux = min(diffusion_flux, conc_layer2 * ST2 * 0.5);
+          } else {
+            diffusion_flux = max(diffusion_flux, -conc_layer3 * ST3 * 0.5);
+          }
+          conc_layer2 -= diffusion_flux /ST2;
+          conc_layer3 += diffusion_flux /ST3;
         } 
        
         

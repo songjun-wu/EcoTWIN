@@ -101,6 +101,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(frac_litter_to_acid_wood, "frac_litter_to_acid_wood", lines);
   readIntoParam(frac_litter_to_ethanol_wood, "frac_litter_to_ethanol_wood", lines);
   readIntoParam(frac_litter_to_nonsoluble_wood, "frac_litter_to_nonsoluble_wood", lines);
+  readIntoParam(transformation_exp_base, "transformation_exp_base", lines);
   readIntoParam(fdepth_decay_Exp, "fdepth_decay_Exp", lines);
   readIntoParam(decomposition_weight_fast_pool, "decomposition_weight_fast_pool", lines);
   readIntoParam(decomposition_weight_humus_pool, "decomposition_weight_humus_pool", lines);

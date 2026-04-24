@@ -52,7 +52,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       fdepth_decay_Exp = par._fdepth_decay_Exp->val[j];
 
       // Factors of soil temperature; identical over whole soil profile
-      fct_Ts = Temp_factor(Get_soil_temperature(atm._Ta->val[j], _LAI->val[j]));
+      fct_Ts = Temp_factor(Get_soil_temperature(atm._Ta->val[j], _LAI->val[j]), par._transformation_exp_base->val[j]);
       // Factors of soil depth; decay exponentially with depth
       fct_depth_layer1 =  exp(-fdepth_decay_Exp * depth1/2);
       fct_depth_layer2 =  exp(-fdepth_decay_Exp * (depth1+depth2/2));

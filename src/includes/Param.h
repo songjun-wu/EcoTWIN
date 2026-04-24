@@ -114,6 +114,7 @@ class Param {
   vector<double> frac_litter_to_acid_wood;
   vector<double> frac_litter_to_ethanol_wood;
   vector<double> frac_litter_to_nonsoluble_wood;
+  vector<double> transformation_exp_base;
   vector<double> fdepth_decay_Exp;
   vector<double> decomposition_weight_fast_pool;
   vector<double> decomposition_weight_humus_pool;
@@ -185,6 +186,7 @@ class Param {
   svector *_frac_litter_to_acid_wood;  // The fraction of wood litter going to soil acid pool  [-] 
   svector *_frac_litter_to_ethanol_wood;  // The fraction of wood litter going to soil ethano pool  [-] 
   svector *_frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
+  svector *_transformation_exp_base;  // Exponential base for temperature function of soil decomposition and denitrification [-]
   svector *_fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   svector *_decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
   svector *_decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]

@@ -37,9 +37,10 @@ double Basin::Temp_factor(double T){
 */
 
 
-double Basin::Temp_factor(double T){
+double Basin::Temp_factor(double T, double transformation_exp_base){
     // Temperature dependence of decomposition in YASSO and JSbach
-    return exp(0.095 * T - 0.0014 * T * T);
+    //return exp(0.095*T - 0.0014*T*T);
+    return exp(transformation_exp_base * T - (transformation_exp_base/2/34) * T * T);  // The optimal temperature is 34 degree celcius for transformation
 }
 
 
