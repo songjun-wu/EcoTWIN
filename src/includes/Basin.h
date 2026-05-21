@@ -514,9 +514,9 @@ class Basin {
     double db_fct_Ts, double db_fct_theta, double db_fct_size, double db_fct_depth, double db_NC_ratio_fast,
     double db_C_trans_ratio_fast_2_humus, double db_C_respiration_ratio_acid, double db_C_respiration_ratio_soluble, double db_C_respiration_ratio_ethanol, double db_C_respiration_ratio_nonsoluble);
   int Carbon_transformation_process_humus_pool(  Control &ctrl, Atmosphere &atm, Param &par, int j,  // Carbon transformation process for humus pool
-    double &db_humus_CP,
+    double &db_humus_CP, double &db_DOC_pool,
     double &db_soil_respiration_C, double &db_soil_decomposition_C,
-    double &db_available_N, double &db_minerl_soil,
+    double &db_DIN_pool, double &db_minerl_soil,
     double db_fct_Ts, double db_fct_theta, double db_fct_size, double fct_depth);
   int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC
   int Carbon_summary(Control &ctrl, Param &par);  // Summary carbon states and fluxes

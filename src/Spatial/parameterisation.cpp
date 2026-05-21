@@ -623,6 +623,13 @@ int Param::Parameterisation(Control &ctrl){
       _decomposition_weight_humus_pool->val[j] = exp(_decomposition_weight_humus_pool->val[j]);
      }
   
+  _humus_C_decomposition_to_DOC_ratio->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (humus_C_decomposition_to_DOC_ratio[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          _humus_C_decomposition_to_DOC_ratio->val[j] += param_category->val[k][j] * humus_C_decomposition_to_DOC_ratio[k];
+     }}}
+  
   _ref_decomp_rate_doc->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (ref_decomp_rate_doc[k]!=nodata) {

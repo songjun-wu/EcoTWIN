@@ -419,6 +419,7 @@ struct Control{
   string fn__fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   string fn__decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
   string fn__decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
+  string fn__humus_C_decomposition_to_DOC_ratio;  // The ratio of humus carbon decomposition to DOC pool [-]
   string fn__ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
   string fn__C_trans_ratio_fast_2_humus;  // Fraction of decomposed fast pool that goes into humus pool [decimal]
   string fn__ref_frac_soluble_to_doc;  // Reference fraction of soluble carbon going to DOC pool [-]

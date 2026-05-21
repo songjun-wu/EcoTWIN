@@ -127,6 +127,7 @@ Param::Param(Control &ctrl){
     _fdepth_decay_Exp = new svector(_sortedGrid.size);
     _decomposition_weight_fast_pool = new svector(_sortedGrid.size);
     _decomposition_weight_humus_pool = new svector(_sortedGrid.size);
+    _humus_C_decomposition_to_DOC_ratio = new svector(_sortedGrid.size);
     _ref_decomp_rate_doc = new svector(_sortedGrid.size);
     _C_trans_ratio_fast_2_humus = new svector(_sortedGrid.size);
     _ref_frac_soluble_to_doc = new svector(_sortedGrid.size);

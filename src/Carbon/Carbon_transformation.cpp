@@ -21,6 +21,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
     double depth1, depth2, depth3;
     double theta1, theta2, theta3;
+    double DOC_pool;
     double fct_Ts, fct_theta1, fct_theta2, fct_theta3, fct_size, fct_depth_layer1, fct_depth_layer2, fct_depth_layer3, fdepth_decay_Exp; // factors for soil decomposition
     double C_from_humus, C_2_humus, C_2_humus_nonwood, C_2_humus_wood;
     double frac_soluble_CP_to_doc;
@@ -30,7 +31,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
     // Varaibles for nitrogen simulation
     double NC_ratio_fast_pool_nonwood;
-    double available_N;
+    double DIN_pool;
 
     // Variables for DOC pool decomposition
     double ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
@@ -74,17 +75,18 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       
 
       // =============== Layer 1 (wood pool)  ===============
-      available_N = _no3_layer1->val[j] * theta1 * depth1;
+      DIN_pool = _no3_layer1->val[j] * theta1 * depth1;
+      DOC_pool = _doc_layer1->val[j] * theta1 * depth1;
       Carbon_transformation_process_fast_pool(ctrl, atm, par, j,
                                     _acid_CP1_wood->val[j], _ethanol_CP1_wood->val[j], _soluble_CP1_wood->val[j], _nonsoluble_CP1_wood->val[j], _humus_CP1->val[j],
                                     _soil_respiration_C->val[j], C_2_humus_wood,
-                                    available_N, _minerl_soil->val[j],
+                                    DIN_pool, _minerl_soil->val[j],
                                     fct_Ts, fct_theta1, fct_size, fct_depth_layer1, par._NC_ratio_fast_pool_wood->val[j],
                                     C_trans_ratio_fast_2_humus, C_respiration_ratio_acid, C_respiration_ratio_soluble, C_respiration_ratio_ethanol, C_respiration_ratio_nonsoluble);
       Carbon_transformation_process_humus_pool(ctrl, atm, par, j,
-                                    _humus_CP1->val[j],
+                                    _humus_CP1->val[j], DOC_pool,
                                     _soil_respiration_C->val[j], C_from_humus,
-                                    available_N, _minerl_soil->val[j], 
+                                    DIN_pool, _minerl_soil->val[j], 
                                     fct_Ts, fct_theta1, fct_size, fct_depth_layer1);
     
 
@@ -93,16 +95,17 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       Carbon_transformation_process_fast_pool(ctrl, atm, par, j,
                                     _acid_CP1_nonwood->val[j], _ethanol_CP1_nonwood->val[j], _soluble_CP1_nonwood->val[j], _nonsoluble_CP1_nonwood->val[j], _humus_CP1->val[j],
                                     _soil_respiration_C->val[j], C_2_humus_nonwood,
-                                    available_N, _minerl_soil->val[j],
+                                    DIN_pool, _minerl_soil->val[j],
                                     fct_Ts, fct_theta1, 1.0, fct_depth_layer1, NC_ratio_fast_pool_nonwood,
                                     C_trans_ratio_fast_2_humus, C_respiration_ratio_acid, C_respiration_ratio_soluble, C_respiration_ratio_ethanol, C_respiration_ratio_nonsoluble);
 
       C_2_humus = C_2_humus_wood + C_2_humus_nonwood;
       _soil_decomposition_C->val[j] += C_from_humus - C_2_humus;
+      _doc_layer1->val[j] = DOC_pool / (theta1 * depth1);
 
       // Update global nitrogen varaibles
       if (ctrl.opt_nitrogen_sim==1){
-        _no3_layer1->val[j] = available_N / (theta1 * depth1);
+        _no3_layer1->val[j] = DIN_pool / (theta1 * depth1);
       }
 
       
@@ -112,23 +115,27 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       // Initialisation for layer 2
       fct_theta2 = Moist_factor(theta2, _thetaWP2->val[j], _thetaFC2->val[j], _thetaS2->val[j], depth2);
       // =============== Layer 2 (wood pool)  ===============
-      available_N = _no3_layer2->val[j] * theta2 * depth2;
+      DIN_pool = _no3_layer2->val[j] * theta2 * depth2;
+      DOC_pool = _doc_layer2->val[j] * theta2 * depth2;
       Carbon_transformation_process_fast_pool(ctrl, atm, par, j,
                                     _acid_CP2_wood->val[j], _ethanol_CP2_wood->val[j], _soluble_CP2_wood->val[j], _nonsoluble_CP2_wood->val[j], _humus_CP2->val[j],
                                     _soil_respiration_C->val[j], C_2_humus,
-                                    available_N, _minerl_soil->val[j],
+                                    DIN_pool, _minerl_soil->val[j],
                                     fct_Ts, fct_theta2, fct_size, fct_depth_layer2, par._NC_ratio_fast_pool_wood->val[j],
                                     C_trans_ratio_fast_2_humus, C_respiration_ratio_acid, C_respiration_ratio_soluble, C_respiration_ratio_ethanol, C_respiration_ratio_nonsoluble);
       Carbon_transformation_process_humus_pool(ctrl, atm, par, j,
-                                    _humus_CP2->val[j],
+                                    _humus_CP2->val[j], DOC_pool,
                                     _soil_respiration_C->val[j], C_from_humus,
-                                    available_N, _minerl_soil->val[j], 
+                                    DIN_pool, _minerl_soil->val[j], 
                                     fct_Ts, fct_theta2, fct_size, fct_depth_layer2);
       _soil_decomposition_C->val[j] += C_from_humus - C_2_humus;
+      _doc_layer2->val[j] = DOC_pool / (theta2 * depth2);
       // Update global nitrogen varaibles
       if (ctrl.opt_nitrogen_sim==1){
-        _no3_layer2->val[j] = available_N / (theta2 * depth2);
+        _no3_layer2->val[j] = DIN_pool / (theta2 * depth2);
       }
+
+
 
 
       /* ========================= Layer 3 ========================= */
@@ -136,22 +143,24 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       fct_theta3 = Moist_factor(theta3, _thetaWP3->val[j], _thetaFC3->val[j], _thetaS3->val[j], depth3);
       
       // =============== Layer 3 (wood pool)  ===============
-      available_N = _no3_layer3->val[j] * theta3 * depth3;
+      DIN_pool = _no3_layer3->val[j] * theta3 * depth3;
+      DOC_pool = _doc_layer3->val[j] * theta3 * depth3;
       Carbon_transformation_process_fast_pool(ctrl, atm, par, j,
                                     _acid_CP3_wood->val[j], _ethanol_CP3_wood->val[j], _soluble_CP3_wood->val[j], _nonsoluble_CP3_wood->val[j], _humus_CP3->val[j],
                                     _soil_respiration_C->val[j], C_2_humus,
-                                    available_N, _minerl_soil->val[j],
+                                    DIN_pool, _minerl_soil->val[j],
                                     fct_Ts, fct_theta3, fct_size, fct_depth_layer3, par._NC_ratio_fast_pool_wood->val[j],
                                     C_trans_ratio_fast_2_humus, C_respiration_ratio_acid, C_respiration_ratio_soluble, C_respiration_ratio_ethanol, C_respiration_ratio_nonsoluble);
       Carbon_transformation_process_humus_pool(ctrl, atm, par, j,
-                                    _humus_CP3->val[j],
+                                    _humus_CP3->val[j], DOC_pool,
                                     _soil_respiration_C->val[j], C_from_humus,
-                                    available_N, _minerl_soil->val[j], 
+                                    DIN_pool, _minerl_soil->val[j], 
                                     fct_Ts, fct_theta3, fct_size, fct_depth_layer3);
       _soil_decomposition_C->val[j] += C_from_humus - C_2_humus;
+      _doc_layer3->val[j] = DOC_pool / (theta3 * depth3);
       // Update global nitrogen varaibles
       if (ctrl.opt_nitrogen_sim==1){
-        _no3_layer3->val[j] = available_N / (theta3 * depth3);
+        _no3_layer3->val[j] = DIN_pool / (theta3 * depth3);
       }
 
 
@@ -164,7 +173,6 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       frac_soluble_CP_to_doc = Calculate_fraction_soluble_CP_to_DOC(_theta2->val[j]*depth2, _Perc2->val[j], par._ref_frac_soluble_to_doc->val[j]);
       _doc_layer2->val[j] += _soluble_CP2_wood->val[j] * frac_soluble_CP_to_doc / (theta2 * depth2);
       _soluble_CP2_wood->val[j] *= (1 - frac_soluble_CP_to_doc);
-
 
       frac_soluble_CP_to_doc = Calculate_fraction_soluble_CP_to_DOC(_theta3->val[j]*depth3, _Perc3->val[j], par._ref_frac_soluble_to_doc->val[j]);
       _doc_layer3->val[j] += _soluble_CP3_wood->val[j] * frac_soluble_CP_to_doc / (theta3 * depth3);
@@ -182,7 +190,11 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       if (ctrl.opt_nitrogen_sim==1){
         // The accompani organic nitrogen is mineralised and goes to DIN pool
         // Note that in EcoTWIN DOC only comes from dissolution of soluble DOC pool; therefore the CN ratio of DOC pool is identical to the CN ratio of fast pool
-        delta_no3_layer1 = delta_doc_layer1 * (par._NC_ratio_fast_pool_wood->val[j] + NC_ratio_fast_pool_nonwood) / 2;
+        double CP_wood_layer1 = _acid_CP1_wood->val[j] + _ethanol_CP1_wood->val[j] + _soluble_CP1_wood->val[j] + _nonsoluble_CP1_wood->val[j];
+        double CP_nonwood_layer1 = _acid_CP1_nonwood->val[j] + _ethanol_CP1_nonwood->val[j] + _soluble_CP1_nonwood->val[j] + _nonsoluble_CP1_nonwood->val[j];
+        double CP_nonwood_wood_ratio_layer1 = CP_nonwood_layer1 / (CP_wood_layer1 + CP_nonwood_layer1);
+        
+        delta_no3_layer1 = delta_doc_layer1 * (NC_ratio_fast_pool_nonwood*CP_nonwood_wood_ratio_layer1 + par._NC_ratio_fast_pool_wood->val[j]*(1 -CP_nonwood_wood_ratio_layer1));
         delta_no3_layer2 = delta_doc_layer2 * par._NC_ratio_fast_pool_wood->val[j];
         delta_no3_layer3 = delta_doc_layer3 * par._NC_ratio_fast_pool_wood->val[j];
         _no3_layer1->val[j] += delta_no3_layer1;
@@ -246,9 +258,9 @@ double Basin::Calculate_fraction_soluble_CP_to_DOC(double soil_storage, double p
 
 
 int Basin::Carbon_transformation_process_humus_pool(  Control &ctrl, Atmosphere &atm, Param &par, int j,
-                                          double &db_humus_CP,
+                                          double &db_humus_CP, double &db_DOC_pool,
                                           double &db_soil_respiration_C, double &db_C_from_humus,
-                                          double &db_available_N, double &db_minerl_soil,
+                                          double &db_DIN_pool, double &db_minerl_soil,
                                           double db_fct_Ts, double db_fct_theta, double db_fct_size, double fct_depth){
 
   double humus_CP = db_humus_CP;
@@ -258,14 +270,15 @@ int Basin::Carbon_transformation_process_humus_pool(  Control &ctrl, Atmosphere 
   C_from_humus = humus_CP * (min(1.0, ref_decomp_rate_humus * par._decomposition_weight_humus_pool->val[j] * db_fct_Ts * db_fct_theta * fct_depth)); // Decomposition of humus is not limited by wood and litter size, as well as nutrients
   db_humus_CP -= C_from_humus;
   db_C_from_humus = C_from_humus;
-  db_soil_respiration_C += C_from_humus;
+  db_DOC_pool += C_from_humus * par._humus_C_decomposition_to_DOC_ratio->val[j];
+  db_soil_respiration_C += C_from_humus * (1 - par._humus_C_decomposition_to_DOC_ratio->val[j]);
   
   if (ctrl.opt_nitrogen_sim) {
-  minerl_soil = C_from_humus * _humus_NC_ratio->val[j];
-  // Respiration releases excess nitrogen to mineral nitrogen pool
-  db_minerl_soil += minerl_soil;
-  // Update available nitrogen pool
-  db_available_N += minerl_soil;  
+    minerl_soil = C_from_humus * _humus_NC_ratio->val[j];
+    // Excess nitrogen due to humus decomposition goes to mineral nitrogen pool
+    db_minerl_soil += minerl_soil;
+    // Update available nitrogen pool
+    db_DIN_pool += minerl_soil;  
   }
 
   return EXIT_SUCCESS;
@@ -374,9 +387,6 @@ int Basin::Carbon_transformation_process_fast_pool(  Control &ctrl, Atmosphere &
       db_soluble_CP = soluble_CP - C_from_soluble + C_2_soluble;
       db_nonsoluble_CP = nonsoluble_CP - C_from_nonsoluble + C_2_nonsoluble;
       db_humus_CP = humus_CP + C_2_humus;
-
-      
-
 
       return EXIT_SUCCESS;
 }

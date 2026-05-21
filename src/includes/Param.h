@@ -118,6 +118,7 @@ class Param {
   vector<double> fdepth_decay_Exp;
   vector<double> decomposition_weight_fast_pool;
   vector<double> decomposition_weight_humus_pool;
+  vector<double> humus_C_decomposition_to_DOC_ratio;
   vector<double> ref_decomp_rate_doc;
   vector<double> C_trans_ratio_fast_2_humus;
   vector<double> ref_frac_soluble_to_doc;
@@ -190,6 +191,7 @@ class Param {
   svector *_fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   svector *_decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
   svector *_decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
+  svector *_humus_C_decomposition_to_DOC_ratio;  // The ratio of humus carbon decomposition to DOC pool [-]
   svector *_ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
   svector *_C_trans_ratio_fast_2_humus;  // Fraction of decomposed fast pool that goes into humus pool [decimal]
   svector *_ref_frac_soluble_to_doc;  // Reference fraction of soluble carbon going to DOC pool [-]

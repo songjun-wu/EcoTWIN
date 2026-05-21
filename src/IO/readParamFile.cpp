@@ -105,6 +105,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(fdepth_decay_Exp, "fdepth_decay_Exp", lines);
   readIntoParam(decomposition_weight_fast_pool, "decomposition_weight_fast_pool", lines);
   readIntoParam(decomposition_weight_humus_pool, "decomposition_weight_humus_pool", lines);
+  readIntoParam(humus_C_decomposition_to_DOC_ratio, "humus_C_decomposition_to_DOC_ratio", lines);
   readIntoParam(ref_decomp_rate_doc, "ref_decomp_rate_doc", lines);
   readIntoParam(C_trans_ratio_fast_2_humus, "C_trans_ratio_fast_2_humus", lines);
   readIntoParam(ref_frac_soluble_to_doc, "ref_frac_soluble_to_doc", lines);

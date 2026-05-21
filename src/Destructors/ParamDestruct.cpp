@@ -118,6 +118,7 @@ int Param::dtor(Control &ctrl){
     if(_fdepth_decay_Exp) delete _fdepth_decay_Exp;
     if(_decomposition_weight_fast_pool) delete _decomposition_weight_fast_pool;
     if(_decomposition_weight_humus_pool) delete _decomposition_weight_humus_pool;
+    if(_humus_C_decomposition_to_DOC_ratio) delete _humus_C_decomposition_to_DOC_ratio;
     if(_ref_decomp_rate_doc) delete _ref_decomp_rate_doc;
     if(_C_trans_ratio_fast_2_humus) delete _C_trans_ratio_fast_2_humus;
     if(_ref_frac_soluble_to_doc) delete _ref_frac_soluble_to_doc;
