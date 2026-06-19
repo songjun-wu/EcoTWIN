@@ -114,6 +114,7 @@ int Param::dtor(Control &ctrl){
     if(_frac_litter_to_acid_wood) delete _frac_litter_to_acid_wood;
     if(_frac_litter_to_ethanol_wood) delete _frac_litter_to_ethanol_wood;
     if(_frac_litter_to_nonsoluble_wood) delete _frac_litter_to_nonsoluble_wood;
+    if(_f_groundwater_depth_decay_exp_base) delete _f_groundwater_depth_decay_exp_base;
     if(_transformation_exp_base) delete _transformation_exp_base;
     if(_fdepth_decay_Exp) delete _fdepth_decay_Exp;
     if(_decomposition_weight_fast_pool) delete _decomposition_weight_fast_pool;

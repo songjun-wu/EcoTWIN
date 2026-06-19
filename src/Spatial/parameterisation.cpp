@@ -583,6 +583,13 @@ int Param::Parameterisation(Control &ctrl){
           _frac_litter_to_nonsoluble_wood->val[j] += param_category->val[k][j] * frac_litter_to_nonsoluble_wood[k];
      }}}
   
+  _f_groundwater_depth_decay_exp_base->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (f_groundwater_depth_decay_exp_base[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          _f_groundwater_depth_decay_exp_base->val[j] += param_category->val[k][j] * f_groundwater_depth_decay_exp_base[k];
+     }}}
+  
   _transformation_exp_base->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (transformation_exp_base[k]!=nodata) {

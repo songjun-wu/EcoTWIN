@@ -97,6 +97,9 @@
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
     _LAI_old = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_carbon_sim == 1){
+    _initial_groundwater_table = new svector(ctrl.path_BasinFolder + ctrl.fn__initial_groundwater_table, _rowNum, _colNum, _sortedGrid);
+  }
   /* end of Storages */
 
   /* Fluxes */

@@ -91,6 +91,9 @@ int Basin::dtor(Control &ctrl){
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
     if(_LAI_old) delete _LAI_old;
   }
+  if (ctrl.opt_carbon_sim == 1){
+    if(_initial_groundwater_table) delete _initial_groundwater_table;
+  }
   /* end of Storages */
 
   /* Fluxes */

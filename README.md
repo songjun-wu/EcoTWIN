@@ -1,10 +1,21 @@
-# EcoTWIN: an ECOhydrological model that Tracks Water, Isotopes, and Nutrients
+# EcoTWIN: an Ecohydrological model that Tracks Water, Isotopes, and Nutrients
+
+
 ## Introduction
 EcoTWIN is a C++-based ecohydrological modelling framework designed for the integrated simulation of water, isotope, carbon, and nitrogen cycles. The model incorporates a wide range of process representations and provides the flexibility to switch between alternative conceptualisations according to the objectives and characteristics of a study catchment.
 
 A unique feature of EcoTWIN is the isotope tracking, which allows it to track the flow path and velocities of vertical and lateral hydrological fluxes. 
 
 The model also employs a dynamic parameterisation scheme, which allows boundary conditions (e.g., land use) and related model parameters to be updated at user-defined intervals during simulation. This capability enables the model to represent evolving boundary conditions, such as land-use change, vegetation dynamics, and management interventions.
+
+
+
+## Publicatons
+Wu, S., Soulsby, C., Zheng, Y., Musolff, A., & Tetzlaff, D. (2026). Divergent evolution of nitrogen cycling along gradients of landscape water velocities. _Science_, 392(6803), 1188–1193. https://doi.org/10.1126/science.aed0399
+
+Wu, S., Tetzlaff, D., Zheng, Y., & Soulsby, C. (2026). EcoTWIN 1.0: a fully distributed tracer-aided ecohydrological model tracking water, isotopes, and nutrients. _Geoscientific Model Development_, 19, 2257–2278. https://doi.org/10.5194/gmd-19-2257-2026
+
+
 
 ## Model strucutre
 EcoTWIN simulates the coupled terrestrial cycles of water, carbon, and nitrogen.
@@ -41,6 +52,8 @@ EcoTWIN incorporates a range of anthropogenic management practices, including:
 These management modules enable the assessment of human impacts on coupled water, carbon, and nitrogen cycling across scales.
 
 ![Strucuture of EcoTWIN](docs/model_structure_v2.0.jpg)
+
+
 
 
 ## Instruction

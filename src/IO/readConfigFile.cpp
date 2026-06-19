@@ -145,6 +145,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__theta3, "SMC_layer3", lines);
   readInto(fn__vadose, "vadose", lines);
   readInto(fn__GW, "groundwater_storage", lines);
+  readInto(fn__initial_groundwater_table, "initial_groundwater_table", lines);
   /* end of Storages */ 
 
   /* Fluxes */

@@ -94,6 +94,7 @@ class Basin {
   svector *_GW_old;  // Groundwater storage [m]
   svector *_chanS_old;  // Channel storage [m3]
   svector *_LAI_old;  // Leaf area index [-]
+  svector *_initial_groundwater_table;  // The initial groundwater table depth [m], only needed when carbon_sim = 1
   /* end of Storages */ 
  
 
@@ -520,7 +521,7 @@ class Basin {
     double db_fct_Ts, double db_fct_theta, double db_fct_size, double fct_depth);
   int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC
   int Carbon_summary(Control &ctrl, Param &par);  // Summary carbon states and fluxes
-  double Calculate_fraction_soluble_CP_to_DOC(double soil_storage, double percolation, double ref_frac_soluble_to_doc);
+  double Calculate_fraction_soluble_CP_to_DOC(double ref_frac_soluble_to_doc, double soil_storage, double percolation, double groundwater_table, double f_groundwater_depth_decay_exp_base);
 
   /* Nitrogen module */
   int Sort_nitrogen_addition(Control &ctrl, Param &par);  // Sort 366 days at first iteration

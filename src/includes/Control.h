@@ -254,6 +254,7 @@ struct Control{
   string fn__theta3;  // Soil moisture in layer 3 [decimal]
   string fn__vadose;  // Vadose storage (unsaturated zone) [m]
   string fn__GW;  // Groundwater storage [m]
+  string fn__initial_groundwater_table;  // The initial groundwater table depth [m], only needed when carbon_sim = 1
   /* end of Storages */
   
   /* Fluxes */
@@ -415,6 +416,7 @@ struct Control{
   string fn__frac_litter_to_acid_wood;  // The fraction of wood litter going to soil acid pool  [-] 
   string fn__frac_litter_to_ethanol_wood;  // The fraction of wood litter going to soil ethano pool  [-] 
   string fn__frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
+  string fn__f_groundwater_depth_decay_exp_base;  // Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
   string fn__transformation_exp_base;  // Exponential base for temperature function of soil decomposition and denitrification [-]
   string fn__fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   string fn__decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
