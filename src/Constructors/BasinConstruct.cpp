@@ -1,10 +1,10 @@
 /***************************************************************
-* Generic Ecohydrological Model (GEM), a spatial-distributed module-based ecohydrological models
-* for multiscale hydrological, isotopic, and water quality simulations
+* EcoTWIN, a spatial-distributed ecohydrological model that
+* tracks water, isotope, and nutrient fluxes across spatial scales
 
 * Copyright (c) 2025   Songjun Wu <songjun.wu@igb-berlin.de / songjun-wu@outlook.com>
 
-  * GEM is a free software under the terms of GNU GEneral Public License version 3,
+  * EcoTWIN is a free software under the terms of GNU GEneral Public License version 3,
   * Resitributon and modification are allowed under proper aknowledgement.
 
 * Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)
@@ -83,7 +83,7 @@
   _vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__vadose, _rowNum, _colNum, _sortedGrid);
   _GW = new svector(ctrl.path_BasinFolder + ctrl.fn__GW, _rowNum, _colNum, _sortedGrid);
   _chanS = new svector(_sortedGrid.size);
-  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
+  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_tracking_trans_age == 1 or ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
     _I_old = new svector(_sortedGrid.size);
     _snow_old = new svector(_sortedGrid.size);
     _pond_old = new svector(_sortedGrid.size);
@@ -93,8 +93,6 @@
     _vadose_old = new svector(_sortedGrid.size);
     _GW_old = new svector(_sortedGrid.size);
     _chanS_old = new svector(_sortedGrid.size);
-  }
-  if (ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
     _LAI_old = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_carbon_sim == 1){

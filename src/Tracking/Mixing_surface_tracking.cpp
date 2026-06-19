@@ -1,10 +1,10 @@
 /***************************************************************
-* Generic Ecohydrological Model (GEM), a spatial-distributed module-based ecohydrological models
-* for multiscale hydrological, isotopic, and water quality simulations
+* EcoTWIN, a spatial-distributed ecohydrological model that
+* tracks water, isotope, and nutrient fluxes across spatial scales
 
 * Copyright (c) 2025   Songjun Wu <songjun.wu@igb-berlin.de / songjun-wu@outlook.com>
 
-  * GEM is a free software under the terms of GNU GEneral Public License version 3,
+  * EcoTWIN is a free software under the terms of GNU GEneral Public License version 3,
   * Resitributon and modification are allowed under proper aknowledgement.
 
 * Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)

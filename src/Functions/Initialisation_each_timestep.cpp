@@ -1,10 +1,10 @@
 /***************************************************************
-* Generic Ecohydrological Model (GEM), a spatial-distributed module-based ecohydrological models
-* for multiscale hydrological, isotopic, and water quality simulations
+* EcoTWIN, a spatial-distributed ecohydrological model that
+* tracks water, isotope, and nutrient fluxes across spatial scales
 
 * Copyright (c) 2025   Songjun Wu <songjun.wu@igb-berlin.de / songjun-wu@outlook.com>
 
-  * GEM is a free software under the terms of GNU GEneral Public License version 3,
+  * EcoTWIN is a free software under the terms of GNU GEneral Public License version 3,
   * Resitributon and modification are allowed under proper aknowledgement.
 
 * Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)
@@ -42,10 +42,12 @@ int Basin::Initialisation_each_timestep(Control &ctrl, Param &par) {
     
     // ===== Hydrological variables =====
     // Vars for drainage
-    _drainage_from_soil->reset();
-    _drainage_from_layer1->reset();
-    _drainage_from_layer2->reset();
-    _drainage_from_layer3->reset();
+    if (ctrl.opt_drainage == 1){
+      _drainage_from_soil->reset();
+      _drainage_from_layer1->reset();
+      _drainage_from_layer2->reset();
+      _drainage_from_layer3->reset();
+    }
     
     // Vars for routing
     _ovf_in->reset();

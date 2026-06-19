@@ -1,10 +1,10 @@
 /***************************************************************
-* Generic Ecohydrological Model (GEM), a spatial-distributed module-based ecohydrological models
-* for multiscale hydrological, isotopic, and water quality simulations
+* EcoTWIN, a spatial-distributed ecohydrological model that
+* tracks water, isotope, and nutrient fluxes across spatial scales
 
 * Copyright (c) 2025   Songjun Wu <songjun.wu@igb-berlin.de / songjun-wu@outlook.com>
 
-  * GEM is a free software under the terms of GNU GEneral Public License version 3,
+  * EcoTWIN is a free software under the terms of GNU GEneral Public License version 3,
   * Resitributon and modification are allowed under proper aknowledgement.
 
 * Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)
@@ -77,7 +77,7 @@ int Basin::dtor(Control &ctrl){
   if(_vadose) delete _vadose;
   if(_GW) delete _GW;
   if(_chanS) delete _chanS;
-  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_nitrogen_sim == 1){
+  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_tracking_trans_age == 1 or ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
     if(_I_old) delete _I_old;
     if(_snow_old) delete _snow_old;
     if(_pond_old) delete _pond_old;
@@ -87,8 +87,6 @@ int Basin::dtor(Control &ctrl){
     if(_vadose_old) delete _vadose_old;
     if(_GW_old) delete _GW_old;
     if(_chanS_old) delete _chanS_old;
-  }
-  if (ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
     if(_LAI_old) delete _LAI_old;
   }
   if (ctrl.opt_carbon_sim == 1){

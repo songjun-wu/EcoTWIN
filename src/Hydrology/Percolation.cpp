@@ -1,10 +1,10 @@
 /***************************************************************
-* Generic Ecohydrological Model (GEM), a spatial-distributed module-based ecohydrological models
-* for multiscale hydrological, isotopic, and water quality simulations
+* EcoTWIN, a spatial-distributed ecohydrological model that
+* tracks water, isotope, and nutrient fluxes across spatial scales
 
 * Copyright (c) 2025   Songjun Wu <songjun.wu@igb-berlin.de / songjun-wu@outlook.com>
 
-  * GEM is a free software under the terms of GNU GEneral Public License version 3,
+  * EcoTWIN is a free software under the terms of GNU GEneral Public License version 3,
   * Resitributon and modification are allowed under proper aknowledgement.
 
 * Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)
@@ -48,15 +48,19 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         double perc3 = 0;
 
         // Drainage variables
-        double drainage_depth =  _drainage_depth->val[j];;  // Drainage depth [m]
-        double drainage_intensity = par._drainage_intensity->val[j];  // Drainage intensity [0-1] = parameter Drainage intensity [0-1] * reference drainage density [length-1] (in parameterisation)
-        double relative_drainage_depth;  // Drainage depth relative to the bottom of soil layer [0-1]
-        double relative_grounwater_table;  // Groundwater table relative to the bottom of soil layer [0-1]
-        double drainage1, drainage2, drainage3;  // Drainage amount for each soil layer [m]
+        double drainage_depth, drainage_intensity, relative_drainage_depth, relative_grounwater_table, drainage1, drainage2, drainage3;
 
-        drainage1 = 0.0;
-        drainage2 = 0.0;
-        drainage3 = 0.0;
+        if (ctrl.opt_drainage == 1){
+            drainage_depth =  _drainage_depth->val[j];;  // Drainage depth [m]
+            drainage_intensity = par._drainage_intensity->val[j];  // Drainage intensity [0-1] = parameter Drainage intensity [0-1] * reference drainage density [length-1] (in parameterisation)
+            relative_drainage_depth;  // Drainage depth relative to the bottom of soil layer [0-1]
+            relative_grounwater_table;  // Groundwater table relative to the bottom of soil layer [0-1]
+            drainage1, drainage2, drainage3;  // Drainage amount for each soil layer [m]
+
+            drainage1 = 0.0;
+            drainage2 = 0.0;
+            drainage3 = 0.0;
+        }
         
 
         // Drainage from soil layer 1
