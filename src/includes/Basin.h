@@ -213,6 +213,9 @@ class Basin {
   vector<vector <double>> _potential_uptake_layer3;
   /* Nitrogen addition */
   vector<double> is_crop;
+  vector<double> plant_day;
+  vector<double> emerge_day;
+  vector<double> harvest_day;
   vector<double> fert_add;
   vector<double> fert_day;
   vector<double> fert_down;
@@ -232,9 +235,6 @@ class Basin {
   vector<double> up2;
   vector<double> up3;
   vector<double> upper_uptake;
-  vector<double> plant_day;
-  vector<double> emerge_day;
-  vector<double> harvest_day;
   /* end of Nitrogen addition */
 
   /* Irrigation */

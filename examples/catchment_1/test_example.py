@@ -3,6 +3,7 @@ import subprocess
 from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 # =============================================================================
 # A SIMPLE EXAMPLE OF MODEL EXECUTION
@@ -31,9 +32,10 @@ target_exe.symlink_to(source_exe)
 
 
 # === Step 3: Run EcoTWIN ===
-subprocess.run(["./EcoTWIN"], cwd=path_cwd, check=True)
+#subprocess.run(["./EcoTWIN"], cwd=path_cwd, check=True)
+os.system('./EcoTWIN')
 
-
+"""
 # === Step 4: Visualise results ===
 # Read outputs; here water age in top soil is shown as an example
 mask = np.loadtxt(path_cwd / "spatial" / "age_layer1.asc", skiprows=6)
@@ -41,8 +43,8 @@ data = np.fromfile(path_output / "age_SMC_layer1_map.bin")
 data = data.reshape(-1, mask.shape[0], mask.shape[1])
 data = np.mean(data, axis=0)
 data[mask == -9999] = np.nan
-vmin = 40
-vmax = 46
+vmin = np.nanpercentile(data, 5)
+vmax = np.nanpercentile(data, 95)
 
 # Plot average water age for the period 1980-2024
 fig, ax = plt.subplots(1, 1, figsize=(3, 2), dpi=300)
@@ -76,3 +78,4 @@ fig.savefig(path_cwd / "water_age_top_soil.png", transparent=True)
 # === Step 5: Clean outputs if needed ===
 if clean_outputs:
     shutil.rmtree(path_output)
+"""
