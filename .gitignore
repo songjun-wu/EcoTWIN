@@ -1,8 +1,8 @@
 *.o
 *.d
-*.bin
+#*.bin
 *.png
-*.asc
+#*.asc
 *.map
 *.mp4
 *.out

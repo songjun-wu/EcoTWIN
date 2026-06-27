@@ -41,7 +41,10 @@ Control::Control(){
   // Nitrogen simulation is dependent on carbon simulation
   if (opt_nitrogen_sim==1){
     opt_carbon_sim = 1;
+  } else if (opt_nitrogen_sim==0){
+    opt_carbon_sim = 0;
   }
+
   // Summary statistics
   if (opt_summary_statistics==0){
     if (opt_carbon_sim==1){
@@ -52,6 +55,99 @@ Control::Control(){
       report__fast_N = 0;
       report__humus_N = 0;
     }
+
+  /* Correction of report flags */
+  if (!(opt_reinfil == 1)){
+    report__rinfilt = 0;
+    report__rPerc1 = 0;
+    report__rPerc2 = 0;
+    report__rPerc3 = 0;
+  }
+  if (!(opt_drainage == 1)){
+    report__drainage_from_soil = 0;
+    report__drainage_from_layer1 = 0;
+    report__drainage_from_layer2 = 0;
+    report__drainage_from_layer3 = 0;
+  }
+  if (!(opt_tracking_isotope == 1)){
+    report__d18o_I = 0;
+    report__d18o_snow = 0;
+    report__d18o_pond = 0;
+    report__d18o_layer1 = 0;
+    report__d18o_layer2 = 0;
+    report__d18o_layer3 = 0;
+    report__d18o_vadose = 0;
+    report__d18o_GW = 0;
+    report__d18o_chanS = 0;
+    report__age_vadose = 0;
+  }
+  if (!(opt_tracking_age == 1)){
+    report__age_I = 0;
+    report__age_snow = 0;
+    report__age_pond = 0;
+    report__age_layer1 = 0;
+    report__age_layer2 = 0;
+    report__age_layer3 = 0;
+    report__age_GW = 0;
+    report__age_chanS = 0;
+  }
+  if (!(opt_tracking_trans_age == 1)){
+    report__trans_age_I = 0;
+    report__trans_age_snow = 0;
+    report__trans_age_pond = 0;
+    report__trans_age_layer1 = 0;
+    report__trans_age_layer2 = 0;
+    report__trans_age_layer3 = 0;
+    report__trans_age_vadose = 0;
+    report__trans_age_GW = 0;
+    report__trans_age_chanS = 0;
+  }
+  if (!(opt_carbon_sim == 1)){
+    report__NPP = 0;
+    report__plant_C = 0;
+    report__humus_C = 0;
+    report__fast_C = 0;
+    report__soluble_C = 0;
+    report__doc_I = 0;
+    report__doc_snow = 0;
+    report__doc_pond = 0;
+    report__doc_layer1 = 0;
+    report__doc_layer2 = 0;
+    report__doc_layer3 = 0;
+    report__doc_vadose = 0;
+    report__doc_GW = 0;
+    report__doc_chanS = 0;
+    report__litter_fall_C = 0;
+    report__soil_respiration_C = 0;
+    report__soil_decomposition_C = 0;
+    report__respiration_river_C = 0;
+    report__leaching_mass_doc = 0;
+    report__drainage_mass_doc = 0;
+  }
+  if (!(opt_nitrogen_sim == 1)){
+    report__no3_I = 0;
+    report__no3_snow = 0;
+    report__no3_pond = 0;
+    report__no3_layer1 = 0;
+    report__no3_layer2 = 0;
+    report__no3_layer3 = 0;
+    report__no3_vadose = 0;
+    report__no3_GW = 0;
+    report__no3_chanS = 0;
+    report__biological_fixiation_N = 0;
+    report__nitrogen_add = 0;
+    report__plant_uptake = 0;
+    report__deni_soil = 0;
+    report__minerl_soil = 0;
+    report__deni_river = 0;
+    report__humus_N = 0;
+    report__fast_N = 0;
+    report__leaching_mass_no3 = 0;
+    report__drainage_mass_no3 = 0;
+  }
+  /* end of Correction of report flags */
+
+
   }
 
   

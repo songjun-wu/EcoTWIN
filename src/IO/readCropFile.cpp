@@ -75,6 +75,8 @@ int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){
     }
     /* end of Nitrogen addition */
 
+
+    
     /* Irrigation */
     if (ctrl.opt_irrigation == 1){
       par.readIntoParam(irrigation_thres, "irrigation_thres", lines);
