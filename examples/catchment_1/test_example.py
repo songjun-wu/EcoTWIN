@@ -35,7 +35,7 @@ target_exe.symlink_to(source_exe)
 #subprocess.run(["./EcoTWIN"], cwd=path_cwd, check=True)
 os.system('./EcoTWIN')
 
-"""
+
 # === Step 4: Visualise results ===
 # Read outputs; here water age in top soil is shown as an example
 mask = np.loadtxt(path_cwd / "spatial" / "age_layer1.asc", skiprows=6)
@@ -78,4 +78,3 @@ fig.savefig(path_cwd / "water_age_top_soil.png", transparent=True)
 # === Step 5: Clean outputs if needed ===
 if clean_outputs:
     shutil.rmtree(path_output)
-"""

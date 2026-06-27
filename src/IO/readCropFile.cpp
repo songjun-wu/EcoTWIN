@@ -44,7 +44,7 @@ int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){
       }
     }
 
-    if (ctrl.opt_nitrogen_sim==1){
+
     /* Nitrogen addition */
     if (ctrl.opt_irrigation == 1 or ctrl.opt_nitrogen_sim == 1){
       par.readIntoParam(is_crop, "is_crop", lines);
@@ -74,15 +74,13 @@ int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){
       par.readIntoParam(residue_fast_NP, "residue_fast_NP", lines);
     }
     /* end of Nitrogen addition */
-    }
 
-    if (ctrl.opt_irrigation==1){
     /* Irrigation */
     if (ctrl.opt_irrigation == 1){
       par.readIntoParam(irrigation_thres, "irrigation_thres", lines);
     }
     /* end of Irrigation */
-    }
+
 
   input.close();
 
