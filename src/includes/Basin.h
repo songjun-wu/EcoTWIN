@@ -34,10 +34,12 @@ class Basin {
   double _dx, _nodata;
   int num_landuse;        // The number of land use types
   vector<int> landuse_idx;  // The location of each land use type in param.ini or N_addition.ini
-  sortedGrid _sortedGrid; 
   /* end of Properties */
 
   public:
+
+  sortedGrid _sortedGrid; 
+
   /* GIS */
   svector *_chnwidth;  // Channel width [m]
   svector *_chndepth;  // Channel depth [m]
@@ -84,16 +86,17 @@ class Basin {
   svector *_vadose;  // Vadose storage (unsaturated zone) [m]
   svector *_GW;  // Groundwater storage [m]
   svector *_chanS;  // Channel storage [m]
-  svector *_I_old;  // Canopy storage [m]
-  svector *_snow_old;  // Snow depth in [m]
-  svector *_pond_old;  // Ponding water in [m]
-  svector *_theta1_old;  // Soil moisture in layer 1 [decimal]
-  svector *_theta2_old;  // Soil moisture in layer 2 [decimal]
-  svector *_theta3_old;  // Soil moisture in layer 3 [decimal]
-  svector *_vadose_old;  // Vadose storage [m]
-  svector *_GW_old;  // Groundwater storage [m]
-  svector *_chanS_old;  // Channel storage [m3]
-  svector *_LAI_old;  // Leaf area index [-]
+  svector *_I_old;  // Canopy storage in previous time step [m]
+  svector *_snow_old;  // Snow depth in previous time step [m]
+  svector *_pond_old;  // Ponding water in previous time step [m]
+  svector *_theta1_old;  // Soil moisture in layer 1 in previous time step [decimal]
+  svector *_theta2_old;  // Soil moisture in layer 2 in previous time step [decimal]
+  svector *_theta3_old;  // Soil moisture in layer 3 in previous time step [decimal]
+  svector *_vadose_old;  // Vadose storage in previous time step [m]
+  svector *_GW_old;  // Groundwater storage in previous time step [m]
+  svector *_chanS_old;  // Channel storage in previous time step [m3]
+  svector *_LAI_old;  // Leaf area index in previous time step [-]
+  svector *_LAI_diff;  // Leaf area index difference between current and previous time step [-]
   svector *_initial_groundwater_table;  // The initial groundwater table depth [m], only needed when carbon_sim = 1
   /* end of Storages */ 
  

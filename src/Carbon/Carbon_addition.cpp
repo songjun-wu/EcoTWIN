@@ -285,7 +285,7 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
     // Leaf sheding: from vegetation green pool to non-woody litter pool
     // TODO: Autumn sheding needs to be added
     leaf_shedding = max(_LAI->val[j] * par._LAI_shed_coef->val[j], _LAI_old->val[j] - _LAI->val[j]);  // Normal shedding or due to plant mortality
-    C_green_2_litter_nonwood = min(ratio_green_2_leaf * leaf_shedding / par._C_in_LeafArea->val[j], plant_green_CP); 
+    C_green_2_litter_nonwood = min(ratio_green_2_leaf * leaf_shedding / par._C_in_LeafArea->val[j], 0.1 * plant_green_CP); 
     plant_green_CP -= C_green_2_litter_nonwood;
     // The green carbon pool cannot exceed the LAI-scaled maximum (ratio_green_2_leaf * _LAI->val[j] / par._C_in_LeafArea->val[j])
     excess_C = plant_green_CP - plant_green_CP_max;

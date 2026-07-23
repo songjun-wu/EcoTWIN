@@ -77,18 +77,17 @@ int Basin::dtor(Control &ctrl){
   if(_vadose) delete _vadose;
   if(_GW) delete _GW;
   if(_chanS) delete _chanS;
-  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_tracking_trans_age == 1 or ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
-    if(_I_old) delete _I_old;
-    if(_snow_old) delete _snow_old;
-    if(_pond_old) delete _pond_old;
-    if(_theta1_old) delete _theta1_old;
-    if(_theta2_old) delete _theta2_old;
-    if(_theta3_old) delete _theta3_old;
-    if(_vadose_old) delete _vadose_old;
-    if(_GW_old) delete _GW_old;
-    if(_chanS_old) delete _chanS_old;
-    if(_LAI_old) delete _LAI_old;
-  }
+  if(_I_old) delete _I_old;
+  if(_snow_old) delete _snow_old;
+  if(_pond_old) delete _pond_old;
+  if(_theta1_old) delete _theta1_old;
+  if(_theta2_old) delete _theta2_old;
+  if(_theta3_old) delete _theta3_old;
+  if(_vadose_old) delete _vadose_old;
+  if(_GW_old) delete _GW_old;
+  if(_chanS_old) delete _chanS_old;
+  if(_LAI_old) delete _LAI_old;
+  if(_LAI_diff) delete _LAI_diff;
   if (ctrl.opt_carbon_sim == 1){
     if(_initial_groundwater_table) delete _initial_groundwater_table;
   }

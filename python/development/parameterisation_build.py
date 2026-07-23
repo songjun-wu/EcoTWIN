@@ -1,15 +1,13 @@
 from develop_tools import *
 import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/scripts_v2/')
-import def_GEM_v2
+import param_info
 
 def parameterisation_build(fname, parameters):
 
     content = []
     content.append('  int nodata = ctrl._nodata;\n\n')
     keys, grouped_data = group_text(parameters)
-
-    param_list = def_GEM_v2.Param.ref
+    param_list = param_info.Param.ref
 
 
 

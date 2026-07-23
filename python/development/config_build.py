@@ -179,11 +179,17 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
         if data[5] != None and data[6] == 1:
             text.append('report_'+data[5]+'  =  0   # '+data[2] + '\n')
 
-    with open(path + 'config.ini', 'r') as f:
-            lines = f.readlines()
-            
-    if(('').join(text) != ('').join(lines)):
-        with open(path + 'config.ini', 'w') as f:
+    config_path = path + 'configs/'
+    os.makedirs(config_path, exist_ok=True)
+
+    if os.path.exists(config_path + 'config.ini'):
+        with open(config_path + 'config.ini', 'r') as f:
+                lines = f.readlines()
+        if(('').join(text) != ('').join(lines)):
+            with open(config_path + 'config.ini', 'w') as f:
+                f.writelines(text)
+    else:
+        with open(config_path + 'config.ini', 'w') as f:
             f.writelines(text)
 
 
@@ -279,6 +285,7 @@ def report_build(fname, reports):
         with open(fname, 'w') as f:
             f.writelines(content)
 
+"""
 def read_crop_info(fname, Nitrogen_inputs, Irrigation_inputs):
     content = []
     with open(fname, 'r') as f:
@@ -301,7 +308,7 @@ def read_crop_info(fname, Nitrogen_inputs, Irrigation_inputs):
     if(('').join(content) != ('').join(lines)):        
         with open(fname, 'w') as f:
             f.writelines(content)
-
+"""
 
 def add_header(directory):
     import time
@@ -318,12 +325,12 @@ def add_header(directory):
 
                 header = [
         "/***************************************************************\n",
-        "* Generic Ecohydrological Model (GEM), a spatial-distributed module-based ecohydrological models\n",
-        "* for multiscale hydrological, isotopic, and water quality simulations\n",
+        "* EcoTWIN, a spatial-distributed ecohydrological model that\n",
+        "* tracks water, isotope, and nutrient fluxes across spatial scales\n",
         "\n",
         "* Copyright (c) 2025   Songjun Wu <songjun.wu@igb-berlin.de / songjun-wu@outlook.com>\n",
         "\n",
-        "  * GEM is a free software under the terms of GNU GEneral Public License version 3,\n",
+        "  * EcoTWIN is a free software under the terms of GNU GEneral Public License version 3,\n",
         "  * Resitributon and modification are allowed under proper aknowledgement.\n",
         "\n",
         "* Contributors: Songjun Wu       Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB)\n",
@@ -354,7 +361,31 @@ def add_header(directory):
                     
 
                 
+def read_crop_info(signs, datas, fname):
 
+    from develop_tools import group_text, locate_text, if_condition_build
+
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j]
+        
+        content = []
+        
+
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')
+            
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = []
+                for i in range(len(grouped_data[key])):                  
+                    text.append('    par.readIntoParam(' + data[i][0] + ', "' + data[i][0] + '", lines);\n')
+                content.append(if_condition_build(key, text))
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)  
 
     
     

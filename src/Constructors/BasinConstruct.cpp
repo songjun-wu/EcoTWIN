@@ -83,18 +83,17 @@
   _vadose = new svector(ctrl.path_BasinFolder + ctrl.fn__vadose, _rowNum, _colNum, _sortedGrid);
   _GW = new svector(ctrl.path_BasinFolder + ctrl.fn__GW, _rowNum, _colNum, _sortedGrid);
   _chanS = new svector(_sortedGrid.size);
-  if (ctrl.opt_tracking_isotope == 1 or ctrl.opt_tracking_age == 1 or ctrl.opt_tracking_trans_age == 1 or ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
-    _I_old = new svector(_sortedGrid.size);
-    _snow_old = new svector(_sortedGrid.size);
-    _pond_old = new svector(_sortedGrid.size);
-    _theta1_old = new svector(_sortedGrid.size);
-    _theta2_old = new svector(_sortedGrid.size);
-    _theta3_old = new svector(_sortedGrid.size);
-    _vadose_old = new svector(_sortedGrid.size);
-    _GW_old = new svector(_sortedGrid.size);
-    _chanS_old = new svector(_sortedGrid.size);
-    _LAI_old = new svector(_sortedGrid.size);
-  }
+  _I_old = new svector(_sortedGrid.size);
+  _snow_old = new svector(_sortedGrid.size);
+  _pond_old = new svector(_sortedGrid.size);
+  _theta1_old = new svector(_sortedGrid.size);
+  _theta2_old = new svector(_sortedGrid.size);
+  _theta3_old = new svector(_sortedGrid.size);
+  _vadose_old = new svector(_sortedGrid.size);
+  _GW_old = new svector(_sortedGrid.size);
+  _chanS_old = new svector(_sortedGrid.size);
+  _LAI_old = new svector(_sortedGrid.size);
+  _LAI_diff = new svector(_sortedGrid.size);
   if (ctrl.opt_carbon_sim == 1){
     _initial_groundwater_table = new svector(ctrl.path_BasinFolder + ctrl.fn__initial_groundwater_table, _rowNum, _colNum, _sortedGrid);
   }

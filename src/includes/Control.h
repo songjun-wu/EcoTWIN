@@ -352,7 +352,7 @@ struct Control{
   string fn__depth3;  // Depth of soil layer 3 [m]
   string fn__alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
   string fn__rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
-  string fn__snow_rain_thre;  // The temperature for snow melt  [m]
+  string fn__snow_rain_thre;  // The temperature for snow melt  [degree Celsius]
   string fn__deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
   string fn__deg_day_max;  // Maximum Degree-day factor [m-1 degreeC-1]
   string fn__deg_day_increase;  // Increase of the Degree-day factor per mm of increase in precipitation precipitation [s-1 degreeC-1]
@@ -396,8 +396,8 @@ struct Control{
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
   string fn__delta_no3_init_GW;  // Initial no3 of GW storage [‰]
-  string fn__denitrification_river;  // Reference rates of aquatic denitrification [day-1]
-  string fn__denitrification_soil;  // Reference rates of soil denitrification [kg/ha]
+  string fn__denitrification_river;  // Reference decay coefficient of aquatic denitrification [timestep-1]
+  string fn__denitrification_soil;  // Reference rates of soil denitrification [timestep-1]
   string fn__deni_soil_moisture_thres;  // The moisture threshold of soil denitrification
   string fn__C_in_LeafArea;  // Carbon content per leaf area in [m2(leaf)/mol(Carbon)]
   string fn__LAI_shed_coef;  // Leaf shedding coefficient related to LAI [-]

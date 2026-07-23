@@ -422,3 +422,27 @@ def control_includes(fname, options, signs, datas, reports, static_config=False)
     if(('').join(content) != ('').join(lines)):
         with open(fname, 'w') as f:
             f.writelines(content)
+
+def report_flag_correction(fname, signs, datas):
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j]
+        
+        content = []
+        
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = []
+                for i in range(len(grouped_data[key])):                  
+                    if grouped_data[key][i][-1] == 1:
+                        text.append('  report_'+grouped_data[key][i][0]+' = 0;\n')
+                
+                if (key != None and text != []):
+                    content.append(if_condition_build_reverse(key, text))
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)  

@@ -60,7 +60,7 @@ int main(){
     oReport->Report_all(*oControl, *oBasin);  // To be re-enabled
 
     // Temporary for faster calibration; todo
-    //oBasin->Report_for_cali(*oControl);  // to be disabled
+    oBasin->Report_for_cali(*oControl);  // to be disabled
 
     // Update counter
     oControl->current_ts += oControl->Simul_tstep;
@@ -103,6 +103,16 @@ int main(){
         oBasin->update_groundTs(*oControl, *oParam);
       }
       advance_groundTs = 0;
+
+      for (int j = 0; j < oBasin->_sortedGrid.row.size(); j++) { // todo
+        oBasin->_LAI_diff->val[j] = oBasin->_LAI->val[j] - oBasin->_LAI_old->val[j];
+      }
+
+    }
+
+    // Smooth the group input to avoid abrupt changes
+    for (int j = 0; j < oBasin->_sortedGrid.row.size(); j++) { // todo
+      oBasin->_LAI->val[j] = oBasin->_LAI_old->val[j] + oBasin->_LAI_diff->val[j] / oControl->Ground_input_tstep * oControl->Simul_tstep ;
     }
 
     // Update management inputs
@@ -114,6 +124,10 @@ int main(){
       }
       advance_management = 0;
     }
+
+    
+
+
 
     // Update land use inputs
     if (advance_landuse >= oControl->Update_interval) {
