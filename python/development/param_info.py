@@ -110,7 +110,7 @@ class Param:
     #ref['KKs']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil, 'fix_value':None,}  
     #ref['Ksat']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[1]*Info.N_soil, 'max':[50]*Info.N_soil, 'fix_value':None,}
     #ref['BClambda']   = {'type':'soil',   'log':0, 'file':'KKs',   'min':[2]*Info.N_soil, 'max':[15]*Info.N_soil, 'fix_value':None,}
-    ref['preferential_flow_coeff']   = {'type':'global_soil',   'log':0, 'file':'preferential_flow_coeff',   'min':[0.01], 'max':[0.4], 'fix_value':None, 'weights':[0,0,0,0,0,1,0],}  # The coefficient parameter for preferential flow [-]
+    ref['preferential_flow_coeff']   = {'type':'global_soil',   'log':0, 'file':'preferential_flow_coeff',   'min':[1e-3], 'max':[1e-1], 'fix_value':None, 'weights':[0,0,0,0,0,1,0],}  # The coefficient parameter for preferential flow [-]
 
     # === Percolation === 
     # Only needed for opt_percolation == 2
@@ -122,7 +122,7 @@ class Param:
     
     # === Evapotranspiration === 
     #ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.95, 0.95, 0.95, 0.999, 0.92, 0.81, 0.95], 'fix_value':None,} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
-    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[1e-3]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':[0.01, 0.01, 0.01, 0.001, 0.01, 0.1, 0.01],} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
+    ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.91]*Info.N_landuse, 'max':[0.98]*Info.N_landuse, 'fix_value':[0.95, 0.95, 0.94, 0.965, 0.95, 0.95, 0.95],} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
     ref['ET_weight'] = {'type':'global_soil',   'log':0, 'file':'ET_weight',   'min':[1.0], 'max':[3.0], 'fix_value':None, 'weights':[1,1,1,1,1,0.8,1],} # Evaporation and Transpiration should be adjusted due to potential underestimation of daily simulaton compared to integral of hourly simulatont [-]
 
     # === GW recharge === 
@@ -146,8 +146,10 @@ class Param:
 
     # === Mixing === 
     #ref['nearsurface_mixing']   = {'type':'global',   'log':0, 'file':'nearsurface_mixing',   'min':[0], 'max':[0], 'fix_value':None,} 
-    ref['diffuse_molecular_coefficient']   = {'type':'global',   'log':1, 'file':'diffuse_molecular_coefficient',   'min':np.array([1e-11])*86400, 'max':np.array([1e-8])*86400, 'fix_value':None,}  # The coefficient for Fickian diffusion [m2/s]
+    #ref['diffuse_molecular_coefficient']   = {'type':'global',   'log':1, 'file':'diffuse_molecular_coefficient',   'min':np.array([1e-11])*86400, 'max':np.array([1e-8])*86400, 'fix_value':None,}  # The coefficient for Fickian diffusion [m2/s]
+    ref['diffuse_molecular_coefficient']   = {'type':'global',   'log':1, 'file':'diffuse_molecular_coefficient',   'min':np.array([1.06e-5]), 'max':np.array([1.06e-5]), 'fix_value':None,}  # The coefficient for Fickian diffusion [m2/s]
     
+
     # === Tracking === 
     ref['CG_n_soil'] = {'type':'landuse',   'log':0, 'file':'CG_n_soil',   'min':[0.5]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None,}
     #ref['delta_d18o_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_d18o_init_GW',   'min':[-5]*Info.N_soil, 'max':[5]*Info.N_soil, 'fix_value':None,} # The adjustment of initial d18o composition
@@ -160,8 +162,7 @@ class Param:
     ref['ETransport'] = {'type':'global_landuse',   'log':0, 'file':'ETransport',   'min':[0.8], 'max':[1.2], 'fix_value':None, 'weights':np.array([145,145,145,145,130,30,145])*1e-6,} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants); np.array([190,145,145,110,130,130])*1e-6
     
     ref['C_in_LeafArea'] = {'type':'landuse',   'log':0, 'file':'C_in_LeafArea',   'min':[], 'max':[], 'fix_value':np.array([0.45, 0.45, 0.45, 0.25, 0.3, 0.3, 0.3])/12,} # Carbon content per leaf area in [m2(leaf)/gC] <== [m2(leaf)/mol(Carbon)/12]
-    #ref['LAI_shed_coef'] = {'type':'landuse',   'log':0, 'file':'LAI_shed_coef',   'min':[], 'max':[], 'fix_value':[0.0055, 0.0055, 0.0055, 0.0027, 0.0027, 0.0027, 0.0055],} # Leaf shedding coefficient related to LAI; Time in which leaves are constantly shedded [days-1]
-    ref['LAI_shed_coef'] = {'type':'landuse',   'log':0, 'file':'LAI_shed_coef',   'min':[], 'max':[], 'fix_value':np.array([0.0055, 0.0055, 0.0055, 0.0027, 0.0027, 0.0027, 0.0055])*15,} # Leaf shedding coefficient related to LAI; Time in which leaves are constantly shedded [days-1]
+    ref['LAI_shed_coef'] = {'type':'landuse',   'log':0, 'file':'LAI_shed_coef',   'min':[], 'max':[], 'fix_value':np.array([0.0055, 0.0055, 0.0055, 0.0027, 0.0027, 0.0027, 0.0055]),} # Leaf shedding coefficient related to LAI; Time in which leaves are constantly shedded [days-1]
     
     ref['tau_wood_C'] = {'type':'landuse',   'log':0, 'file':'tau_wood_C',   'min':[], 'max':[], 'fix_value':np.array([1,1,1,60,1,1,1])*365,} # Life time scale of the wood pool and vegetation dynamics [days]
     # Distribute NPP to vegetation pools
@@ -180,18 +181,18 @@ class Param:
     ref['frac_litter_to_ethanol_wood'] = {'type':'landuse',   'log':0, 'file':'frac_litter_to_ethanol_wood',   'min':[], 'max':[], 'fix_value':[0.02,0.02,0.02,0.02,0.02,0.02,0.02],} # The fraction of wood litter going to soil ethano pool  [-]
     ref['frac_litter_to_nonsoluble_wood'] = {'type':'landuse',   'log':0, 'file':'frac_litter_to_nonsoluble_wood',   'min':[], 'max':[], 'fix_value':[0.23,0.23,0.23,0.23,0.23,0.23,0.23],} # The fraction of wood litter going to soil nonsoluble pool  [-]
     # Reference fraction of soluble carbon going to DOC pool
-    #ref['ref_frac_soluble_to_doc'] = {'type':'soil',   'log':0, 'file':'ref_frac_soluble_to_doc',   'min':[0.01]*Info.N_soil, 'max':[0.2]*Info.N_soil, 'fix_value':None,} # Reference fraction of soluble carbon going to DOC pool [-]
-    ref['ref_frac_soluble_to_doc'] = {'type':'soil',   'log':0, 'file':'ref_frac_soluble_to_doc',   'min':[0.01,0.2,0.2,0.1,0.4,0.01,0.4], 'max':[0.2,0.6,0.6,0.6,0.9,0.1,0.9], 'fix_value':None,} # Reference fraction of soluble carbon going to DOC pool [-]
+    ref['ref_frac_soluble_to_doc'] = {'type':'soil',   'log':0, 'file':'ref_frac_soluble_to_doc',   'min':np.array([0.01,0.2,0.2,0.1,0.4,0.01,0.4])*1e-2, 'max':np.array([0.2,0.6,0.6,0.6,0.9,0.1,0.9])*1e-2, 'fix_value':None,} # Reference fraction of soluble carbon going to DOC pool [-]
     
+
     # Reference decomposition rates of carbon pools
     ref['f_groundwater_depth_decay_exp_base'] = {'type':'global',   'log':0, 'file':'f_groundwater_depth_decay_exp_base',   'min':[0.1], 'max':[2], 'fix_value':None,} # Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
     ref['transformation_exp_base'] = {'type':'global',   'log':0, 'file':'transformation_exp_base',   'min':[0.08], 'max':[0.2], 'fix_value':None,} # Exponential base for temperature function of soil decomposition and denitrification; the higher the more sensitive to temperature changes [-]
     ref['fdepth_decay_Exp'] = {'type':'global',   'log':1, 'file':'fdepth_decay_Exp',   'min':[0.5]*Info.N_soil, 'max':[10]*Info.N_soil, 'fix_value':None,} # Exponential decay function for soil decomposition based on depth [-]
-    ref['decomposition_weight_fast_pool'] = {'type':'global_landuse',   'log':1, 'file':'decomposition_weight_fast_pool',   'min':[1e-1], 'max':[1e1], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.7],} # Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
-    ref['decomposition_weight_humus_pool'] = {'type':'global_landuse',   'log':1, 'file':'decomposition_weight_humus_pool',   'min':[1e-1], 'max':[1e1], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.7],} # Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
+    ref['decomposition_weight_fast_pool'] = {'type':'global_landuse',   'log':1, 'file':'decomposition_weight_fast_pool',   'min':[1], 'max':[1], 'fix_value':None, 'weights':[1,1,1,1,1,1,1],} # Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
+    ref['decomposition_weight_humus_pool'] = {'type':'global_landuse',   'log':1, 'file':'decomposition_weight_humus_pool',   'min':[1e-3], 'max':[1], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.7],} # Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
     ref['humus_C_decomposition_to_DOC_ratio'] = {'type':'global',   'log':0, 'file':'humus_C_decomposition_to_DOC_ratio',   'min':[0], 'max':[0.99], 'fix_value':None,} # The ratio of humus carbon decomposition to DOC pool [-]
-    ref['ref_decomp_rate_doc'] = {'type':'global_landuse',   'log':0, 'file':'ref_decomp_rate_doc',   'min':[1e-3], 'max':[5e-2], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.7],} # Reference decomposition rate of DOC pool [day-1]
-    ref['C_trans_ratio_fast_2_humus'] = {'type':'landuse',   'log':0, 'file':'C_trans_ratio_fast_2_humus',   'min':[0], 'max':[1e-2], 'fix_value':np.array([0.20,0.40,0.40,0.45,0.45,0.45,0.85])*0.01,} # Fraction of decomposed fast pool that goes into humus pool [decimal]
+    ref['ref_decomp_rate_doc'] = {'type':'global_landuse',   'log':0, 'file':'ref_decomp_rate_doc',   'min':[1e-4], 'max':[5e-3], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.7],} # Reference decomposition rate of DOC pool [day-1]
+    ref['C_trans_ratio_fast_2_humus'] = {'type':'landuse',   'log':0, 'file':'C_trans_ratio_fast_2_humus',   'min':[0], 'max':[1e-2], 'fix_value':np.array([0.45,0.45,0.45,0.45,0.45,0.45,0.45])*0.01,} # Fraction of decomposed fast pool that goes into humus pool [decimal]
     ref['respiration_river'] = {'type':'landuse',   'log':1, 'file':'respiration_river',   'min':[1e-3]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None,} # Reference rates of aquatic heterotrophic respiration [gC m-2 day-1]
 
     # === Nitrogen simulation ===

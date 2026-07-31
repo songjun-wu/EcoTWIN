@@ -34,13 +34,14 @@ int Basin::Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         if (_chnlength->val[j] > 0){    // If this is a channel cell
             if (_chanS->val[j] > 0){
-                _doc_chanS->val[j] += _NPP->val[j] * 0.1 / dx / dx * _chnlength->val[j] * _chnwidth->val[j] / _chanS->val[j];
+                _doc_chanS->val[j] += _NPP->val[j] * 0.02 / dx / dx * _chnlength->val[j] * _chnwidth->val[j] / _chanS->val[j];
             }
         }
     }
     */
 
     // Calculate heterotrophic respiration of DOC
+    /*
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
         if (_chnlength->val[j] > 0){    // If this is a channel cell
 
@@ -68,6 +69,7 @@ int Basin::Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param 
             }
         }
     }
+    */
 
     return EXIT_SUCCESS;
 }

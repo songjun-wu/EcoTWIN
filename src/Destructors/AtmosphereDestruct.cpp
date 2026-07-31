@@ -32,19 +32,15 @@ int Atmosphere::dtor(Control &ctrl){
   if(_Ta) delete _Ta;
   if (if__RH.is_open())  if__RH.close();
   if(_RH) delete _RH;
+  if (if__airpressure.is_open())  if__airpressure.close();
+  if(_airpressure) delete _airpressure;
+  if (if__windspeed.is_open())  if__windspeed.close();
+  if(_windspeed) delete _windspeed;
+  if (if__Rnet.is_open())  if__Rnet.close();
+  if(_Rnet) delete _Rnet;
   if (ctrl.opt_evap == 1){
     if (if__PET.is_open())  if__PET.close();
     if(_PET) delete _PET;
-  }
-  if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
-    if (if__airpressure.is_open())  if__airpressure.close();
-    if(_airpressure) delete _airpressure;
-    if (if__Rnet.is_open())  if__Rnet.close();
-    if(_Rnet) delete _Rnet;
-  }
-  if (ctrl.opt_chanE == 1){
-    if (if__windspeed.is_open())  if__windspeed.close();
-    if(_windspeed) delete _windspeed;
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
     if (if__Rswd.is_open())  if__Rswd.close();

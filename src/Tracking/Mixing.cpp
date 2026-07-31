@@ -46,7 +46,7 @@ int Basin::Mixing_baseflow(double storage, double &coutput, double input, double
     k2 = (input_mass - output * y1) / retention_storage;
     y2 = coutput + k2 * 0.5;
     k3 = (input_mass - output * y2) / retention_storage;
-    y3 = coutput + k2;
+    y3 = coutput + k3;
     k4 = (input_mass - output * y3) / retention_storage;
 
     coutput = coutput + (k1 + 2*k2 +2*k3 + k4)/6.0;

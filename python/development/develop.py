@@ -36,9 +36,9 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             ['_RH', [Opt.cond['none']], 'Relative humidity [decimal]', 'grid', 'spatial_TS', 'Relative_humidity', 0],
             ['_PET', [Opt.cond['evap_1']], 'Potential evapotranspiration [m]', 'grid', 'spatial_TS', 'Potential_evapotranspiration', 0],
 
-            ['_airpressure', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Air pressure [Pa]', 'grid', 'spatial_TS', 'Air_pressure', 0],
-            ['_windspeed', [Opt.cond['chanE_1']], 'Wind speed at 2 m [m/s]', 'grid', 'spatial_TS', 'Wind_speed', 0],
-            ['_Rnet', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'Net radiation [W/m2]', 'grid', 'spatial_TS', 'Net_radiation', 0],
+            ['_airpressure', [Opt.cond['none']], 'Air pressure [Pa]', 'grid', 'spatial_TS', 'Air_pressure', 0],
+            ['_windspeed', [Opt.cond['none']], 'Wind speed at 2 m [m/s]', 'grid', 'spatial_TS', 'Wind_speed', 0],
+            ['_Rnet', [Opt.cond['none']], 'Net radiation [W/m2]', 'grid', 'spatial_TS', 'Net_radiation', 0],
             ['_Rswd', [Opt.cond['carbon_sim_1'], Opt.cond['nitrogen_sim_1']], 'Shortwave downward radiation [W/m2]', 'grid', 'spatial_TS', 'Shortwave_downward_radiation', 0],
 
             ['_d18o_P', [Opt.cond['tracking_isotope_1']], 'd18O in precipitation [‰]', 'grid', 'spatial_TS', 'd18O_Precipitation', 0],
@@ -235,7 +235,17 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_flux_ovf_in_acc',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in overland inflow [original unit * m]', 'grid', 'new', None, 0],
             ['_flux_interf_in_acc',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in inter-inflow [original unit * m]', 'grid', 'new', None, 0],
             ['_flux_GWf_in_acc',  [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in GW inflow [original unit * m]', 'grid', 'new', None, 0],
-            ['_flux_Qupstream_acc', [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in upstream inflow to channel storage [original unit * m]', 'grid', 'new', None, 0]
+            ['_flux_Qupstream_acc', [Opt.cond['tracking_isotope_1'], Opt.cond['tracking_age_1'], Opt.cond['nitrogen_sim_1']], 'Total amount of solutes in upstream inflow to channel storage [original unit * m]', 'grid', 'new', None, 0],
+
+            # ======= Testing =======  // todo
+            #['_test0', [Opt.cond['none']], 'Variable for testing', 'grid', 'new', 'test0', 1], 
+            #['_test1', [Opt.cond['none']], 'Variable for testing', 'grid', 'new', 'test1', 1],
+            #['_test2', [Opt.cond['none']], 'Variable for testing', 'grid', 'new', 'test2', 1],
+            #['_test3', [Opt.cond['none']], 'Variable for testing', 'grid', 'new', 'test3', 1],
+            #['_test4', [Opt.cond['none']], 'Variable for testing', 'grid', 'new', 'test4', 1],
+            #['_test5', [Opt.cond['none']], 'Variable for testing', 'grid', 'new', 'test5', 1],
+
+
 
             ]
 
@@ -386,19 +396,19 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           ['_ethanol_CP1_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'ethanol_CP1_wood', 0],
           ['_nonsoluble_CP1_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'nonsoluble_CP1_wood', 0],
           ['_soluble_CP1_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'soluble_CP1_wood', 0],
-          ['_humus_CP1', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood and non-wood) in layer 1', 'grid', 'spatial', 'humus_CP1_nonwood', 0],
+          ['_humus_CP1', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood and non-wood) in layer 1', 'grid', 'spatial', 'humus_CP1', 0],
 
           ['_acid_CP2_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 2', 'grid', 'spatial', 'acid_CP2_wood', 0],
           ['_ethanol_CP2_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'ethanol_CP2_wood', 0],
           ['_nonsoluble_CP2_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'nonsoluble_CP2_wood', 0],
           ['_soluble_CP2_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'soluble_CP2_wood', 0],
-          ['_humus_CP2', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 2', 'grid', 'spatial', 'humus_CP2_nonwood', 0],
+          ['_humus_CP2', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 2', 'grid', 'spatial', 'humus_CP2', 0],
         
           ['_acid_CP3_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 3', 'grid', 'spatial', 'acid_CP3_wood', 0],
           ['_ethanol_CP3_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'ethanol_CP3_wood', 0],
           ['_nonsoluble_CP3_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'nonsoluble_CP3_wood', 0],
           ['_soluble_CP3_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'soluble_CP3_wood', 0],
-          ['_humus_CP3', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 3', 'grid', 'spatial', 'humus_CP3_nonwood', 0],
+          ['_humus_CP3', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 3', 'grid', 'spatial', 'humus_CP3', 0],
 
           #['_fast_C1',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 1 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C1', 0],
           #['_fast_C2',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 2 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C2', 0],

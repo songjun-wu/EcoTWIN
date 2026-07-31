@@ -37,7 +37,7 @@ int Basin::Canopy_evaporation_1(Control &ctrl, Param &par, Atmosphere &atm) {
 
         if (canopy_storage > 0) {
             max_canopy_storage = _LAI->val[j] * par._alpha->val[j];
-            Ei = PET * pow(canopy_storage / max_canopy_storage, 2/3);
+            Ei = PET * pow(canopy_storage / max_canopy_storage, 2.0/3.0);
             Ei = min(Ei, canopy_storage);
             Ei = min(Ei, PET);
             canopy_storage -= Ei;

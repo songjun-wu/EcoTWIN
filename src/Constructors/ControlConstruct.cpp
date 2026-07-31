@@ -45,6 +45,10 @@ Control::Control(){
     opt_carbon_sim = 0;
   }
 
+  if (opt_carbon_sim==0 and opt_evap==2){
+    opt_evap = 1;
+  }
+
   // Summary statistics
   if (opt_summary_statistics==0){
     if (opt_carbon_sim==1){

@@ -39,4 +39,3 @@ int Basin::Carbon_summary(Control &ctrl, Param &par){
 
     return EXIT_SUCCESS;
 }
-

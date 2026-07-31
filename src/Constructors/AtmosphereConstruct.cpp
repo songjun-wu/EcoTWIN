@@ -30,15 +30,11 @@
   _P = new svector(_sortedGrid.size);
   _Ta = new svector(_sortedGrid.size);
   _RH = new svector(_sortedGrid.size);
+  _airpressure = new svector(_sortedGrid.size);
+  _windspeed = new svector(_sortedGrid.size);
+  _Rnet = new svector(_sortedGrid.size);
   if (ctrl.opt_evap == 1){
     _PET = new svector(_sortedGrid.size);
-  }
-  if (ctrl.opt_chanE == 1 or ctrl.opt_chanE == 2){
-    _airpressure = new svector(_sortedGrid.size);
-    _Rnet = new svector(_sortedGrid.size);
-  }
-  if (ctrl.opt_chanE == 1){
-    _windspeed = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_nitrogen_sim == 1){
     _Rswd = new svector(_sortedGrid.size);

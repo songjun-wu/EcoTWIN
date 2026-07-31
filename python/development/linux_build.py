@@ -1,5 +1,4 @@
 import os
-import shutil
 import numpy as np
 
 def linux_make(release_path):
@@ -25,6 +24,7 @@ def release_linux(path, release_path):
             fnames_1 = np.array(os.listdir(path + fname_0))
             cppfiles = fnames_1[[kk.split('.')[-1]=='cpp' for kk in fnames_1]]
             if len(cppfiles) > 0:
+                cppfiles = np.sort(cppfiles)
                 folders.append(fname_0)
                 if not os.path.exists(release_path + fname_0):
                     os.mkdir(release_path + fname_0)

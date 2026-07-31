@@ -498,9 +498,9 @@ class Basin {
   /* ===== Solute mixing and transport module ===== */
   int Solve_canopy_transport(Atmosphere &atm, svector &_sv_conc_I, svector &_sv_conc_P, svector &_sv_conc_pond, bool enrich_flag);
   int Solve_surface_transport(Control &ctrl, Atmosphere &atm, Param &par, svector &sv_conc_I, svector &sv_conc_snow, svector &sv_conc_pond, svector &sv_conc_chanS, svector &sv_conc_GW, bool enrich_flag);                             
-  int Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_conc_layer1, svector &sv_conc_layer2, svector &sv_conc_layer3, svector &sv_conc_vadose, svector &sv_conc_chanS, svector &sv_leaching_mass, svector &sv_drainage_mass, bool enrich_flag, double drainage_flag, bool diffuse_flag);
+  int Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_conc_layer1, svector &sv_conc_layer2, svector &sv_conc_layer3, svector &sv_conc_vadose, svector &sv_conc_chanS, svector &sv_leaching_mass, svector &sv_drainage_mass, bool enrich_flag, double drainage_flag, bool diffuse_flag, bool isotope_flag);
   int Solve_routing_transport(Control &ctrl, Param &par, svector &_sv_conc_pond, svector &_sv_conc_layer1, svector &_sv_conc_layer2, svector &_sv_conc_layer3, svector &_sv_conc_vadose, svector &_sv_conc_GW, svector &_sv_conc_chanS);
-  
+  int Solve_diffusive_flux(Param &par, svector &sv_conc1, svector &sv_conc2, const svector &sv_storage1, const svector &sv_storage2, const svector &sv_length1, const svector &sv_length2, bool theta_flag1, bool theta_flag2, bool isotope_flag);
    
   /* ===== Carbon module ===== */
   int Assimilation(Control &ctrl, Atmosphere &atm, Param &par);  // GPP and NPP calculation
@@ -524,7 +524,7 @@ class Basin {
     double db_fct_Ts, double db_fct_theta, double db_fct_size, double fct_depth);
   int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC
   int Carbon_summary(Control &ctrl, Param &par);  // Summary carbon states and fluxes
-  double Calculate_fraction_soluble_CP_to_DOC(double ref_frac_soluble_to_doc, double soil_storage, double percolation, double groundwater_table, double f_groundwater_depth_decay_exp_base);
+  double Calculate_fraction_soluble_CP_to_DOC(double ref_frac_soluble_to_doc, double soil_storage, double percolation, double groundwater_table, double f_groundwater_depth_decay_exp_base, double fct_Ts);
 
   /* Nitrogen module */
   int Sort_nitrogen_addition(Control &ctrl, Param &par);  // Sort 366 days at first iteration

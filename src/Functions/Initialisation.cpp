@@ -25,9 +25,7 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
     }
 
     // Initilisation of old storages
-    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1 or ctrl.opt_tracking_trans_age or ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){
-      Store_states();  // Store all water storages for mixing
-    }
+    Store_states();  // Store all water storages for mixing
 
     
 

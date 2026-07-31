@@ -167,24 +167,27 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
 
       // Dissolution from dissolved organic carbon pool to soil water (DOC formation)
-      excess_soil_water = (theta1 - _thetaFC1->val[j])*depth1 + (theta2 - _thetaFC2->val[j])*depth2 + (theta3 - _thetaFC3->val[j])*depth3;
-      if (excess_soil_water < roundoffERR) excess_soil_water = 0;
+      excess_soil_water = max(0.0, theta1 - _thetaFC1->val[j]) / (_thetaS1->val[j] - _thetaFC1->val[j]) * depth1 + 
+                          max(0.0, theta2 - _thetaFC2->val[j]) / (_thetaS2->val[j] - _thetaFC2->val[j]) * depth2 + 
+                          max(0.0, theta3 - _thetaFC3->val[j]) / (_thetaS3->val[j] - _thetaFC3->val[j]) * depth3;
       groundwater_table = _initial_groundwater_table->val[j] - excess_soil_water;   // Groundwater table depth [m]
       if (groundwater_table < roundoffERR) groundwater_table = 0;
 
 
-      frac_soluble_CP_to_doc = Calculate_fraction_soluble_CP_to_DOC(par._ref_frac_soluble_to_doc->val[j], theta1*depth1, _Perc1->val[j], groundwater_table, par._f_groundwater_depth_decay_exp_base->val[j]);
+      frac_soluble_CP_to_doc = Calculate_fraction_soluble_CP_to_DOC(par._ref_frac_soluble_to_doc->val[j], theta1*depth1, _Perc1->val[j], groundwater_table, par._f_groundwater_depth_decay_exp_base->val[j], fct_Ts);
       _doc_layer1->val[j] += (_soluble_CP1_nonwood->val[j] + _soluble_CP1_wood->val[j]) * frac_soluble_CP_to_doc / (theta1 * depth1);
       _soluble_CP1_nonwood->val[j] *= (1 - frac_soluble_CP_to_doc);
       _soluble_CP1_wood->val[j] *= (1 - frac_soluble_CP_to_doc);
 
-      frac_soluble_CP_to_doc = Calculate_fraction_soluble_CP_to_DOC(par._ref_frac_soluble_to_doc->val[j], theta2*depth2, _Perc2->val[j], groundwater_table, par._f_groundwater_depth_decay_exp_base->val[j]);
+      frac_soluble_CP_to_doc = Calculate_fraction_soluble_CP_to_DOC(par._ref_frac_soluble_to_doc->val[j], theta2*depth2, _Perc2->val[j], groundwater_table, par._f_groundwater_depth_decay_exp_base->val[j], fct_Ts);
       _doc_layer2->val[j] += _soluble_CP2_wood->val[j] * frac_soluble_CP_to_doc / (theta2 * depth2);
       _soluble_CP2_wood->val[j] *= (1 - frac_soluble_CP_to_doc);
 
-      frac_soluble_CP_to_doc = Calculate_fraction_soluble_CP_to_DOC(par._ref_frac_soluble_to_doc->val[j], theta3*depth3, _Perc3->val[j], groundwater_table, par._f_groundwater_depth_decay_exp_base->val[j]);
+      frac_soluble_CP_to_doc = Calculate_fraction_soluble_CP_to_DOC(par._ref_frac_soluble_to_doc->val[j], theta3*depth3, _Perc3->val[j], groundwater_table, par._f_groundwater_depth_decay_exp_base->val[j], fct_Ts);
       _doc_layer3->val[j] += _soluble_CP3_wood->val[j] * frac_soluble_CP_to_doc / (theta3 * depth3);
       _soluble_CP3_wood->val[j] *= (1 - frac_soluble_CP_to_doc);
+
+
 
       // Decomposition of DOC pool
       ref_decomp_rate_doc = par._ref_decomp_rate_doc->val[j];
@@ -211,11 +214,10 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
         // Update total mineralization amount
         _minerl_soil->val[j] += delta_no3_layer1*theta1*depth1 + delta_no3_layer2*theta2*depth2 + delta_no3_layer3*theta3*depth3; 
       }
-
-
-
-      // DOC composition is also considered as a part of soil respiration
+      
+      // DOC decomposition is also considered as a part of soil respiration
       _soil_respiration_C->val[j] += delta_doc_layer1 * theta1 * depth1 + delta_doc_layer2 * theta2 * depth2 + delta_doc_layer3 * theta3 * depth3;
+
 
 
 
@@ -235,14 +237,13 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
 double Basin::Calculate_fraction_soluble_CP_to_DOC( double ref_frac_soluble_to_doc,
                                                     double soil_storage, double percolation,   // For decay function based on residence time
-                                                    double groundwater_table, double f_groundwater_depth_decay_exp_base   // For decay function based on groundwater table depth
+                                                    double groundwater_table, double f_groundwater_depth_decay_exp_base,   // For decay function based on groundwater table depth
+                                                    double fct_Ts  // Temperature factor
                                                   ){  // return: the fraction of soluble carbon going to DOC pool [-]
 
-  double min_residence_time = 1;
-  double max_residence_time = 3000;
-  double fct_residence_time, residence_time;
   double fct_groundwater_depth;
 
+  /*
   // Factor based on residence time
   if (percolation < roundoffERR) {
     fct_residence_time = 1.0;
@@ -257,11 +258,13 @@ double Basin::Calculate_fraction_soluble_CP_to_DOC( double ref_frac_soluble_to_d
     }
     fct_residence_time = 0.2 + 0.8*fct_residence_time;
   }
+  */
+
 
   // Factor based on groundwater table depth; the concept is adopted from BioRT-HBV 1.0 (Sadayappan et al., 2024; JAMES; doi.org/10.1029/2024MS004217)
   fct_groundwater_depth = exp(-f_groundwater_depth_decay_exp_base * sqrt(groundwater_table));
 
-  return ref_frac_soluble_to_doc * fct_residence_time * fct_groundwater_depth;
+  return ref_frac_soluble_to_doc * fct_Ts * fct_groundwater_depth;
 }
 
 

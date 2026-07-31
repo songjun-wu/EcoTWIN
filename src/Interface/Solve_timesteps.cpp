@@ -39,9 +39,7 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
 
 
 
-    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1 or ctrl.opt_tracking_trans_age or ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){
-        Store_states();  // Store all water storages for mixing
-    }
+    Store_states();  // Store all water storages for mixing
 
     Statistic_summary(ctrl, par);
 

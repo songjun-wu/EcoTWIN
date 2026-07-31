@@ -58,13 +58,18 @@ int Basin::Solve_soil_profile_nutrient(Control &ctrl, Atmosphere &atm, Param &pa
     
     
     // ======= Mixing through layer 1-3 =======
+    // flag1: enrichment due to evaportranspiration
+    // flag2: drainage
+    // flag3: Fickian diffusion
+    // flag4: Whether solute is stable water isotope
     if (ctrl.opt_carbon_sim==1){
-      Solve_soil_transport(par, *_doc_pond, *_doc_layer1, *_doc_layer2, *_doc_layer3, *_doc_vadose, *_doc_chanS, *_leaching_mass_doc, *_drainage_mass_doc, true, ctrl.opt_drainage, true);  // True1: enrichment due to evaportranspiration; True2: Fickian diffusion
+      Solve_soil_transport(par, *_doc_pond, *_doc_layer1, *_doc_layer2, *_doc_layer3, *_doc_vadose, *_doc_chanS, *_leaching_mass_doc, *_drainage_mass_doc, true, ctrl.opt_drainage, true, false);  
     }
     
     if (ctrl.opt_nitrogen_sim==1){
-      Solve_soil_transport(par, *_no3_pond, *_no3_layer1, *_no3_layer2, *_no3_layer3, *_no3_vadose, *_no3_chanS, *_leaching_mass_no3, *_drainage_mass_no3, true, ctrl.opt_drainage, true);  // True1: enrichment due to evaportranspiration; True2: Fickian diffusion
+      Solve_soil_transport(par, *_no3_pond, *_no3_layer1, *_no3_layer2, *_no3_layer3, *_no3_vadose, *_no3_chanS, *_leaching_mass_no3, *_drainage_mass_no3, true, ctrl.opt_drainage, true, false);
     }
+
 
     // ======= Carbon/nitrogen biogeochemical processes =======
     if (ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){

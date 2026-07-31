@@ -68,12 +68,10 @@ int Basin::Solve_soil_profile(Control &ctrl, Param &par, Atmosphere &atm){
 
 
 
-    if (ctrl.opt_tracking_isotope==1 or ctrl.opt_tracking_age==1 or ctrl.opt_tracking_trans_age or ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){
-        // Store all water storages for routing mixing
-        // States update happens after soil mixing
-        // Do not activate when checking the hydrological mass balance
-        Store_states();  
-    }
+    // Store all water storages for routing mixing
+    // States update happens after soil mixing
+    // Do not activate when checking the hydrological mass balance
+    Store_states();  
     
    
     return EXIT_SUCCESS;

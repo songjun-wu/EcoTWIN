@@ -19,7 +19,7 @@
 
 int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_conc_layer1, svector &sv_conc_layer2, svector &sv_conc_layer3, svector &sv_conc_vadose, svector &sv_conc_chanS,
                                 svector &sv_leaching_mass, svector &sv_drainage_mass,
-                                bool enrich_flag, double drainage_flag, bool diffuse_flag){
+                                bool enrich_flag, double drainage_flag, bool diffuse_flag, bool isotope_flag){
 
     /* 
     ### Soil layer 1:
@@ -53,7 +53,18 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
     (_theta3)          
     + repercolation2
     - repercolation3
-    + interflow_in      
+    
+
+    ### Vadose zone
+    (_vadose_old)
+    + percolation3  (need to mix)
+    + preferential_flow  (need to mix)
+    - capillary_flow
+    - percolation_vadose
+    (_vadose)
+    + repercolation3
+    - repercolation_vadose
+    + interflow_in   
     - interflow_out
     - interflow_toChn
 
@@ -73,7 +84,7 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
 
     // Variables for Fickian diffusion
     double diffuse_molecular;
-    double diffusion_flux;
+    double diffusion_flux, equilibrium_mass;
 
     // Variables for drainage
     double mass_drainage;
@@ -122,13 +133,14 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
           ST3 += (_Perc2->val[j] - _Perc3->val[j]);
         }
 
+
         
         // Mixing vadose storage (percolation from layer 3 and preferential flow from ponding)
         input_water = _preferential_flow->val[j] + _Perc3->val[j];
         input_mass = conc_pond * _preferential_flow->val[j] + conc_layer3 * _Perc3->val[j];
         input_conc = input_mass / input_water;
         sv_leaching_mass.val[j] = input_mass;
-        Mixing_full(_vadose_old->val[j], conc_vadose, input_water, input_conc);
+        Mixing_full(_vadose_old->val[j], conc_vadose, input_water, input_conc);  // Update vadose concentration
         
         
 
@@ -167,29 +179,6 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         ST3 -= (_Tr3->val[j]);
 
 
-        // Mixing layers due to potential capillary flow exchange
-        // Fickian diffusion: diffuse_molecular * concentration gradient (Fick's first law)
-        if (diffuse_flag){
-          diffuse_molecular  = par._diffuse_molecular_coefficient->val[j];
-          // Layer 1 and 2        
-          diffusion_flux = diffuse_molecular * (conc_layer1 - conc_layer2)/(min(_depth1->val[j], _depth2->val[j]));
-          if (diffusion_flux > 0) {
-              diffusion_flux = min(diffusion_flux, conc_layer1 * ST1 * 0.5);
-          } else {
-              diffusion_flux = max(diffusion_flux, -conc_layer2 * ST2 * 0.5);
-          }
-          conc_layer1 -= diffusion_flux / ST1;
-          conc_layer2 += diffusion_flux / ST2;
-          // Layer 2 and 3
-          diffusion_flux = diffuse_molecular * (conc_layer2 - conc_layer3)/(min(_depth2->val[j], par._depth3->val[j]));
-          if (diffusion_flux > 0) {
-            diffusion_flux = min(diffusion_flux, conc_layer2 * ST2 * 0.5);
-          } else {
-            diffusion_flux = max(diffusion_flux, -conc_layer3 * ST3 * 0.5);
-          }
-          conc_layer2 -= diffusion_flux /ST2;
-          conc_layer3 += diffusion_flux /ST3;
-        } 
        
         
         // Update global variables
@@ -198,7 +187,22 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         sv_conc_layer2.val[j] = conc_layer2;
         sv_conc_layer3.val[j] = conc_layer3;
         sv_conc_vadose.val[j] = conc_vadose;
+    }  // end of for (unsigned int j = 0; j < _sortedGrid.row.size(); j++)
+
+
+    // Solve diffusive fluxes if activated
+    // Fickian diffusion: diffuse_molecular * concentration gradient (Fick's first law)
+    // Disabled temporarily
+    /*
+    if (diffuse_flag){
+      // The first and second flags are to judge whether the first and second inputs are storage or theta (which needs to muliply by depth)
+      // The third flag is for unit conversion of stable water isotopes
+      Solve_diffusive_flux(par, sv_conc_layer1, sv_conc_layer2, *_theta1, *_theta2, *_depth1, *_depth2, true, true, isotope_flag);
+      Solve_diffusive_flux(par, sv_conc_layer2, sv_conc_layer3, *_theta2, *_theta3, *_depth2, *par._depth3, true, true, isotope_flag);
+      Solve_diffusive_flux(par, sv_conc_layer3, sv_conc_vadose, *_theta3, *_vadose, *par._depth3, *_depth1, true, false, isotope_flag);
     }
+    */
+
 
     return EXIT_SUCCESS;
 }

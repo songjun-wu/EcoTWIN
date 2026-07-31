@@ -24,7 +24,6 @@ def extract_multiple_classes(src, dest, class_list):
         if cls_content:
             # Join lines of a single class into one block of text
             extracted_blocks.append("".join(cls_content))
-    print(extracted_blocks)  # todo
     with open(dest, 'w', encoding='utf-8') as f:
         # Join all extracted classes with PEP 8 standard double blank lines
         f.write("\n\n".join(extracted_blocks) + "\n")

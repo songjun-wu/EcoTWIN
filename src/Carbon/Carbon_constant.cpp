@@ -62,10 +62,10 @@ int Basin::Set_carbon_constant(){
     //C_respiration_ratio_nonsoluble = 1 - C_trans_ratio_nonsoluble_2_acid - C_trans_ratio_nonsoluble_2_soluble - C_trans_ratio_nonsoluble_2_ethanol - C_trans_ratio_all_2_humus;
 
     // ======= Decomposition rates of different carbon pools =======
-    ref_decomp_rate_acid = 0.72 / 365 * 100;  // Reference docomposition rate of acid pool [1/day]
-    ref_decomp_rate_soluble = 0.72 / 365 * 100;  // Reference docomposition rate of soluble pool [1/day]
-    ref_decomp_rate_ethanol = 0.28 / 365 * 100;  // Reference docomposition rate of ethanol pool [1/day]
-    ref_decomp_rate_nonsoluble = 0.031 / 365 * 100;  // Reference docomposition rate of nonsoluble pool [1/day]
+    ref_decomp_rate_acid = 0.72 / 365;  // Reference docomposition rate of acid pool [1/day]
+    ref_decomp_rate_soluble = 5.9 / 365;  // Reference docomposition rate of soluble pool [1/day]
+    ref_decomp_rate_ethanol = 0.28 / 365;  // Reference docomposition rate of ethanol pool [1/day]
+    ref_decomp_rate_nonsoluble = 0.031 / 365;  // Reference docomposition rate of nonsoluble pool [1/day]
     ref_decomp_rate_humus = 0.0016 / 365;  // Reference docomposition rate of humus pool [1/day]
     WoodLitterSize = 4.0; // Litter size of wood pool
 
