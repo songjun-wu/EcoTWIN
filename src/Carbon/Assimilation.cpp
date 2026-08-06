@@ -58,6 +58,7 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
     LAI_total = _LAI->val[j];
     if (LAI_total < roundoffERR){
       _NPP->val[j] = 0;
+      _canopy_conductance->val[j] = 0;
       continue;
     }
 
@@ -101,10 +102,10 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
 
     // water limitation factor weighted by root distribution in three layers
     // For stomatal conductance correction due to water stress
-    water_limitation_factor =\  
-    _froot_layer1->val[j] * (_theta1->val[j] - _thetaWP1->val[j]) / (_thetaFC1->val[j] - _thetaWP1->val[j]) + 
-    _froot_layer2->val[j] * (_theta2->val[j] - _thetaWP2->val[j]) / (_thetaFC2->val[j] - _thetaWP2->val[j]) + 
-    _froot_layer3->val[j] * (_theta3->val[j] - _thetaWP3->val[j]) / (_thetaFC3->val[j] - _thetaWP3->val[j]);
+    water_limitation_factor =   
+      _froot_layer1->val[j] * (_theta1->val[j] - _thetaWP1->val[j]) / (_thetaFC1->val[j] - _thetaWP1->val[j]) + 
+      _froot_layer2->val[j] * (_theta2->val[j] - _thetaWP2->val[j]) / (_thetaFC2->val[j] - _thetaWP2->val[j]) + 
+      _froot_layer3->val[j] * (_theta3->val[j] - _thetaWP3->val[j]) / (_thetaFC3->val[j] - _thetaWP3->val[j]);
     water_limitation_factor = min(max(0.0, water_limitation_factor), 1.0);
     water_limitation_factor /= water_limitation_factor + 0.3;  // Michaelis-Menten function for soil moisture limitation of photosynthesis
 

@@ -192,24 +192,17 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__plant_wood_CP, "plant_wood_CP", lines);
   readInto(fn__plant_reserve_CP, "plant_reserve_CP", lines);
   readInto(fn__plant_wood_CP_forest_max, "plant_wood_CP_forest_max", lines);
-  readInto(fn__acid_CP1_nonwood, "acid_CP1_nonwood", lines);
-  readInto(fn__ethanol_CP1_nonwood, "ethanol_CP1_nonwood", lines);
-  readInto(fn__nonsoluble_CP1_nonwood, "nonsoluble_CP1_nonwood", lines);
-  readInto(fn__soluble_CP1_nonwood, "soluble_CP1_nonwood", lines);
-  readInto(fn__acid_CP1_wood, "acid_CP1_wood", lines);
-  readInto(fn__ethanol_CP1_wood, "ethanol_CP1_wood", lines);
-  readInto(fn__nonsoluble_CP1_wood, "nonsoluble_CP1_wood", lines);
-  readInto(fn__soluble_CP1_wood, "soluble_CP1_wood", lines);
+  readInto(fn__dpm_litter_CP1, "dpm_litter_CP1", lines);
+  readInto(fn__dpm_litter_CP2, "dpm_litter_CP2", lines);
+  readInto(fn__dpm_litter_CP3, "dpm_litter_CP3", lines);
+  readInto(fn__rpm_litter_CP1, "rpm_litter_CP1", lines);
+  readInto(fn__rpm_litter_CP2, "rpm_litter_CP2", lines);
+  readInto(fn__rpm_litter_CP3, "rpm_litter_CP3", lines);
+  readInto(fn__bio_CP1, "bio_CP1", lines);
+  readInto(fn__bio_CP2, "bio_CP2", lines);
+  readInto(fn__bio_CP3, "bio_CP3", lines);
   readInto(fn__humus_CP1, "humus_CP1", lines);
-  readInto(fn__acid_CP2_wood, "acid_CP2_wood", lines);
-  readInto(fn__ethanol_CP2_wood, "ethanol_CP2_wood", lines);
-  readInto(fn__nonsoluble_CP2_wood, "nonsoluble_CP2_wood", lines);
-  readInto(fn__soluble_CP2_wood, "soluble_CP2_wood", lines);
   readInto(fn__humus_CP2, "humus_CP2", lines);
-  readInto(fn__acid_CP3_wood, "acid_CP3_wood", lines);
-  readInto(fn__ethanol_CP3_wood, "ethanol_CP3_wood", lines);
-  readInto(fn__nonsoluble_CP3_wood, "nonsoluble_CP3_wood", lines);
-  readInto(fn__soluble_CP3_wood, "soluble_CP3_wood", lines);
   readInto(fn__humus_CP3, "humus_CP3", lines);
   readInto(fn__doc_I, "doc_canopy_storage", lines);
   readInto(fn__doc_snow, "doc_snow_depth", lines);
@@ -236,7 +229,7 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__no3_vadose, "no3_vadose", lines);
   readInto(fn__no3_GW, "no3_groundwater_storage", lines);
   readInto(fn__no3_chanS, "no3_chanS", lines);
-  readInto(fn__humus_NC_ratio, "humus_NC_ratio", lines);
+  readInto(fn__NC_ratio_soil_pool, "NC_ratio_soil_pool", lines);
   /* end of Nitrogen */
 
   /* Reference states or fluxes parameterisation */
@@ -319,9 +312,21 @@ int Control::ReadConfigFile(string fname){
   readInto(report__trans_age_chanS, "report_trans_age_chanS", lines);
   readInto(report__NPP, "report_net_primary_production", lines);
   readInto(report__plant_C, "report_plant_C", lines);
-  readInto(report__humus_C, "report_humus_C", lines);
-  readInto(report__fast_C, "report_fast_C", lines);
-  readInto(report__soluble_C, "report_soluble_C", lines);
+  readInto(report__dpm_litter_CP1, "report_dpm_litter_CP1", lines);
+  readInto(report__dpm_litter_CP2, "report_dpm_litter_CP2", lines);
+  readInto(report__dpm_litter_CP3, "report_dpm_litter_CP3", lines);
+  readInto(report__rpm_litter_CP1, "report_rpm_litter_CP1", lines);
+  readInto(report__rpm_litter_CP2, "report_rpm_litter_CP2", lines);
+  readInto(report__rpm_litter_CP3, "report_rpm_litter_CP3", lines);
+  readInto(report__bio_CP1, "report_bio_CP1", lines);
+  readInto(report__bio_CP2, "report_bio_CP2", lines);
+  readInto(report__bio_CP3, "report_bio_CP3", lines);
+  readInto(report__humus_CP1, "report_humus_CP1", lines);
+  readInto(report__humus_CP2, "report_humus_CP2", lines);
+  readInto(report__humus_CP3, "report_humus_CP3", lines);
+  readInto(report__soluble_CP1, "report_soluble_CP1", lines);
+  readInto(report__soluble_CP2, "report_soluble_CP2", lines);
+  readInto(report__soluble_CP3, "report_soluble_CP3", lines);
   readInto(report__doc_I, "report_doc_canopy_storage", lines);
   readInto(report__doc_snow, "report_doc_snow_depth", lines);
   readInto(report__doc_pond, "report_doc_pond", lines);
@@ -332,7 +337,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__doc_GW, "report_doc_groundwater_storage", lines);
   readInto(report__doc_chanS, "report_doc_chanS", lines);
   readInto(report__litter_fall_C, "report_litter_fall_C", lines);
-  readInto(report__soil_respiration_C, "report_soil_respiration_C", lines);
+  readInto(report__co2_emission_C, "report_co2_emission_C", lines);
   readInto(report__soil_decomposition_C, "report_soil_decomposition_C", lines);
   readInto(report__respiration_river_C, "report_respiration_river_C", lines);
   readInto(report__leaching_mass_doc, "report_leaching_mass_doc", lines);
@@ -347,13 +352,11 @@ int Control::ReadConfigFile(string fname){
   readInto(report__no3_GW, "report_no3_groundwater_storage", lines);
   readInto(report__no3_chanS, "report_no3_chanS", lines);
   readInto(report__biological_fixiation_N, "report_biological_fixiation_N", lines);
-  readInto(report__nitrogen_add, "report_nitrogen_addition", lines);
-  readInto(report__plant_uptake, "report_plant_uptake", lines);
-  readInto(report__deni_soil, "report_deni_soil", lines);
-  readInto(report__minerl_soil, "report_minerl_soil", lines);
-  readInto(report__deni_river, "report_deni_river", lines);
-  readInto(report__humus_N, "report_humus_N", lines);
-  readInto(report__fast_N, "report_fast_N", lines);
+  readInto(report__nitrogen_addition_N, "report_nitrogen_addition_N", lines);
+  readInto(report__plant_uptake_N, "report_plant_uptake_N", lines);
+  readInto(report__soil_deni_N, "report_soil_deni_N", lines);
+  readInto(report__soil_minerl_N, "report_soil_minerl_N", lines);
+  readInto(report__aquatic_deni_N, "report_aquatic_deni_N", lines);
   readInto(report__leaching_mass_no3, "report_leaching_mass_no3", lines);
   readInto(report__drainage_mass_no3, "report_drainage_mass_no3", lines);
   /* end of Report */

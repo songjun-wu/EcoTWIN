@@ -33,41 +33,14 @@ int Basin::Set_carbon_constant(){
     Epar = 2.2e5;   //Energy content of PAR [J / mol(photons)]
 
 
-    // ======= Tansformation rates between different carbon pools =======
-    C_trans_ratio_acid_2_soluble         = 0.99;
-    C_trans_ratio_acid_2_ethanol         = 0.00;
-    C_trans_ratio_acid_2_nonsoluble      = 0.00;
-    C_trans_ratio_soluble_2_acid         = 0.48;
-    C_trans_ratio_soluble_2_ethanol      = 0.00;
-    C_trans_ratio_soluble_2_nonsoluble   = 0.015;
-    C_trans_ratio_ethanol_2_acid         = 0.01;
-    C_trans_ratio_ethanol_2_soluble      = 0.00;
-    C_trans_ratio_ethanol_2_nonsoluble   = 0.95;
-    C_trans_ratio_nonsoluble_2_acid      = 0.83;
-    C_trans_ratio_nonsoluble_2_soluble   = 0.01;
-    C_trans_ratio_nonsoluble_2_ethanol   = 0.02;
+    // Reference decomposition rates of carbon pools
+    ref_decomp_rate_dpm_litter_CP = 10.0 / 365;  // Reference docomposition rate of decomposable plant material litter pool [1/day]
+    ref_decomp_rate_rpm_litter_CP = 0.8 / 365;  // Reference docomposition rate of resistant plant material litter pool [1/day]; elevated to 0.8 to avoid overestimation of litter pools
+    //ref_decomp_rate_rpm_litter_CP = 0.3 / 365;  // Reference docomposition rate of resistant plant material litter pool [1/day]
+    ref_decomp_rate_bio_CP = 0.66 / 365;  // Reference docomposition rate of microbial biomass pool [1/day]
+    ref_decomp_rate_humus_CP = 0.02 / 365;  // Reference docomposition rate of humus pool [1/day]
 
-    // The remaining litter carbon will go to either humus pool or respired
-    C_to_go_acid = 1 - C_trans_ratio_acid_2_soluble - C_trans_ratio_acid_2_ethanol - C_trans_ratio_acid_2_nonsoluble;
-    C_to_go_soluble = 1 - C_trans_ratio_soluble_2_acid - C_trans_ratio_soluble_2_ethanol - C_trans_ratio_soluble_2_nonsoluble;
-    C_to_go_ethanol = 1 - C_trans_ratio_ethanol_2_acid - C_trans_ratio_ethanol_2_soluble - C_trans_ratio_ethanol_2_nonsoluble;
-    C_to_go_nonsoluble = 1 - C_trans_ratio_nonsoluble_2_acid - C_trans_ratio_nonsoluble_2_soluble - C_trans_ratio_nonsoluble_2_ethanol;
 
-    
-    //C_trans_ratio_all_2_humus            = 0.0045;
-    // The respiration ratios
-    //C_respiration_ratio_acid = 1 - C_trans_ratio_acid_2_soluble - C_trans_ratio_acid_2_ethanol - C_trans_ratio_acid_2_nonsoluble - C_trans_ratio_all_2_humus;
-    //C_respiration_ratio_soluble = 1 - C_trans_ratio_soluble_2_acid - C_trans_ratio_soluble_2_ethanol - C_trans_ratio_soluble_2_nonsoluble - C_trans_ratio_all_2_humus;
-    //C_respiration_ratio_ethanol = 1 - C_trans_ratio_ethanol_2_acid - C_trans_ratio_ethanol_2_soluble - C_trans_ratio_ethanol_2_nonsoluble - C_trans_ratio_all_2_humus;
-    //C_respiration_ratio_nonsoluble = 1 - C_trans_ratio_nonsoluble_2_acid - C_trans_ratio_nonsoluble_2_soluble - C_trans_ratio_nonsoluble_2_ethanol - C_trans_ratio_all_2_humus;
-
-    // ======= Decomposition rates of different carbon pools =======
-    ref_decomp_rate_acid = 0.72 / 365;  // Reference docomposition rate of acid pool [1/day]
-    ref_decomp_rate_soluble = 5.9 / 365;  // Reference docomposition rate of soluble pool [1/day]
-    ref_decomp_rate_ethanol = 0.28 / 365;  // Reference docomposition rate of ethanol pool [1/day]
-    ref_decomp_rate_nonsoluble = 0.031 / 365;  // Reference docomposition rate of nonsoluble pool [1/day]
-    ref_decomp_rate_humus = 0.0016 / 365;  // Reference docomposition rate of humus pool [1/day]
-    WoodLitterSize = 4.0; // Litter size of wood pool
 
     // ======= Assimilation =======
     KC0 = 460e-6;   // Michaelis-menten Constant for CO2 at 25C [mol(CO2) / mol(air)]

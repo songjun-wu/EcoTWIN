@@ -292,8 +292,6 @@ struct Control{
   /* end of Tracking */
 
   /* Phenology */
-  string fn__NPP;  // Net primary production [gC/(m2*Ts)] 
-  string fn__canopy_conductance;  // Stomatal conductance for whole canopy  [m s-1]
   /* end of Phenology */
 
   /* Nitrogen */
@@ -306,7 +304,7 @@ struct Control{
   string fn__no3_vadose;  // no3 in vadose storage [mgN/L]
   string fn__no3_GW;  // no3 in Groundwater storage [mgN/L]
   string fn__no3_chanS;  // no3 in Channel storage [mgN/L]
-  string fn__humus_NC_ratio;  // Initial nitrogen carbon ratio of humus pools []
+  string fn__NC_ratio_soil_pool;  // Initial nitrogen carbon ratio of soil organic pools []
   /* end of Nitrogen */
 
   /* Carbon */
@@ -314,25 +312,18 @@ struct Control{
   string fn__plant_wood_CP;  //   Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]
   string fn__plant_reserve_CP;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
   string fn__plant_wood_CP_forest_max;  // The maximum carbon content in wood pool for forest species [molC/m2] 
-  string fn__acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
-  string fn__ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
-  string fn__nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
-  string fn__soluble_CP1_nonwood;  // Soluble carbon pool (non-wood) in layer 1
-  string fn__acid_CP1_wood;  // Acid hydrolyzable carbon pool (wood) in layer 1
-  string fn__ethanol_CP1_wood;  // Ethanol soluble carbon pool (wood) in layer 1
-  string fn__nonsoluble_CP1_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 1
-  string fn__soluble_CP1_wood;  // Soluble carbon pool (wood) in layer 1
-  string fn__humus_CP1;  // Humus carbon pool (wood and non-wood) in layer 1
-  string fn__acid_CP2_wood;  // Acid hydrolyzable carbon pool (wood) in layer 2
-  string fn__ethanol_CP2_wood;  // Ethanol soluble carbon pool (wood) in layer 2
-  string fn__nonsoluble_CP2_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 2
-  string fn__soluble_CP2_wood;  // Soluble carbon pool (wood) in layer 2
-  string fn__humus_CP2;  // Humus carbon pool (wood) in layer 2
-  string fn__acid_CP3_wood;  // Acid hydrolyzable carbon pool (wood) in layer 3
-  string fn__ethanol_CP3_wood;  // Ethanol soluble carbon pool (wood) in layer 3
-  string fn__nonsoluble_CP3_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 3
-  string fn__soluble_CP3_wood;  // Soluble carbon pool (wood) in layer 3
-  string fn__humus_CP3;  // Humus carbon pool (wood) in layer 3
+  string fn__dpm_litter_CP1;  // Decomposable Plant Material litter carbon pool in layer 1
+  string fn__dpm_litter_CP2;  // Decomposable Plant Material litter carbon pool in layer 2
+  string fn__dpm_litter_CP3;  // Decomposable Plant Material litter carbon pool in layer 3
+  string fn__rpm_litter_CP1;  // Resistant Plant Material litter carbon pool in layer 1
+  string fn__rpm_litter_CP2;  // Resistant Plant Material litter carbon pool in layer 2
+  string fn__rpm_litter_CP3;  // Resistant Plant Material litter carbon pool in layer 3
+  string fn__bio_CP1;  // Microbial biomass carbon pool in layer 1
+  string fn__bio_CP2;  // Microbial biomass carbon pool in layer 2
+  string fn__bio_CP3;  // Microbial biomass carbon pool in layer 3
+  string fn__humus_CP1;  // Humufied carbon pool in layer 1
+  string fn__humus_CP2;  // Humufied carbon pool in layer 2
+  string fn__humus_CP3;  // Humufied carbon pool in layer 3
   string fn__doc_I;  // DOC in Canopy storage [mgN/L]
   string fn__doc_snow;  // DOC in Snow depth in [mgN/L]
   string fn__doc_pond;  // DOC in Ponding water in [mgN/L]
@@ -392,6 +383,7 @@ struct Control{
   string fn__herbivory_uptake_coeff;  // The coefficient for herbivory uptake [-]
   string fn__harvest_coeff;  // The coefficient for crop harvest [-]
   string fn__diffuse_molecular_coefficient;  // The coefficient for Fickian diffusion [m2/s]
+  string fn__nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
@@ -408,28 +400,19 @@ struct Control{
   string fn__ETransport;  // Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)
   string fn__frac_NPP_to_green;  // The fraction of NPP addition to vegetation green pool [-] 
   string fn__frac_NPP_to_wood;  // The fraction of NPP addition to wood green pool [-] 
-  string fn__frac_litter_to_soluble_nonwood;  // The fraction of nonwood litter going to soil soluble pool (DOC pool)  [-] 
-  string fn__frac_litter_to_acid_nonwood;  // The fraction of non-woody litter going to soil acid pool  [-] 
-  string fn__frac_litter_to_ethanol_nonwood;  // The fraction of non-woody litter going to soil ethano pool  [-] 
-  string fn__frac_litter_to_nonsoluble_nonwood;  // The fraction of non-woody litter going to soil nonsoluble pool  [-] 
-  string fn__frac_litter_to_soluble_wood;  // The fraction of wood litter going to soil soluble pool (DOC pool)  [-] 
-  string fn__frac_litter_to_acid_wood;  // The fraction of wood litter going to soil acid pool  [-] 
-  string fn__frac_litter_to_ethanol_wood;  // The fraction of wood litter going to soil ethano pool  [-] 
-  string fn__frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
-  string fn__f_groundwater_depth_decay_exp_base;  // Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
-  string fn__transformation_exp_base;  // Exponential base for temperature function of soil decomposition and denitrification [-]
-  string fn__fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
-  string fn__decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
-  string fn__decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
-  string fn__humus_C_decomposition_to_DOC_ratio;  // The ratio of humus carbon decomposition to DOC pool [-]
-  string fn__ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
-  string fn__C_trans_ratio_fast_2_humus;  // Fraction of decomposed fast pool that goes into humus pool [decimal]
+  string fn__alpha_litter_distribution_nonwood;  // The fraction of non-woody plant materials going to decomposable plant material litter pool [-]
+  string fn__frac_leaf_in_litter;  // The fraction of leaf in non-woody plant materials (compared to fine root) going to decomposable plant material litter pool [-]
+  string fn__frac_DOC_production_from_litter_CP;  // The fraction of DOC production from decomposition of litter carbon pool [-]
+  string fn__frac_DOC_production_from_soil_CP;  // The fraction of DOC production from decomposition of soil carbon pool [-]
   string fn__ref_frac_soluble_to_doc;  // Reference fraction of soluble carbon going to DOC pool [-]
+  string fn__f_groundwater_depth_decay_exp_base;  // Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
+  string fn__fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
+  string fn__ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
   string fn__respiration_river;  // Reference rates of aquatic heterotrophic respiration [day-1]
   string fn__NC_ratio_plant_green;  // Nitrogen carbon ratio in vegetation green pool  [gN/gC] 
   string fn__NC_ratio_plant_wood;  // Nitrogen carbon ratio in vegetation wood pool  [gN/gC] 
-  string fn__NC_ratio_fast_pool_nonwood;  // Nitrogen carbon ratio in non-wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] 
-  string fn__NC_ratio_fast_pool_wood;  // Nitrogen carbon ratio in wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] 
+  string fn__NC_ratio_dpm_litter;  // # Nitrogen carbon ratio in the litter pool of decomposable plant material  [gN/gC]
+  string fn__NC_ratio_rpm_litter;  // # Nitrogen carbon ratio in the litter pool of resistant plant material  [gN/gC]
   /* end of Parameters */
 
   /* Report */
@@ -505,9 +488,21 @@ struct Control{
   int report__trans_age_chanS;  // report Transient age in Channel storage [days]
   int report__NPP;  // report Net primary production [gC/(m2*Ts)] 
   int report__plant_C;  // report  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
-  int report__humus_C;  // report Humus carbon storage in all soil layers [mgN/L*m = gN/m2]
-  int report__fast_C;  // report Fast carbon storage in all soil layers [mgN/L*m = gN/m2]
-  int report__soluble_C;  // report Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]
+  int report__dpm_litter_CP1;  // report Decomposable Plant Material litter carbon pool in layer 1
+  int report__dpm_litter_CP2;  // report Decomposable Plant Material litter carbon pool in layer 2
+  int report__dpm_litter_CP3;  // report Decomposable Plant Material litter carbon pool in layer 3
+  int report__rpm_litter_CP1;  // report Resistant Plant Material litter carbon pool in layer 1
+  int report__rpm_litter_CP2;  // report Resistant Plant Material litter carbon pool in layer 2
+  int report__rpm_litter_CP3;  // report Resistant Plant Material litter carbon pool in layer 3
+  int report__bio_CP1;  // report Microbial biomass carbon pool in layer 1
+  int report__bio_CP2;  // report Microbial biomass carbon pool in layer 2
+  int report__bio_CP3;  // report Microbial biomass carbon pool in layer 3
+  int report__humus_CP1;  // report Humufied carbon pool in layer 1
+  int report__humus_CP2;  // report Humufied carbon pool in layer 2
+  int report__humus_CP3;  // report Humufied carbon pool in layer 3
+  int report__soluble_CP1;  // report Soluble carbon pool (stable DOC) in layer 1
+  int report__soluble_CP2;  // report Soluble carbon pool (stable DOC) in layer 2
+  int report__soluble_CP3;  // report Soluble carbon pool (stable DOC) in layer 3
   int report__doc_I;  // report DOC in Canopy storage [mgN/L]
   int report__doc_snow;  // report DOC in Snow depth in [mgN/L]
   int report__doc_pond;  // report DOC in Ponding water in [mgN/L]
@@ -518,7 +513,7 @@ struct Control{
   int report__doc_GW;  // report DOC in Groundwater storage [mgN/L]
   int report__doc_chanS;  // report DOC in Channel storage [mgN/L]
   int report__litter_fall_C;  // report Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
-  int report__soil_respiration_C;  // report Soil respiration summarised in carbon [gC/m2]
+  int report__co2_emission_C;  // report CO2 fluxes summarised in carbon [gC/m2]
   int report__soil_decomposition_C;  // report Soil decomposition summarised in carbon [gC/m2]
   int report__respiration_river_C;  // report Aquatic heterotrophic respiration summarised in carbon [gC/m2]
   int report__leaching_mass_doc;  // report Leaching of DOC [gC/m2]
@@ -533,13 +528,11 @@ struct Control{
   int report__no3_GW;  // report no3 in Groundwater storage [mgN/L]
   int report__no3_chanS;  // report no3 in Channel storage [mgN/L]
   int report__biological_fixiation_N;  // report Nitrogen biological fixiation [gN/m2]
-  int report__nitrogen_add;  // report Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
-  int report__plant_uptake;  // report Plant uptake [mgN/L*m = gN/m2]
-  int report__deni_soil;  // report Soil denitrification [mgN/L*m = gN/m2]
-  int report__minerl_soil;  // report Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
-  int report__deni_river;  // report Aquatic denitrification [mgN/L*m = gN/m2]
-  int report__humus_N;  // report Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
-  int report__fast_N;  // report Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
+  int report__nitrogen_addition_N;  // report Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
+  int report__plant_uptake_N;  // report Plant uptake [mgN/L*m = gN/m2]
+  int report__soil_deni_N;  // report Soil denitrification [mgN/L*m = gN/m2]
+  int report__soil_minerl_N;  // report Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
+  int report__aquatic_deni_N;  // report Aquatic denitrification [mgN/L*m = gN/m2]
   int report__leaching_mass_no3;  // report Leaching of NO3 [gN/m2]
   int report__drainage_mass_no3;  // report Drainage of NO3 [gN/m2]
   /* end of Report */

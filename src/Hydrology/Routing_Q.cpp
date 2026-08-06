@@ -80,7 +80,7 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
                     count++;
                 }while(fabs(fQj1i1)>0.00001 && count < 50);
                 
-                _chanS->val[j] = std::max(0.0,(Qupstream+Qall*_dx  - Qk1)*dt) / dx_square;  // Channel storage [m]
+                _chanS->val[j] = std::max(0.0,(Qupstream+Qall*dx  - Qk1)*dt) / dx_square;  // Channel storage [m]
                 _Q->val[j] = Qk1; // Discharge [m3/s]
                 
                 if (_sortedGrid.lat_ok[j] == 1){
@@ -90,6 +90,10 @@ int Basin::Routing_Q_1(Control &ctrl, Param &par){
                 
 
                 // cout << _chanS->val[j] * dx_square / (_chnlength->val[j] * _chnwidth->val[j]) << "    "<< _chnlength->val[j] << "     " << _chnwidth->val[j] << "     " << _Q->val[j] << endl;
+            
+            }  else {  // if (Qall + Qupstream == 0)
+                _chanS->val[j] = 0.0;
+                _Q->val[j] = 0.0;
             }
         }    
     }

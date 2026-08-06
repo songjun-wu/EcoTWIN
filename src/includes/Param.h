@@ -90,6 +90,7 @@ class Param {
   vector<double> herbivory_uptake_coeff;
   vector<double> harvest_coeff;
   vector<double> diffuse_molecular_coefficient;
+  vector<double> nearsurface_mixing;
   vector<double> ratio_to_interf;
   vector<double> CG_n_soil;
   vector<double> delta_d18o_init_GW;
@@ -106,28 +107,19 @@ class Param {
   vector<double> ETransport;
   vector<double> frac_NPP_to_green;
   vector<double> frac_NPP_to_wood;
-  vector<double> frac_litter_to_soluble_nonwood;
-  vector<double> frac_litter_to_acid_nonwood;
-  vector<double> frac_litter_to_ethanol_nonwood;
-  vector<double> frac_litter_to_nonsoluble_nonwood;
-  vector<double> frac_litter_to_soluble_wood;
-  vector<double> frac_litter_to_acid_wood;
-  vector<double> frac_litter_to_ethanol_wood;
-  vector<double> frac_litter_to_nonsoluble_wood;
-  vector<double> f_groundwater_depth_decay_exp_base;
-  vector<double> transformation_exp_base;
-  vector<double> fdepth_decay_Exp;
-  vector<double> decomposition_weight_fast_pool;
-  vector<double> decomposition_weight_humus_pool;
-  vector<double> humus_C_decomposition_to_DOC_ratio;
-  vector<double> ref_decomp_rate_doc;
-  vector<double> C_trans_ratio_fast_2_humus;
+  vector<double> alpha_litter_distribution_nonwood;
+  vector<double> frac_leaf_in_litter;
+  vector<double> frac_DOC_production_from_litter_CP;
+  vector<double> frac_DOC_production_from_soil_CP;
   vector<double> ref_frac_soluble_to_doc;
+  vector<double> f_groundwater_depth_decay_exp_base;
+  vector<double> fdepth_decay_Exp;
+  vector<double> ref_decomp_rate_doc;
   vector<double> respiration_river;
   vector<double> NC_ratio_plant_green;
   vector<double> NC_ratio_plant_wood;
-  vector<double> NC_ratio_fast_pool_nonwood;
-  vector<double> NC_ratio_fast_pool_wood;
+  vector<double> NC_ratio_dpm_litter;
+  vector<double> NC_ratio_rpm_litter;
   svector *_depth3;  // Depth of soil layer 3 [m]
   svector *_alpha;  // The weighting parameter that links LAI and maximum canopy storage [-]
   svector *_rE;  // Parameter regulates the surface cover fraction, rExtinct = -0.463 Rutter (1972)
@@ -136,6 +128,7 @@ class Param {
   svector *_perc_vadose_coeff;  // The coefficient parameter for GW recharge [-], only needed when opt_recharge = 1 or 2
   svector *_irrigation_FC_thres;  // The soil moisture threshold for irrigation [-]
   svector *_diffuse_molecular_coefficient;  // The coefficient for Fickian diffusion [m2/s]
+  svector *_nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   svector *_ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   svector *_snow_rain_thre;  // The temperature for snow melt  [degree Celsius]
   svector *_deg_day_min;  // Degree-day factor with no precipitation [m-1 degreeC-1]
@@ -180,23 +173,14 @@ class Param {
   svector *_ETransport;  // Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)
   svector *_frac_NPP_to_green;  // The fraction of NPP addition to vegetation green pool [-] 
   svector *_frac_NPP_to_wood;  // The fraction of NPP addition to wood green pool [-] 
-  svector *_frac_litter_to_soluble_nonwood;  // The fraction of nonwood litter going to soil soluble pool (DOC pool)  [-] 
-  svector *_frac_litter_to_acid_nonwood;  // The fraction of non-woody litter going to soil acid pool  [-] 
-  svector *_frac_litter_to_ethanol_nonwood;  // The fraction of non-woody litter going to soil ethano pool  [-] 
-  svector *_frac_litter_to_nonsoluble_nonwood;  // The fraction of non-woody litter going to soil nonsoluble pool  [-] 
-  svector *_frac_litter_to_soluble_wood;  // The fraction of wood litter going to soil soluble pool (DOC pool)  [-] 
-  svector *_frac_litter_to_acid_wood;  // The fraction of wood litter going to soil acid pool  [-] 
-  svector *_frac_litter_to_ethanol_wood;  // The fraction of wood litter going to soil ethano pool  [-] 
-  svector *_frac_litter_to_nonsoluble_wood;  // The fraction of wood litter going to soil nonsoluble pool  [-] 
-  svector *_f_groundwater_depth_decay_exp_base;  // Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
-  svector *_transformation_exp_base;  // Exponential base for temperature function of soil decomposition and denitrification [-]
-  svector *_fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
-  svector *_decomposition_weight_fast_pool;  // Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]
-  svector *_decomposition_weight_humus_pool;  // Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]
-  svector *_humus_C_decomposition_to_DOC_ratio;  // The ratio of humus carbon decomposition to DOC pool [-]
-  svector *_ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
-  svector *_C_trans_ratio_fast_2_humus;  // Fraction of decomposed fast pool that goes into humus pool [decimal]
+  svector *_alpha_litter_distribution_nonwood;  // The fraction of non-woody plant materials going to decomposable plant material litter pool [-]
+  svector *_frac_leaf_in_litter;  // The fraction of leaf in non-woody plant materials (compared to fine root) going to decomposable plant material litter pool [-]
+  svector *_frac_DOC_production_from_litter_CP;  // The fraction of DOC production from decomposition of litter carbon pool [-]
+  svector *_frac_DOC_production_from_soil_CP;  // The fraction of DOC production from decomposition of soil carbon pool [-]
   svector *_ref_frac_soluble_to_doc;  // Reference fraction of soluble carbon going to DOC pool [-]
+  svector *_f_groundwater_depth_decay_exp_base;  // Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
+  svector *_fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
+  svector *_ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
   svector *_CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
   svector *_delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
   svector *_delta_no3_init_GW;  // Initial no3 of GW storage [‰]
@@ -206,8 +190,8 @@ class Param {
   svector *_respiration_river;  // Reference rates of aquatic heterotrophic respiration [day-1]
   svector *_NC_ratio_plant_green;  // Nitrogen carbon ratio in vegetation green pool  [gN/gC] 
   svector *_NC_ratio_plant_wood;  // Nitrogen carbon ratio in vegetation wood pool  [gN/gC] 
-  svector *_NC_ratio_fast_pool_nonwood;  // Nitrogen carbon ratio in non-wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] 
-  svector *_NC_ratio_fast_pool_wood;  // Nitrogen carbon ratio in wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] 
+  svector *_NC_ratio_dpm_litter;  // # Nitrogen carbon ratio in the litter pool of decomposable plant material  [gN/gC]
+  svector *_NC_ratio_rpm_litter;  // # Nitrogen carbon ratio in the litter pool of resistant plant material  [gN/gC]
   svector *_LAI_shed_coef;  // Leaf shedding coefficient related to LAI [-]
   /* end of Parameters */
 

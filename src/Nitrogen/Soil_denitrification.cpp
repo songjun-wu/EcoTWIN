@@ -54,7 +54,7 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         
 
         // Soil temperature factor [-]
-        fct_Ts = Temp_factor(Ts, par._transformation_exp_base->val[j]);  
+        fct_Ts = Temp_factor(Ts);  
 
         // Factors of soil depth; decay exponentially with depth
         fdepth_decay_Exp = par._fdepth_decay_Exp->val[j];
@@ -111,7 +111,7 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         
 
         // Update global variables
-        _deni_soil->val[j] = deni1 + deni2 + deni3;
+        _soil_deni_N->val[j] = deni1 + deni2 + deni3;
         _no3_layer1->val[j] = no3_layer1;
         _no3_layer2->val[j] = no3_layer2;
         _no3_layer3->val[j] = no3_layer3;

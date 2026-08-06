@@ -53,11 +53,8 @@ Control::Control(){
   if (opt_summary_statistics==0){
     if (opt_carbon_sim==1){
       report__plant_C = 0;
-      report__soluble_C = 0;
     }
     if (opt_nitrogen_sim==1){
-      report__fast_N = 0;
-      report__humus_N = 0;
     }
 
   /* Correction of report flags */
@@ -109,9 +106,21 @@ Control::Control(){
   if (!(opt_carbon_sim == 1)){
     report__NPP = 0;
     report__plant_C = 0;
-    report__humus_C = 0;
-    report__fast_C = 0;
-    report__soluble_C = 0;
+    report__dpm_litter_CP1 = 0;
+    report__dpm_litter_CP2 = 0;
+    report__dpm_litter_CP3 = 0;
+    report__rpm_litter_CP1 = 0;
+    report__rpm_litter_CP2 = 0;
+    report__rpm_litter_CP3 = 0;
+    report__bio_CP1 = 0;
+    report__bio_CP2 = 0;
+    report__bio_CP3 = 0;
+    report__humus_CP1 = 0;
+    report__humus_CP2 = 0;
+    report__humus_CP3 = 0;
+    report__soluble_CP1 = 0;
+    report__soluble_CP2 = 0;
+    report__soluble_CP3 = 0;
     report__doc_I = 0;
     report__doc_snow = 0;
     report__doc_pond = 0;
@@ -122,7 +131,7 @@ Control::Control(){
     report__doc_GW = 0;
     report__doc_chanS = 0;
     report__litter_fall_C = 0;
-    report__soil_respiration_C = 0;
+    report__co2_emission_C = 0;
     report__soil_decomposition_C = 0;
     report__respiration_river_C = 0;
     report__leaching_mass_doc = 0;
@@ -139,13 +148,11 @@ Control::Control(){
     report__no3_GW = 0;
     report__no3_chanS = 0;
     report__biological_fixiation_N = 0;
-    report__nitrogen_add = 0;
-    report__plant_uptake = 0;
-    report__deni_soil = 0;
-    report__minerl_soil = 0;
-    report__deni_river = 0;
-    report__humus_N = 0;
-    report__fast_N = 0;
+    report__nitrogen_addition_N = 0;
+    report__plant_uptake_N = 0;
+    report__soil_deni_N = 0;
+    report__soil_minerl_N = 0;
+    report__aquatic_deni_N = 0;
     report__leaching_mass_no3 = 0;
     report__drainage_mass_no3 = 0;
   }

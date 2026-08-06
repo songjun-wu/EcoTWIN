@@ -105,6 +105,13 @@ int Param::Parameterisation(Control &ctrl){
     _diffuse_molecular_coefficient->val[j] = exp(_diffuse_molecular_coefficient->val[j]);
    }
 
+  _nearsurface_mixing->reset();
+  for (int k=0; k<param_category->n_category; k++){
+    if (nearsurface_mixing[k]!=nodata) {
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _nearsurface_mixing->val[j] += param_category->val[k][j] * nearsurface_mixing[k];
+   }}}
+
   _ratio_to_interf->reset();
   for (int k=0; k<param_category->n_category; k++){
     if (ratio_to_interf[k]!=nodata) {
@@ -527,74 +534,50 @@ int Param::Parameterisation(Control &ctrl){
           _frac_NPP_to_wood->val[j] += param_category->val[k][j] * frac_NPP_to_wood[k];
      }}}
   
-  _frac_litter_to_soluble_nonwood->reset();
+  _alpha_litter_distribution_nonwood->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (frac_litter_to_soluble_nonwood[k]!=nodata) {
+      if (alpha_litter_distribution_nonwood[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_litter_to_soluble_nonwood->val[j] += param_category->val[k][j] * frac_litter_to_soluble_nonwood[k];
+          _alpha_litter_distribution_nonwood->val[j] += param_category->val[k][j] * alpha_litter_distribution_nonwood[k];
      }}}
   
-  _frac_litter_to_acid_nonwood->reset();
+  _frac_leaf_in_litter->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (frac_litter_to_acid_nonwood[k]!=nodata) {
+      if (frac_leaf_in_litter[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_litter_to_acid_nonwood->val[j] += param_category->val[k][j] * frac_litter_to_acid_nonwood[k];
+          _frac_leaf_in_litter->val[j] += param_category->val[k][j] * frac_leaf_in_litter[k];
      }}}
   
-  _frac_litter_to_ethanol_nonwood->reset();
+  _frac_DOC_production_from_litter_CP->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (frac_litter_to_ethanol_nonwood[k]!=nodata) {
+      if (frac_DOC_production_from_litter_CP[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_litter_to_ethanol_nonwood->val[j] += param_category->val[k][j] * frac_litter_to_ethanol_nonwood[k];
+          _frac_DOC_production_from_litter_CP->val[j] += param_category->val[k][j] * frac_DOC_production_from_litter_CP[k];
      }}}
   
-  _frac_litter_to_nonsoluble_nonwood->reset();
+  _frac_DOC_production_from_soil_CP->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (frac_litter_to_nonsoluble_nonwood[k]!=nodata) {
+      if (frac_DOC_production_from_soil_CP[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_litter_to_nonsoluble_nonwood->val[j] += param_category->val[k][j] * frac_litter_to_nonsoluble_nonwood[k];
+          _frac_DOC_production_from_soil_CP->val[j] += param_category->val[k][j] * frac_DOC_production_from_soil_CP[k];
      }}}
   
-  _frac_litter_to_soluble_wood->reset();
+  _ref_frac_soluble_to_doc->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (frac_litter_to_soluble_wood[k]!=nodata) {
+      if (ref_frac_soluble_to_doc[k]!=nodata) {
+        double logp = log(ref_frac_soluble_to_doc[k]);
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_litter_to_soluble_wood->val[j] += param_category->val[k][j] * frac_litter_to_soluble_wood[k];
+          _ref_frac_soluble_to_doc->val[j] += param_category->val[k][j] * logp;
      }}}
-  
-  _frac_litter_to_acid_wood->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (frac_litter_to_acid_wood[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_litter_to_acid_wood->val[j] += param_category->val[k][j] * frac_litter_to_acid_wood[k];
-     }}}
-  
-  _frac_litter_to_ethanol_wood->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (frac_litter_to_ethanol_wood[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_litter_to_ethanol_wood->val[j] += param_category->val[k][j] * frac_litter_to_ethanol_wood[k];
-     }}}
-  
-  _frac_litter_to_nonsoluble_wood->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (frac_litter_to_nonsoluble_wood[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_litter_to_nonsoluble_wood->val[j] += param_category->val[k][j] * frac_litter_to_nonsoluble_wood[k];
-     }}}
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _ref_frac_soluble_to_doc->val[j] = exp(_ref_frac_soluble_to_doc->val[j]);
+     }
   
   _f_groundwater_depth_decay_exp_base->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (f_groundwater_depth_decay_exp_base[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
           _f_groundwater_depth_decay_exp_base->val[j] += param_category->val[k][j] * f_groundwater_depth_decay_exp_base[k];
-     }}}
-  
-  _transformation_exp_base->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (transformation_exp_base[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _transformation_exp_base->val[j] += param_category->val[k][j] * transformation_exp_base[k];
      }}}
   
   _fdepth_decay_Exp->reset();
@@ -608,54 +591,11 @@ int Param::Parameterisation(Control &ctrl){
       _fdepth_decay_Exp->val[j] = exp(_fdepth_decay_Exp->val[j]);
      }
   
-  _decomposition_weight_fast_pool->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (decomposition_weight_fast_pool[k]!=nodata) {
-        double logp = log(decomposition_weight_fast_pool[k]);
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _decomposition_weight_fast_pool->val[j] += param_category->val[k][j] * logp;
-     }}}
-    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-      _decomposition_weight_fast_pool->val[j] = exp(_decomposition_weight_fast_pool->val[j]);
-     }
-  
-  _decomposition_weight_humus_pool->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (decomposition_weight_humus_pool[k]!=nodata) {
-        double logp = log(decomposition_weight_humus_pool[k]);
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _decomposition_weight_humus_pool->val[j] += param_category->val[k][j] * logp;
-     }}}
-    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-      _decomposition_weight_humus_pool->val[j] = exp(_decomposition_weight_humus_pool->val[j]);
-     }
-  
-  _humus_C_decomposition_to_DOC_ratio->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (humus_C_decomposition_to_DOC_ratio[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _humus_C_decomposition_to_DOC_ratio->val[j] += param_category->val[k][j] * humus_C_decomposition_to_DOC_ratio[k];
-     }}}
-  
   _ref_decomp_rate_doc->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (ref_decomp_rate_doc[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
           _ref_decomp_rate_doc->val[j] += param_category->val[k][j] * ref_decomp_rate_doc[k];
-     }}}
-  
-  _C_trans_ratio_fast_2_humus->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (C_trans_ratio_fast_2_humus[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _C_trans_ratio_fast_2_humus->val[j] += param_category->val[k][j] * C_trans_ratio_fast_2_humus[k];
-     }}}
-  
-  _ref_frac_soluble_to_doc->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (ref_frac_soluble_to_doc[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _ref_frac_soluble_to_doc->val[j] += param_category->val[k][j] * ref_frac_soluble_to_doc[k];
      }}}
 
   }
@@ -749,18 +689,18 @@ int Param::Parameterisation(Control &ctrl){
           _NC_ratio_plant_wood->val[j] += param_category->val[k][j] * NC_ratio_plant_wood[k];
      }}}
   
-  _NC_ratio_fast_pool_nonwood->reset();
+  _NC_ratio_dpm_litter->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (NC_ratio_fast_pool_nonwood[k]!=nodata) {
+      if (NC_ratio_dpm_litter[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _NC_ratio_fast_pool_nonwood->val[j] += param_category->val[k][j] * NC_ratio_fast_pool_nonwood[k];
+          _NC_ratio_dpm_litter->val[j] += param_category->val[k][j] * NC_ratio_dpm_litter[k];
      }}}
   
-  _NC_ratio_fast_pool_wood->reset();
+  _NC_ratio_rpm_litter->reset();
     for (int k=0; k<param_category->n_category; k++){
-      if (NC_ratio_fast_pool_wood[k]!=nodata) {
+      if (NC_ratio_rpm_litter[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _NC_ratio_fast_pool_wood->val[j] += param_category->val[k][j] * NC_ratio_fast_pool_wood[k];
+          _NC_ratio_rpm_litter->val[j] += param_category->val[k][j] * NC_ratio_rpm_litter[k];
      }}}
 
   }

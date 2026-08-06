@@ -113,28 +113,21 @@ class Report {
     ofstream of__plant_reserve_CP;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
     ofstream of__plant_C;  //  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
     ofstream of__plant_wood_CP_forest_max;  // The maximum carbon content in wood pool for forest species [molC/m2] 
-    ofstream of__acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
-    ofstream of__ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
-    ofstream of__nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
-    ofstream of__soluble_CP1_nonwood;  // Soluble carbon pool (non-wood) in layer 1
-    ofstream of__acid_CP1_wood;  // Acid hydrolyzable carbon pool (wood) in layer 1
-    ofstream of__ethanol_CP1_wood;  // Ethanol soluble carbon pool (wood) in layer 1
-    ofstream of__nonsoluble_CP1_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 1
-    ofstream of__soluble_CP1_wood;  // Soluble carbon pool (wood) in layer 1
-    ofstream of__humus_CP1;  // Humus carbon pool (wood and non-wood) in layer 1
-    ofstream of__acid_CP2_wood;  // Acid hydrolyzable carbon pool (wood) in layer 2
-    ofstream of__ethanol_CP2_wood;  // Ethanol soluble carbon pool (wood) in layer 2
-    ofstream of__nonsoluble_CP2_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 2
-    ofstream of__soluble_CP2_wood;  // Soluble carbon pool (wood) in layer 2
-    ofstream of__humus_CP2;  // Humus carbon pool (wood) in layer 2
-    ofstream of__acid_CP3_wood;  // Acid hydrolyzable carbon pool (wood) in layer 3
-    ofstream of__ethanol_CP3_wood;  // Ethanol soluble carbon pool (wood) in layer 3
-    ofstream of__nonsoluble_CP3_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 3
-    ofstream of__soluble_CP3_wood;  // Soluble carbon pool (wood) in layer 3
-    ofstream of__humus_CP3;  // Humus carbon pool (wood) in layer 3
-    ofstream of__humus_C;  // Humus carbon storage in all soil layers [mgN/L*m = gN/m2]
-    ofstream of__fast_C;  // Fast carbon storage in all soil layers [mgN/L*m = gN/m2]
-    ofstream of__soluble_C;  // Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]
+    ofstream of__dpm_litter_CP1;  // Decomposable Plant Material litter carbon pool in layer 1
+    ofstream of__dpm_litter_CP2;  // Decomposable Plant Material litter carbon pool in layer 2
+    ofstream of__dpm_litter_CP3;  // Decomposable Plant Material litter carbon pool in layer 3
+    ofstream of__rpm_litter_CP1;  // Resistant Plant Material litter carbon pool in layer 1
+    ofstream of__rpm_litter_CP2;  // Resistant Plant Material litter carbon pool in layer 2
+    ofstream of__rpm_litter_CP3;  // Resistant Plant Material litter carbon pool in layer 3
+    ofstream of__bio_CP1;  // Microbial biomass carbon pool in layer 1
+    ofstream of__bio_CP2;  // Microbial biomass carbon pool in layer 2
+    ofstream of__bio_CP3;  // Microbial biomass carbon pool in layer 3
+    ofstream of__humus_CP1;  // Humufied carbon pool in layer 1
+    ofstream of__humus_CP2;  // Humufied carbon pool in layer 2
+    ofstream of__humus_CP3;  // Humufied carbon pool in layer 3
+    ofstream of__soluble_CP1;  // Soluble carbon pool (stable DOC) in layer 1
+    ofstream of__soluble_CP2;  // Soluble carbon pool (stable DOC) in layer 2
+    ofstream of__soluble_CP3;  // Soluble carbon pool (stable DOC) in layer 3
     ofstream of__doc_I;  // DOC in Canopy storage [mgN/L]
     ofstream of__doc_snow;  // DOC in Snow depth in [mgN/L]
     ofstream of__doc_pond;  // DOC in Ponding water in [mgN/L]
@@ -145,7 +138,7 @@ class Report {
     ofstream of__doc_GW;  // DOC in Groundwater storage [mgN/L]
     ofstream of__doc_chanS;  // DOC in Channel storage [mgN/L]
     ofstream of__litter_fall_C;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
-    ofstream of__soil_respiration_C;  // Soil respiration summarised in carbon [gC/m2]
+    ofstream of__co2_emission_C;  // CO2 fluxes summarised in carbon [gC/m2]
     ofstream of__soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
     ofstream of__respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     ofstream of__humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
@@ -153,7 +146,7 @@ class Report {
     ofstream of__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
     ofstream of__leaching_mass_doc;  // Leaching of DOC [gC/m2]
     ofstream of__drainage_mass_doc;  // Drainage of DOC [gC/m2]
-    ofstream of__plant_mobile_N;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
+    ofstream of__plant_mobile_NP;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
     ofstream of__no3_I;  // no3 in Canopy storage [mgN/L]
     ofstream of__no3_snow;  // no3 in Snow depth in [mgN/L]
     ofstream of__no3_pond;  // no3 in Ponding water in [mgN/L]
@@ -164,16 +157,12 @@ class Report {
     ofstream of__no3_GW;  // no3 in Groundwater storage [mgN/L]
     ofstream of__no3_chanS;  // no3 in Channel storage [mgN/L]
     ofstream of__biological_fixiation_N;  // Nitrogen biological fixiation [gN/m2]
-    ofstream of__nitrogen_add;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
-    ofstream of__plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
-    ofstream of__deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
-    ofstream of__minerl_soil;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
-    ofstream of__deni_river;  // Aquatic denitrification [mgN/L*m = gN/m2]
-    ofstream of__humus_NC_ratio;  // Initial nitrogen carbon ratio of humus pools []
-    ofstream of__fast_NP1_nonwood;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
-    ofstream of__fast_NP1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-    ofstream of__humus_N;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
-    ofstream of__fast_N;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
+    ofstream of__nitrogen_addition_N;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
+    ofstream of__plant_uptake_N;  // Plant uptake [mgN/L*m = gN/m2]
+    ofstream of__soil_deni_N;  // Soil denitrification [mgN/L*m = gN/m2]
+    ofstream of__soil_minerl_N;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
+    ofstream of__aquatic_deni_N;  // Aquatic denitrification [mgN/L*m = gN/m2]
+    ofstream of__NC_ratio_soil_pool;  // Initial nitrogen carbon ratio of soil organic pools []
     ofstream of__leaching_mass_no3;  // Leaching of NO3 [gN/m2]
     ofstream of__drainage_mass_no3;  // Drainage of NO3 [gN/m2]
 
@@ -257,28 +246,21 @@ class Report {
     svector *_plant_reserve_CP_acc;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
     svector *_plant_C_acc;  //  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
     svector *_plant_wood_CP_forest_max_acc;  // The maximum carbon content in wood pool for forest species [molC/m2] 
-    svector *_acid_CP1_nonwood_acc;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
-    svector *_ethanol_CP1_nonwood_acc;  // Ethanol soluble carbon pool (non-wood) in layer 1
-    svector *_nonsoluble_CP1_nonwood_acc;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
-    svector *_soluble_CP1_nonwood_acc;  // Soluble carbon pool (non-wood) in layer 1
-    svector *_acid_CP1_wood_acc;  // Acid hydrolyzable carbon pool (wood) in layer 1
-    svector *_ethanol_CP1_wood_acc;  // Ethanol soluble carbon pool (wood) in layer 1
-    svector *_nonsoluble_CP1_wood_acc;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 1
-    svector *_soluble_CP1_wood_acc;  // Soluble carbon pool (wood) in layer 1
-    svector *_humus_CP1_acc;  // Humus carbon pool (wood and non-wood) in layer 1
-    svector *_acid_CP2_wood_acc;  // Acid hydrolyzable carbon pool (wood) in layer 2
-    svector *_ethanol_CP2_wood_acc;  // Ethanol soluble carbon pool (wood) in layer 2
-    svector *_nonsoluble_CP2_wood_acc;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 2
-    svector *_soluble_CP2_wood_acc;  // Soluble carbon pool (wood) in layer 2
-    svector *_humus_CP2_acc;  // Humus carbon pool (wood) in layer 2
-    svector *_acid_CP3_wood_acc;  // Acid hydrolyzable carbon pool (wood) in layer 3
-    svector *_ethanol_CP3_wood_acc;  // Ethanol soluble carbon pool (wood) in layer 3
-    svector *_nonsoluble_CP3_wood_acc;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 3
-    svector *_soluble_CP3_wood_acc;  // Soluble carbon pool (wood) in layer 3
-    svector *_humus_CP3_acc;  // Humus carbon pool (wood) in layer 3
-    svector *_humus_C_acc;  // Humus carbon storage in all soil layers [mgN/L*m = gN/m2]
-    svector *_fast_C_acc;  // Fast carbon storage in all soil layers [mgN/L*m = gN/m2]
-    svector *_soluble_C_acc;  // Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]
+    svector *_dpm_litter_CP1_acc;  // Decomposable Plant Material litter carbon pool in layer 1
+    svector *_dpm_litter_CP2_acc;  // Decomposable Plant Material litter carbon pool in layer 2
+    svector *_dpm_litter_CP3_acc;  // Decomposable Plant Material litter carbon pool in layer 3
+    svector *_rpm_litter_CP1_acc;  // Resistant Plant Material litter carbon pool in layer 1
+    svector *_rpm_litter_CP2_acc;  // Resistant Plant Material litter carbon pool in layer 2
+    svector *_rpm_litter_CP3_acc;  // Resistant Plant Material litter carbon pool in layer 3
+    svector *_bio_CP1_acc;  // Microbial biomass carbon pool in layer 1
+    svector *_bio_CP2_acc;  // Microbial biomass carbon pool in layer 2
+    svector *_bio_CP3_acc;  // Microbial biomass carbon pool in layer 3
+    svector *_humus_CP1_acc;  // Humufied carbon pool in layer 1
+    svector *_humus_CP2_acc;  // Humufied carbon pool in layer 2
+    svector *_humus_CP3_acc;  // Humufied carbon pool in layer 3
+    svector *_soluble_CP1_acc;  // Soluble carbon pool (stable DOC) in layer 1
+    svector *_soluble_CP2_acc;  // Soluble carbon pool (stable DOC) in layer 2
+    svector *_soluble_CP3_acc;  // Soluble carbon pool (stable DOC) in layer 3
     svector *_doc_I_acc;  // DOC in Canopy storage [mgN/L]
     svector *_doc_snow_acc;  // DOC in Snow depth in [mgN/L]
     svector *_doc_pond_acc;  // DOC in Ponding water in [mgN/L]
@@ -289,7 +271,7 @@ class Report {
     svector *_doc_GW_acc;  // DOC in Groundwater storage [mgN/L]
     svector *_doc_chanS_acc;  // DOC in Channel storage [mgN/L]
     svector *_litter_fall_C_acc;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
-    svector *_soil_respiration_C_acc;  // Soil respiration summarised in carbon [gC/m2]
+    svector *_co2_emission_C_acc;  // CO2 fluxes summarised in carbon [gC/m2]
     svector *_soil_decomposition_C_acc;  // Soil decomposition summarised in carbon [gC/m2]
     svector *_respiration_river_C_acc;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     svector *_humus_decomposition_spatial_weights_acc;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
@@ -297,7 +279,7 @@ class Report {
     svector *_doc_rain_acc;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
     svector *_leaching_mass_doc_acc;  // Leaching of DOC [gC/m2]
     svector *_drainage_mass_doc_acc;  // Drainage of DOC [gC/m2]
-    svector *_plant_mobile_N_acc;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
+    svector *_plant_mobile_NP_acc;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
     svector *_no3_I_acc;  // no3 in Canopy storage [mgN/L]
     svector *_no3_snow_acc;  // no3 in Snow depth in [mgN/L]
     svector *_no3_pond_acc;  // no3 in Ponding water in [mgN/L]
@@ -308,16 +290,12 @@ class Report {
     svector *_no3_GW_acc;  // no3 in Groundwater storage [mgN/L]
     svector *_no3_chanS_acc;  // no3 in Channel storage [mgN/L]
     svector *_biological_fixiation_N_acc;  // Nitrogen biological fixiation [gN/m2]
-    svector *_nitrogen_add_acc;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
-    svector *_plant_uptake_acc;  // Plant uptake [mgN/L*m = gN/m2]
-    svector *_deni_soil_acc;  // Soil denitrification [mgN/L*m = gN/m2]
-    svector *_minerl_soil_acc;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
-    svector *_deni_river_acc;  // Aquatic denitrification [mgN/L*m = gN/m2]
-    svector *_humus_NC_ratio_acc;  // Initial nitrogen carbon ratio of humus pools []
-    svector *_fast_NP1_nonwood_acc;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
-    svector *_fast_NP1_acc;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-    svector *_humus_N_acc;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
-    svector *_fast_N_acc;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
+    svector *_nitrogen_addition_N_acc;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
+    svector *_plant_uptake_N_acc;  // Plant uptake [mgN/L*m = gN/m2]
+    svector *_soil_deni_N_acc;  // Soil denitrification [mgN/L*m = gN/m2]
+    svector *_soil_minerl_N_acc;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
+    svector *_aquatic_deni_N_acc;  // Aquatic denitrification [mgN/L*m = gN/m2]
+    svector *_NC_ratio_soil_pool_acc;  // Initial nitrogen carbon ratio of soil organic pools []
     svector *_leaching_mass_no3_acc;  // Leaching of NO3 [gN/m2]
     svector *_drainage_mass_no3_acc;  // Drainage of NO3 [gN/m2]
     /* end of Report */

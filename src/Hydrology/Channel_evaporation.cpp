@@ -34,7 +34,7 @@ int Basin::Channel_evaporation_1(Control &ctrl, Atmosphere &atm, Param &par) {
         if (_chnwidth->val[j] > 0){
 
             Ta = atm._Ta->val[j];   // Air temperature [degree C]
-            Ta_k = Ta + 273.3;      // Air temperature [K]
+            Ta_k = Ta + 237.3;      // Air temperature [K]
             airpress = atm._airpressure->val[j]; // Air pressure [Pa]
             windspeed = atm._windspeed->val[j]; // Wind speed at 2 m [m s-1]
             Rnet = atm._Rnet->val[j] * ctrl.Simul_tstep; // Net radiation [J m2-1 d-1]
@@ -79,10 +79,10 @@ int Basin::Channel_evaporation_2(Control &ctrl, Atmosphere &atm, Param &par) {
         if (_chnwidth->val[j] > 0){
 
             Ta = atm._Ta->val[j];   // Air temperature [degree C]
-            Ta_k = Ta + 273.3;      // Air temperature [K]
+            Ta_k = Ta + 237.3;      // Air temperature [K]
             airpress = atm._airpressure->val[j]; // Air pressure [Pa]
             windspeed = 3.2; // Wind speed at 2 m [m s-1]
-            Rnet = atm._Rnet->val[j] * ctrl.Simul_tstep; // Net radiation [J m2-1 d-1]
+            Rnet = atm._Rnet->val[j] * ctrl.Simul_tstep; // Net radiation [J m2-1 timestep-1]
 
             // Saturated vapour pressures [Pa]
             ea_s = 611 * exp(17.27 * Ta / (Ta + 237.3));  // Saturated pressure [Pa]

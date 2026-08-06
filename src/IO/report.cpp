@@ -111,9 +111,21 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__trans_age_chanS==2) _trans_age_chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__NPP==2) _NPP_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__plant_C==2) _plant_C_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__humus_C==2) _humus_C_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__fast_C==2) _fast_C_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__soluble_C==2) _soluble_C_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__dpm_litter_CP1==2) _dpm_litter_CP1_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__dpm_litter_CP2==2) _dpm_litter_CP2_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__dpm_litter_CP3==2) _dpm_litter_CP3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__rpm_litter_CP1==2) _rpm_litter_CP1_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__rpm_litter_CP2==2) _rpm_litter_CP2_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__rpm_litter_CP3==2) _rpm_litter_CP3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__bio_CP1==2) _bio_CP1_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__bio_CP2==2) _bio_CP2_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__bio_CP3==2) _bio_CP3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__humus_CP1==2) _humus_CP1_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__humus_CP2==2) _humus_CP2_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__humus_CP3==2) _humus_CP3_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__soluble_CP1==2) _soluble_CP1_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__soluble_CP2==2) _soluble_CP2_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__soluble_CP3==2) _soluble_CP3_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_I==2) _doc_I_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_snow==2) _doc_snow_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_pond==2) _doc_pond_acc = new svector(ctrl._sortedGrid.size);
@@ -124,7 +136,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__doc_GW==2) _doc_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__doc_chanS==2) _doc_chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__litter_fall_C==2) _litter_fall_C_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__soil_respiration_C==2) _soil_respiration_C_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__co2_emission_C==2) _co2_emission_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__soil_decomposition_C==2) _soil_decomposition_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__respiration_river_C==2) _respiration_river_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__leaching_mass_doc==2) _leaching_mass_doc_acc = new svector(ctrl._sortedGrid.size);
@@ -139,13 +151,11 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__no3_GW==2) _no3_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_chanS==2) _no3_chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__biological_fixiation_N==2) _biological_fixiation_N_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__nitrogen_add==2) _nitrogen_add_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__plant_uptake==2) _plant_uptake_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__deni_soil==2) _deni_soil_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__minerl_soil==2) _minerl_soil_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__deni_river==2) _deni_river_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__humus_N==2) _humus_N_acc = new svector(ctrl._sortedGrid.size);
-  if (ctrl.report__fast_N==2) _fast_N_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__nitrogen_addition_N==2) _nitrogen_addition_N_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__plant_uptake_N==2) _plant_uptake_N_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__soil_deni_N==2) _soil_deni_N_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__soil_minerl_N==2) _soil_minerl_N_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__aquatic_deni_N==2) _aquatic_deni_N_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__leaching_mass_no3==2) _leaching_mass_no3_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__drainage_mass_no3==2) _drainage_mass_no3_acc = new svector(ctrl._sortedGrid.size);
   /* end of Create maps */
@@ -226,9 +236,21 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__trans_age_chanS==2) _trans_age_chanS_acc->plus(*Bsn._trans_age_chanS);
   if (ctrl.report__NPP==2) _NPP_acc->plus(*Bsn._NPP);
   if (ctrl.report__plant_C==2) _plant_C_acc->plus(*Bsn._plant_C);
-  if (ctrl.report__humus_C==2) _humus_C_acc->plus(*Bsn._humus_C);
-  if (ctrl.report__fast_C==2) _fast_C_acc->plus(*Bsn._fast_C);
-  if (ctrl.report__soluble_C==2) _soluble_C_acc->plus(*Bsn._soluble_C);
+  if (ctrl.report__dpm_litter_CP1==2) _dpm_litter_CP1_acc->plus(*Bsn._dpm_litter_CP1);
+  if (ctrl.report__dpm_litter_CP2==2) _dpm_litter_CP2_acc->plus(*Bsn._dpm_litter_CP2);
+  if (ctrl.report__dpm_litter_CP3==2) _dpm_litter_CP3_acc->plus(*Bsn._dpm_litter_CP3);
+  if (ctrl.report__rpm_litter_CP1==2) _rpm_litter_CP1_acc->plus(*Bsn._rpm_litter_CP1);
+  if (ctrl.report__rpm_litter_CP2==2) _rpm_litter_CP2_acc->plus(*Bsn._rpm_litter_CP2);
+  if (ctrl.report__rpm_litter_CP3==2) _rpm_litter_CP3_acc->plus(*Bsn._rpm_litter_CP3);
+  if (ctrl.report__bio_CP1==2) _bio_CP1_acc->plus(*Bsn._bio_CP1);
+  if (ctrl.report__bio_CP2==2) _bio_CP2_acc->plus(*Bsn._bio_CP2);
+  if (ctrl.report__bio_CP3==2) _bio_CP3_acc->plus(*Bsn._bio_CP3);
+  if (ctrl.report__humus_CP1==2) _humus_CP1_acc->plus(*Bsn._humus_CP1);
+  if (ctrl.report__humus_CP2==2) _humus_CP2_acc->plus(*Bsn._humus_CP2);
+  if (ctrl.report__humus_CP3==2) _humus_CP3_acc->plus(*Bsn._humus_CP3);
+  if (ctrl.report__soluble_CP1==2) _soluble_CP1_acc->plus(*Bsn._soluble_CP1);
+  if (ctrl.report__soluble_CP2==2) _soluble_CP2_acc->plus(*Bsn._soluble_CP2);
+  if (ctrl.report__soluble_CP3==2) _soluble_CP3_acc->plus(*Bsn._soluble_CP3);
   if (ctrl.report__doc_I==2) _doc_I_acc->plus(*Bsn._doc_I);
   if (ctrl.report__doc_snow==2) _doc_snow_acc->plus(*Bsn._doc_snow);
   if (ctrl.report__doc_pond==2) _doc_pond_acc->plus(*Bsn._doc_pond);
@@ -239,7 +261,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__doc_GW==2) _doc_GW_acc->plus(*Bsn._doc_GW);
   if (ctrl.report__doc_chanS==2) _doc_chanS_acc->plus(*Bsn._doc_chanS);
   if (ctrl.report__litter_fall_C==2) _litter_fall_C_acc->plus(*Bsn._litter_fall_C);
-  if (ctrl.report__soil_respiration_C==2) _soil_respiration_C_acc->plus(*Bsn._soil_respiration_C);
+  if (ctrl.report__co2_emission_C==2) _co2_emission_C_acc->plus(*Bsn._co2_emission_C);
   if (ctrl.report__soil_decomposition_C==2) _soil_decomposition_C_acc->plus(*Bsn._soil_decomposition_C);
   if (ctrl.report__respiration_river_C==2) _respiration_river_C_acc->plus(*Bsn._respiration_river_C);
   if (ctrl.report__leaching_mass_doc==2) _leaching_mass_doc_acc->plus(*Bsn._leaching_mass_doc);
@@ -254,13 +276,11 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__no3_GW==2) _no3_GW_acc->plus(*Bsn._no3_GW);
   if (ctrl.report__no3_chanS==2) _no3_chanS_acc->plus(*Bsn._no3_chanS);
   if (ctrl.report__biological_fixiation_N==2) _biological_fixiation_N_acc->plus(*Bsn._biological_fixiation_N);
-  if (ctrl.report__nitrogen_add==2) _nitrogen_add_acc->plus(*Bsn._nitrogen_add);
-  if (ctrl.report__plant_uptake==2) _plant_uptake_acc->plus(*Bsn._plant_uptake);
-  if (ctrl.report__deni_soil==2) _deni_soil_acc->plus(*Bsn._deni_soil);
-  if (ctrl.report__minerl_soil==2) _minerl_soil_acc->plus(*Bsn._minerl_soil);
-  if (ctrl.report__deni_river==2) _deni_river_acc->plus(*Bsn._deni_river);
-  if (ctrl.report__humus_N==2) _humus_N_acc->plus(*Bsn._humus_N);
-  if (ctrl.report__fast_N==2) _fast_N_acc->plus(*Bsn._fast_N);
+  if (ctrl.report__nitrogen_addition_N==2) _nitrogen_addition_N_acc->plus(*Bsn._nitrogen_addition_N);
+  if (ctrl.report__plant_uptake_N==2) _plant_uptake_N_acc->plus(*Bsn._plant_uptake_N);
+  if (ctrl.report__soil_deni_N==2) _soil_deni_N_acc->plus(*Bsn._soil_deni_N);
+  if (ctrl.report__soil_minerl_N==2) _soil_minerl_N_acc->plus(*Bsn._soil_minerl_N);
+  if (ctrl.report__aquatic_deni_N==2) _aquatic_deni_N_acc->plus(*Bsn._aquatic_deni_N);
   if (ctrl.report__leaching_mass_no3==2) _leaching_mass_no3_acc->plus(*Bsn._leaching_mass_no3);
   if (ctrl.report__drainage_mass_no3==2) _drainage_mass_no3_acc->plus(*Bsn._drainage_mass_no3);
   /* end of Update maps */
@@ -484,14 +504,50 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__plant_C==1)  report_create(ctrl.path_ResultsFolder+"plant_C_TS.bin", of__plant_C);
   else if (ctrl.report__plant_C==2)  report_create(ctrl.path_ResultsFolder+"plant_C_map.bin", of__plant_C);
 
-  if (ctrl.report__humus_C==1)  report_create(ctrl.path_ResultsFolder+"humus_C_TS.bin", of__humus_C);
-  else if (ctrl.report__humus_C==2)  report_create(ctrl.path_ResultsFolder+"humus_C_map.bin", of__humus_C);
+  if (ctrl.report__dpm_litter_CP1==1)  report_create(ctrl.path_ResultsFolder+"dpm_litter_CP1_TS.bin", of__dpm_litter_CP1);
+  else if (ctrl.report__dpm_litter_CP1==2)  report_create(ctrl.path_ResultsFolder+"dpm_litter_CP1_map.bin", of__dpm_litter_CP1);
 
-  if (ctrl.report__fast_C==1)  report_create(ctrl.path_ResultsFolder+"fast_C_TS.bin", of__fast_C);
-  else if (ctrl.report__fast_C==2)  report_create(ctrl.path_ResultsFolder+"fast_C_map.bin", of__fast_C);
+  if (ctrl.report__dpm_litter_CP2==1)  report_create(ctrl.path_ResultsFolder+"dpm_litter_CP2_TS.bin", of__dpm_litter_CP2);
+  else if (ctrl.report__dpm_litter_CP2==2)  report_create(ctrl.path_ResultsFolder+"dpm_litter_CP2_map.bin", of__dpm_litter_CP2);
 
-  if (ctrl.report__soluble_C==1)  report_create(ctrl.path_ResultsFolder+"soluble_C_TS.bin", of__soluble_C);
-  else if (ctrl.report__soluble_C==2)  report_create(ctrl.path_ResultsFolder+"soluble_C_map.bin", of__soluble_C);
+  if (ctrl.report__dpm_litter_CP3==1)  report_create(ctrl.path_ResultsFolder+"dpm_litter_CP3_TS.bin", of__dpm_litter_CP3);
+  else if (ctrl.report__dpm_litter_CP3==2)  report_create(ctrl.path_ResultsFolder+"dpm_litter_CP3_map.bin", of__dpm_litter_CP3);
+
+  if (ctrl.report__rpm_litter_CP1==1)  report_create(ctrl.path_ResultsFolder+"rpm_litter_CP1_TS.bin", of__rpm_litter_CP1);
+  else if (ctrl.report__rpm_litter_CP1==2)  report_create(ctrl.path_ResultsFolder+"rpm_litter_CP1_map.bin", of__rpm_litter_CP1);
+
+  if (ctrl.report__rpm_litter_CP2==1)  report_create(ctrl.path_ResultsFolder+"rpm_litter_CP2_TS.bin", of__rpm_litter_CP2);
+  else if (ctrl.report__rpm_litter_CP2==2)  report_create(ctrl.path_ResultsFolder+"rpm_litter_CP2_map.bin", of__rpm_litter_CP2);
+
+  if (ctrl.report__rpm_litter_CP3==1)  report_create(ctrl.path_ResultsFolder+"rpm_litter_CP3_TS.bin", of__rpm_litter_CP3);
+  else if (ctrl.report__rpm_litter_CP3==2)  report_create(ctrl.path_ResultsFolder+"rpm_litter_CP3_map.bin", of__rpm_litter_CP3);
+
+  if (ctrl.report__bio_CP1==1)  report_create(ctrl.path_ResultsFolder+"bio_CP1_TS.bin", of__bio_CP1);
+  else if (ctrl.report__bio_CP1==2)  report_create(ctrl.path_ResultsFolder+"bio_CP1_map.bin", of__bio_CP1);
+
+  if (ctrl.report__bio_CP2==1)  report_create(ctrl.path_ResultsFolder+"bio_CP2_TS.bin", of__bio_CP2);
+  else if (ctrl.report__bio_CP2==2)  report_create(ctrl.path_ResultsFolder+"bio_CP2_map.bin", of__bio_CP2);
+
+  if (ctrl.report__bio_CP3==1)  report_create(ctrl.path_ResultsFolder+"bio_CP3_TS.bin", of__bio_CP3);
+  else if (ctrl.report__bio_CP3==2)  report_create(ctrl.path_ResultsFolder+"bio_CP3_map.bin", of__bio_CP3);
+
+  if (ctrl.report__humus_CP1==1)  report_create(ctrl.path_ResultsFolder+"humus_CP1_TS.bin", of__humus_CP1);
+  else if (ctrl.report__humus_CP1==2)  report_create(ctrl.path_ResultsFolder+"humus_CP1_map.bin", of__humus_CP1);
+
+  if (ctrl.report__humus_CP2==1)  report_create(ctrl.path_ResultsFolder+"humus_CP2_TS.bin", of__humus_CP2);
+  else if (ctrl.report__humus_CP2==2)  report_create(ctrl.path_ResultsFolder+"humus_CP2_map.bin", of__humus_CP2);
+
+  if (ctrl.report__humus_CP3==1)  report_create(ctrl.path_ResultsFolder+"humus_CP3_TS.bin", of__humus_CP3);
+  else if (ctrl.report__humus_CP3==2)  report_create(ctrl.path_ResultsFolder+"humus_CP3_map.bin", of__humus_CP3);
+
+  if (ctrl.report__soluble_CP1==1)  report_create(ctrl.path_ResultsFolder+"soluble_CP1_TS.bin", of__soluble_CP1);
+  else if (ctrl.report__soluble_CP1==2)  report_create(ctrl.path_ResultsFolder+"soluble_CP1_map.bin", of__soluble_CP1);
+
+  if (ctrl.report__soluble_CP2==1)  report_create(ctrl.path_ResultsFolder+"soluble_CP2_TS.bin", of__soluble_CP2);
+  else if (ctrl.report__soluble_CP2==2)  report_create(ctrl.path_ResultsFolder+"soluble_CP2_map.bin", of__soluble_CP2);
+
+  if (ctrl.report__soluble_CP3==1)  report_create(ctrl.path_ResultsFolder+"soluble_CP3_TS.bin", of__soluble_CP3);
+  else if (ctrl.report__soluble_CP3==2)  report_create(ctrl.path_ResultsFolder+"soluble_CP3_map.bin", of__soluble_CP3);
 
   if (ctrl.report__doc_I==1)  report_create(ctrl.path_ResultsFolder+"doc_canopy_storage_TS.bin", of__doc_I);
   else if (ctrl.report__doc_I==2)  report_create(ctrl.path_ResultsFolder+"doc_canopy_storage_map.bin", of__doc_I);
@@ -523,8 +579,8 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__litter_fall_C==1)  report_create(ctrl.path_ResultsFolder+"litter_fall_C_TS.bin", of__litter_fall_C);
   else if (ctrl.report__litter_fall_C==2)  report_create(ctrl.path_ResultsFolder+"litter_fall_C_map.bin", of__litter_fall_C);
 
-  if (ctrl.report__soil_respiration_C==1)  report_create(ctrl.path_ResultsFolder+"soil_respiration_C_TS.bin", of__soil_respiration_C);
-  else if (ctrl.report__soil_respiration_C==2)  report_create(ctrl.path_ResultsFolder+"soil_respiration_C_map.bin", of__soil_respiration_C);
+  if (ctrl.report__co2_emission_C==1)  report_create(ctrl.path_ResultsFolder+"co2_emission_C_TS.bin", of__co2_emission_C);
+  else if (ctrl.report__co2_emission_C==2)  report_create(ctrl.path_ResultsFolder+"co2_emission_C_map.bin", of__co2_emission_C);
 
   if (ctrl.report__soil_decomposition_C==1)  report_create(ctrl.path_ResultsFolder+"soil_decomposition_C_TS.bin", of__soil_decomposition_C);
   else if (ctrl.report__soil_decomposition_C==2)  report_create(ctrl.path_ResultsFolder+"soil_decomposition_C_map.bin", of__soil_decomposition_C);
@@ -568,26 +624,20 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__biological_fixiation_N==1)  report_create(ctrl.path_ResultsFolder+"biological_fixiation_N_TS.bin", of__biological_fixiation_N);
   else if (ctrl.report__biological_fixiation_N==2)  report_create(ctrl.path_ResultsFolder+"biological_fixiation_N_map.bin", of__biological_fixiation_N);
 
-  if (ctrl.report__nitrogen_add==1)  report_create(ctrl.path_ResultsFolder+"nitrogen_addition_TS.bin", of__nitrogen_add);
-  else if (ctrl.report__nitrogen_add==2)  report_create(ctrl.path_ResultsFolder+"nitrogen_addition_map.bin", of__nitrogen_add);
+  if (ctrl.report__nitrogen_addition_N==1)  report_create(ctrl.path_ResultsFolder+"nitrogen_addition_N_TS.bin", of__nitrogen_addition_N);
+  else if (ctrl.report__nitrogen_addition_N==2)  report_create(ctrl.path_ResultsFolder+"nitrogen_addition_N_map.bin", of__nitrogen_addition_N);
 
-  if (ctrl.report__plant_uptake==1)  report_create(ctrl.path_ResultsFolder+"plant_uptake_TS.bin", of__plant_uptake);
-  else if (ctrl.report__plant_uptake==2)  report_create(ctrl.path_ResultsFolder+"plant_uptake_map.bin", of__plant_uptake);
+  if (ctrl.report__plant_uptake_N==1)  report_create(ctrl.path_ResultsFolder+"plant_uptake_N_TS.bin", of__plant_uptake_N);
+  else if (ctrl.report__plant_uptake_N==2)  report_create(ctrl.path_ResultsFolder+"plant_uptake_N_map.bin", of__plant_uptake_N);
 
-  if (ctrl.report__deni_soil==1)  report_create(ctrl.path_ResultsFolder+"deni_soil_TS.bin", of__deni_soil);
-  else if (ctrl.report__deni_soil==2)  report_create(ctrl.path_ResultsFolder+"deni_soil_map.bin", of__deni_soil);
+  if (ctrl.report__soil_deni_N==1)  report_create(ctrl.path_ResultsFolder+"soil_deni_N_TS.bin", of__soil_deni_N);
+  else if (ctrl.report__soil_deni_N==2)  report_create(ctrl.path_ResultsFolder+"soil_deni_N_map.bin", of__soil_deni_N);
 
-  if (ctrl.report__minerl_soil==1)  report_create(ctrl.path_ResultsFolder+"minerl_soil_TS.bin", of__minerl_soil);
-  else if (ctrl.report__minerl_soil==2)  report_create(ctrl.path_ResultsFolder+"minerl_soil_map.bin", of__minerl_soil);
+  if (ctrl.report__soil_minerl_N==1)  report_create(ctrl.path_ResultsFolder+"soil_minerl_N_TS.bin", of__soil_minerl_N);
+  else if (ctrl.report__soil_minerl_N==2)  report_create(ctrl.path_ResultsFolder+"soil_minerl_N_map.bin", of__soil_minerl_N);
 
-  if (ctrl.report__deni_river==1)  report_create(ctrl.path_ResultsFolder+"deni_river_TS.bin", of__deni_river);
-  else if (ctrl.report__deni_river==2)  report_create(ctrl.path_ResultsFolder+"deni_river_map.bin", of__deni_river);
-
-  if (ctrl.report__humus_N==1)  report_create(ctrl.path_ResultsFolder+"humus_N_TS.bin", of__humus_N);
-  else if (ctrl.report__humus_N==2)  report_create(ctrl.path_ResultsFolder+"humus_N_map.bin", of__humus_N);
-
-  if (ctrl.report__fast_N==1)  report_create(ctrl.path_ResultsFolder+"fast_N_TS.bin", of__fast_N);
-  else if (ctrl.report__fast_N==2)  report_create(ctrl.path_ResultsFolder+"fast_N_map.bin", of__fast_N);
+  if (ctrl.report__aquatic_deni_N==1)  report_create(ctrl.path_ResultsFolder+"aquatic_deni_N_TS.bin", of__aquatic_deni_N);
+  else if (ctrl.report__aquatic_deni_N==2)  report_create(ctrl.path_ResultsFolder+"aquatic_deni_N_map.bin", of__aquatic_deni_N);
 
   if (ctrl.report__leaching_mass_no3==1)  report_create(ctrl.path_ResultsFolder+"leaching_mass_no3_TS.bin", of__leaching_mass_no3);
   else if (ctrl.report__leaching_mass_no3==2)  report_create(ctrl.path_ResultsFolder+"leaching_mass_no3_map.bin", of__leaching_mass_no3);
@@ -680,9 +730,21 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__trans_age_chanS==1) {reportTS(ctrl, Bsn._trans_age_chanS, of__trans_age_chanS);}
   if (ctrl.report__NPP==1) {reportTS(ctrl, Bsn._NPP, of__NPP);}
   if (ctrl.report__plant_C==1) {reportTS(ctrl, Bsn._plant_C, of__plant_C);}
-  if (ctrl.report__humus_C==1) {reportTS(ctrl, Bsn._humus_C, of__humus_C);}
-  if (ctrl.report__fast_C==1) {reportTS(ctrl, Bsn._fast_C, of__fast_C);}
-  if (ctrl.report__soluble_C==1) {reportTS(ctrl, Bsn._soluble_C, of__soluble_C);}
+  if (ctrl.report__dpm_litter_CP1==1) {reportTS(ctrl, Bsn._dpm_litter_CP1, of__dpm_litter_CP1);}
+  if (ctrl.report__dpm_litter_CP2==1) {reportTS(ctrl, Bsn._dpm_litter_CP2, of__dpm_litter_CP2);}
+  if (ctrl.report__dpm_litter_CP3==1) {reportTS(ctrl, Bsn._dpm_litter_CP3, of__dpm_litter_CP3);}
+  if (ctrl.report__rpm_litter_CP1==1) {reportTS(ctrl, Bsn._rpm_litter_CP1, of__rpm_litter_CP1);}
+  if (ctrl.report__rpm_litter_CP2==1) {reportTS(ctrl, Bsn._rpm_litter_CP2, of__rpm_litter_CP2);}
+  if (ctrl.report__rpm_litter_CP3==1) {reportTS(ctrl, Bsn._rpm_litter_CP3, of__rpm_litter_CP3);}
+  if (ctrl.report__bio_CP1==1) {reportTS(ctrl, Bsn._bio_CP1, of__bio_CP1);}
+  if (ctrl.report__bio_CP2==1) {reportTS(ctrl, Bsn._bio_CP2, of__bio_CP2);}
+  if (ctrl.report__bio_CP3==1) {reportTS(ctrl, Bsn._bio_CP3, of__bio_CP3);}
+  if (ctrl.report__humus_CP1==1) {reportTS(ctrl, Bsn._humus_CP1, of__humus_CP1);}
+  if (ctrl.report__humus_CP2==1) {reportTS(ctrl, Bsn._humus_CP2, of__humus_CP2);}
+  if (ctrl.report__humus_CP3==1) {reportTS(ctrl, Bsn._humus_CP3, of__humus_CP3);}
+  if (ctrl.report__soluble_CP1==1) {reportTS(ctrl, Bsn._soluble_CP1, of__soluble_CP1);}
+  if (ctrl.report__soluble_CP2==1) {reportTS(ctrl, Bsn._soluble_CP2, of__soluble_CP2);}
+  if (ctrl.report__soluble_CP3==1) {reportTS(ctrl, Bsn._soluble_CP3, of__soluble_CP3);}
   if (ctrl.report__doc_I==1) {reportTS(ctrl, Bsn._doc_I, of__doc_I);}
   if (ctrl.report__doc_snow==1) {reportTS(ctrl, Bsn._doc_snow, of__doc_snow);}
   if (ctrl.report__doc_pond==1) {reportTS(ctrl, Bsn._doc_pond, of__doc_pond);}
@@ -693,7 +755,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__doc_GW==1) {reportTS(ctrl, Bsn._doc_GW, of__doc_GW);}
   if (ctrl.report__doc_chanS==1) {reportTS(ctrl, Bsn._doc_chanS, of__doc_chanS);}
   if (ctrl.report__litter_fall_C==1) {reportTS(ctrl, Bsn._litter_fall_C, of__litter_fall_C);}
-  if (ctrl.report__soil_respiration_C==1) {reportTS(ctrl, Bsn._soil_respiration_C, of__soil_respiration_C);}
+  if (ctrl.report__co2_emission_C==1) {reportTS(ctrl, Bsn._co2_emission_C, of__co2_emission_C);}
   if (ctrl.report__soil_decomposition_C==1) {reportTS(ctrl, Bsn._soil_decomposition_C, of__soil_decomposition_C);}
   if (ctrl.report__respiration_river_C==1) {reportTS(ctrl, Bsn._respiration_river_C, of__respiration_river_C);}
   if (ctrl.report__leaching_mass_doc==1) {reportTS(ctrl, Bsn._leaching_mass_doc, of__leaching_mass_doc);}
@@ -708,13 +770,11 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__no3_GW==1) {reportTS(ctrl, Bsn._no3_GW, of__no3_GW);}
   if (ctrl.report__no3_chanS==1) {reportTS(ctrl, Bsn._no3_chanS, of__no3_chanS);}
   if (ctrl.report__biological_fixiation_N==1) {reportTS(ctrl, Bsn._biological_fixiation_N, of__biological_fixiation_N);}
-  if (ctrl.report__nitrogen_add==1) {reportTS(ctrl, Bsn._nitrogen_add, of__nitrogen_add);}
-  if (ctrl.report__plant_uptake==1) {reportTS(ctrl, Bsn._plant_uptake, of__plant_uptake);}
-  if (ctrl.report__deni_soil==1) {reportTS(ctrl, Bsn._deni_soil, of__deni_soil);}
-  if (ctrl.report__minerl_soil==1) {reportTS(ctrl, Bsn._minerl_soil, of__minerl_soil);}
-  if (ctrl.report__deni_river==1) {reportTS(ctrl, Bsn._deni_river, of__deni_river);}
-  if (ctrl.report__humus_N==1) {reportTS(ctrl, Bsn._humus_N, of__humus_N);}
-  if (ctrl.report__fast_N==1) {reportTS(ctrl, Bsn._fast_N, of__fast_N);}
+  if (ctrl.report__nitrogen_addition_N==1) {reportTS(ctrl, Bsn._nitrogen_addition_N, of__nitrogen_addition_N);}
+  if (ctrl.report__plant_uptake_N==1) {reportTS(ctrl, Bsn._plant_uptake_N, of__plant_uptake_N);}
+  if (ctrl.report__soil_deni_N==1) {reportTS(ctrl, Bsn._soil_deni_N, of__soil_deni_N);}
+  if (ctrl.report__soil_minerl_N==1) {reportTS(ctrl, Bsn._soil_minerl_N, of__soil_minerl_N);}
+  if (ctrl.report__aquatic_deni_N==1) {reportTS(ctrl, Bsn._aquatic_deni_N, of__aquatic_deni_N);}
   if (ctrl.report__leaching_mass_no3==1) {reportTS(ctrl, Bsn._leaching_mass_no3, of__leaching_mass_no3);}
   if (ctrl.report__drainage_mass_no3==1) {reportTS(ctrl, Bsn._drainage_mass_no3, of__drainage_mass_no3);}
   /* end of Report to time series */
@@ -796,9 +856,21 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__trans_age_chanS==2) {reportMap(ctrl, _trans_age_chanS_acc, ctrl._sortedGrid, of__trans_age_chanS);}
   if (ctrl.report__NPP==2) {reportMap(ctrl, _NPP_acc, ctrl._sortedGrid, of__NPP);}
   if (ctrl.report__plant_C==2) {reportMap(ctrl, _plant_C_acc, ctrl._sortedGrid, of__plant_C);}
-  if (ctrl.report__humus_C==2) {reportMap(ctrl, _humus_C_acc, ctrl._sortedGrid, of__humus_C);}
-  if (ctrl.report__fast_C==2) {reportMap(ctrl, _fast_C_acc, ctrl._sortedGrid, of__fast_C);}
-  if (ctrl.report__soluble_C==2) {reportMap(ctrl, _soluble_C_acc, ctrl._sortedGrid, of__soluble_C);}
+  if (ctrl.report__dpm_litter_CP1==2) {reportMap(ctrl, _dpm_litter_CP1_acc, ctrl._sortedGrid, of__dpm_litter_CP1);}
+  if (ctrl.report__dpm_litter_CP2==2) {reportMap(ctrl, _dpm_litter_CP2_acc, ctrl._sortedGrid, of__dpm_litter_CP2);}
+  if (ctrl.report__dpm_litter_CP3==2) {reportMap(ctrl, _dpm_litter_CP3_acc, ctrl._sortedGrid, of__dpm_litter_CP3);}
+  if (ctrl.report__rpm_litter_CP1==2) {reportMap(ctrl, _rpm_litter_CP1_acc, ctrl._sortedGrid, of__rpm_litter_CP1);}
+  if (ctrl.report__rpm_litter_CP2==2) {reportMap(ctrl, _rpm_litter_CP2_acc, ctrl._sortedGrid, of__rpm_litter_CP2);}
+  if (ctrl.report__rpm_litter_CP3==2) {reportMap(ctrl, _rpm_litter_CP3_acc, ctrl._sortedGrid, of__rpm_litter_CP3);}
+  if (ctrl.report__bio_CP1==2) {reportMap(ctrl, _bio_CP1_acc, ctrl._sortedGrid, of__bio_CP1);}
+  if (ctrl.report__bio_CP2==2) {reportMap(ctrl, _bio_CP2_acc, ctrl._sortedGrid, of__bio_CP2);}
+  if (ctrl.report__bio_CP3==2) {reportMap(ctrl, _bio_CP3_acc, ctrl._sortedGrid, of__bio_CP3);}
+  if (ctrl.report__humus_CP1==2) {reportMap(ctrl, _humus_CP1_acc, ctrl._sortedGrid, of__humus_CP1);}
+  if (ctrl.report__humus_CP2==2) {reportMap(ctrl, _humus_CP2_acc, ctrl._sortedGrid, of__humus_CP2);}
+  if (ctrl.report__humus_CP3==2) {reportMap(ctrl, _humus_CP3_acc, ctrl._sortedGrid, of__humus_CP3);}
+  if (ctrl.report__soluble_CP1==2) {reportMap(ctrl, _soluble_CP1_acc, ctrl._sortedGrid, of__soluble_CP1);}
+  if (ctrl.report__soluble_CP2==2) {reportMap(ctrl, _soluble_CP2_acc, ctrl._sortedGrid, of__soluble_CP2);}
+  if (ctrl.report__soluble_CP3==2) {reportMap(ctrl, _soluble_CP3_acc, ctrl._sortedGrid, of__soluble_CP3);}
   if (ctrl.report__doc_I==2) {reportMap(ctrl, _doc_I_acc, ctrl._sortedGrid, of__doc_I);}
   if (ctrl.report__doc_snow==2) {reportMap(ctrl, _doc_snow_acc, ctrl._sortedGrid, of__doc_snow);}
   if (ctrl.report__doc_pond==2) {reportMap(ctrl, _doc_pond_acc, ctrl._sortedGrid, of__doc_pond);}
@@ -809,7 +881,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__doc_GW==2) {reportMap(ctrl, _doc_GW_acc, ctrl._sortedGrid, of__doc_GW);}
   if (ctrl.report__doc_chanS==2) {reportMap(ctrl, _doc_chanS_acc, ctrl._sortedGrid, of__doc_chanS);}
   if (ctrl.report__litter_fall_C==2) {reportMap(ctrl, _litter_fall_C_acc, ctrl._sortedGrid, of__litter_fall_C);}
-  if (ctrl.report__soil_respiration_C==2) {reportMap(ctrl, _soil_respiration_C_acc, ctrl._sortedGrid, of__soil_respiration_C);}
+  if (ctrl.report__co2_emission_C==2) {reportMap(ctrl, _co2_emission_C_acc, ctrl._sortedGrid, of__co2_emission_C);}
   if (ctrl.report__soil_decomposition_C==2) {reportMap(ctrl, _soil_decomposition_C_acc, ctrl._sortedGrid, of__soil_decomposition_C);}
   if (ctrl.report__respiration_river_C==2) {reportMap(ctrl, _respiration_river_C_acc, ctrl._sortedGrid, of__respiration_river_C);}
   if (ctrl.report__leaching_mass_doc==2) {reportMap(ctrl, _leaching_mass_doc_acc, ctrl._sortedGrid, of__leaching_mass_doc);}
@@ -824,13 +896,11 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__no3_GW==2) {reportMap(ctrl, _no3_GW_acc, ctrl._sortedGrid, of__no3_GW);}
   if (ctrl.report__no3_chanS==2) {reportMap(ctrl, _no3_chanS_acc, ctrl._sortedGrid, of__no3_chanS);}
   if (ctrl.report__biological_fixiation_N==2) {reportMap(ctrl, _biological_fixiation_N_acc, ctrl._sortedGrid, of__biological_fixiation_N);}
-  if (ctrl.report__nitrogen_add==2) {reportMap(ctrl, _nitrogen_add_acc, ctrl._sortedGrid, of__nitrogen_add);}
-  if (ctrl.report__plant_uptake==2) {reportMap(ctrl, _plant_uptake_acc, ctrl._sortedGrid, of__plant_uptake);}
-  if (ctrl.report__deni_soil==2) {reportMap(ctrl, _deni_soil_acc, ctrl._sortedGrid, of__deni_soil);}
-  if (ctrl.report__minerl_soil==2) {reportMap(ctrl, _minerl_soil_acc, ctrl._sortedGrid, of__minerl_soil);}
-  if (ctrl.report__deni_river==2) {reportMap(ctrl, _deni_river_acc, ctrl._sortedGrid, of__deni_river);}
-  if (ctrl.report__humus_N==2) {reportMap(ctrl, _humus_N_acc, ctrl._sortedGrid, of__humus_N);}
-  if (ctrl.report__fast_N==2) {reportMap(ctrl, _fast_N_acc, ctrl._sortedGrid, of__fast_N);}
+  if (ctrl.report__nitrogen_addition_N==2) {reportMap(ctrl, _nitrogen_addition_N_acc, ctrl._sortedGrid, of__nitrogen_addition_N);}
+  if (ctrl.report__plant_uptake_N==2) {reportMap(ctrl, _plant_uptake_N_acc, ctrl._sortedGrid, of__plant_uptake_N);}
+  if (ctrl.report__soil_deni_N==2) {reportMap(ctrl, _soil_deni_N_acc, ctrl._sortedGrid, of__soil_deni_N);}
+  if (ctrl.report__soil_minerl_N==2) {reportMap(ctrl, _soil_minerl_N_acc, ctrl._sortedGrid, of__soil_minerl_N);}
+  if (ctrl.report__aquatic_deni_N==2) {reportMap(ctrl, _aquatic_deni_N_acc, ctrl._sortedGrid, of__aquatic_deni_N);}
   if (ctrl.report__leaching_mass_no3==2) {reportMap(ctrl, _leaching_mass_no3_acc, ctrl._sortedGrid, of__leaching_mass_no3);}
   if (ctrl.report__drainage_mass_no3==2) {reportMap(ctrl, _drainage_mass_no3_acc, ctrl._sortedGrid, of__drainage_mass_no3);}
   /* end of Report to maps */

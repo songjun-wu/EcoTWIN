@@ -309,7 +309,7 @@ Parameters = [# ======= Hydrology =======
 
               # # ======= Mixing =======
               ['_diffuse_molecular_coefficient', [Opt.cond['none']], 'The coefficient for Fickian diffusion [m2/s]', 'grid', 'spatial_param', 'diffuse_molecular_coefficient', 0],
-              #['_nearsurface_mixing', [Opt.cond['none']], 'The proportion of pond to mix with layer1  [decimal]', 'grid', 'spatial_param', 'nearsurface_mixing', 0],  # Disabled due to potential overfitting
+              ['_nearsurface_mixing', [Opt.cond['none']], 'The proportion of pond to mix with layer1  [decimal]', 'grid', 'spatial_param', 'nearsurface_mixing', 0],
               ['_ratio_to_interf', [Opt.cond['none']], 'The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]', 'grid', 'spatial_param', 'ratio_to_interf', 0],
 
 
@@ -341,42 +341,40 @@ Parameters = [# ======= Hydrology =======
               # Assimilation
               ['_carboxylation_rate', [Opt.cond['carbon_sim_1']], 'Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)] (*1e-6?)', 'grid', 'spatial_param', 'carboxylation_rate', 0],
               ['_ETransport', [Opt.cond['carbon_sim_1']], 'Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)', 'grid', 'spatial_param', 'ETransport', 0],
+              # Distribute NPP to vegetation pools
               ['_frac_NPP_to_green', [Opt.cond['carbon_sim_1']], 'The fraction of NPP addition to vegetation green pool [-] ', 'grid', 'spatial_param', 'frac_NPP_to_green', 0],
               ['_frac_NPP_to_wood', [Opt.cond['carbon_sim_1']], 'The fraction of NPP addition to wood green pool [-] ', 'grid', 'spatial_param', 'frac_NPP_to_wood', 0],             
-              # Distribute wood/nonwood litter to soil carbon pools
-              ['_frac_litter_to_soluble_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of nonwood litter going to soil soluble pool (DOC pool)  [-] ', 'grid', 'spatial_param', 'frac_litter_to_soluble_nonwood', 0],
-              ['_frac_litter_to_acid_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of non-woody litter going to soil acid pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_acid_nonwood', 0],
-              ['_frac_litter_to_ethanol_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of non-woody litter going to soil ethano pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_ethanol_nonwood', 0],
-              ['_frac_litter_to_nonsoluble_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of non-woody litter going to soil nonsoluble pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_nonsoluble_nonwood', 0],
-              ['_frac_litter_to_soluble_wood', [Opt.cond['carbon_sim_1']], 'The fraction of wood litter going to soil soluble pool (DOC pool)  [-] ', 'grid', 'spatial_param', 'frac_litter_to_soluble_wood', 0],
-              ['_frac_litter_to_acid_wood', [Opt.cond['carbon_sim_1']], 'The fraction of wood litter going to soil acid pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_acid_wood', 0],
-              ['_frac_litter_to_ethanol_wood', [Opt.cond['carbon_sim_1']], 'The fraction of wood litter going to soil ethano pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_ethanol_wood', 0],
-              ['_frac_litter_to_nonsoluble_wood', [Opt.cond['carbon_sim_1']], 'The fraction of wood litter going to soil nonsoluble pool  [-] ', 'grid', 'spatial_param', 'frac_litter_to_nonsoluble_wood', 0],
+               
+             
+              # Distribute litter to soil carbon pools
+              ['_alpha_litter_distribution_nonwood', [Opt.cond['carbon_sim_1']], 'The fraction of non-woody plant materials going to decomposable plant material litter pool [-]', 'grid', 'spatial_param', 'alpha_litter_distribution_nonwood', 0],
+              #['_alpha_litter_distribution_wood', [Opt.cond['carbon_sim_1']], 'The fraction of woody plant materials going to decomposable plant material litter pool [-]', 'grid', 'spatial_param', 'alpha_litter_distribution_wood', 0],
+              ['_frac_leaf_in_litter', [Opt.cond['carbon_sim_1']], 'The fraction of leaf in non-woody plant materials (compared to fine root) going to decomposable plant material litter pool [-]', 'grid', 'spatial_param', 'frac_litter_to_nonsoluble_wood', 0],
+              # Carbon decomposition
+              ['_frac_DOC_production_from_litter_CP', [Opt.cond['carbon_sim_1']], 'The fraction of DOC production from decomposition of litter carbon pool [-]', 'grid', 'spatial_param', 'frac_DOC_production_from_litter_CP', 0],
+              ['_frac_DOC_production_from_soil_CP', [Opt.cond['carbon_sim_1']], 'The fraction of DOC production from decomposition of soil carbon pool [-]', 'grid', 'spatial_param', 'frac_DOC_production_from_soil_CP', 0],
+              ['_ref_frac_soluble_to_doc', [Opt.cond['carbon_sim_1']], 'Reference fraction of soluble carbon going to DOC pool [-]', 'grid', 'spatial_param', 'ref_frac_soluble_to_doc', 0],
+              
+
               # Correction of decomposition rates based on the magnitudes of carbon storages
               ['_f_groundwater_depth_decay_exp_base', [Opt.cond['carbon_sim_1']], 'Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table', 'grid', 'spatial_param', 'f_groundwater_depth_decay_exp_base', 0],
-              ['_transformation_exp_base', [Opt.cond['carbon_sim_1']], 'Exponential base for temperature function of soil decomposition and denitrification [-]', 'grid', 'spatial_param', 'transformation_exp_base', 0],
+              #['_transformation_exp_base', [Opt.cond['carbon_sim_1']], 'Exponential base for temperature function of soil decomposition and denitrification [-]', 'grid', 'spatial_param', 'transformation_exp_base', 0],
               ['_fdepth_decay_Exp', [Opt.cond['carbon_sim_1']], 'Exponential decay function for soil decomposition based on depth [-]', 'grid', 'spatial_param', 'fdepth_decay_Exp', 0],
-              ['_decomposition_weight_fast_pool', [Opt.cond['carbon_sim_1']], 'Correction of decomposition rates of past pool based on the magnitudes of carbon storages [-]', 'grid', 'spatial_param', 'decomposition_weight_fast_pool', 0],
-              ['_decomposition_weight_humus_pool', [Opt.cond['carbon_sim_1']], 'Correction of decomposition rates of humus pool based on the magnitudes of carbon storages [-]', 'grid', 'spatial_param', 'decomposition_weight_humus_pool', 0],
-              ['_humus_C_decomposition_to_DOC_ratio', [Opt.cond['carbon_sim_1']], 'The ratio of humus carbon decomposition to DOC pool [-]', 'grid', 'spatial_param', 'humus_C_decomposition_to_DOC_ratio', 0],
               ['_ref_decomp_rate_doc', [Opt.cond['carbon_sim_1']], 'Reference decomposition rate of DOC pool [day-1]', 'grid', 'spatial_param', 'ref_decomp_rate_doc', 0],
-              ['_C_trans_ratio_fast_2_humus', [Opt.cond['carbon_sim_1']], 'Fraction of decomposed fast pool that goes into humus pool [decimal]', 'grid', 'spatial_param', 'C_trans_ratio_fast_2_humus', 0],
-              ['_ref_frac_soluble_to_doc', [Opt.cond['carbon_sim_1']], 'Reference fraction of soluble carbon going to DOC pool [-]', 'grid', 'spatial_param', 'ref_frac_soluble_to_doc', 0],
               ['_respiration_river', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic heterotrophic respiration [day-1]', 'grid', 'spatial_param', 'respiration_river', 0],
               # ======= Nitrogen =======
               ['_NC_ratio_plant_green', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in vegetation green pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_plant_green', 0],
               ['_NC_ratio_plant_wood', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in vegetation wood pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_plant_wood', 0],
-              ['_NC_ratio_fast_pool_nonwood', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in non-wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_fast_pool', 0],
-              ['_NC_ratio_fast_pool_wood', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in wood litter (fast) pool (acid, ethanol, and nonsoluble)  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_fast_pool', 0],
+              ['_NC_ratio_dpm_litter', [Opt.cond['nitrogen_sim_1']], '# Nitrogen carbon ratio in the litter pool of decomposable plant material  [gN/gC]', 'grid', 'spatial_param', 'NC_ratio_dpm_litter', 0],
+              ['_NC_ratio_rpm_litter', [Opt.cond['nitrogen_sim_1']], '# Nitrogen carbon ratio in the litter pool of resistant plant material  [gN/gC]', 'grid', 'spatial_param', 'NC_ratio_rpm_litter', 0],
               #['_NC_ratio_humus_pool', [Opt.cond['nitrogen_sim_1']], 'Nitrogen carbon ratio in humus pool  [gN/gC] ', 'grid', 'spatial_param', 'NC_ratio_humus_pool', 0],
             ]
+  
 
-
-
-Phenology = [['_NPP', [Opt.cond['carbon_sim_1']], 'Net primary production [gC/(m2*Ts)] ', 'grid', 'spatial_param', 'net_primary_production', 1],
-             #['_GPP', [Opt.cond['carbon_sim_1']], 'Gross primary production [gC/(m2*Ts)] ', 'grid', 'spatial_param', 'gross_primary_production', 1],
-             #['_WoodLitterSize', [Opt.cond['carbon_sim_1']], 'Size of wood litter [-] ', 'grid', 'spatial_param', 'WoodLitterSize', 0],
-             ['_canopy_conductance', [Opt.cond['carbon_sim_1']], 'Stomatal conductance for whole canopy  [m s-1]', 'grid', 'spatial_param', 'canopy_conductance', 0],
+Phenology = [['_NPP', [Opt.cond['carbon_sim_1']], 'Net primary production [gC/(m2*Ts)] ', 'grid', 'new', 'net_primary_production', 1],
+             #['_GPP', [Opt.cond['carbon_sim_1']], 'Gross primary production [gC/(m2*Ts)] ', 'grid', 'new', 'gross_primary_production', 1],
+             #['_WoodLitterSize', [Opt.cond['carbon_sim_1']], 'Size of wood litter [-] ', 'grid', 'new', 'WoodLitterSize', 0],
+             ['_canopy_conductance', [Opt.cond['carbon_sim_1']], 'Stomatal conductance for whole canopy  [m s-1]', 'grid', 'new', 'canopy_conductance', 0],
              ]
 
 Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]', 'grid', 'spatial', 'plant_green_CP', 0],
@@ -386,37 +384,28 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           ['_plant_C', [Opt.cond['carbon_sim_1']], ' The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]', 'grid', 'new', 'plant_C', 1],
           ['_plant_wood_CP_forest_max', [Opt.cond['carbon_sim_1']], 'The maximum carbon content in wood pool for forest species [molC/m2] ', 'grid', 'spatial', 'plant_wood_CP_forest_max', 0],
           
+
+          ['_dpm_litter_CP1', [Opt.cond['carbon_sim_1']], 'Decomposable Plant Material litter carbon pool in layer 1', 'grid', 'spatial', 'dpm_litter_CP1', 1],
+          ['_dpm_litter_CP2', [Opt.cond['carbon_sim_1']], 'Decomposable Plant Material litter carbon pool in layer 2', 'grid', 'spatial', 'dpm_litter_CP2', 1],
+          ['_dpm_litter_CP3', [Opt.cond['carbon_sim_1']], 'Decomposable Plant Material litter carbon pool in layer 3', 'grid', 'spatial', 'dpm_litter_CP3', 1],
+          ['_rpm_litter_CP1', [Opt.cond['carbon_sim_1']], 'Resistant Plant Material litter carbon pool in layer 1', 'grid', 'spatial', 'rpm_litter_CP1', 1],
+          ['_rpm_litter_CP2', [Opt.cond['carbon_sim_1']], 'Resistant Plant Material litter carbon pool in layer 2', 'grid', 'spatial', 'rpm_litter_CP2', 1],
+          ['_rpm_litter_CP3', [Opt.cond['carbon_sim_1']], 'Resistant Plant Material litter carbon pool in layer 3', 'grid', 'spatial', 'rpm_litter_CP3', 1],
+          ['_bio_CP1', [Opt.cond['carbon_sim_1']], 'Microbial biomass carbon pool in layer 1', 'grid', 'spatial', 'bio_CP1', 1],
+          ['_bio_CP2', [Opt.cond['carbon_sim_1']], 'Microbial biomass carbon pool in layer 2', 'grid', 'spatial', 'bio_CP2', 1],
+          ['_bio_CP3', [Opt.cond['carbon_sim_1']], 'Microbial biomass carbon pool in layer 3', 'grid', 'spatial', 'bio_CP3', 1],
+          ['_humus_CP1', [Opt.cond['carbon_sim_1']], 'Humufied carbon pool in layer 1', 'grid', 'spatial', 'humus_CP1', 1],
+          ['_humus_CP2', [Opt.cond['carbon_sim_1']], 'Humufied carbon pool in layer 2', 'grid', 'spatial', 'humus_CP2', 1],
+          ['_humus_CP3', [Opt.cond['carbon_sim_1']], 'Humufied carbon pool in layer 3', 'grid', 'spatial', 'humus_CP3', 1],
+          #['_iom_CP1', [Opt.cond['carbon_sim_1']], 'Inert organic carbon pool in layer 1', 'grid', 'spatial', 'iom_CP1', 1],
+          #['_iom_CP2', [Opt.cond['carbon_sim_1']], 'Inert organic carbon pool in layer 2', 'grid', 'spatial', 'iom_CP2', 1],
+          #['_iom_CP3', [Opt.cond['carbon_sim_1']], 'Inert organic carbon pool in layer 3', 'grid', 'spatial', 'iom_CP3', 1],
+
+          ['_soluble_CP1', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (stable DOC) in layer 1', 'grid', 'new', 'soluble_CP1', 1],
+          ['_soluble_CP2', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (stable DOC) in layer 2', 'grid', 'new', 'soluble_CP2', 1],
+          ['_soluble_CP3', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (stable DOC) in layer 3', 'grid', 'new', 'soluble_CP3', 1],
           
 
-          ['_acid_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'acid_CP1_nonwood', 0],
-          ['_ethanol_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'ethanol_CP1_nonwood', 0],
-          ['_nonsoluble_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'nonsoluble_CP1_nonwood', 0],
-          ['_soluble_CP1_nonwood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (non-wood) in layer 1', 'grid', 'spatial', 'soluble_CP1_nonwood', 0],
-          ['_acid_CP1_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 1', 'grid', 'spatial', 'acid_CP1_wood', 0],
-          ['_ethanol_CP1_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'ethanol_CP1_wood', 0],
-          ['_nonsoluble_CP1_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'nonsoluble_CP1_wood', 0],
-          ['_soluble_CP1_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 1', 'grid', 'spatial', 'soluble_CP1_wood', 0],
-          ['_humus_CP1', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood and non-wood) in layer 1', 'grid', 'spatial', 'humus_CP1', 0],
-
-          ['_acid_CP2_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 2', 'grid', 'spatial', 'acid_CP2_wood', 0],
-          ['_ethanol_CP2_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'ethanol_CP2_wood', 0],
-          ['_nonsoluble_CP2_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'nonsoluble_CP2_wood', 0],
-          ['_soluble_CP2_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 2', 'grid', 'spatial', 'soluble_CP2_wood', 0],
-          ['_humus_CP2', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 2', 'grid', 'spatial', 'humus_CP2', 0],
-        
-          ['_acid_CP3_wood', [Opt.cond['carbon_sim_1']], 'Acid hydrolyzable carbon pool (wood) in layer 3', 'grid', 'spatial', 'acid_CP3_wood', 0],
-          ['_ethanol_CP3_wood', [Opt.cond['carbon_sim_1']], 'Ethanol soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'ethanol_CP3_wood', 0],
-          ['_nonsoluble_CP3_wood', [Opt.cond['carbon_sim_1']], 'Neither hydrolyzable nor soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'nonsoluble_CP3_wood', 0],
-          ['_soluble_CP3_wood', [Opt.cond['carbon_sim_1']], 'Soluble carbon pool (wood) in layer 3', 'grid', 'spatial', 'soluble_CP3_wood', 0],
-          ['_humus_CP3', [Opt.cond['carbon_sim_1']], 'Humus carbon pool (wood) in layer 3', 'grid', 'spatial', 'humus_CP3', 0],
-
-          #['_fast_C1',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 1 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C1', 0],
-          #['_fast_C2',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 2 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C2', 0],
-          #['_fast_C3',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in layer 3 [mgC/L*m = gN/m2]', 'grid', 'spatial', 'fast_C3', 0],
-
-          ['_humus_C',  [Opt.cond['carbon_sim_1']], 'Humus carbon storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_C', 1],
-          ['_fast_C',  [Opt.cond['carbon_sim_1']], 'Fast carbon storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_C', 1],
-          ['_soluble_C',  [Opt.cond['carbon_sim_1']], 'Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'soluble_C', 1],
 
 
           ['_doc_I',   [Opt.cond['carbon_sim_1']], 'DOC in Canopy storage [mgN/L]', 'grid', 'spatial', 'doc_canopy_storage', 1],
@@ -430,7 +419,7 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           ['_doc_chanS',  [Opt.cond['carbon_sim_1']], 'DOC in Channel storage [mgN/L]', 'grid', 'spatial', 'doc_chanS', 1],
 
           ['_litter_fall_C',  [Opt.cond['carbon_sim_1']], 'Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]', 'grid', 'new', 'litter_fall_C', 1],
-          ['_soil_respiration_C',  [Opt.cond['carbon_sim_1']], 'Soil respiration summarised in carbon [gC/m2]', 'grid', 'new', 'soil_respiration_C', 1],
+          ['_co2_emission_C',  [Opt.cond['carbon_sim_1']], 'CO2 fluxes summarised in carbon [gC/m2]', 'grid', 'new', 'co2_emission_C', 1],
           ['_soil_decomposition_C',  [Opt.cond['carbon_sim_1']], 'Soil decomposition summarised in carbon [gC/m2]', 'grid', 'new', 'soil_decomposition_C', 1],
           ['_respiration_river_C',  [Opt.cond['carbon_sim_1']], 'Aquatic heterotrophic respiration summarised in carbon [gC/m2]', 'grid', 'new', 'respiration_river_C', 1],
           ['_humus_decomposition_spatial_weights',  [Opt.cond['carbon_sim_1']], 'Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]', 'grid', 'spatial', 'humus_decomposition_spatial_weights', 0],
@@ -448,7 +437,7 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
         ]
 
 
-Nitrogen = [['_plant_mobile_N', [Opt.cond['nitrogen_sim_1']], 'Plant mobile nitrogen [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_mobile_N', 0],
+Nitrogen = [['_plant_mobile_NP', [Opt.cond['nitrogen_sim_1']], 'Plant mobile nitrogen [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_mobile_N', 0],
             ['_no3_I',   [Opt.cond['nitrogen_sim_1']], 'no3 in Canopy storage [mgN/L]', 'grid', 'spatial', 'no3_canopy_storage', 1],
             ['_no3_snow',    [Opt.cond['nitrogen_sim_1']], 'no3 in Snow depth in [mgN/L]', 'grid', 'spatial', 'no3_snow_depth', 1],
             ['_no3_pond',    [Opt.cond['nitrogen_sim_1']], 'no3 in Ponding water in [mgN/L]', 'grid', 'spatial', 'no3_pond', 1],
@@ -473,40 +462,31 @@ Nitrogen = [['_plant_mobile_N', [Opt.cond['nitrogen_sim_1']], 'Plant mobile nitr
 
             # Nitrogen
             ['_biological_fixiation_N', [Opt.cond['nitrogen_sim_1']], 'Nitrogen biological fixiation [gN/m2]', 'grid', 'new', 'biological_fixiation_N', 1],  # todo; potential for validation
-            ['_nitrogen_add', [Opt.cond['nitrogen_sim_1']], 'Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]', 'grid', 'new', 'nitrogen_addition', 1],
-            ['_plant_uptake', [Opt.cond['nitrogen_sim_1']], 'Plant uptake [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_uptake', 1],
-            ['_deni_soil', [Opt.cond['nitrogen_sim_1']], 'Soil denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_soil', 1],
-            ['_minerl_soil', [Opt.cond['nitrogen_sim_1']], 'Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]', 'grid', 'new', 'minerl_soil', 1],
+            ['_nitrogen_addition_N', [Opt.cond['nitrogen_sim_1']], 'Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]', 'grid', 'new', 'nitrogen_addition_N', 1],
+            ['_plant_uptake_N', [Opt.cond['nitrogen_sim_1']], 'Plant uptake [mgN/L*m = gN/m2]', 'grid', 'new', 'plant_uptake_N', 1],
+            ['_soil_deni_N', [Opt.cond['nitrogen_sim_1']], 'Soil denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'soil_deni_N', 1],
+            ['_soil_minerl_N', [Opt.cond['nitrogen_sim_1']], 'Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]', 'grid', 'new', 'soil_minerl_N', 1],
             #['_degrad_soil', [Opt.cond['nitrogen_sim_1']], 'Soil degradation [mgN/L*m = gN/m2]', 'grid', 'new', 'degrad_soil', 1],
-            ['_deni_river', [Opt.cond['nitrogen_sim_1']], 'Aquatic denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'deni_river', 1],
+            ['_aquatic_deni_N', [Opt.cond['nitrogen_sim_1']], 'Aquatic denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'aquatic_deni_N', 1],
 
             #['_n2o_emission', [Opt.cond['nitrogen_sim_1']], 'N2O emission from soil due to soil decomposition and denitrification [mgN/L*m = gN/m2]', 'grid', 'new', 'n2o_emission', 1],
             
             # Internal fluxes
-            ['_humus_NC_ratio', [Opt.cond['nitrogen_sim_1']], 'Initial nitrogen carbon ratio of humus pools []', 'grid', 'spatial', 'humus_NC_ratio', 0],
-            ['_fast_NP1_nonwood',  [Opt.cond['nitrogen_sim_1']], 'Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs', 'grid', 'new', 'fast_NP1_nonwood', 0],
-            #['_fast_NP1_wood',  [Opt.cond['nitrogen_sim_1']], 'Fast wood nitrogen storage in layer 1 (wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of wood pools are variable due to reserve inputs', 'grid', 'new', 'fast_NP1_wood', 0],
-            ['_fast_NP1',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP1', 0],
-            #['_fast_NP2',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP2', 0],
-            #['_fast_NP3',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_NP3', 0],
-            #['_humus_NP1',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 1 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP1', 0],
-            #['_humus_NP2',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 2 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP2', 0],
-            #['_humus_NP3',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in layer 3 [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_NP3', 0],
-            ['_humus_N',  [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'humus_N', 1],
-            ['_fast_N',  [Opt.cond['nitrogen_sim_1']], 'Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]', 'grid', 'new', 'fast_N', 1],
+            ['_NC_ratio_soil_pool', [Opt.cond['nitrogen_sim_1']], 'Initial nitrogen carbon ratio of soil organic pools []', 'grid', 'spatial', 'NC_ratio_soil_pool', 0],
+
 
             # Statistics of nitrogen storages and fluxes
-          ['_leaching_mass_no3', [Opt.cond['nitrogen_sim_1']], 'Leaching of NO3 [gN/m2]', 'grid', 'new', 'leaching_mass_no3', 1],
-          ['_drainage_mass_no3', [Opt.cond['nitrogen_sim_1']], 'Drainage of NO3 [gN/m2]', 'grid', 'new', 'drainage_mass_no3', 1],
+            ['_leaching_mass_no3', [Opt.cond['nitrogen_sim_1']], 'Leaching of NO3 [gN/m2]', 'grid', 'new', 'leaching_mass_no3', 1],
+            ['_drainage_mass_no3', [Opt.cond['nitrogen_sim_1']], 'Drainage of NO3 [gN/m2]', 'grid', 'new', 'drainage_mass_no3', 1],
 
-          # Only for debug
-          #['_litter_fall_N',  [Opt.cond['nitrogen_sim_1']], 'Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gN/m2]', 'grid', 'new', 'litter_fall_N', 0],
-          #['_plant_uptake_from_all_sources',  [Opt.cond['nitrogen_sim_1']], 'Plant uptake summarised from all sources [gN/m2]', 'grid', 'new', 'plant_uptake_from_all_sources', 0],
-          #['_fast_pool_N_release_by_respiration', [Opt.cond['nitrogen_sim_1']], 'Fast pool nitrogen from respiration [gN/m2]', 'grid', 'new', 'fast_pool_N_release_by_respiration', 0],
-          #['_fast_pool_N_immob_by_decomposition', [Opt.cond['nitrogen_sim_1']], 'Fast pool nitrogen immobilised by decomposition [gN/m2]', 'grid', 'new', 'fast_pool_N_immob_by_decomposition', 0],
-          #['_fast_pool_N_dissolved_to_DIN', [Opt.cond['nitrogen_sim_1']], 'Fast pool nitrogen dissolved to DIN [gN/m2]', 'grid', 'new', 'fast_pool_N_dissolved_to_DIN', 0],
-          #['_humus_N_release_by_respiration', [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen released by respiration [gN/m2]', 'grid', 'new', 'humus_N_release_by_respiration', 0],
-          #['_no3_hydro_input_mass', [Opt.cond['nitrogen_sim_1']], 'Hydrological input of NO3 [gN/m2]', 'grid', 'new', 'no3_hydro_input_mass', 0],  # only for debug
+            # Only for debug
+            #['_litter_fall_N',  [Opt.cond['nitrogen_sim_1']], 'Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gN/m2]', 'grid', 'new', 'litter_fall_N', 0],
+            #['_plant_uptake_from_all_sources',  [Opt.cond['nitrogen_sim_1']], 'Plant uptake summarised from all sources [gN/m2]', 'grid', 'new', 'plant_uptake_from_all_sources', 0],
+            #['_fast_pool_N_release_by_respiration', [Opt.cond['nitrogen_sim_1']], 'Fast pool nitrogen from respiration [gN/m2]', 'grid', 'new', 'fast_pool_N_release_by_respiration', 0],
+            #['_fast_pool_N_immob_by_decomposition', [Opt.cond['nitrogen_sim_1']], 'Fast pool nitrogen immobilised by decomposition [gN/m2]', 'grid', 'new', 'fast_pool_N_immob_by_decomposition', 0],
+            #['_fast_pool_N_dissolved_to_DIN', [Opt.cond['nitrogen_sim_1']], 'Fast pool nitrogen dissolved to DIN [gN/m2]', 'grid', 'new', 'fast_pool_N_dissolved_to_DIN', 0],
+            #['_humus_N_release_by_respiration', [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen released by respiration [gN/m2]', 'grid', 'new', 'humus_N_release_by_respiration', 0],
+            #['_no3_hydro_input_mass', [Opt.cond['nitrogen_sim_1']], 'Hydrological input of NO3 [gN/m2]', 'grid', 'new', 'no3_hydro_input_mass', 0],  # only for debug
             ]
 
 

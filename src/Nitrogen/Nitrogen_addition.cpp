@@ -125,24 +125,19 @@ int Basin::Nitrogen_addition(Control &ctrl, Param &par){
        
         // Nitrogen addition to layer 1
         if (ST1 > 0){
-            _no3_layer1->val[j] = (ST1 * _no3_layer1->val[j] + fertN_add_layer1_IN) / ST1;
-        } else {
-            _fast_NP1_nonwood->val[j] += fertN_add_layer1_IN;
-        }
-        _fast_NP1_nonwood->val[j]  += fertN_add_layer1_fast_NP;
+            _no3_layer1->val[j] = (ST1 * _no3_layer1->val[j] + fertN_add_layer1_IN) / ST1;  // Inorganic nitrogen is added to DIN pool
+        } 
+        _dpm_litter_CP1->val[j]  += fertN_add_layer1_fast_NP / par._NC_ratio_dpm_litter->val[j];  // Organic nitrogen is added to dpm_litter_pool (here we update the carbon pool given the consistent NC ratio)
 
         // Nitrogen addition to layer 2
         if (ST2 > 0){
-            _no3_layer2->val[j] = (ST2 * _no3_layer2->val[j] + fertN_add_layer2_IN) / ST2;
-        } else {
-            _fast_NP1_nonwood->val[j] += fertN_add_layer2_IN;
-        }
-        _fast_NP1_nonwood->val[j]  += fertN_add_layer2_fast_NP;  // The fast pool addtion will only be added to the nonwood pool in layer 1
+            _no3_layer2->val[j] = (ST2 * _no3_layer2->val[j] + fertN_add_layer2_IN) / ST2;  // Inorganic nitrogen is added to DIN pool
+        } 
+        _dpm_litter_CP2->val[j]  += fertN_add_layer2_fast_NP / par._NC_ratio_dpm_litter->val[j];  // Organic nitrogen is added to dpm_litter_pool (here we update the carbon pool given the consistent NC ratio)
 
 
         // Only counts the Nitrogen addition to IN and fast_NP pools
-        _nitrogen_add->val[j] += fertN_add_layer1_IN + fertN_add_layer2_IN + fertN_add_layer1_fast_NP + fertN_add_layer2_fast_NP;
-        //_nitrogen_add->val[j] = fertN_add_layer1_IN + fertN_add_layer2_IN;
+        _nitrogen_addition_N->val[j] += fertN_add_layer1_IN + fertN_add_layer2_IN + fertN_add_layer1_fast_NP + fertN_add_layer2_fast_NP;
 
     }
     return EXIT_SUCCESS;

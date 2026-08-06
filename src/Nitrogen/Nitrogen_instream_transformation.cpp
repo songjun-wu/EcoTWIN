@@ -39,7 +39,7 @@ int Basin::Nitrogen_instream_transformation(Control &ctrl, Atmosphere &atm, Para
                 IN_chanS = no3_chanS * _chanS->val[j];  // in-stream IN storage [gN/m2]
 
                 
-                fct_TchanS = Temp_factor(_TchanS->val[j], par._transformation_exp_base->val[j]);  // Instream temperature factor [-]
+                fct_TchanS = Temp_factor(_TchanS->val[j]);  // Instream temperature factor [-]
                 fct_conc = no3_chanS / (no3_chanS + 1.5);  // Concentration factor [-]
 
                 // Instream denitrification during the timestep DT; scaled by river temperature and channel length [gN/m2]
@@ -47,10 +47,10 @@ int Basin::Nitrogen_instream_transformation(Control &ctrl, Atmosphere &atm, Para
 
                 // Update global variables
                 _no3_chanS->val[j] = (IN_chanS - deni_river) / _chanS->val[j];  // [gN/m2/m = gN/m3 = mgN/L]
-                _deni_river->val[j] = deni_river; // [gN/m2]
+                _aquatic_deni_N->val[j] = deni_river; // [gN/m2]
 
             } else {
-                _deni_river->val[j] = 0;
+                _aquatic_deni_N->val[j] = 0;
                 _no3_chanS->val[j] = 0;
             }
         }

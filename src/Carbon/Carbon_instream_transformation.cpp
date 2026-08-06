@@ -53,7 +53,7 @@ int Basin::Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param 
                 doc_CP_chanS = doc_chanS * _chanS->val[j];  // in-stream IN storage [gC/m2]
 
                 
-                fct_TchanS = Temp_factor(_TchanS->val[j], par._transformation_exp_base->val[j]);  // Instream temperature factor [-]
+                fct_TchanS = Temp_factor(_TchanS->val[j]);  // Instream temperature factor [-]
 
                 // Instream heterotrophic respiration during the timestep DT; scaled by river temperature and channel length
                 respiration_river = doc_CP_chanS * min(par._respiration_river->val[j] * fct_TchanS * (_chnlength->val[j] / dx) * DT, 1.0);  // [gC/m2]

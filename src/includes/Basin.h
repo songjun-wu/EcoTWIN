@@ -250,7 +250,7 @@ class Basin {
   /* end of Phenology */
 
   /* Nitrogen */
-  svector *_plant_mobile_N;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
+  svector *_plant_mobile_NP;  // Plant mobile nitrogen [mgN/L*m = gN/m2]
   svector *_no3_I;  // no3 in Canopy storage [mgN/L]
   svector *_no3_snow;  // no3 in Snow depth in [mgN/L]
   svector *_no3_pond;  // no3 in Ponding water in [mgN/L]
@@ -261,16 +261,12 @@ class Basin {
   svector *_no3_GW;  // no3 in Groundwater storage [mgN/L]
   svector *_no3_chanS;  // no3 in Channel storage [mgN/L]
   svector *_biological_fixiation_N;  // Nitrogen biological fixiation [gN/m2]
-  svector *_nitrogen_add;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
-  svector *_plant_uptake;  // Plant uptake [mgN/L*m = gN/m2]
-  svector *_deni_soil;  // Soil denitrification [mgN/L*m = gN/m2]
-  svector *_minerl_soil;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
-  svector *_deni_river;  // Aquatic denitrification [mgN/L*m = gN/m2]
-  svector *_humus_NC_ratio;  // Initial nitrogen carbon ratio of humus pools []
-  svector *_fast_NP1_nonwood;  // Fast nonwood nitrogen storage in layer 1 (non-wood) [mgN/L*m = gN/m2]; needed as nitrogen carbon ratio of nonwood pools are variable due to reserve inputs
-  svector *_fast_NP1;  // Fast nitrogen storage in layer 1 [mgN/L*m = gN/m2]
-  svector *_humus_N;  // Humus nitrogen storage in all soil layers [mgN/L*m = gN/m2]
-  svector *_fast_N;  // Fast nitrogen storage in all soil layers [mgN/L*m = gN/m2]
+  svector *_nitrogen_addition_N;  // Nitrogen addition of fertilizer, manure, and plant residues [mgN/L*m = gN/m2]
+  svector *_plant_uptake_N;  // Plant uptake [mgN/L*m = gN/m2]
+  svector *_soil_deni_N;  // Soil denitrification [mgN/L*m = gN/m2]
+  svector *_soil_minerl_N;  // Soil mineralisation (Soil decomposition may take additional nitorgen from dissolved inorganic nitrogen pool to build humus) [mgN/L*m = gN/m2]
+  svector *_aquatic_deni_N;  // Aquatic denitrification [mgN/L*m = gN/m2]
+  svector *_NC_ratio_soil_pool;  // Initial nitrogen carbon ratio of soil organic pools []
   svector *_leaching_mass_no3;  // Leaching of NO3 [gN/m2]
   svector *_drainage_mass_no3;  // Drainage of NO3 [gN/m2]
   /* end of Nitrogen */
@@ -282,28 +278,21 @@ class Basin {
   svector *_plant_reserve_CP;  //  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
   svector *_plant_C;  //  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
   svector *_plant_wood_CP_forest_max;  // The maximum carbon content in wood pool for forest species [molC/m2] 
-  svector *_acid_CP1_nonwood;  // Acid hydrolyzable carbon pool (non-wood) in layer 1
-  svector *_ethanol_CP1_nonwood;  // Ethanol soluble carbon pool (non-wood) in layer 1
-  svector *_nonsoluble_CP1_nonwood;  // Neither hydrolyzable nor soluble carbon pool (non-wood) in layer 1
-  svector *_soluble_CP1_nonwood;  // Soluble carbon pool (non-wood) in layer 1
-  svector *_acid_CP1_wood;  // Acid hydrolyzable carbon pool (wood) in layer 1
-  svector *_ethanol_CP1_wood;  // Ethanol soluble carbon pool (wood) in layer 1
-  svector *_nonsoluble_CP1_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 1
-  svector *_soluble_CP1_wood;  // Soluble carbon pool (wood) in layer 1
-  svector *_humus_CP1;  // Humus carbon pool (wood and non-wood) in layer 1
-  svector *_acid_CP2_wood;  // Acid hydrolyzable carbon pool (wood) in layer 2
-  svector *_ethanol_CP2_wood;  // Ethanol soluble carbon pool (wood) in layer 2
-  svector *_nonsoluble_CP2_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 2
-  svector *_soluble_CP2_wood;  // Soluble carbon pool (wood) in layer 2
-  svector *_humus_CP2;  // Humus carbon pool (wood) in layer 2
-  svector *_acid_CP3_wood;  // Acid hydrolyzable carbon pool (wood) in layer 3
-  svector *_ethanol_CP3_wood;  // Ethanol soluble carbon pool (wood) in layer 3
-  svector *_nonsoluble_CP3_wood;  // Neither hydrolyzable nor soluble carbon pool (wood) in layer 3
-  svector *_soluble_CP3_wood;  // Soluble carbon pool (wood) in layer 3
-  svector *_humus_CP3;  // Humus carbon pool (wood) in layer 3
-  svector *_humus_C;  // Humus carbon storage in all soil layers [mgN/L*m = gN/m2]
-  svector *_fast_C;  // Fast carbon storage in all soil layers [mgN/L*m = gN/m2]
-  svector *_soluble_C;  // Soluble carbon storage in all soil layers [mgN/L*m = gN/m2]
+  svector *_dpm_litter_CP1;  // Decomposable Plant Material litter carbon pool in layer 1
+  svector *_dpm_litter_CP2;  // Decomposable Plant Material litter carbon pool in layer 2
+  svector *_dpm_litter_CP3;  // Decomposable Plant Material litter carbon pool in layer 3
+  svector *_rpm_litter_CP1;  // Resistant Plant Material litter carbon pool in layer 1
+  svector *_rpm_litter_CP2;  // Resistant Plant Material litter carbon pool in layer 2
+  svector *_rpm_litter_CP3;  // Resistant Plant Material litter carbon pool in layer 3
+  svector *_bio_CP1;  // Microbial biomass carbon pool in layer 1
+  svector *_bio_CP2;  // Microbial biomass carbon pool in layer 2
+  svector *_bio_CP3;  // Microbial biomass carbon pool in layer 3
+  svector *_humus_CP1;  // Humufied carbon pool in layer 1
+  svector *_humus_CP2;  // Humufied carbon pool in layer 2
+  svector *_humus_CP3;  // Humufied carbon pool in layer 3
+  svector *_soluble_CP1;  // Soluble carbon pool (stable DOC) in layer 1
+  svector *_soluble_CP2;  // Soluble carbon pool (stable DOC) in layer 2
+  svector *_soluble_CP3;  // Soluble carbon pool (stable DOC) in layer 3
   svector *_doc_I;  // DOC in Canopy storage [mgN/L]
   svector *_doc_snow;  // DOC in Snow depth in [mgN/L]
   svector *_doc_pond;  // DOC in Ponding water in [mgN/L]
@@ -314,7 +303,7 @@ class Basin {
   svector *_doc_GW;  // DOC in Groundwater storage [mgN/L]
   svector *_doc_chanS;  // DOC in Channel storage [mgN/L]
   svector *_litter_fall_C;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
-  svector *_soil_respiration_C;  // Soil respiration summarised in carbon [gC/m2]
+  svector *_co2_emission_C;  // CO2 fluxes summarised in carbon [gC/m2]
   svector *_soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
   svector *_respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
   svector *_humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
@@ -362,32 +351,10 @@ class Basin {
   double WoodLitterSize;  // Litter size of wood pool
 
   /* Carbon_constant */
-  double C_trans_ratio_acid_2_soluble;
-  double C_trans_ratio_acid_2_ethanol;
-  double C_trans_ratio_acid_2_nonsoluble;
-  double C_trans_ratio_soluble_2_acid;
-  double C_trans_ratio_soluble_2_ethanol;
-  double C_trans_ratio_soluble_2_nonsoluble;
-  double C_trans_ratio_ethanol_2_acid;
-  double C_trans_ratio_ethanol_2_soluble;
-  double C_trans_ratio_ethanol_2_nonsoluble;
-  double C_trans_ratio_nonsoluble_2_acid;
-  double C_trans_ratio_nonsoluble_2_soluble;
-  double C_trans_ratio_nonsoluble_2_ethanol;
-  double C_to_go_acid;
-  double C_to_go_ethanol;
-  double C_to_go_soluble;
-  double C_to_go_nonsoluble;
-  //double C_trans_ratio_all_2_humus;
-  double ref_decomp_rate_acid;
-  double ref_decomp_rate_soluble;
-  double ref_decomp_rate_ethanol;
-  double ref_decomp_rate_nonsoluble;
-  double ref_decomp_rate_humus;
-  //double C_respiration_ratio_acid;
-  //double C_respiration_ratio_soluble;
-  //double C_respiration_ratio_ethanol;
-  //double C_respiration_ratio_nonsoluble;
+  double ref_decomp_rate_dpm_litter_CP;
+  double ref_decomp_rate_rpm_litter_CP;
+  double ref_decomp_rate_bio_CP;
+  double ref_decomp_rate_humus_CP;
 
 
   
@@ -511,17 +478,11 @@ class Basin {
   int Carbon_addition(Control &ctrl, Param &par);  // Carbon addition process (from vegetation pools to litter pools)
   int Carbon_management(Control &ctrl, Param &par);  // Carbon management process (harvest and herbivory loss)
   int Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par);   // Solve soil carbon decomposition
-  int Carbon_transformation_process_fast_pool(  Control &ctrl, Atmosphere &atm, Param &par, int j,  // Carbon transformation process for fast pool
-    double &db_acid_CP, double &db_ethanol_CP, double &db_soluble_CP, double &db_nonsoluble_CP, double &db_humus_CP,
-    double &db_soil_respiration_C, double &db_soil_decomposition_C,
-    double &db_available_N, double &db_minerl_soil,
-    double db_fct_Ts, double db_fct_theta, double db_fct_size, double db_fct_depth, double db_NC_ratio_fast,
-    double db_C_trans_ratio_fast_2_humus, double db_C_respiration_ratio_acid, double db_C_respiration_ratio_soluble, double db_C_respiration_ratio_ethanol, double db_C_respiration_ratio_nonsoluble);
-  int Carbon_transformation_process_humus_pool(  Control &ctrl, Atmosphere &atm, Param &par, int j,  // Carbon transformation process for humus pool
-    double &db_humus_CP, double &db_DOC_pool,
-    double &db_soil_respiration_C, double &db_soil_decomposition_C,
-    double &db_DIN_pool, double &db_minerl_soil,
-    double db_fct_Ts, double db_fct_theta, double db_fct_size, double fct_depth);
+  int Carbon_decomposition_process(Control &ctrl, Atmosphere &atm, Param &par, int j,
+                                    double &db_dpm_litter_CP, double &db_rpm_litter_CP, double &db_bio_CP, double &db_humus_CP,
+                                    double &DOC_pool, double &db_soil_decomposition_C, double &db_CO2_emission,
+                                    double &db_DIN_pool, double &db_soil_minerl_N,
+                                    double db_fct_Ts, double db_fct_theta, double fct_depth);
   int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC
   int Carbon_summary(Control &ctrl, Param &par);  // Summary carbon states and fluxes
   double Calculate_fraction_soluble_CP_to_DOC(double ref_frac_soluble_to_doc, double soil_storage, double percolation, double groundwater_table, double f_groundwater_depth_decay_exp_base, double fct_Ts);
@@ -539,7 +500,7 @@ class Basin {
   /* ===== Global functions ===== */
   int Sort_percolation_travel_time(Control &ctrl, Param &par);
   int Sort_root_fraction(Control &ctrl,Param &par);  // Estimate root fraction
-  double Temp_factor(double T, double transformation_exp_base);  // Temperature factor of nitrogen transformation
+  double Temp_factor(double T);  // Q10 temperature dependence function with Q10 = 2
   double Moist_factor(const double db_theta, const double db_thetaWP, const double db_thetaFC, const double db_thetaS, const double db_depth); // Moisture factor of nitrogen transformation
 
   /* ===== Initialisation ===== */

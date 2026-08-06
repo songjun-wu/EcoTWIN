@@ -179,6 +179,23 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         ST3 -= (_Tr3->val[j]);
 
 
+        // Mixing vadose storage with riparian zone in channel grids
+        /*
+        if (_chnlength->val[j] > roundoffERR) {
+          if (_vadose->val[j] > roundoffERR and ST1 > roundoffERR) {
+            double frac_riparian_zone = min(1.0, _chnwidth->val[j] * _chnlength->val[j] * 0.5 / (_dx * _dx));
+            _test0->val[j] = frac_riparian_zone;  // todo
+            //double frac_riparian_zone = 1.0;
+            conc_vadose = (conc_vadose * _vadose->val[j] + frac_riparian_zone * conc_layer1 * ST1) / (_vadose->val[j] + frac_riparian_zone * ST1);
+            conc_layer1 = conc_layer1 * (1 - frac_riparian_zone) + conc_vadose * frac_riparian_zone;
+            conc_vadose = (conc_vadose * _vadose->val[j] + frac_riparian_zone * conc_layer2 * ST2) / (_vadose->val[j] + frac_riparian_zone * ST2);
+            conc_layer2 = conc_layer2 * (1 - frac_riparian_zone) + conc_vadose * frac_riparian_zone;
+          }
+        }
+        */
+
+
+
        
         
         // Update global variables

@@ -218,7 +218,7 @@ int Basin::dtor(Control &ctrl){
 
   /* Nitrogen */
   if (ctrl.opt_nitrogen_sim == 1){
-    if(_plant_mobile_N) delete _plant_mobile_N;
+    if(_plant_mobile_NP) delete _plant_mobile_NP;
     if(_no3_I) delete _no3_I;
     if(_no3_snow) delete _no3_snow;
     if(_no3_pond) delete _no3_pond;
@@ -229,16 +229,12 @@ int Basin::dtor(Control &ctrl){
     if(_no3_GW) delete _no3_GW;
     if(_no3_chanS) delete _no3_chanS;
     if(_biological_fixiation_N) delete _biological_fixiation_N;
-    if(_nitrogen_add) delete _nitrogen_add;
-    if(_plant_uptake) delete _plant_uptake;
-    if(_deni_soil) delete _deni_soil;
-    if(_minerl_soil) delete _minerl_soil;
-    if(_deni_river) delete _deni_river;
-    if(_humus_NC_ratio) delete _humus_NC_ratio;
-    if(_fast_NP1_nonwood) delete _fast_NP1_nonwood;
-    if(_fast_NP1) delete _fast_NP1;
-    if(_humus_N) delete _humus_N;
-    if(_fast_N) delete _fast_N;
+    if(_nitrogen_addition_N) delete _nitrogen_addition_N;
+    if(_plant_uptake_N) delete _plant_uptake_N;
+    if(_soil_deni_N) delete _soil_deni_N;
+    if(_soil_minerl_N) delete _soil_minerl_N;
+    if(_aquatic_deni_N) delete _aquatic_deni_N;
+    if(_NC_ratio_soil_pool) delete _NC_ratio_soil_pool;
     if(_leaching_mass_no3) delete _leaching_mass_no3;
     if(_drainage_mass_no3) delete _drainage_mass_no3;
   }
@@ -251,28 +247,21 @@ int Basin::dtor(Control &ctrl){
     if(_plant_reserve_CP) delete _plant_reserve_CP;
     if(_plant_C) delete _plant_C;
     if(_plant_wood_CP_forest_max) delete _plant_wood_CP_forest_max;
-    if(_acid_CP1_nonwood) delete _acid_CP1_nonwood;
-    if(_ethanol_CP1_nonwood) delete _ethanol_CP1_nonwood;
-    if(_nonsoluble_CP1_nonwood) delete _nonsoluble_CP1_nonwood;
-    if(_soluble_CP1_nonwood) delete _soluble_CP1_nonwood;
-    if(_acid_CP1_wood) delete _acid_CP1_wood;
-    if(_ethanol_CP1_wood) delete _ethanol_CP1_wood;
-    if(_nonsoluble_CP1_wood) delete _nonsoluble_CP1_wood;
-    if(_soluble_CP1_wood) delete _soluble_CP1_wood;
+    if(_dpm_litter_CP1) delete _dpm_litter_CP1;
+    if(_dpm_litter_CP2) delete _dpm_litter_CP2;
+    if(_dpm_litter_CP3) delete _dpm_litter_CP3;
+    if(_rpm_litter_CP1) delete _rpm_litter_CP1;
+    if(_rpm_litter_CP2) delete _rpm_litter_CP2;
+    if(_rpm_litter_CP3) delete _rpm_litter_CP3;
+    if(_bio_CP1) delete _bio_CP1;
+    if(_bio_CP2) delete _bio_CP2;
+    if(_bio_CP3) delete _bio_CP3;
     if(_humus_CP1) delete _humus_CP1;
-    if(_acid_CP2_wood) delete _acid_CP2_wood;
-    if(_ethanol_CP2_wood) delete _ethanol_CP2_wood;
-    if(_nonsoluble_CP2_wood) delete _nonsoluble_CP2_wood;
-    if(_soluble_CP2_wood) delete _soluble_CP2_wood;
     if(_humus_CP2) delete _humus_CP2;
-    if(_acid_CP3_wood) delete _acid_CP3_wood;
-    if(_ethanol_CP3_wood) delete _ethanol_CP3_wood;
-    if(_nonsoluble_CP3_wood) delete _nonsoluble_CP3_wood;
-    if(_soluble_CP3_wood) delete _soluble_CP3_wood;
     if(_humus_CP3) delete _humus_CP3;
-    if(_humus_C) delete _humus_C;
-    if(_fast_C) delete _fast_C;
-    if(_soluble_C) delete _soluble_C;
+    if(_soluble_CP1) delete _soluble_CP1;
+    if(_soluble_CP2) delete _soluble_CP2;
+    if(_soluble_CP3) delete _soluble_CP3;
     if(_doc_I) delete _doc_I;
     if(_doc_snow) delete _doc_snow;
     if(_doc_pond) delete _doc_pond;
@@ -283,7 +272,7 @@ int Basin::dtor(Control &ctrl){
     if(_doc_GW) delete _doc_GW;
     if(_doc_chanS) delete _doc_chanS;
     if(_litter_fall_C) delete _litter_fall_C;
-    if(_soil_respiration_C) delete _soil_respiration_C;
+    if(_co2_emission_C) delete _co2_emission_C;
     if(_soil_decomposition_C) delete _soil_decomposition_C;
     if(_respiration_river_C) delete _respiration_river_C;
     if(_humus_decomposition_spatial_weights) delete _humus_decomposition_spatial_weights;

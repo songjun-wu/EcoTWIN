@@ -125,7 +125,7 @@ class Opt:
 
     cond['evap_2']   = {'key':'opt_evap', 'value':2, 
                         'general_description':'Evapotranspiration function\n# 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)\n# 2: based on Penman-Monteith equation',
-                        'description':'Evapotranspiration calculation based on Penman-Monteith equation'}
+                        'description':'Evapotranspiration calculation based on Penman-Monteith equation; needs to activate opt_carbon_sim and opt_nitrogen_sim'}
     cond['evap_1']   = {'key':'opt_evap', 'value':1, 
                         'general_description':'Evapotranspiration function\n# 1: based on PET and a soil water dependent root extraction function (Feddes et al., 1976)\n# 2: based on Penman-Monteith equation',
                         'description':'Evapotranspiration calculation based on Feddes et al., (1976)'}

@@ -77,6 +77,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(herbivory_uptake_coeff, "herbivory_uptake_coeff", lines);
   readIntoParam(harvest_coeff, "harvest_coeff", lines);
   readIntoParam(diffuse_molecular_coefficient, "diffuse_molecular_coefficient", lines);
+  readIntoParam(nearsurface_mixing, "nearsurface_mixing", lines);
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
   readIntoParam(CG_n_soil, "CG_n_soil", lines);
   readIntoParam(delta_d18o_init_GW, "delta_d18o_init_GW", lines);
@@ -93,28 +94,19 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(ETransport, "ETransport", lines);
   readIntoParam(frac_NPP_to_green, "frac_NPP_to_green", lines);
   readIntoParam(frac_NPP_to_wood, "frac_NPP_to_wood", lines);
-  readIntoParam(frac_litter_to_soluble_nonwood, "frac_litter_to_soluble_nonwood", lines);
-  readIntoParam(frac_litter_to_acid_nonwood, "frac_litter_to_acid_nonwood", lines);
-  readIntoParam(frac_litter_to_ethanol_nonwood, "frac_litter_to_ethanol_nonwood", lines);
-  readIntoParam(frac_litter_to_nonsoluble_nonwood, "frac_litter_to_nonsoluble_nonwood", lines);
-  readIntoParam(frac_litter_to_soluble_wood, "frac_litter_to_soluble_wood", lines);
-  readIntoParam(frac_litter_to_acid_wood, "frac_litter_to_acid_wood", lines);
-  readIntoParam(frac_litter_to_ethanol_wood, "frac_litter_to_ethanol_wood", lines);
-  readIntoParam(frac_litter_to_nonsoluble_wood, "frac_litter_to_nonsoluble_wood", lines);
-  readIntoParam(f_groundwater_depth_decay_exp_base, "f_groundwater_depth_decay_exp_base", lines);
-  readIntoParam(transformation_exp_base, "transformation_exp_base", lines);
-  readIntoParam(fdepth_decay_Exp, "fdepth_decay_Exp", lines);
-  readIntoParam(decomposition_weight_fast_pool, "decomposition_weight_fast_pool", lines);
-  readIntoParam(decomposition_weight_humus_pool, "decomposition_weight_humus_pool", lines);
-  readIntoParam(humus_C_decomposition_to_DOC_ratio, "humus_C_decomposition_to_DOC_ratio", lines);
-  readIntoParam(ref_decomp_rate_doc, "ref_decomp_rate_doc", lines);
-  readIntoParam(C_trans_ratio_fast_2_humus, "C_trans_ratio_fast_2_humus", lines);
+  readIntoParam(alpha_litter_distribution_nonwood, "alpha_litter_distribution_nonwood", lines);
+  readIntoParam(frac_leaf_in_litter, "frac_leaf_in_litter", lines);
+  readIntoParam(frac_DOC_production_from_litter_CP, "frac_DOC_production_from_litter_CP", lines);
+  readIntoParam(frac_DOC_production_from_soil_CP, "frac_DOC_production_from_soil_CP", lines);
   readIntoParam(ref_frac_soluble_to_doc, "ref_frac_soluble_to_doc", lines);
+  readIntoParam(f_groundwater_depth_decay_exp_base, "f_groundwater_depth_decay_exp_base", lines);
+  readIntoParam(fdepth_decay_Exp, "fdepth_decay_Exp", lines);
+  readIntoParam(ref_decomp_rate_doc, "ref_decomp_rate_doc", lines);
   readIntoParam(respiration_river, "respiration_river", lines);
   readIntoParam(NC_ratio_plant_green, "NC_ratio_plant_green", lines);
   readIntoParam(NC_ratio_plant_wood, "NC_ratio_plant_wood", lines);
-  readIntoParam(NC_ratio_fast_pool_nonwood, "NC_ratio_fast_pool_nonwood", lines);
-  readIntoParam(NC_ratio_fast_pool_wood, "NC_ratio_fast_pool_wood", lines);
+  readIntoParam(NC_ratio_dpm_litter, "NC_ratio_dpm_litter", lines);
+  readIntoParam(NC_ratio_rpm_litter, "NC_ratio_rpm_litter", lines);
   /* end of Parameters */
 
   input.close();

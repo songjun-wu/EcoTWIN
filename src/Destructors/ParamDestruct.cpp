@@ -31,6 +31,7 @@ int Param::dtor(Control &ctrl){
   if(_perc_vadose_coeff) delete _perc_vadose_coeff;
   if(_irrigation_FC_thres) delete _irrigation_FC_thres;
   if(_diffuse_molecular_coefficient) delete _diffuse_molecular_coefficient;
+  if(_nearsurface_mixing) delete _nearsurface_mixing;
   if(_ratio_to_interf) delete _ratio_to_interf;
   if (ctrl.opt_snow == 1){
     if(_snow_rain_thre) delete _snow_rain_thre;
@@ -106,23 +107,14 @@ int Param::dtor(Control &ctrl){
     if(_ETransport) delete _ETransport;
     if(_frac_NPP_to_green) delete _frac_NPP_to_green;
     if(_frac_NPP_to_wood) delete _frac_NPP_to_wood;
-    if(_frac_litter_to_soluble_nonwood) delete _frac_litter_to_soluble_nonwood;
-    if(_frac_litter_to_acid_nonwood) delete _frac_litter_to_acid_nonwood;
-    if(_frac_litter_to_ethanol_nonwood) delete _frac_litter_to_ethanol_nonwood;
-    if(_frac_litter_to_nonsoluble_nonwood) delete _frac_litter_to_nonsoluble_nonwood;
-    if(_frac_litter_to_soluble_wood) delete _frac_litter_to_soluble_wood;
-    if(_frac_litter_to_acid_wood) delete _frac_litter_to_acid_wood;
-    if(_frac_litter_to_ethanol_wood) delete _frac_litter_to_ethanol_wood;
-    if(_frac_litter_to_nonsoluble_wood) delete _frac_litter_to_nonsoluble_wood;
-    if(_f_groundwater_depth_decay_exp_base) delete _f_groundwater_depth_decay_exp_base;
-    if(_transformation_exp_base) delete _transformation_exp_base;
-    if(_fdepth_decay_Exp) delete _fdepth_decay_Exp;
-    if(_decomposition_weight_fast_pool) delete _decomposition_weight_fast_pool;
-    if(_decomposition_weight_humus_pool) delete _decomposition_weight_humus_pool;
-    if(_humus_C_decomposition_to_DOC_ratio) delete _humus_C_decomposition_to_DOC_ratio;
-    if(_ref_decomp_rate_doc) delete _ref_decomp_rate_doc;
-    if(_C_trans_ratio_fast_2_humus) delete _C_trans_ratio_fast_2_humus;
+    if(_alpha_litter_distribution_nonwood) delete _alpha_litter_distribution_nonwood;
+    if(_frac_leaf_in_litter) delete _frac_leaf_in_litter;
+    if(_frac_DOC_production_from_litter_CP) delete _frac_DOC_production_from_litter_CP;
+    if(_frac_DOC_production_from_soil_CP) delete _frac_DOC_production_from_soil_CP;
     if(_ref_frac_soluble_to_doc) delete _ref_frac_soluble_to_doc;
+    if(_f_groundwater_depth_decay_exp_base) delete _f_groundwater_depth_decay_exp_base;
+    if(_fdepth_decay_Exp) delete _fdepth_decay_Exp;
+    if(_ref_decomp_rate_doc) delete _ref_decomp_rate_doc;
   }
   if (ctrl.opt_tracking_isotope == 1){
     if(_CG_n_soil) delete _CG_n_soil;
@@ -140,8 +132,8 @@ int Param::dtor(Control &ctrl){
     if(_respiration_river) delete _respiration_river;
     if(_NC_ratio_plant_green) delete _NC_ratio_plant_green;
     if(_NC_ratio_plant_wood) delete _NC_ratio_plant_wood;
-    if(_NC_ratio_fast_pool_nonwood) delete _NC_ratio_fast_pool_nonwood;
-    if(_NC_ratio_fast_pool_wood) delete _NC_ratio_fast_pool_wood;
+    if(_NC_ratio_dpm_litter) delete _NC_ratio_dpm_litter;
+    if(_NC_ratio_rpm_litter) delete _NC_ratio_rpm_litter;
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
     if(_LAI_shed_coef) delete _LAI_shed_coef;

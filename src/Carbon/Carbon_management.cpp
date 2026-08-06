@@ -29,7 +29,7 @@ int Basin::Carbon_management(Control &ctrl, Param &par){
     
     plant_green_CP = _plant_green_CP->val[j];
     plant_reserve_CP = _plant_reserve_CP->val[j];
-    plant_mobile_N = _plant_mobile_N->val[j];
+    plant_mobile_N = _plant_mobile_NP->val[j];
 
     // Harvest and Herbivory loss: loss from plant_green_CP due to harvest and herbivory [gC/m2]
     // === Herbivory loss ===
@@ -48,7 +48,7 @@ int Basin::Carbon_management(Control &ctrl, Param &par){
     // Update vegetation carbon pools    
     _plant_green_CP->val[j] = plant_green_CP;
     _plant_reserve_CP->val[j] = plant_reserve_CP;
-    _plant_mobile_N->val[j] = plant_mobile_N;
+    _plant_mobile_NP->val[j] = plant_mobile_N;
 
 
 

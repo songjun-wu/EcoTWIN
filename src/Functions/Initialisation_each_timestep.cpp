@@ -68,13 +68,13 @@ int Basin::Initialisation_each_timestep(Control &ctrl, Param &par) {
         _NPP->reset();
         _canopy_conductance->reset();
         //_plant_uptake->reset();
-        _soil_respiration_C->reset();
+        _co2_emission_C->reset();
         _soil_decomposition_C->reset();
         //_n2o_emission->reset();
     }
     if (ctrl.opt_nitrogen_sim==1) {
-      _nitrogen_add->reset();
-      _minerl_soil->reset();
+      _nitrogen_addition_N->reset();
+      _soil_minerl_N->reset();
     }
 
     return EXIT_SUCCESS;
