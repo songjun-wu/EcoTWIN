@@ -42,6 +42,7 @@ class Param {
   int sort_perc_travel_time_OK;  
   int sort_root_fraction_OK;  
   int sort_plant_uptake_OK;  // The plant uptake only needs to be calculated once (or once within each change)
+  int sort_crop_management_OK;  // The crop management only needs to be calculated once (or once within each change)
   int sort_nitrogen_addition_OK;  // The nitrogen addtion only needs to be calculated once (or once within each change)
   int sort_parameter_correction_OK;  // The parameter correction only needs to be calculated once (or once within each change)
 
@@ -88,7 +89,6 @@ class Param {
   vector<double> irrigation_coeff;
   vector<double> drainage_intensity;
   vector<double> herbivory_uptake_coeff;
-  vector<double> harvest_coeff;
   vector<double> diffuse_molecular_coefficient;
   vector<double> nearsurface_mixing;
   vector<double> ratio_to_interf;
@@ -103,6 +103,7 @@ class Param {
   vector<double> tau_wood_C;
   vector<double> plant_wood_CP_max;
   vector<double> plant_reserve_CP_max;
+  vector<double> delta_doc_init_GW;
   vector<double> carboxylation_rate;
   vector<double> ETransport;
   vector<double> frac_NPP_to_green;
@@ -164,7 +165,6 @@ class Param {
   svector *_irrigation_coeff;  // Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled
   svector *_drainage_intensity;  // The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
   svector *_herbivory_uptake_coeff;  // The coefficient for herbivory uptake [-]
-  svector *_harvest_coeff;  // The coefficient for crop harvest [-]
   svector *_C_in_LeafArea;  // Carbon content per leaf area in [m2(leaf)/mol(Carbon)]
   svector *_tau_wood_C;  // Life time scale of the wood pool and vegetation dynamics [days]
   svector *_plant_wood_CP_max;  // The maximum carbon content in wood pool [molC/m2] 
@@ -182,8 +182,8 @@ class Param {
   svector *_fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   svector *_ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
   svector *_CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
-  svector *_delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
-  svector *_delta_no3_init_GW;  // Initial no3 of GW storage [‰]
+  svector *_delta_d18o_init_GW;  // Changes of initial d18O of GW storage [‰]
+  svector *_delta_no3_init_GW;  // Changes of initial no3 of GW storage [mg/L]
   svector *_denitrification_river;  // Reference decay coefficient of aquatic denitrification [timestep-1]
   svector *_denitrification_soil;  // Reference rates of soil denitrification [timestep-1]
   svector *_deni_soil_moisture_thres;  // The moisture threshold of soil denitrification
@@ -193,6 +193,7 @@ class Param {
   svector *_NC_ratio_dpm_litter;  // # Nitrogen carbon ratio in the litter pool of decomposable plant material  [gN/gC]
   svector *_NC_ratio_rpm_litter;  // # Nitrogen carbon ratio in the litter pool of resistant plant material  [gN/gC]
   svector *_LAI_shed_coef;  // Leaf shedding coefficient related to LAI [-]
+  svector *_delta_doc_init_GW;  // Changes of initial doc of GW storage [mg/L]
   /* end of Parameters */
 
   svector_2d *param_category;

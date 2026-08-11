@@ -51,12 +51,16 @@ int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){
       par.readIntoParam(plant_day, "plant_day", lines);
       par.readIntoParam(emerge_day, "emerge_day", lines);
       par.readIntoParam(harvest_day, "harvest_day", lines);
+      par.readIntoParam(harvest_period, "harvest_period", lines);
+      par.readIntoParam(harvest_coeff, "harvest_coeff", lines);
     }
     if (ctrl.opt_nitrogen_sim == 1){
       par.readIntoParam(is_crop, "is_crop", lines);
       par.readIntoParam(plant_day, "plant_day", lines);
       par.readIntoParam(emerge_day, "emerge_day", lines);
       par.readIntoParam(harvest_day, "harvest_day", lines);
+      par.readIntoParam(harvest_period, "harvest_period", lines);
+      par.readIntoParam(harvest_coeff, "harvest_coeff", lines);
       par.readIntoParam(fert_add, "fert_add", lines);
       par.readIntoParam(fert_day, "fert_day", lines);
       par.readIntoParam(fert_down, "fert_down", lines);
@@ -70,8 +74,6 @@ int Basin::ReadCropFile(Control &ctrl, Param &par, string fname){
       par.readIntoParam(residue_add, "residue_add", lines);
       par.readIntoParam(residue_day, "residue_day", lines);
       par.readIntoParam(residue_down, "residue_down", lines);
-      par.readIntoParam(residue_period, "residue_period", lines);
-      par.readIntoParam(residue_fast_NP, "residue_fast_NP", lines);
     }
     /* end of Nitrogen addition */
 

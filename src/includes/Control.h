@@ -176,6 +176,10 @@ struct Control{
   // 0: NO, use full mixing
   // 1: YES, use baseflow mixing with more damped variation
   int opt_baseflow_mixing;
+  // Whether to adjust the doc compostion in inital storages
+  // 0: NO
+  // 1: YES (the parameter doc_init_GW needs to be specified)
+  int opt_init_doc;
   // Whether to adjust the no3 compostion in inital storages
   // 0: NO
   // 1: YES (the parameter no3_init_GW needs to be specified)
@@ -381,13 +385,12 @@ struct Control{
   string fn__irrigation_coeff;  // Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled
   string fn__drainage_intensity;  // The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
   string fn__herbivory_uptake_coeff;  // The coefficient for herbivory uptake [-]
-  string fn__harvest_coeff;  // The coefficient for crop harvest [-]
   string fn__diffuse_molecular_coefficient;  // The coefficient for Fickian diffusion [m2/s]
   string fn__nearsurface_mixing;  // The proportion of pond to mix with layer1  [decimal]
   string fn__ratio_to_interf;  // The proportion of excess storage in layer 1 that routs as interflow (otherwise percolate to GW) [decimal]
   string fn__CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]
-  string fn__delta_d18o_init_GW;  // Initial d18O of GW storage [‰]
-  string fn__delta_no3_init_GW;  // Initial no3 of GW storage [‰]
+  string fn__delta_d18o_init_GW;  // Changes of initial d18O of GW storage [‰]
+  string fn__delta_no3_init_GW;  // Changes of initial no3 of GW storage [mg/L]
   string fn__denitrification_river;  // Reference decay coefficient of aquatic denitrification [timestep-1]
   string fn__denitrification_soil;  // Reference rates of soil denitrification [timestep-1]
   string fn__deni_soil_moisture_thres;  // The moisture threshold of soil denitrification
@@ -396,6 +399,7 @@ struct Control{
   string fn__tau_wood_C;  // Life time scale of the wood pool and vegetation dynamics [days]
   string fn__plant_wood_CP_max;  // The maximum carbon content in wood pool [molC/m2] 
   string fn__plant_reserve_CP_max;  // Term to calculate maximum carbon content in reserve pool at optimal conditions [-]: first term is the ratio of ratio of vegetation green pool to reserve pool at maximum LAI, while second term is maximum LAI
+  string fn__delta_doc_init_GW;  // Changes of initial doc of GW storage [mg/L]
   string fn__carboxylation_rate;  // Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)] (*1e-6?)
   string fn__ETransport;  // Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)
   string fn__frac_NPP_to_green;  // The fraction of NPP addition to vegetation green pool [-] 
@@ -516,6 +520,7 @@ struct Control{
   int report__co2_emission_C;  // report CO2 fluxes summarised in carbon [gC/m2]
   int report__soil_decomposition_C;  // report Soil decomposition summarised in carbon [gC/m2]
   int report__respiration_river_C;  // report Aquatic heterotrophic respiration summarised in carbon [gC/m2]
+  int report__harvest_C;  // report Crop harvest summarised in carbon [gC/m2]
   int report__leaching_mass_doc;  // report Leaching of DOC [gC/m2]
   int report__drainage_mass_doc;  // report Drainage of DOC [gC/m2]
   int report__no3_I;  // report no3 in Canopy storage [mgN/L]

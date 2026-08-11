@@ -48,7 +48,6 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
     double mineral_N_layer1, mineral_N_layer2, mineral_N_layer3;  // Mineral N pools in each layer [gN/m2]
     double potential_N_for_plant_growth_layer1, potential_N_for_plant_growth_layer2, potential_N_for_plant_growth_layer3; // Potential nitrogen uptake by vegetation for plant growth in each layer [gN/m2]
     double actual_N_for_plant_growth; // Actual nitrogen uptake by vegetation for plant growth in all layers [gN/m2]
-    double plant_uptake; // Plant uptake in each layer [gN/m2]
     double fct_N_limitation_green, fct_N_limitation_wood;  // Limitation of vegetation growth of green and wood pools based on N availability; plant_reserve_CP pool is not affected; Set to 1 if nitrogen simulation is not enabled is not activated
     double N_biological_fixiation; // Nitrogen biological fixiation [gN/m2]
     double litter_wood_each_layer;
@@ -192,9 +191,6 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
         mineral_N_layer3 += N_biological_fixiation * _froot_layer3->val[j];
         _biological_fixiation_N->val[j] = N_biological_fixiation;  // [gN/m2]
 
-        
-
-
         // === Plant uptake ===
         // First sort the use of plant mobile N for green pool growth
         fct_N_limitation_green = 1.0;  // Limitation of vegetation growth of green and wood pools based on N availability; plant_reserve_CP pool is not affected; Set to 1 if nitrogen simulation is not enabled is not activated
@@ -302,6 +298,32 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
     // Depletion of plant_reserve_CP pool: from plant_reserve_CP pool to green litter pool
     C_plant_reserve_CP_2_litter_nonwood = plant_reserve_CP / 365;  // _tau_plant_reserve_CP_C = 365 days; depletion of plant_reserve_CP pool
     plant_reserve_CP -= C_plant_reserve_CP_2_litter_nonwood;
+
+    // Harvest for crops
+    // Generated litter partially goes to harvest pool during harvest period (tile/crop-based)
+    double fraction_crop_to_harvest;
+    int idx;
+    int day_of_year = ctrl.day_of_year;
+
+    fraction_crop_to_harvest = 0.0;
+    for (int i = 0; i < num_landuse; i++) {
+      idx = landuse_idx[i];
+        if (is_crop[idx] == 1){
+          if (day_of_year >= harvest_day[idx] and day_of_year < (harvest_day[idx] + harvest_period[idx])){
+            fraction_crop_to_harvest += par.param_category->val[idx][j] * harvest_coeff[idx];
+          }
+      }
+    }
+
+    _harvest_C->val[j] = (C_green_2_litter_nonwood + C_plant_reserve_CP_2_litter_nonwood + C_wood_2_litter_wood) * fraction_crop_to_harvest;
+    C_green_2_litter_nonwood *= (1 - fraction_crop_to_harvest);
+    C_plant_reserve_CP_2_litter_nonwood *= (1 - fraction_crop_to_harvest);
+    C_wood_2_litter_wood *= (1 - fraction_crop_to_harvest);
+
+    
+
+
+    
 
     /* ======= Update carbon variables ======= */
     _plant_green_CP->val[j] = plant_green_CP;

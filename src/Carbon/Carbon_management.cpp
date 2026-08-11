@@ -37,13 +37,6 @@ int Basin::Carbon_management(Control &ctrl, Param &par){
     plant_reserve_CP *= (1 - par._herbivory_uptake_coeff->val[j]);
     plant_mobile_N *= (1 - par._herbivory_uptake_coeff->val[j]);
 
-    // === Crop harvest loss ===
-    idx_last_land_use = ctrl.num_category - 1;
-    if (ctrl.day_of_year==harvest_day[idx_last_land_use]){
-      plant_green_CP *= (1 - par._harvest_coeff->val[j]);
-      plant_reserve_CP *= (1 - par._harvest_coeff->val[j]);
-      plant_mobile_N *= (1 - par._harvest_coeff->val[j]);
-    }
 
     // Update vegetation carbon pools    
     _plant_green_CP->val[j] = plant_green_CP;

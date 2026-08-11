@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../src/Functions/Initialisation.cpp \
 ../src/Functions/Initialisation_each_timestep.cpp \
+../src/Functions/Sort_crop_management.cpp \
 ../src/Functions/Sort_datetime.cpp \
 ../src/Functions/Sort_percolation_travel_time.cpp \
 ../src/Functions/Sort_root_fraction.cpp \
@@ -15,6 +16,7 @@ CPP_SRCS += \
 OBJS += \
 ./Functions/Initialisation.o \
 ./Functions/Initialisation_each_timestep.o \
+./Functions/Sort_crop_management.o \
 ./Functions/Sort_datetime.o \
 ./Functions/Sort_percolation_travel_time.o \
 ./Functions/Sort_root_fraction.o \
@@ -24,6 +26,7 @@ OBJS += \
 CPP_DEPS += \
 ./Functions/Initialisation.d \
 ./Functions/Initialisation_each_timestep.d \
+./Functions/Sort_crop_management.d \
 ./Functions/Sort_datetime.d \
 ./Functions/Sort_percolation_travel_time.d \
 ./Functions/Sort_root_fraction.d \

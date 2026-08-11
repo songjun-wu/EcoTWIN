@@ -107,7 +107,6 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
 
         /* Mixing */
         // Mix ponding water with top layer storage (not used in current version)
-        /*
         pond_old = _pond->val[j] + _infilt->val[j];
         if (pond_old > roundoffERR and ST1 > roundoffERR){
             conc_pond_old = conc_pond;
@@ -116,7 +115,6 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
             conc_pond = (conc_pond_old * (pond_old - pond_to_mix) + conc_layer1_old * pond_to_mix) / pond_old;
             conc_layer1 = (conc_pond_old * pond_to_mix + conc_layer1_old * (ST1 - pond_to_mix)) / ST1;
         }
-        */
 
         
         // Mixing layer 1-3

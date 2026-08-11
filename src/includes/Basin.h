@@ -219,6 +219,8 @@ class Basin {
   vector<double> plant_day;
   vector<double> emerge_day;
   vector<double> harvest_day;
+  vector<double> harvest_period;
+  vector<double> harvest_coeff;
   vector<double> fert_add;
   vector<double> fert_day;
   vector<double> fert_down;
@@ -307,6 +309,7 @@ class Basin {
   svector *_soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
   svector *_respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
   svector *_humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
+  svector *_harvest_C;  // Crop harvest summarised in carbon [gC/m2]
   svector *_C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   svector *_doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
   svector *_leaching_mass_doc;  // Leaching of DOC [gC/m2]
@@ -470,11 +473,12 @@ class Basin {
   int Solve_diffusive_flux(Param &par, svector &sv_conc1, svector &sv_conc2, const svector &sv_storage1, const svector &sv_storage2, const svector &sv_length1, const svector &sv_length2, bool theta_flag1, bool theta_flag2, bool isotope_flag);
    
   /* ===== Carbon module ===== */
+  int Sort_crop_management(Control &ctrl, Param &par);  // Sort crop management (harvest and herbivory loss)
   int Assimilation(Control &ctrl, Atmosphere &atm, Param &par);  // GPP and NPP calculation
   int Photosynthesis_C3(int j, int timestep, double PAR_mol, double RH, double LAI, double Ta_k, double TC_c, double air_pressure, double energy_scaling_factor, double co2_mol, double co2_leaf_mol, 
     double KC, double KO, double VC_max, double Jmax, double gamma, double water_limitation_factor, double carboxylation_rate, svector &sv_NPP, svector &sv_canopy_conductance);  // C3 photosynthesis based on Farquhar (1980)
   int Set_carbon_constant();  // Set constants for carbon simulation (tansformation rates between different carbon pools)
-  int Solve_soil_profile_carbon(Control &ctrl, Atmosphere &atm, Param &par);  // Solve soil carbon processes (addition, transport, decomposition)
+  //int Solve_soil_profile_carbon(Control &ctrl, Atmosphere &atm, Param &par);  // Solve soil carbon processes (addition, transport, decomposition)
   int Carbon_addition(Control &ctrl, Param &par);  // Carbon addition process (from vegetation pools to litter pools)
   int Carbon_management(Control &ctrl, Param &par);  // Carbon management process (harvest and herbivory loss)
   int Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par);   // Solve soil carbon decomposition

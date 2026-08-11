@@ -139,6 +139,7 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__co2_emission_C==2) _co2_emission_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__soil_decomposition_C==2) _soil_decomposition_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__respiration_river_C==2) _respiration_river_C_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__harvest_C==2) _harvest_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__leaching_mass_doc==2) _leaching_mass_doc_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__drainage_mass_doc==2) _drainage_mass_doc_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__no3_I==2) _no3_I_acc = new svector(ctrl._sortedGrid.size);
@@ -264,6 +265,7 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__co2_emission_C==2) _co2_emission_C_acc->plus(*Bsn._co2_emission_C);
   if (ctrl.report__soil_decomposition_C==2) _soil_decomposition_C_acc->plus(*Bsn._soil_decomposition_C);
   if (ctrl.report__respiration_river_C==2) _respiration_river_C_acc->plus(*Bsn._respiration_river_C);
+  if (ctrl.report__harvest_C==2) _harvest_C_acc->plus(*Bsn._harvest_C);
   if (ctrl.report__leaching_mass_doc==2) _leaching_mass_doc_acc->plus(*Bsn._leaching_mass_doc);
   if (ctrl.report__drainage_mass_doc==2) _drainage_mass_doc_acc->plus(*Bsn._drainage_mass_doc);
   if (ctrl.report__no3_I==2) _no3_I_acc->plus(*Bsn._no3_I);
@@ -588,6 +590,9 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__respiration_river_C==1)  report_create(ctrl.path_ResultsFolder+"respiration_river_C_TS.bin", of__respiration_river_C);
   else if (ctrl.report__respiration_river_C==2)  report_create(ctrl.path_ResultsFolder+"respiration_river_C_map.bin", of__respiration_river_C);
 
+  if (ctrl.report__harvest_C==1)  report_create(ctrl.path_ResultsFolder+"harvest_C_TS.bin", of__harvest_C);
+  else if (ctrl.report__harvest_C==2)  report_create(ctrl.path_ResultsFolder+"harvest_C_map.bin", of__harvest_C);
+
   if (ctrl.report__leaching_mass_doc==1)  report_create(ctrl.path_ResultsFolder+"leaching_mass_doc_TS.bin", of__leaching_mass_doc);
   else if (ctrl.report__leaching_mass_doc==2)  report_create(ctrl.path_ResultsFolder+"leaching_mass_doc_map.bin", of__leaching_mass_doc);
 
@@ -758,6 +763,7 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__co2_emission_C==1) {reportTS(ctrl, Bsn._co2_emission_C, of__co2_emission_C);}
   if (ctrl.report__soil_decomposition_C==1) {reportTS(ctrl, Bsn._soil_decomposition_C, of__soil_decomposition_C);}
   if (ctrl.report__respiration_river_C==1) {reportTS(ctrl, Bsn._respiration_river_C, of__respiration_river_C);}
+  if (ctrl.report__harvest_C==1) {reportTS(ctrl, Bsn._harvest_C, of__harvest_C);}
   if (ctrl.report__leaching_mass_doc==1) {reportTS(ctrl, Bsn._leaching_mass_doc, of__leaching_mass_doc);}
   if (ctrl.report__drainage_mass_doc==1) {reportTS(ctrl, Bsn._drainage_mass_doc, of__drainage_mass_doc);}
   if (ctrl.report__no3_I==1) {reportTS(ctrl, Bsn._no3_I, of__no3_I);}
@@ -884,6 +890,7 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__co2_emission_C==2) {reportMap(ctrl, _co2_emission_C_acc, ctrl._sortedGrid, of__co2_emission_C);}
   if (ctrl.report__soil_decomposition_C==2) {reportMap(ctrl, _soil_decomposition_C_acc, ctrl._sortedGrid, of__soil_decomposition_C);}
   if (ctrl.report__respiration_river_C==2) {reportMap(ctrl, _respiration_river_C_acc, ctrl._sortedGrid, of__respiration_river_C);}
+  if (ctrl.report__harvest_C==2) {reportMap(ctrl, _harvest_C_acc, ctrl._sortedGrid, of__harvest_C);}
   if (ctrl.report__leaching_mass_doc==2) {reportMap(ctrl, _leaching_mass_doc_acc, ctrl._sortedGrid, of__leaching_mass_doc);}
   if (ctrl.report__drainage_mass_doc==2) {reportMap(ctrl, _drainage_mass_doc_acc, ctrl._sortedGrid, of__drainage_mass_doc);}
   if (ctrl.report__no3_I==2) {reportMap(ctrl, _no3_I_acc, ctrl._sortedGrid, of__no3_I);}

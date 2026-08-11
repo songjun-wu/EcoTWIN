@@ -305,7 +305,7 @@ Parameters = [# ======= Hydrology =======
               ['_irrigation_coeff', [Opt.cond['irrigation_1']], 'Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled', 'grid', 'spatial_param', 'irrigation_coeff', 0],
               ['_drainage_intensity', [Opt.cond['drainage_1']], 'The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled', 'grid', 'spatial_param', 'drainage_intensity', 0],
               ['_herbivory_uptake_coeff', [Opt.cond['carbon_sim_1']], 'The coefficient for herbivory uptake [-]', 'grid', 'spatial_param', 'herbivory_uptake_coeff', 0],
-              ['_harvest_coeff', [Opt.cond['carbon_sim_1']], 'The coefficient for crop harvest [-]', 'grid', 'spatial_param', 'harvest_coeff', 0],
+              #['_harvest_coeff', [Opt.cond['carbon_sim_1']], 'The coefficient for crop harvest [-]', 'grid', 'spatial_param', 'harvest_coeff', 0],
 
               # # ======= Mixing =======
               ['_diffuse_molecular_coefficient', [Opt.cond['none']], 'The coefficient for Fickian diffusion [m2/s]', 'grid', 'spatial_param', 'diffuse_molecular_coefficient', 0],
@@ -315,12 +315,12 @@ Parameters = [# ======= Hydrology =======
 
               # ======= Isotope tracking =======
               ['_CG_n_soil', [Opt.cond['tracking_isotope_1']], 'Parameter N in CG model for soil water fractionation [-]', 'grid', 'spatial_param', 'CG_n_soil', 0],
-              ['_delta_d18o_init_GW', [Opt.cond['init_d18o_1']], 'Initial d18O of GW storage [‰]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
+              ['_delta_d18o_init_GW', [Opt.cond['init_d18o_1']], 'Changes of initial d18O of GW storage [‰]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
               
               
 
               # ======= Nitrogen =======
-              ['_delta_no3_init_GW', [Opt.cond['init_no3_1']], 'Initial no3 of GW storage [‰]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
+              ['_delta_no3_init_GW', [Opt.cond['init_no3_1']], 'Changes of initial no3 of GW storage [mg/L]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
               ['_denitrification_river', [Opt.cond['nitrogen_sim_1']], 'Reference decay coefficient of aquatic denitrification [timestep-1]', 'grid', 'spatial_param', 'denitrification_river', 0],
               #['_autotrophic_uptake_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic autotrophic uptake [-]', 'grid', 'spatial_param', 'autotrophic_uptake_aquatic', 0],
               #['_primary_production_aquatic', [Opt.cond['nitrogen_sim_1']], 'Reference rates of aquatic primary production [-]', 'grid', 'spatial_param', 'primary_production_aquatic', 0],
@@ -338,6 +338,8 @@ Parameters = [# ======= Hydrology =======
               ['_plant_reserve_CP_max', [Opt.cond['carbon_sim_1']], 'Term to calculate maximum carbon content in reserve pool at optimal conditions [-]: first term is the ratio of ratio of vegetation green pool to reserve pool at maximum LAI, while second term is maximum LAI', 'grid', 'spatial_param', 'plant_reserve_CP_max', 0],
               
               # ======= Carbon =======
+              # Initialization
+              ['_delta_doc_init_GW', [Opt.cond['init_doc_1']], 'Changes of initial doc of GW storage [mg/L]', 'grid', 'spatial_param', 'delta_d18o_init_GW', 0],
               # Assimilation
               ['_carboxylation_rate', [Opt.cond['carbon_sim_1']], 'Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)] (*1e-6?)', 'grid', 'spatial_param', 'carboxylation_rate', 0],
               ['_ETransport', [Opt.cond['carbon_sim_1']], 'Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)', 'grid', 'spatial_param', 'ETransport', 0],
@@ -423,12 +425,15 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           ['_soil_decomposition_C',  [Opt.cond['carbon_sim_1']], 'Soil decomposition summarised in carbon [gC/m2]', 'grid', 'new', 'soil_decomposition_C', 1],
           ['_respiration_river_C',  [Opt.cond['carbon_sim_1']], 'Aquatic heterotrophic respiration summarised in carbon [gC/m2]', 'grid', 'new', 'respiration_river_C', 1],
           ['_humus_decomposition_spatial_weights',  [Opt.cond['carbon_sim_1']], 'Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]', 'grid', 'spatial', 'humus_decomposition_spatial_weights', 0],
-
+          ['_harvest_C',  [Opt.cond['carbon_sim_1']], 'Crop harvest summarised in carbon [gC/m2]', 'grid', 'new', 'harvest_C', 1],
           
           
           ['_C4_flag', [Opt.cond['carbon_sim_1']], ' C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)', 'grid', 'spatial', 'C4_flag', 0],
           ['_doc_rain', [Opt.cond['carbon_sim_1']], 'The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1', 'grid', 'spatial', 'doc_rain', 0],
 
+        
+          # Internal variables
+          #['_fraction_crop', [Opt.cond['carbon_sim_1']], 'The proportion of crop in the grid cell [decimal]', 'grid', 'new', 'fraction_crop', 0],
 
           # Statistics of carbon storages and fluxes
           ['_leaching_mass_doc', [Opt.cond['carbon_sim_1']], 'Leaching of DOC [gC/m2]', 'grid', 'new', 'leaching_mass_doc', 1],
@@ -494,7 +499,8 @@ Nitrogen_addition = [['is_crop', [Opt.cond['irrigation_1'], Opt.cond['nitrogen_s
                      ['plant_day', [Opt.cond['irrigation_1'], Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation planting [day]', 'vector', 'vector', None, 0],
                      ['emerge_day', [Opt.cond['irrigation_1'], Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation emeregence [day]', 'vector', 'vector', None, 0],
                      ['harvest_day', [Opt.cond['irrigation_1'], Opt.cond['nitrogen_sim_1']], 'Day of year for vegetation harvest [day]', 'vector', 'vector', None, 0],
-                     #['harvest_period', [Opt.cond['irrigation_1'], Opt.cond['nitrogen_sim_1']], 'The duration of harvest [day]', 'vector', 'vector', None, 0],
+                     ['harvest_period', [Opt.cond['irrigation_1'], Opt.cond['nitrogen_sim_1']], 'The duration of harvest [day]', 'vector', 'vector', None, 0],
+                     ['harvest_coeff', [Opt.cond['irrigation_1'], Opt.cond['nitrogen_sim_1']], 'The coefficient of harvest [decimal]', 'vector', 'vector', None, 0],
 
 
 

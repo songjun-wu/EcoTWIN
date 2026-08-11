@@ -75,7 +75,6 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(irrigation_coeff, "irrigation_coeff", lines);
   readIntoParam(drainage_intensity, "drainage_intensity", lines);
   readIntoParam(herbivory_uptake_coeff, "herbivory_uptake_coeff", lines);
-  readIntoParam(harvest_coeff, "harvest_coeff", lines);
   readIntoParam(diffuse_molecular_coefficient, "diffuse_molecular_coefficient", lines);
   readIntoParam(nearsurface_mixing, "nearsurface_mixing", lines);
   readIntoParam(ratio_to_interf, "ratio_to_interf", lines);
@@ -90,6 +89,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(tau_wood_C, "tau_wood_C", lines);
   readIntoParam(plant_wood_CP_max, "plant_wood_CP_max", lines);
   readIntoParam(plant_reserve_CP_max, "plant_reserve_CP_max", lines);
+  readIntoParam(delta_doc_init_GW, "delta_doc_init_GW", lines);
   readIntoParam(carboxylation_rate, "carboxylation_rate", lines);
   readIntoParam(ETransport, "ETransport", lines);
   readIntoParam(frac_NPP_to_green, "frac_NPP_to_green", lines);

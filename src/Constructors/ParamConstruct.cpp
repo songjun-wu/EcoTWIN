@@ -28,6 +28,7 @@ Param::Param(Control &ctrl){
   sort_perc_travel_time_OK = 0;  
   sort_root_fraction_OK = 0;  
   sort_plant_uptake_OK = 0;  // The plant uptake only needs to be calculated once (or once within each change)
+  sort_crop_management_OK = 0;  // The crop management only needs to be calculated once (or once within each change)
   sort_nitrogen_addition_OK = 0;  // The nitrogen addtion only needs to be calculated once (or once within each change)
 
   string fname = "param.ini";
@@ -107,7 +108,6 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_carbon_sim == 1){
     _herbivory_uptake_coeff = new svector(_sortedGrid.size);
-    _harvest_coeff = new svector(_sortedGrid.size);
     _C_in_LeafArea = new svector(_sortedGrid.size);
     _tau_wood_C = new svector(_sortedGrid.size);
     _plant_wood_CP_max = new svector(_sortedGrid.size);
@@ -146,6 +146,9 @@ Param::Param(Control &ctrl){
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
     _LAI_shed_coef = new svector(_sortedGrid.size);
+  }
+  if (ctrl.opt_init_doc == 1){
+    _delta_doc_init_GW = new svector(_sortedGrid.size);
   }
   /* end of Parameters */
 

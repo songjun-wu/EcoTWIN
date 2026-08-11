@@ -142,6 +142,7 @@ class Report {
     ofstream of__soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
     ofstream of__respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     ofstream of__humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
+    ofstream of__harvest_C;  // Crop harvest summarised in carbon [gC/m2]
     ofstream of__C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     ofstream of__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
     ofstream of__leaching_mass_doc;  // Leaching of DOC [gC/m2]
@@ -275,6 +276,7 @@ class Report {
     svector *_soil_decomposition_C_acc;  // Soil decomposition summarised in carbon [gC/m2]
     svector *_respiration_river_C_acc;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
     svector *_humus_decomposition_spatial_weights_acc;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
+    svector *_harvest_C_acc;  // Crop harvest summarised in carbon [gC/m2]
     svector *_C4_flag_acc;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     svector *_doc_rain_acc;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
     svector *_leaching_mass_doc_acc;  // Leaching of DOC [gC/m2]

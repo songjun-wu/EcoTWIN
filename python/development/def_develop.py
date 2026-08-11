@@ -200,6 +200,13 @@ class Opt:
                         'general_description':'Whether to use baseflow mixing for GW storage\n# 0: NO, use full mixing\n# 1: YES, use baseflow mixing with more damped variation',
                         'description':'Use baseflow mixing with more damped variation for GW storage'}
 
+    cond['init_doc_0']   = {'key':'opt_init_doc', 'value':0, 
+                        'general_description':'Whether to adjust the doc compostion in inital storages\n# 0: NO\n# 1: YES (the parameter doc_init_GW needs to be specified)',
+                        'description':'Adjust the initial doc composition from raster inputs, the parameter doc_init_GW needs to be specified'}
+    cond['init_doc_1']   = {'key':'opt_init_doc', 'value':1, 
+                        'general_description':'Whether to adjust the doc compostion in inital storages\n# 0: NO\n# 1: YES (the parameter doc_init_GW needs to be specified)',
+                        'description':'Adjust the initial doc composition from raster inputs, the parameter doc_init_GW needs to be specified'}
+
     cond['init_no3_0']   = {'key':'opt_init_no3', 'value':0, 
                         'general_description':'Whether to adjust the no3 compostion in inital storages\n# 0: NO\n# 1: YES (the parameter no3_init_GW needs to be specified)',
                         'description':'Adjust the initial no3 composition from raster inputs, the parameter no3_init_GW needs to be specified'}

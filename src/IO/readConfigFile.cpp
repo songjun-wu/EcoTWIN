@@ -82,6 +82,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_chanE, "opt_chanE", lines);
   readInto(opt_init_d18o, "opt_init_d18o", lines);
   readInto(opt_baseflow_mixing, "opt_baseflow_mixing", lines);
+  readInto(opt_init_doc, "opt_init_doc", lines);
   readInto(opt_init_no3, "opt_init_no3", lines);
   readInto(opt_fert_input, "opt_fert_input", lines);
   /* end of Options */
@@ -340,6 +341,7 @@ int Control::ReadConfigFile(string fname){
   readInto(report__co2_emission_C, "report_co2_emission_C", lines);
   readInto(report__soil_decomposition_C, "report_soil_decomposition_C", lines);
   readInto(report__respiration_river_C, "report_respiration_river_C", lines);
+  readInto(report__harvest_C, "report_harvest_C", lines);
   readInto(report__leaching_mass_doc, "report_leaching_mass_doc", lines);
   readInto(report__drainage_mass_doc, "report_drainage_mass_doc", lines);
   readInto(report__no3_I, "report_no3_canopy_storage", lines);

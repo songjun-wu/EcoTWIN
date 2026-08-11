@@ -276,6 +276,7 @@ int Basin::dtor(Control &ctrl){
     if(_soil_decomposition_C) delete _soil_decomposition_C;
     if(_respiration_river_C) delete _respiration_river_C;
     if(_humus_decomposition_spatial_weights) delete _humus_decomposition_spatial_weights;
+    if(_harvest_C) delete _harvest_C;
     if(_C4_flag) delete _C4_flag;
     if(_doc_rain) delete _doc_rain;
     if(_leaching_mass_doc) delete _leaching_mass_doc;

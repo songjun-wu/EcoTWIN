@@ -122,6 +122,7 @@ int Report::dtor(Control &ctrl){
   if (of__co2_emission_C.is_open())  of__co2_emission_C.close();
   if (of__soil_decomposition_C.is_open())  of__soil_decomposition_C.close();
   if (of__respiration_river_C.is_open())  of__respiration_river_C.close();
+  if (of__harvest_C.is_open())  of__harvest_C.close();
   if (of__leaching_mass_doc.is_open())  of__leaching_mass_doc.close();
   if (of__drainage_mass_doc.is_open())  of__drainage_mass_doc.close();
   if (of__no3_I.is_open())  of__no3_I.close();
@@ -240,6 +241,7 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__co2_emission_C==2) delete _co2_emission_C_acc;
   if (ctrl.report__soil_decomposition_C==2) delete _soil_decomposition_C_acc;
   if (ctrl.report__respiration_river_C==2) delete _respiration_river_C_acc;
+  if (ctrl.report__harvest_C==2) delete _harvest_C_acc;
   if (ctrl.report__leaching_mass_doc==2) delete _leaching_mass_doc_acc;
   if (ctrl.report__drainage_mass_doc==2) delete _drainage_mass_doc_acc;
   if (ctrl.report__no3_I==2) delete _no3_I_acc;

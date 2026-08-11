@@ -35,7 +35,7 @@ Control::Control(){
   
   _Gauge_to_Report = new svector(path_BasinFolder + fn__Gauge_to_Report, _rowNum, _colNum, _sortedGrid);
   _Tsmask = sortTSmask();
-
+  
 
   // ===== Option correction =====
   // Nitrogen simulation is dependent on carbon simulation
@@ -56,6 +56,7 @@ Control::Control(){
     }
     if (opt_nitrogen_sim==1){
     }
+  }
 
   /* Correction of report flags */
   if (!(opt_reinfil == 1)){
@@ -134,6 +135,7 @@ Control::Control(){
     report__co2_emission_C = 0;
     report__soil_decomposition_C = 0;
     report__respiration_river_C = 0;
+    report__harvest_C = 0;
     report__leaching_mass_doc = 0;
     report__drainage_mass_doc = 0;
   }
@@ -159,7 +161,4 @@ Control::Control(){
   /* end of Correction of report flags */
 
 
-  }
-
-  
 }

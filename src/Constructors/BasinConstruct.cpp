@@ -282,6 +282,7 @@
     _soil_decomposition_C = new svector(_sortedGrid.size);
     _respiration_river_C = new svector(_sortedGrid.size);
     _humus_decomposition_spatial_weights = new svector(ctrl.path_BasinFolder + ctrl.fn__humus_decomposition_spatial_weights, _rowNum, _colNum, _sortedGrid);
+    _harvest_C = new svector(_sortedGrid.size);
     _C4_flag = new svector(ctrl.path_BasinFolder + ctrl.fn__C4_flag, _rowNum, _colNum, _sortedGrid);
     _doc_rain = new svector(ctrl.path_BasinFolder + ctrl.fn__doc_rain, _rowNum, _colNum, _sortedGrid);
     _leaching_mass_doc = new svector(_sortedGrid.size);

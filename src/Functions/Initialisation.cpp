@@ -74,6 +74,26 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
     if (ctrl.opt_carbon_sim==1){
     _plant_wood_CP->lower_than(*par._plant_wood_CP_max);
     _plant_reserve_CP->lower_than(*par._plant_reserve_CP_max);
+
+    // Adjust the initial doc composition if needed
+    if (ctrl.opt_init_doc==1){
+      _doc_chanS->plus(*par._delta_doc_init_GW); // Asign isotopic composition to channel storage
+      _doc_layer1->plus(*par._delta_doc_init_GW); // Asign isotopic composition to soil layer1
+      _doc_layer2->plus(*par._delta_doc_init_GW); // Asign isotopic composition to soil layer2
+      _doc_layer3->plus(*par._delta_doc_init_GW); // Asign isotopic composition to soil layer3
+      _doc_GW->plus(*par._delta_doc_init_GW); // Asign isotopic composition to GW
+      // Avoid negative values
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        _doc_chanS->val[j] = max(0.0, _doc_chanS->val[j]);
+        _doc_layer1->val[j] = max(0.0, _doc_layer1->val[j]);
+        _doc_layer2->val[j] = max(0.0, _doc_layer2->val[j]);
+        _doc_layer3->val[j] = max(0.0, _doc_layer3->val[j]);
+        _doc_GW->val[j] = max(0.0, _doc_GW->val[j]);
+      }
+    }  // end of opt_init_doc
+
+
+
     }  // end of opt_carbon_sim
 
    
@@ -85,7 +105,6 @@ int Basin::Initialisation(Control &ctrl, Param &par, Atmosphere &atm){
       // Set nitrogen storage and DON concentration
       for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
       }
-      
       
       // Adjust the initial no3 composition if needed
       if (ctrl.opt_init_no3==1){

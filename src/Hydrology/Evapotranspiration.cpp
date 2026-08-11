@@ -149,7 +149,7 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
     double transp; // Transpiration [m per timestep]
     double depth1, depth2, depth3;
     double theta1, theta2, theta3;
-    double ST1, ST2, ST3;
+    double ST1, ST2, ST3, available_water;
     double thetaS1;
     double FC1, FC2, FC3;
     double WP1, WP2, WP3;
@@ -163,8 +163,8 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
     double Ea_s;  // Saturated vapor pressure in atmosphere [Pa]
     // === Conductance ===
     // Water limitation factor averaged from three layers
-    double water_limitation_factor;
-    double ga; // Aerodynamic conductance [m/s]
+    //double water_limitation_factor;
+    double ga_canopy, ga_soil; // Aerodynamic conductance for canopy and soil [m/s]
     // Soil surface resistance from Sellers, P. J., et al. (1996)
     // https://doi.org/10.1175/1520-0442(1996)009<0676:ARLSPF>2.0.CO;2
     double rs_soil;
@@ -228,20 +228,23 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
         Rnet_veg = atm._Rnet->val[j] * SCF_veg;  // Radiation for vegetation [W/m2]
         Rnet_soil = atm._Rnet->val[j] - Rnet_veg;  // Radiation for soil [W/m2]
 
+    
+
         // === Saturated vapor pressure ===
         Ta = atm._Ta->val[j];  // Air temperature in degree Celsius
         Ea_s = 611 * exp((17.3 * Ta)/(Ta + 237.3));  // Saturated vapor pressure in atmosphere [Pa]
         // === Conductance ===
         // Water limitation factor averaged from three layers
-        water_limitation_factor =\  
-        _froot_layer1->val[j] * (theta1 - WP1) / (FC1 - WP1) + 
-        _froot_layer2->val[j] * (theta2 - WP2) / (FC2 - WP2) + 
-        _froot_layer3->val[j] * (theta3 - WP3) / (FC3 - WP3);
-        water_limitation_factor = min(max(0.0, water_limitation_factor), 1.0); 
-        ga = 0.02 * 2.0; // Aerodynamic conductance [m/s]
+        //water_limitation_factor =\  
+        //_froot_layer1->val[j] * (theta1 - WP1) / (FC1 - WP1) + 
+        //_froot_layer2->val[j] * (theta2 - WP2) / (FC2 - WP2) + 
+        //_froot_layer3->val[j] * (theta3 - WP3) / (FC3 - WP3);
+        //water_limitation_factor = min(max(0.0, water_limitation_factor), 1.0); 
+        ga_canopy = 0.02 * 2.0; // Aerodynamic conductance for canopy [m/s]
+        ga_soil = ga_canopy * (1 - SCF_veg); // Aerodynamic conductance for soil [m/s]
         // Soil surface resistance from Sellers, P. J., et al. (1996)
         // https://doi.org/10.1175/1520-0442(1996)009<0676:ARLSPF>2.0.CO;2
-        rs_soil = (1 / ga) + exp(8.2 - 4.255 * theta1/thetaS1);
+        rs_soil = exp(8.2 - 4.255 * theta1/thetaS1);
         gs = 1 / rs_soil;
         gc = _canopy_conductance->val[j];  // Canopy conductance [m/s]
 
@@ -251,16 +254,18 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
 
 
         // === Parameters of Penman-Monteith equation ===
-        VPD = max(0.05, Ea_s * (1 - atm._RH->val[j]));  // Vapour pressure deficit [Pa]
+        VPD = Ea_s * (1 - atm._RH->val[j]);  // Vapour pressure deficit [Pa]
+        //VPD = max(0.05, Ea_s * (1 - atm._RH->val[j]));  // Vapour pressure deficit [Pa]
         PM_delta = 4098 * Ea_s / ((Ta + 237.3)*(Ta + 237.3)) ; // Slope of saturated vapor pressure curve at air temperature [Pa/K]
         PM_pho = 1.2;  // Air density [kg/m3]
         PM_cp = 1005;  // Specific heat capacity of air at constant pressure [J kg-1 K-1]
         PM_lambda = 2.45e6;  // Latent heat of vaporization of water [J kg-1]
         PM_gamma = 65;  // Psychrometric constant (Approximate value for standard pressure) [Pa K-1]
 
+
         // === Penman-Monteith implementation ===
-        transp = (PM_delta * Rnet_veg + PM_pho * PM_cp * VPD * ga) / (PM_lambda * (PM_delta + PM_gamma * (1 + ga/gc)));  // Transpiration [kg m-2 s-1]
-        soil_evap = (PM_delta * Rnet_soil + PM_pho * PM_cp * VPD * ga) / (PM_lambda * (PM_delta + PM_gamma * (1 + ga/gs)));  // Soil evaporation [kg m-2 s-1]
+        transp = (PM_delta * Rnet_veg + PM_pho * PM_cp * VPD * ga_canopy) / (PM_lambda * (PM_delta + PM_gamma * (1 + ga_canopy/gc)));  // Transpiration [kg m-2 s-1]
+        soil_evap = (PM_delta * Rnet_soil + PM_pho * PM_cp * VPD * ga_soil) / (PM_lambda * (PM_delta + PM_gamma * (1 + ga_soil/gs)));  // Soil evaporation [kg m-2 s-1]
         // Evaporation and Transpiration should be adjusted by par._ET_weight->val[j] due to potential underestimation of daily simulaton compared to integral of hourly simulaton
         // Set par._ET_weight->val[j] to 1 for subdaily simulation
         transp *= par._ET_weight->val[j] * DT / 1000;  // Unit transformation from kg m-2 s-1 to m per timestep
@@ -273,18 +278,22 @@ int Basin::Evapotranspiration_2(Control &ctrl, Param &par, Atmosphere &atm){
         
   
         // Transpiration in layer 1
-        Tr1 = min(transp * _froot_layer1->val[j], ST1 - WP1*depth1);
+        available_water = max(0.0, ST1 - WP1*depth1);
+        Tr1 = min(transp * _froot_layer1->val[j], available_water);
         ST1 -= Tr1;
         // Soil evaporation in layer 1
-        soil_evap = min(soil_evap, ST1 - WP1*depth1);
+        available_water = max(0.0, ST1 - WP1*depth1);
+        soil_evap = min(soil_evap, available_water);
         ST1 -= soil_evap;
 
         // Transpiration in layer 2
-        Tr2 = min(transp * _froot_layer2->val[j], ST2 - WP2*depth2);
+        available_water = max(0.0, ST2 - WP2*depth2);
+        Tr2 = min(transp * _froot_layer2->val[j], available_water);
         ST2 -= Tr2;
         
         // Transpiration in layer 3
-        Tr3 = min(transp * _froot_layer3->val[j], ST3 - WP3*depth3);
+        available_water = max(0.0, ST3 - WP3*depth3);
+        Tr3 = min(transp * _froot_layer3->val[j], available_water);
         ST3 -= Tr3;
 
         // Update global variables

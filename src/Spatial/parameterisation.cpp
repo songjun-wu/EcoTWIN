@@ -23,6 +23,7 @@ int Param::Parameterisation(Control &ctrl){
   sort_perc_travel_time_OK = 0;  
   sort_root_fraction_OK = 0;  
   sort_plant_uptake_OK = 0;  // The plant uptake only needs to be calculated once (or once within each change)
+  sort_crop_management_OK = 0;  // The crop management only needs to be calculated once (or once within each change)
   sort_nitrogen_addition_OK = 0;  // The nitrogen addtion only needs to be calculated once (or once within each change)
   sort_parameter_correction_OK = 0;  // The parameter correction only needs to be calculated once (or once within each change)
 
@@ -471,13 +472,6 @@ int Param::Parameterisation(Control &ctrl){
           _herbivory_uptake_coeff->val[j] += param_category->val[k][j] * herbivory_uptake_coeff[k];
      }}}
   
-  _harvest_coeff->reset();
-    for (int k=0; k<param_category->n_category; k++){
-      if (harvest_coeff[k]!=nodata) {
-        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _harvest_coeff->val[j] += param_category->val[k][j] * harvest_coeff[k];
-     }}}
-  
   _C_in_LeafArea->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (C_in_LeafArea[k]!=nodata) {
@@ -712,6 +706,17 @@ int Param::Parameterisation(Control &ctrl){
       if (LAI_shed_coef[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
           _LAI_shed_coef->val[j] += param_category->val[k][j] * LAI_shed_coef[k];
+     }}}
+
+  }
+
+  if (ctrl.opt_init_doc == 1){
+  
+  _delta_doc_init_GW->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (delta_doc_init_GW[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          _delta_doc_init_GW->val[j] += param_category->val[k][j] * delta_doc_init_GW[k];
      }}}
 
   }

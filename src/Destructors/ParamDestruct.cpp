@@ -98,7 +98,6 @@ int Param::dtor(Control &ctrl){
   }
   if (ctrl.opt_carbon_sim == 1){
     if(_herbivory_uptake_coeff) delete _herbivory_uptake_coeff;
-    if(_harvest_coeff) delete _harvest_coeff;
     if(_C_in_LeafArea) delete _C_in_LeafArea;
     if(_tau_wood_C) delete _tau_wood_C;
     if(_plant_wood_CP_max) delete _plant_wood_CP_max;
@@ -137,6 +136,9 @@ int Param::dtor(Control &ctrl){
   }
   if (ctrl.opt_carbon_sim == 1 or ctrl.opt_carbon_sim == 1){
     if(_LAI_shed_coef) delete _LAI_shed_coef;
+  }
+  if (ctrl.opt_init_doc == 1){
+    if(_delta_doc_init_GW) delete _delta_doc_init_GW;
   }
   /* end of Parameters */
 
