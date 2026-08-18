@@ -67,9 +67,9 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         if (theta1 > 0){
             // Soil moisture factor
             if (theta1 / _thetaS1->val[j] > moisture_function_threshold){
-                fct_theta = pow((theta1 / _thetaS1->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5);
+                fct_theta = 0.1 + pow((theta1 / _thetaS1->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5) * 0.9;
             } else{
-                fct_theta = 0;
+                fct_theta = 0.1;
             }
             // Concentration factor
             fct_conc = no3_layer1 / (no3_layer1 + 1.5);
@@ -82,9 +82,9 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         if (theta2 > 0){
             // Soil moisture factor
             if (theta2 / _thetaS2->val[j] > moisture_function_threshold){
-                fct_theta = pow((theta2 / _thetaS2->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5);
+                fct_theta = 0.1 + pow((theta2 / _thetaS2->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5) * 0.9;
             } else{
-                fct_theta = 0;
+                fct_theta = 0.1;
             }
             // Concentration factor
             fct_conc = no3_layer2 / (no3_layer2 + 1.5);
@@ -97,9 +97,9 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
         if (theta3 > 0){
             // Soil moisture factor
             if (theta3 / _thetaS3->val[j] > moisture_function_threshold){
-                fct_theta = pow((theta3 / _thetaS3->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5);
+                fct_theta = 0.1 + pow((theta3 / _thetaS3->val[j] - moisture_function_threshold) / (1 - moisture_function_threshold), 2.5) * 0.9;
             } else{
-                fct_theta = 0;
+                fct_theta = 0.1;
             }
             // Concentration factor
             fct_conc = no3_layer3 / (no3_layer3 + 1.5);

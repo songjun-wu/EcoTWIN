@@ -66,9 +66,6 @@ int Basin::Carbon_addition(Control &ctrl, Param &par){
 
       plant_green_CP_max = ratio_green_2_leaf * _LAI->val[j] / par._C_in_LeafArea->val[j];  // The maximum carbon content in green pool [gC/m2]
       plant_reserve_CP_max = par._plant_reserve_CP_max->val[j] / par._C_in_LeafArea->val[j];  // The maximum carbon content in plant_reserve_CP pool [gC/m2]
-      //soluble_CP1 = _doc_layer1->val[j] * _theta1->val[j] * depth1;
-      //soluble_CP2 = _doc_layer2->val[j] * _theta2->val[j] * depth2;
-      //soluble_CP3 = _doc_layer3->val[j] * _theta3->val[j] * depth3;
 
       froot_layer1 = _froot_layer1->val[j];  // Root fraction in layer 1 [-]
       froot_layer2 = _froot_layer2->val[j];  // Root fraction in layer 2 [-]

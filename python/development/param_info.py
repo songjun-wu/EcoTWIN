@@ -78,11 +78,8 @@ class Param:
     # === Management ===
     ref['irrigation_FC_thres']   =   {'type':'global',  'log':1, 'file':'irrigation_FC_thres',   'min':[0.01], 'max':[0.1], 'fix_value':[0.1],}  # The soil moisture threshold for irrigation
     ref['irrigation_coeff']   = {'type':'global',   'log':1, 'file':'irrigation_coeff',   'min':[0.01], 'max':[0.2], 'fix_value':[0.0],}  # Irrigation coefficient to determine the actual water demand from water deficit [-]
-    ref['drainage_intensity']   = {'type':'global_landuse',  'log':0, 'file':'drainage_intensity',   'min':[0.0], 'max':[0.99], 'fix_value':None, 'weights':[1,0,0,0,0,0.8,0],}  # The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
+    ref['drainage_intensity']   = {'type':'global_landuse',  'log':0, 'file':'drainage_intensity',   'min':[0.0], 'max':[0.99], 'fix_value':None, 'weights':[1,0,0,0,0,0,0],}  # The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
     ref['herbivory_uptake_coeff']   = {'type':'global',  'log':0, 'file':'herbivory_uptake_coeff',   'min':[2e-4], 'max':[2e-3], 'fix_value':[0.0],}  # The coefficient for herbivory uptake [-]
-    
-    # todo: to be deleted
-    ref['harvest_coeff']   = {'type':'global_landuse',  'log':0, 'file':'harvest_coeff',   'min':[0.0], 'max':[0.4], 'fix_value':None, 'weights':[1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],}  # The coefficient for crop harvest [-]
 
     # Snow
     ref['snow_rain_thre']   =   {'type':'global',   'log':0, 'file':'snow_rain_thre',   'min':[-5], 'max':[5], 'fix_value':None,}
@@ -93,7 +90,7 @@ class Param:
     
     # === Pedotransfer function ===
     # Soil proporties (field capacity, wilting point, hydraulic conductivity)
-    ref['ref_thetaS']   = {'type':'global',   'log':0, 'file':'ref_thetaS',   'min':[0.4], 'max':[0.99], 'fix_value':None,} # 'min':[0.5], 'max':[0.99]
+    ref['ref_thetaS']   = {'type':'global',   'log':0, 'file':'ref_thetaS',   'min':[0.4], 'max':[0.9], 'fix_value':None,} # 'min':[0.5], 'max':[0.99]
     ref['PTF_VG_clay']   = {'type':'global',   'log':1, 'file':'PTF_VG_clay',   'min':[5e-8], 'max':[5e-3], 'fix_value':None,}
     ref['PTF_VG_Db']   = {'type':'global',   'log':1, 'file':'PTF_VG_Db',   'min':[5e-4], 'max':[5e-1], 'fix_value':None,}
     ref['PTF_Ks_const']   = {'type':'global_landuse',   'log':0, 'file':'PTF_Ks_const',   'min':[-1.2], 'max':[-0.3], 'fix_value':None, 'weights':[1,1,1,1,1,2,1],} # [-1.2, -0.29]
@@ -137,7 +134,7 @@ class Param:
     ref['pOvf_toChn']   = {'type':'global',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3], 'max':[1], 'fix_value':[1],}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size) [1e-3, 1]
     ref['Ks_surface']   = {'type':'landuse',   'log':0, 'file':'Ks_surface',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':[0.9, 0.9, 0.9, 0.8, 1.0, 1.0, 0.5],}  # The reference conductivity of surface for overland flow routing [m/day] [1e-3, 1]
     ref['Ks_vadose']   = {'type':'global',   'log':1, 'file':'Ks_vadose',   'min':[1e-3], 'max':[1], 'fix_value':None,}  # The reference conductivity of vadose zone for interflow routing [m/day] [1e-3, 1]
-    ref['Ks_GW']   = {'type':'global',   'log':1, 'file':'Ks_GW',   'min':[1e-9], 'max':[1e-2], 'fix_value':None,}  # The reference conductivity of GW zone for interflow routing [m/day]
+    ref['Ks_GW']   = {'type':'global',   'log':1, 'file':'Ks_GW',   'min':[1e-9], 'max':[1e-3], 'fix_value':None,}  # The reference conductivity of GW zone for interflow routing [m/day]
     ref['lat_to_Chn_vadose']   = {'type':'global',   'log':1, 'file':'lat_to_Chn_vadose',   'min':[0.1]*Info.N_landuse, 'max':[15]*Info.N_landuse, 'fix_value':None,} # The ratio between conductivities of lateral flow and channel recharge in vadose zone [-]  [0.1,10]
     ref['lat_to_Chn_GW']   = {'type':'global',   'log':1, 'file':'lat_to_Chn_GW',   'min':[1e-3]*Info.N_landuse, 'max':[1e1]*Info.N_landuse, 'fix_value':None,} # The ratio between conductivities of lateral flow and channel recharge in GW zone [-]
     ref['interfExp']   = {'type':'global',   'log':1, 'file':'interfExp',   'min':[1e-2]*Info.N_landuse, 'max':[10]*Info.N_landuse, 'fix_value':None,}
@@ -146,15 +143,15 @@ class Param:
     ref['ratio_to_interf'] = {'type':'global',   'log':0, 'file':'ratio_to_interf',   'min':[0], 'max':[1], 'fix_value':None,}  #[0,1]
 
     # === Channel === 
-    ref['Echan_alpha']   = {'type':'global',   'log':1, 'file':'Echan_alpha',   'min':[0.1], 'max':[10], 'fix_value':None,}  # Correction factor in Priestley-Taylor equation
+    ref['Echan_alpha']   = {'type':'global',   'log':1, 'file':'Echan_alpha',   'min':[0.1], 'max':[10], 'fix_value':[1],}  # Correction factor in Priestley-Taylor equation
 
     # === Mixing === 
-    ref['nearsurface_mixing']   = {'type':'global',   'log':0, 'file':'nearsurface_mixing',   'min':[0], 'max':[0], 'fix_value':[1e-2],} 
-    ref['diffuse_molecular_coefficient']   = {'type':'global',   'log':1, 'file':'diffuse_molecular_coefficient',   'min':np.array([1.06e-5]), 'max':np.array([1.06e-5]), 'fix_value':None,}  # The coefficient for Fickian diffusion [m2/s]
+    ref['nearsurface_mixing']   = {'type':'global',   'log':0, 'file':'nearsurface_mixing',   'min':[0], 'max':[1], 'fix_value':None,} 
+    ref['diffuse_molecular_coefficient']   = {'type':'global',   'log':1, 'file':'diffuse_molecular_coefficient',   'min':np.array([1.06e-5]), 'max':np.array([1.06e-5]), 'fix_value':[1.06e-5],}  # The coefficient for Fickian diffusion [m2/s]
     
 
     # === Tracking ===      
-    ref['CG_n_soil'] = {'type':'landuse',   'log':0, 'file':'CG_n_soil',   'min':[0.5]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None,}
+    ref['CG_n_soil'] = {'type':'global',   'log':0, 'file':'CG_n_soil',   'min':[0.5], 'max':[1], 'fix_value':None,}
     #ref['delta_d18o_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_d18o_init_GW',   'min':[-5]*Info.N_soil, 'max':[5]*Info.N_soil, 'fix_value':None,} # The adjustment of initial d18o composition
 
 
@@ -186,30 +183,29 @@ class Param:
     ref['frac_leaf_in_litter'] = {'type':'global',   'log':0, 'file':'frac_leaf_in_litter',   'min':[0.1], 'max':[1], 'fix_value':[0.5],} # The fraction of leaf in non-woody plant materials (compared to fine root) going to decomposable plant material litter pool [-]
 
     # Carbon decomposition
-    ref['frac_DOC_production_from_litter_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_litter_CP',   'min':[2e-4], 'max':[1e-2], 'fix_value':None,} # The fraction of DOC production from decomposition of litter carbon pool [-]  # 2e-3 in literature
-    ref['frac_DOC_production_from_soil_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_soil_CP',   'min':[2e-3], 'max':[2e-2], 'fix_value':None,} # The fraction of DOC production from decomposition of soil carbon pool [-]  # 1e-2 in literature
-    ref['ref_frac_soluble_to_doc'] = {'type':'global',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':np.array([0.01]), 'max':np.array([1.0]), 'fix_value':None,} # Reference fraction of soluble carbon going to DOC pool [-]
+    ref['frac_DOC_production_from_litter_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_litter_CP',   'min':[2e-3], 'max':[1e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of litter carbon pool [-]  # 2e-3 in literature
+    ref['frac_DOC_production_from_soil_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_soil_CP',   'min':[2e-3], 'max':[2e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of soil carbon pool [-]  # 1e-2 in literature
+    ref['ref_frac_soluble_to_doc'] = {'type':'landuse',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':[5e-4]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None,'weights':None} # Reference fraction of soluble carbon going to DOC pool [-]
     
 
     # Reference decomposition rates of carbon pools
     ref['f_groundwater_depth_decay_exp_base'] = {'type':'global',   'log':0, 'file':'f_groundwater_depth_decay_exp_base',   'min':[0.1], 'max':[2], 'fix_value':None,} # Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
     #ref['transformation_exp_base'] = {'type':'global',   'log':0, 'file':'transformation_exp_base',   'min':[0.08], 'max':[0.2], 'fix_value':None,} # Exponential base for temperature function of soil decomposition and denitrification; the higher the more sensitive to temperature changes [-]
     ref['fdepth_decay_Exp'] = {'type':'global',   'log':1, 'file':'fdepth_decay_Exp',   'min':[0.5]*Info.N_soil, 'max':[10]*Info.N_soil, 'fix_value':None,} # Exponential decay function for soil decomposition based on depth [-]
-    ref['ref_decomp_rate_doc'] = {'type':'global_landuse',   'log':0, 'file':'ref_decomp_rate_doc',   'min':[1e-4], 'max':[1e-2], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.7],} # Reference decomposition rate of DOC pool [day-1]
+    ref['ref_decomp_rate_doc'] = {'type':'spatial_distributed_global_landuse',   'log':0, 'file':'ref_decomp_rate_doc',   'min':[1e-4], 'max':[1e-1], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.9],} # Reference decomposition rate of DOC pool [day-1]
     ref['respiration_river'] = {'type':'global',   'log':1, 'file':'respiration_river',   'min':[1e-3], 'max':[1e-1], 'fix_value':None,} # Reference rates of aquatic heterotrophic respiration [gC m-2 day-1]
 
     # === Nitrogen simulation ===
-    #ref['delta_no3_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_no3_init_GW',   'min':[-2,-1,-0.2,-0.2,-0.2,-0.2,-0.2], 'max':[2,1,0.2,0.2,0.2,0.2,0.2], 'fix_value':None,} # The adjustment of initial no3 composition
-    ref['delta_no3_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_no3_init_GW',   'min':[-2,-1,-1,-1,-1,-1,-1], 'max':[-2,-1,-1,-1,-1,-1,-1], 'fix_value':None,} # The adjustment of initial no3 composition
+    ref['delta_no3_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_no3_init_GW',   'min':[-2,-1,-1,-1,-1,-1,-1], 'max':[2,1,1,1,1,1,1], 'fix_value':None,} # The adjustment of initial no3 composition
     
     ref['denitrification_river']   = {'type':'global_landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-3], 'max':[1e-1], 'fix_value':None, 'weights':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 1.0],} # Reference rates of aquatic denitrification [gN m-2 day-1]
     #ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':None,}
     #ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None,}
-    ref['denitrification_soil']   = {'type':'global_landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-5], 'max':[5e-2], 'fix_value':None, 'weights':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 1.0],}
+    ref['denitrification_soil']   = {'type':'spatial_distributed_global_landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-5], 'max':[5e-2], 'fix_value':None, 'weights':[1,1,1,1,1,1,1.3],}
     #ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-6]*Info.N_landuse, 'max':[1e-4,1e-4,1e-4,1e-4,1e-5,1e-5], 'fix_value':None,}
     #ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-5]*Info.N_landuse, 'max':[0.4,0.4,0.3,0.2,0.1,0.01], 'fix_value':None,}
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None,}
-    ref['deni_soil_moisture_thres']   = {'type':'global',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.1], 'max':[0.7], 'fix_value':None,}
+    ref['deni_soil_moisture_thres']   = {'type':'spatial_distributed_global',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.1], 'max':[0.7], 'fix_value':None,}
 
     #ref['NC_ratio_plant_green'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_green',   'min':[16], 'max':[70], 'fix_value':None,} # Carbon nitrogen ratio in vegetation green pool  [gC/gN]; log:2 means the parameter values are the inverse of the nitrogen carbon ratio for mathematic simplicity
     #ref['NC_ratio_plant_wood'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_wood',   'min':[50], 'max':[250], 'fix_value':None,} # Carbon nitrogen ratio in vegetation wood pool  [gC/gN]
@@ -222,3 +218,13 @@ class Param:
     ref['NC_ratio_dpm_litter'] = {'type':'global',   'log':2, 'file':'NC_ratio_dpm_litter',   'min':[40], 'max':[150], 'fix_value':None,} # Nitrogen carbon ratio in the litter pool of decomposable plant material  [gN/gC]
     ref['NC_ratio_rpm_litter'] = {'type':'global',   'log':2, 'file':'NC_ratio_rpm_litter',   'min':[200], 'max':[1400], 'fix_value':None,} # Nitrogen carbon ratio in the litter pool of resistant plant material  [gN/gC]
     #ref['NC_ratio_humus_pool'] = {'type':'global',   'log':2, 'file':'NC_ratio_humus_pool',   'min':[15], 'max':[15], 'fix_value':[1/15],} # Nitrogen carbon ratio in humus pool  [gN/gC]
+
+
+
+    # todo
+    # 1_4
+    #ref['frac_DOC_production_from_litter_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_litter_CP',   'min':[1e-2], 'max':[1e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of litter carbon pool [-]  # 2e-3 in literature
+    #ref['ref_frac_soluble_to_doc'] = {'type':'global',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':np.array([5e-4]), 'max':np.array([2e-3]), 'fix_value':None,} # Reference fraction of soluble carbon going to DOC pool [-]
+    #ref['denitrification_soil']   = {'type':'global',   'log':1, 'file':'denitrification_soil',   'min':[1e-5], 'max':[5e-2], 'fix_value':None, 'weights':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 1.0],}
+    #ref['deni_soil_moisture_thres']   = {'type':'global',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.1], 'max':[0.7], 'fix_value':None,}
+

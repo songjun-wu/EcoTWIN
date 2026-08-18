@@ -49,6 +49,7 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
     + percolation2          (need to mix)
     - drainage_from_layer3
     - percolation3
+    + capillary_flow
     - Transp3
     (_theta3)          
     + repercolation2
@@ -105,6 +106,7 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         ST2 = _theta2_old->val[j] * _depth2->val[j];
         ST3 = _theta3_old->val[j] * par._depth3->val[j];
 
+
         /* Mixing */
         // Mix ponding water with top layer storage (not used in current version)
         pond_old = _pond->val[j] + _infilt->val[j];
@@ -115,6 +117,8 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
             conc_pond = (conc_pond_old * (pond_old - pond_to_mix) + conc_layer1_old * pond_to_mix) / pond_old;
             conc_layer1 = (conc_pond_old * pond_to_mix + conc_layer1_old * (ST1 - pond_to_mix)) / ST1;
         }
+
+
 
         
         // Mixing layer 1-3
@@ -133,6 +137,7 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
 
 
         
+        
         // Mixing vadose storage (percolation from layer 3 and preferential flow from ponding)
         input_water = _preferential_flow->val[j] + _Perc3->val[j];
         input_mass = conc_pond * _preferential_flow->val[j] + conc_layer3 * _Perc3->val[j];
@@ -140,7 +145,9 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         sv_leaching_mass.val[j] = input_mass;
         Mixing_full(_vadose_old->val[j], conc_vadose, input_water, input_conc);  // Update vadose concentration
         
+
         
+
 
         // Mixing drainage with channel storage if activated
         if (drainage_flag == 1) {
@@ -158,9 +165,12 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         }  // End of if (drainage_flag == 1)
 
 
+
+
         // Mixing capillary flow with layer 3
         Mixing_full(ST3, conc_layer3, _capillary_flow->val[j], conc_vadose);
         ST3 += _capillary_flow->val[j];
+
 
         // Solute enrichment due to evapotranspiration
         if (enrich_flag){
@@ -175,6 +185,8 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         ST1 -= (_Es->val[j] + _Tr1->val[j]);
         ST2 -= (_Tr2->val[j]);
         ST3 -= (_Tr3->val[j]);
+
+
 
 
         // Mixing vadose storage with riparian zone in channel grids

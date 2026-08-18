@@ -24,7 +24,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
     double fct_Ts, fct_theta1, fct_theta2, fct_theta3, fct_depth_layer1, fct_depth_layer2, fct_depth_layer3, fdepth_decay_Exp; // factors for soil decomposition
 
     // Varaibles for nitrogen simulation
-    double ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
+    double frac_DOC_decomposition_layer1, frac_DOC_decomposition_layer2, frac_DOC_decomposition_layer3;  // Decomposition rate of DOC pool in three soil layers [day-1]
     double delta_doc_layer1, delta_doc_layer2, delta_doc_layer3;
 
 
@@ -89,6 +89,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
                                     fct_Ts, fct_theta3, fct_depth_layer3);
       
       
+      
       // Mobilisation of bounded DOC to mobile DOC
       // First calculate the groundwater table depth
       double excess_soil_water, groundwater_table, fct_groundwater_depth, DOC_mobilisation, ref_frac_soluble_to_doc;
@@ -101,30 +102,31 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       fct_groundwater_depth = exp(-par._f_groundwater_depth_decay_exp_base->val[j] * sqrt(groundwater_table));
       // Mobilisation of bounded DOC to mobile DOC
       ref_frac_soluble_to_doc = par._ref_frac_soluble_to_doc->val[j];
-      DOC_mobilisation = soluble_CP1 * ref_frac_soluble_to_doc * fct_groundwater_depth;
+      DOC_mobilisation = soluble_CP1 * ref_frac_soluble_to_doc * fct_groundwater_depth * fct_depth_layer1;
       DOC_pool_layer1 += DOC_mobilisation;
       soluble_CP1 -= DOC_mobilisation;
-      DOC_mobilisation = soluble_CP2 * ref_frac_soluble_to_doc * fct_groundwater_depth;
+      DOC_mobilisation = soluble_CP2 * ref_frac_soluble_to_doc * fct_groundwater_depth * fct_depth_layer2;
       DOC_pool_layer2 += DOC_mobilisation;
       soluble_CP2 -= DOC_mobilisation;
-      DOC_mobilisation = soluble_CP3 * ref_frac_soluble_to_doc * fct_groundwater_depth;
+      DOC_mobilisation = soluble_CP3 * ref_frac_soluble_to_doc * fct_groundwater_depth * fct_depth_layer3;
       DOC_pool_layer3 += DOC_mobilisation;
       soluble_CP3 -= DOC_mobilisation;
 
 
-
-
-
       // Decomposition of DOC pool
-      
       // Nitrogen has been released to mineral pool during DOC production. Therefore, no nitrogen is released during DOC decomposition
-      ref_decomp_rate_doc = par._ref_decomp_rate_doc->val[j];
-      delta_doc_layer1 = soluble_CP1 * ref_decomp_rate_doc * fct_depth_layer1;
-      delta_doc_layer2 = soluble_CP2 * ref_decomp_rate_doc * fct_depth_layer2;
-      delta_doc_layer3 = soluble_CP3 * ref_decomp_rate_doc * fct_depth_layer3;
-      soluble_CP1 -= delta_doc_layer1;
-      soluble_CP2 -= delta_doc_layer2;
-      soluble_CP3 -= delta_doc_layer3;
+      frac_DOC_decomposition_layer1 = par._ref_decomp_rate_doc->val[j] * fct_depth_layer1;
+      frac_DOC_decomposition_layer2 = par._ref_decomp_rate_doc->val[j] * fct_depth_layer2;
+      frac_DOC_decomposition_layer3 = par._ref_decomp_rate_doc->val[j] * fct_depth_layer3;
+      delta_doc_layer1 = (soluble_CP1 + DOC_pool_layer1) * frac_DOC_decomposition_layer1;
+      delta_doc_layer2 = (soluble_CP2 + DOC_pool_layer2) * frac_DOC_decomposition_layer2;
+      delta_doc_layer3 = (soluble_CP3 + DOC_pool_layer3) * frac_DOC_decomposition_layer3;
+      soluble_CP1 *= (1 - frac_DOC_decomposition_layer1);
+      soluble_CP2 *= (1 - frac_DOC_decomposition_layer2);
+      soluble_CP3 *= (1 - frac_DOC_decomposition_layer3);
+      DOC_pool_layer1 *= (1 - frac_DOC_decomposition_layer1);
+      DOC_pool_layer2 *= (1 - frac_DOC_decomposition_layer2);
+      DOC_pool_layer3 *= (1 - frac_DOC_decomposition_layer3);
 
       // DOC decomposition is also considered as a part of soil respiration
       _co2_emission_C->val[j] += delta_doc_layer1 + delta_doc_layer2 + delta_doc_layer3;

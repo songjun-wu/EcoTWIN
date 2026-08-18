@@ -33,7 +33,7 @@ int Basin::Solve_channel_nutrient(Control &ctrl, Atmosphere &atm, Param &par){
     (_chanS)
     */
     
-    // ********* Mixing reinfiltration and percolation ********
+
     // Evaporation enrichment
     // Carbon (Solve evaporative enrichment of in-stream DOC)
     if (ctrl.opt_carbon_sim==1){

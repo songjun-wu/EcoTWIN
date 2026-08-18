@@ -65,26 +65,28 @@ int Basin::Solve_soil_profile_nutrient(Control &ctrl, Atmosphere &atm, Param &pa
     if (ctrl.opt_carbon_sim==1){
       Solve_soil_transport(par, *_doc_pond, *_doc_layer1, *_doc_layer2, *_doc_layer3, *_doc_vadose, *_doc_chanS, *_leaching_mass_doc, *_drainage_mass_doc, true, ctrl.opt_drainage, true, false);  
     }
-    
+      
     if (ctrl.opt_nitrogen_sim==1){
       Solve_soil_transport(par, *_no3_pond, *_no3_layer1, *_no3_layer2, *_no3_layer3, *_no3_vadose, *_no3_chanS, *_leaching_mass_no3, *_drainage_mass_no3, true, ctrl.opt_drainage, true, false);
     }
 
+    
+
 
     // ======= Carbon/nitrogen biogeochemical processes =======
+
     if (ctrl.opt_carbon_sim==1 or ctrl.opt_nitrogen_sim==1){
-      Carbon_addition(ctrl, par);      
+      Carbon_addition(ctrl, par);
       Carbon_transformation(ctrl, atm, par);
       Carbon_management(ctrl, par);
     }
 
 
     // ======= Nitrogen biogeochemical processes =======
-    /* Nitrogen addtion */
     Sort_nitrogen_addition(ctrl, par);
     Nitrogen_addition(ctrl, par);
     Soil_denitrification(ctrl, atm, par);  // Denitrification
-   
+
 
     return EXIT_SUCCESS;
 }
