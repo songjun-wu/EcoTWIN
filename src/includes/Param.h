@@ -113,7 +113,9 @@ class Param {
   vector<double> frac_DOC_production_from_litter_CP;
   vector<double> frac_DOC_production_from_soil_CP;
   vector<double> ref_frac_soluble_to_doc;
+  vector<double> frac_soluble_to_doc_weights;
   vector<double> f_groundwater_depth_decay_exp_base;
+  vector<double> f_groundwater_depth_rescale_factor;
   vector<double> fdepth_decay_Exp;
   vector<double> ref_decomp_rate_doc;
   vector<double> respiration_river;
@@ -178,7 +180,9 @@ class Param {
   svector *_frac_DOC_production_from_litter_CP;  // The fraction of DOC production from decomposition of litter carbon pool [-]
   svector *_frac_DOC_production_from_soil_CP;  // The fraction of DOC production from decomposition of soil carbon pool [-]
   svector *_ref_frac_soluble_to_doc;  // Reference fraction of soluble carbon going to DOC pool [-]
+  svector *_frac_soluble_to_doc_weights;  // The weights for reference fraction of soluble carbon going to DOC pool [-]
   svector *_f_groundwater_depth_decay_exp_base;  // Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
+  svector *_f_groundwater_depth_rescale_factor;  // The rescaling factor for initial groundwater table depth [-]; this parameter determines how the initial groundwater table depth is rescaled for the DOC decomposition calculation
   svector *_fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   svector *_ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
   svector *_CG_n_soil;  // Parameter N in CG model for soil water fractionation [-]

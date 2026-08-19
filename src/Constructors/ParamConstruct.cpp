@@ -121,7 +121,9 @@ Param::Param(Control &ctrl){
     _frac_DOC_production_from_litter_CP = new svector(_sortedGrid.size);
     _frac_DOC_production_from_soil_CP = new svector(_sortedGrid.size);
     _ref_frac_soluble_to_doc = new svector(_sortedGrid.size);
+    _frac_soluble_to_doc_weights = new svector(_sortedGrid.size);
     _f_groundwater_depth_decay_exp_base = new svector(_sortedGrid.size);
+    _f_groundwater_depth_rescale_factor = new svector(_sortedGrid.size);
     _fdepth_decay_Exp = new svector(_sortedGrid.size);
     _ref_decomp_rate_doc = new svector(_sortedGrid.size);
   }

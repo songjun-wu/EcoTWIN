@@ -567,11 +567,25 @@ int Param::Parameterisation(Control &ctrl){
       _ref_frac_soluble_to_doc->val[j] = exp(_ref_frac_soluble_to_doc->val[j]);
      }
   
+  _frac_soluble_to_doc_weights->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (frac_soluble_to_doc_weights[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          _frac_soluble_to_doc_weights->val[j] += param_category->val[k][j] * frac_soluble_to_doc_weights[k];
+     }}}
+  
   _f_groundwater_depth_decay_exp_base->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (f_groundwater_depth_decay_exp_base[k]!=nodata) {
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
           _f_groundwater_depth_decay_exp_base->val[j] += param_category->val[k][j] * f_groundwater_depth_decay_exp_base[k];
+     }}}
+  
+  _f_groundwater_depth_rescale_factor->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (f_groundwater_depth_rescale_factor[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          _f_groundwater_depth_rescale_factor->val[j] += param_category->val[k][j] * f_groundwater_depth_rescale_factor[k];
      }}}
   
   _fdepth_decay_Exp->reset();

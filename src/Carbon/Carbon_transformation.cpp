@@ -96,19 +96,19 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       excess_soil_water = max(0.0, theta1 - _thetaFC1->val[j]) / (_thetaS1->val[j] - _thetaFC1->val[j]) * depth1 + 
                           max(0.0, theta2 - _thetaFC2->val[j]) / (_thetaS2->val[j] - _thetaFC2->val[j]) * depth2 + 
                           max(0.0, theta3 - _thetaFC3->val[j]) / (_thetaS3->val[j] - _thetaFC3->val[j]) * depth3;
-      groundwater_table = _initial_groundwater_table->val[j] - excess_soil_water;   // Groundwater table depth [m]
-      if (groundwater_table < roundoffERR) groundwater_table = 0;
+      groundwater_table = _initial_groundwater_table->val[j] * par._f_groundwater_depth_rescale_factor->val[j] - excess_soil_water;   // Groundwater table depth [m]
+      if (groundwater_table < roundoffERR) groundwater_table = 0.0;
       // Calculate the factor of groundwater depth
       fct_groundwater_depth = exp(-par._f_groundwater_depth_decay_exp_base->val[j] * sqrt(groundwater_table));
       // Mobilisation of bounded DOC to mobile DOC
-      ref_frac_soluble_to_doc = par._ref_frac_soluble_to_doc->val[j];
-      DOC_mobilisation = soluble_CP1 * ref_frac_soluble_to_doc * fct_groundwater_depth * fct_depth_layer1;
+      ref_frac_soluble_to_doc = par._ref_frac_soluble_to_doc->val[j] * par._frac_soluble_to_doc_weights->val[j];
+      DOC_mobilisation = soluble_CP1 * ref_frac_soluble_to_doc * fct_groundwater_depth;
       DOC_pool_layer1 += DOC_mobilisation;
       soluble_CP1 -= DOC_mobilisation;
-      DOC_mobilisation = soluble_CP2 * ref_frac_soluble_to_doc * fct_groundwater_depth * fct_depth_layer2;
+      DOC_mobilisation = soluble_CP2 * ref_frac_soluble_to_doc * fct_groundwater_depth;
       DOC_pool_layer2 += DOC_mobilisation;
       soluble_CP2 -= DOC_mobilisation;
-      DOC_mobilisation = soluble_CP3 * ref_frac_soluble_to_doc * fct_groundwater_depth * fct_depth_layer3;
+      DOC_mobilisation = soluble_CP3 * ref_frac_soluble_to_doc * fct_groundwater_depth;
       DOC_pool_layer3 += DOC_mobilisation;
       soluble_CP3 -= DOC_mobilisation;
 

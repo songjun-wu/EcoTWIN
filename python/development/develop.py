@@ -356,10 +356,11 @@ Parameters = [# ======= Hydrology =======
               ['_frac_DOC_production_from_litter_CP', [Opt.cond['carbon_sim_1']], 'The fraction of DOC production from decomposition of litter carbon pool [-]', 'grid', 'spatial_param', 'frac_DOC_production_from_litter_CP', 0],
               ['_frac_DOC_production_from_soil_CP', [Opt.cond['carbon_sim_1']], 'The fraction of DOC production from decomposition of soil carbon pool [-]', 'grid', 'spatial_param', 'frac_DOC_production_from_soil_CP', 0],
               ['_ref_frac_soluble_to_doc', [Opt.cond['carbon_sim_1']], 'Reference fraction of soluble carbon going to DOC pool [-]', 'grid', 'spatial_param', 'ref_frac_soluble_to_doc', 0],
-              
+              ['_frac_soluble_to_doc_weights', [Opt.cond['carbon_sim_1']], 'The weights for reference fraction of soluble carbon going to DOC pool [-]', 'grid', 'spatial_param', 'frac_soluble_to_doc_weights', 0],
 
               # Correction of decomposition rates based on the magnitudes of carbon storages
               ['_f_groundwater_depth_decay_exp_base', [Opt.cond['carbon_sim_1']], 'Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table', 'grid', 'spatial_param', 'f_groundwater_depth_decay_exp_base', 0],
+              ['_f_groundwater_depth_rescale_factor', [Opt.cond['carbon_sim_1']], 'The rescaling factor for initial groundwater table depth [-]; this parameter determines how the initial groundwater table depth is rescaled for the DOC decomposition calculation', 'grid', 'spatial_param', 'f_groundwater_depth_rescale_factor', 0],
               #['_transformation_exp_base', [Opt.cond['carbon_sim_1']], 'Exponential base for temperature function of soil decomposition and denitrification [-]', 'grid', 'spatial_param', 'transformation_exp_base', 0],
               ['_fdepth_decay_Exp', [Opt.cond['carbon_sim_1']], 'Exponential decay function for soil decomposition based on depth [-]', 'grid', 'spatial_param', 'fdepth_decay_Exp', 0],
               ['_ref_decomp_rate_doc', [Opt.cond['carbon_sim_1']], 'Reference decomposition rate of DOC pool [day-1]', 'grid', 'spatial_param', 'ref_decomp_rate_doc', 0],

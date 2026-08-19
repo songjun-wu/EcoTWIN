@@ -90,7 +90,7 @@ class Param:
     
     # === Pedotransfer function ===
     # Soil proporties (field capacity, wilting point, hydraulic conductivity)
-    ref['ref_thetaS']   = {'type':'global',   'log':0, 'file':'ref_thetaS',   'min':[0.4], 'max':[0.9], 'fix_value':None,} # 'min':[0.5], 'max':[0.99]
+    ref['ref_thetaS']   = {'type':'global',   'log':0, 'file':'ref_thetaS',   'min':[0.4], 'max':[0.8], 'fix_value':None,} # 'min':[0.5], 'max':[0.99]
     ref['PTF_VG_clay']   = {'type':'global',   'log':1, 'file':'PTF_VG_clay',   'min':[5e-8], 'max':[5e-3], 'fix_value':None,}
     ref['PTF_VG_Db']   = {'type':'global',   'log':1, 'file':'PTF_VG_Db',   'min':[5e-4], 'max':[5e-1], 'fix_value':None,}
     ref['PTF_Ks_const']   = {'type':'global_landuse',   'log':0, 'file':'PTF_Ks_const',   'min':[-1.2], 'max':[-0.3], 'fix_value':None, 'weights':[1,1,1,1,1,2,1],} # [-1.2, -0.29]
@@ -161,7 +161,7 @@ class Param:
 
     # === Carbon simulation ===
     # Initialization
-    ref['delta_doc_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_doc_init_GW',   'min':[-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None,} # The adjustment of initial doc composition
+    ref['delta_doc_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_doc_init_GW',   'min':[-1]*Info.N_landuse, 'max':[0]*Info.N_landuse, 'fix_value':None,} # The adjustment of initial doc composition
     #ref['carboxylation_rate'] = {'type':'landuse',   'log':0, 'file':'carboxylation_rate',   'min':np.array([95,75,75,35,0,0])*1e-6, 'max':np.array([105,85,85,65,30,30])*1e-6, 'fix_value':None,} # Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)]
     #ref['ETransport'] = {'type':'landuse',   'log':0, 'file':'ETransport',   'min':np.array([180,130,130,100,20,20])*1e-6, 'max':np.array([200,160,160,120,80,80])*1e-6, 'fix_value':None,} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)
     # Assimilation
@@ -183,20 +183,23 @@ class Param:
     ref['frac_leaf_in_litter'] = {'type':'global',   'log':0, 'file':'frac_leaf_in_litter',   'min':[0.1], 'max':[1], 'fix_value':[0.5],} # The fraction of leaf in non-woody plant materials (compared to fine root) going to decomposable plant material litter pool [-]
 
     # Carbon decomposition
-    ref['frac_DOC_production_from_litter_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_litter_CP',   'min':[2e-3], 'max':[1e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of litter carbon pool [-]  # 2e-3 in literature
-    ref['frac_DOC_production_from_soil_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_soil_CP',   'min':[2e-3], 'max':[2e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of soil carbon pool [-]  # 1e-2 in literature
-    ref['ref_frac_soluble_to_doc'] = {'type':'landuse',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':[5e-4]*Info.N_landuse, 'max':[1e-1]*Info.N_landuse, 'fix_value':None,'weights':None} # Reference fraction of soluble carbon going to DOC pool [-]
+    ref['frac_DOC_production_from_litter_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_litter_CP',   'min':[5e-3], 'max':[1e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of litter carbon pool [-]  # 2e-3 in literature
+    ref['frac_DOC_production_from_soil_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_soil_CP',   'min':[5e-3], 'max':[2e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of soil carbon pool [-]  # 1e-2 in literature
+    ref['ref_frac_soluble_to_doc'] = {'type':'global',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':[5e-4], 'max':[0.99], 'fix_value':None} # Reference fraction of soluble carbon going to DOC pool [-]
+    ref['frac_soluble_to_doc_weights'] = {'type':'soil',   'log':0, 'file':'frac_soluble_to_doc_weights',   'min':[0.3, 0.3, 0.3, 0.3, 0.5, 0.0, 0.8], 'max':[0.6, 0.6, 0.6, 0.6, 0.8, 0.2, 1.0], 'fix_value':None} # The weights for reference fraction of soluble carbon going to DOC pool [-]
     
 
     # Reference decomposition rates of carbon pools
-    ref['f_groundwater_depth_decay_exp_base'] = {'type':'global',   'log':0, 'file':'f_groundwater_depth_decay_exp_base',   'min':[0.1], 'max':[2], 'fix_value':None,} # Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
+    ref['f_groundwater_depth_decay_exp_base'] = {'type':'global',   'log':0, 'file':'f_groundwater_depth_decay_exp_base',   'min':[0.1], 'max':[1], 'fix_value':None,} # Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
+    ref['f_groundwater_depth_rescale_factor'] = {'type':'global',   'log':0, 'file':'f_groundwater_depth_rescale_factor',   'min':[0.1], 'max':[1], 'fix_value':None,} # The rescaling factor for initial groundwater table depth [-]; this parameter determines how the initial groundwater table depth is rescaled for the DOC decomposition calculation
+    
     #ref['transformation_exp_base'] = {'type':'global',   'log':0, 'file':'transformation_exp_base',   'min':[0.08], 'max':[0.2], 'fix_value':None,} # Exponential base for temperature function of soil decomposition and denitrification; the higher the more sensitive to temperature changes [-]
-    ref['fdepth_decay_Exp'] = {'type':'global',   'log':1, 'file':'fdepth_decay_Exp',   'min':[0.5]*Info.N_soil, 'max':[10]*Info.N_soil, 'fix_value':None,} # Exponential decay function for soil decomposition based on depth [-]
-    ref['ref_decomp_rate_doc'] = {'type':'spatial_distributed_global_landuse',   'log':0, 'file':'ref_decomp_rate_doc',   'min':[1e-4], 'max':[1e-1], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.9],} # Reference decomposition rate of DOC pool [day-1]
+    ref['fdepth_decay_Exp'] = {'type':'global',   'log':1, 'file':'fdepth_decay_Exp',   'min':[1.3], 'max':[1.7], 'fix_value':None,} # Exponential decay function for soil decomposition based on depth [-]
+    ref['ref_decomp_rate_doc'] = {'type':'global_landuse',   'log':0, 'file':'ref_decomp_rate_doc',   'min':[1e-4], 'max':[1e-1], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.9],} # Reference decomposition rate of DOC pool [day-1]
     ref['respiration_river'] = {'type':'global',   'log':1, 'file':'respiration_river',   'min':[1e-3], 'max':[1e-1], 'fix_value':None,} # Reference rates of aquatic heterotrophic respiration [gC m-2 day-1]
 
     # === Nitrogen simulation ===
-    ref['delta_no3_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_no3_init_GW',   'min':[-2,-1,-1,-1,-1,-1,-1], 'max':[2,1,1,1,1,1,1], 'fix_value':None,} # The adjustment of initial no3 composition
+    ref['delta_no3_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_no3_init_GW',   'min':[-2,-1,-1,-1,-1,-1,-1], 'max':[0,0,0,0,0,0,0], 'fix_value':None,} # The adjustment of initial no3 composition
     
     ref['denitrification_river']   = {'type':'global_landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-3], 'max':[1e-1], 'fix_value':None, 'weights':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 1.0],} # Reference rates of aquatic denitrification [gN m-2 day-1]
     #ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':None,}
@@ -221,10 +224,15 @@ class Param:
 
 
 
-    # todo
+    # todop
     # 1_4
     #ref['frac_DOC_production_from_litter_CP'] = {'type':'global',   'log':0, 'file':'frac_DOC_production_from_litter_CP',   'min':[1e-2], 'max':[1e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of litter carbon pool [-]  # 2e-3 in literature
-    #ref['ref_frac_soluble_to_doc'] = {'type':'global',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':np.array([5e-4]), 'max':np.array([2e-3]), 'fix_value':None,} # Reference fraction of soluble carbon going to DOC pool [-]
+    #ref['ref_frac_soluble_to_doc'] = {'type':'global',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':np.array([0.3]), 'max':np.array([0.3]), 'fix_value':None,} # Reference fraction of soluble carbon going to DOC pool [-]
     #ref['denitrification_soil']   = {'type':'global',   'log':1, 'file':'denitrification_soil',   'min':[1e-5], 'max':[5e-2], 'fix_value':None, 'weights':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 1.0],}
     #ref['deni_soil_moisture_thres']   = {'type':'global',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.1], 'max':[0.7], 'fix_value':None,}
+    #ref['ref_decomp_rate_doc'] = {'type':'global_landuse',   'log':0, 'file':'ref_decomp_rate_doc',   'min':[1e-4], 'max':[1e-2], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.9],} # Reference decomposition rate of DOC pool [day-1]
+    
 
+    #ref['fdepth_decay_Exp'] = {'type':'global',   'log':1, 'file':'fdepth_decay_Exp',   'min':[1.5], 'max':[1.5], 'fix_value':None,} # Exponential decay function for soil decomposition based on depth [-]
+    #ref['f_groundwater_depth_decay_exp_base'] = {'type':'global',   'log':0, 'file':'f_groundwater_depth_decay_exp_base',   'min':[0.5], 'max':[0.5], 'fix_value':None,} # Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
+    

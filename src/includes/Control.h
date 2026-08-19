@@ -409,7 +409,9 @@ struct Control{
   string fn__frac_DOC_production_from_litter_CP;  // The fraction of DOC production from decomposition of litter carbon pool [-]
   string fn__frac_DOC_production_from_soil_CP;  // The fraction of DOC production from decomposition of soil carbon pool [-]
   string fn__ref_frac_soluble_to_doc;  // Reference fraction of soluble carbon going to DOC pool [-]
+  string fn__frac_soluble_to_doc_weights;  // The weights for reference fraction of soluble carbon going to DOC pool [-]
   string fn__f_groundwater_depth_decay_exp_base;  // Exponential base for depth function of groundwater table [-]; this parameter determines how dissolution of DOC is affected by the depth of groundwater table
+  string fn__f_groundwater_depth_rescale_factor;  // The rescaling factor for initial groundwater table depth [-]; this parameter determines how the initial groundwater table depth is rescaled for the DOC decomposition calculation
   string fn__fdepth_decay_Exp;  // Exponential decay function for soil decomposition based on depth [-]
   string fn__ref_decomp_rate_doc;  // Reference decomposition rate of DOC pool [day-1]
   string fn__respiration_river;  // Reference rates of aquatic heterotrophic respiration [day-1]

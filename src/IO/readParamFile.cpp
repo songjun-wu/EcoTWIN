@@ -99,7 +99,9 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(frac_DOC_production_from_litter_CP, "frac_DOC_production_from_litter_CP", lines);
   readIntoParam(frac_DOC_production_from_soil_CP, "frac_DOC_production_from_soil_CP", lines);
   readIntoParam(ref_frac_soluble_to_doc, "ref_frac_soluble_to_doc", lines);
+  readIntoParam(frac_soluble_to_doc_weights, "frac_soluble_to_doc_weights", lines);
   readIntoParam(f_groundwater_depth_decay_exp_base, "f_groundwater_depth_decay_exp_base", lines);
+  readIntoParam(f_groundwater_depth_rescale_factor, "f_groundwater_depth_rescale_factor", lines);
   readIntoParam(fdepth_decay_Exp, "fdepth_decay_Exp", lines);
   readIntoParam(ref_decomp_rate_doc, "ref_decomp_rate_doc", lines);
   readIntoParam(respiration_river, "respiration_river", lines);

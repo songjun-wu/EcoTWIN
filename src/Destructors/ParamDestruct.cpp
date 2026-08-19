@@ -111,7 +111,9 @@ int Param::dtor(Control &ctrl){
     if(_frac_DOC_production_from_litter_CP) delete _frac_DOC_production_from_litter_CP;
     if(_frac_DOC_production_from_soil_CP) delete _frac_DOC_production_from_soil_CP;
     if(_ref_frac_soluble_to_doc) delete _ref_frac_soluble_to_doc;
+    if(_frac_soluble_to_doc_weights) delete _frac_soluble_to_doc_weights;
     if(_f_groundwater_depth_decay_exp_base) delete _f_groundwater_depth_decay_exp_base;
+    if(_f_groundwater_depth_rescale_factor) delete _f_groundwater_depth_rescale_factor;
     if(_fdepth_decay_Exp) delete _fdepth_decay_Exp;
     if(_ref_decomp_rate_doc) delete _ref_decomp_rate_doc;
   }
