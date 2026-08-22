@@ -58,9 +58,9 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
 
         // Factors of soil depth; decay exponentially with depth
         fdepth_decay_Exp = par._fdepth_decay_Exp->val[j];
-        fct_depth_layer1 =  exp(-fdepth_decay_Exp * depth1/2);
-        fct_depth_layer2 =  exp(-fdepth_decay_Exp * (depth1+depth2/2));
-        fct_depth_layer3 =  exp(-fdepth_decay_Exp * (depth1+depth2+depth3/2));
+        //fct_depth_layer1 =  exp(-fdepth_decay_Exp * depth1/2);
+        //fct_depth_layer2 =  exp(-fdepth_decay_Exp * (depth1+depth2/2));
+        //fct_depth_layer3 =  exp(-fdepth_decay_Exp * (depth1+depth2+depth3/2));
 
 
         // Layer 1
@@ -74,7 +74,7 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
             // Concentration factor
             fct_conc = no3_layer1 / (no3_layer1 + 1.5);
             // Denitrification
-            deni1 = diss_IN1 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc * fct_depth_layer1 * DT, 0.5);
+            deni1 = diss_IN1 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc * DT, 0.5);
             no3_layer1 = (diss_IN1 - deni1) / (theta1 * _depth1->val[j]);
         }
 
@@ -89,7 +89,7 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
             // Concentration factor
             fct_conc = no3_layer2 / (no3_layer2 + 1.5);
             // Denitrification
-            deni2 = diss_IN2 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc * fct_depth_layer2 * DT, 0.5);
+            deni2 = diss_IN2 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc * DT, 0.5);
             no3_layer2 = (diss_IN2 - deni2) / (theta2 * _depth2->val[j]);
         }
 
@@ -104,7 +104,7 @@ int Basin::Soil_denitrification(Control &ctrl, Atmosphere &atm, Param &par){
             // Concentration factor
             fct_conc = no3_layer3 / (no3_layer3 + 1.5);
             // Denitrification
-            deni3 = diss_IN3 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc * fct_depth_layer3 * DT, 0.5);
+            deni3 = diss_IN3 * min(par._denitrification_soil->val[j] * fct_Ts * fct_theta * fct_conc * DT, 0.5);
             no3_layer3 = (diss_IN3 - deni3) / (theta3 * par._depth3->val[j]);
         }
 

@@ -214,7 +214,6 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__doc_vadose, "doc_vadose", lines);
   readInto(fn__doc_GW, "doc_groundwater_storage", lines);
   readInto(fn__doc_chanS, "doc_chanS", lines);
-  readInto(fn__humus_decomposition_spatial_weights, "humus_decomposition_spatial_weights", lines);
   readInto(fn__C4_flag, "C4_flag", lines);
   readInto(fn__doc_rain, "doc_rain", lines);
   /* end of Carbon */
@@ -338,8 +337,9 @@ int Control::ReadConfigFile(string fname){
   readInto(report__doc_GW, "report_doc_groundwater_storage", lines);
   readInto(report__doc_chanS, "report_doc_chanS", lines);
   readInto(report__litter_fall_C, "report_litter_fall_C", lines);
-  readInto(report__co2_emission_C, "report_co2_emission_C", lines);
   readInto(report__soil_decomposition_C, "report_soil_decomposition_C", lines);
+  readInto(report__soluble_production_C, "report_soluble_production_C", lines);
+  readInto(report__co2_emission_C, "report_co2_emission_C", lines);
   readInto(report__respiration_river_C, "report_respiration_river_C", lines);
   readInto(report__harvest_C, "report_harvest_C", lines);
   readInto(report__leaching_mass_doc, "report_leaching_mass_doc", lines);

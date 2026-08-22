@@ -337,7 +337,6 @@ struct Control{
   string fn__doc_vadose;  // DOC in vadose storage [mgN/L]
   string fn__doc_GW;  // DOC in Groundwater storage [mgN/L]
   string fn__doc_chanS;  // DOC in Channel storage [mgN/L]
-  string fn__humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
   string fn__C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   string fn__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
   /* end of Carbon */
@@ -519,8 +518,9 @@ struct Control{
   int report__doc_GW;  // report DOC in Groundwater storage [mgN/L]
   int report__doc_chanS;  // report DOC in Channel storage [mgN/L]
   int report__litter_fall_C;  // report Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
-  int report__co2_emission_C;  // report CO2 fluxes summarised in carbon [gC/m2]
   int report__soil_decomposition_C;  // report Soil decomposition summarised in carbon [gC/m2]
+  int report__soluble_production_C;  // report Soluble carbon production summarised in carbon [gC/m2]
+  int report__co2_emission_C;  // report CO2 fluxes summarised in carbon [gC/m2]
   int report__respiration_river_C;  // report Aquatic heterotrophic respiration summarised in carbon [gC/m2]
   int report__harvest_C;  // report Crop harvest summarised in carbon [gC/m2]
   int report__leaching_mass_doc;  // report Leaching of DOC [gC/m2]

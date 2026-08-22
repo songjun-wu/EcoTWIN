@@ -40,6 +40,9 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       theta3 = _theta3->val[j];
       fdepth_decay_Exp = par._fdepth_decay_Exp->val[j];
 
+      // Initial soluble carbon production
+      _soluble_production_C->val[j] = 0.0;
+
       
 
 
@@ -71,20 +74,23 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       // Carbon decomposition
       // Layer 1
       Carbon_decomposition_process(ctrl, atm, par, j,
+                                    _theta1->val[j], _thetaS1->val[j],
                                     _dpm_litter_CP1->val[j], _rpm_litter_CP1->val[j], _bio_CP1->val[j], _humus_CP1->val[j],
-                                    soluble_CP1, _soil_decomposition_C->val[j], _co2_emission_C->val[j],
+                                    soluble_CP1, _soil_decomposition_C->val[j], _co2_emission_C->val[j], _soluble_production_C->val[j],
                                     DIN_pool_layer1, _soil_minerl_N->val[j],
                                     fct_Ts, fct_theta1, fct_depth_layer1);
       // Layer 2
       Carbon_decomposition_process(ctrl, atm, par, j,
+                                    _theta2->val[j], _thetaS2->val[j],
                                     _dpm_litter_CP2->val[j], _rpm_litter_CP2->val[j], _bio_CP2->val[j], _humus_CP2->val[j],
-                                    soluble_CP2, _soil_decomposition_C->val[j], _co2_emission_C->val[j],
+                                    soluble_CP2, _soil_decomposition_C->val[j], _co2_emission_C->val[j], _soluble_production_C->val[j],
                                     DIN_pool_layer2, _soil_minerl_N->val[j],
                                     fct_Ts, fct_theta2, fct_depth_layer2);
       // Layer 3
       Carbon_decomposition_process(ctrl, atm, par, j,
+                                    _theta3->val[j], _thetaS3->val[j],
                                     _dpm_litter_CP3->val[j], _rpm_litter_CP3->val[j], _bio_CP3->val[j], _humus_CP3->val[j],
-                                    soluble_CP3, _soil_decomposition_C->val[j], _co2_emission_C->val[j],
+                                    soluble_CP3, _soil_decomposition_C->val[j], _co2_emission_C->val[j], _soluble_production_C->val[j],
                                     DIN_pool_layer3, _soil_minerl_N->val[j],
                                     fct_Ts, fct_theta3, fct_depth_layer3);
       
@@ -115,9 +121,9 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
       // Decomposition of DOC pool
       // Nitrogen has been released to mineral pool during DOC production. Therefore, no nitrogen is released during DOC decomposition
-      frac_DOC_decomposition_layer1 = par._ref_decomp_rate_doc->val[j] * fct_depth_layer1;
-      frac_DOC_decomposition_layer2 = par._ref_decomp_rate_doc->val[j] * fct_depth_layer2;
-      frac_DOC_decomposition_layer3 = par._ref_decomp_rate_doc->val[j] * fct_depth_layer3;
+      frac_DOC_decomposition_layer1 = par._ref_decomp_rate_doc->val[j];
+      frac_DOC_decomposition_layer2 = par._ref_decomp_rate_doc->val[j];
+      frac_DOC_decomposition_layer3 = par._ref_decomp_rate_doc->val[j];
       delta_doc_layer1 = (soluble_CP1 + DOC_pool_layer1) * frac_DOC_decomposition_layer1;
       delta_doc_layer2 = (soluble_CP2 + DOC_pool_layer2) * frac_DOC_decomposition_layer2;
       delta_doc_layer3 = (soluble_CP3 + DOC_pool_layer3) * frac_DOC_decomposition_layer3;
@@ -151,15 +157,17 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
 
 
 int Basin::Carbon_decomposition_process( Control &ctrl, Atmosphere &atm, Param &par, int j,
+                                            double theta, double thetaS,
                                             double &db_dpm_litter_CP, double &db_rpm_litter_CP, double &db_bio_CP, double &db_humus_CP,
-                                            double &db_DOC_pool, double &db_soil_decomposition_C, double &db_co2_emission,
+                                            double &db_DOC_pool, double &db_soil_decomposition_C, double &db_co2_emission, double &db_soluble_production_C,
                                             double &db_DIN_pool, double &db_soil_minerl_N,
                                             double db_fct_Ts, double db_fct_theta, double fct_depth){
                                             
     double decomposition_total, decomposition_from_dpm_litter_CP, decomposition_from_rpm_litter_CP, decomposition_from_bio_CP, decomposition_from_humus_CP;
     double fct_N_limitation = 1.0;
-    double frac_DOC_production_from_litter_CP = par._frac_DOC_production_from_litter_CP->val[j];
-    double frac_DOC_production_from_soil_CP = par._frac_DOC_production_from_soil_CP->val[j];
+    double fct_theta_DOC_production = 0.1 + 0.9 * theta / thetaS;
+    double frac_DOC_production_from_litter_CP = par._frac_DOC_production_from_litter_CP->val[j] * fct_theta_DOC_production;
+    double frac_DOC_production_from_soil_CP = par._frac_DOC_production_from_soil_CP->val[j] * fct_theta_DOC_production;
 
     double Cflux_to_DOC_pool;
     double Nflux_litter, Nflux_soil, Nflux_balance;
@@ -229,6 +237,7 @@ int Basin::Carbon_decomposition_process( Control &ctrl, Atmosphere &atm, Param &
     Cflux_to_DOC_pool = (decomposition_from_dpm_litter_CP + decomposition_from_rpm_litter_CP) * (1 - beta) * frac_DOC_production_from_litter_CP +
                         (decomposition_from_bio_CP + decomposition_from_humus_CP) * (1 - beta) * frac_DOC_production_from_soil_CP;
     db_DOC_pool += Cflux_to_DOC_pool;
+    db_soluble_production_C += Cflux_to_DOC_pool;
     db_co2_emission += decomposition_total * (1 - beta) - Cflux_to_DOC_pool;
     // Total decomposition
     db_soil_decomposition_C += decomposition_total;

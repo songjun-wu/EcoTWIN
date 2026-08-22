@@ -132,8 +132,9 @@ Control::Control(){
     report__doc_GW = 0;
     report__doc_chanS = 0;
     report__litter_fall_C = 0;
-    report__co2_emission_C = 0;
     report__soil_decomposition_C = 0;
+    report__soluble_production_C = 0;
+    report__co2_emission_C = 0;
     report__respiration_river_C = 0;
     report__harvest_C = 0;
     report__leaching_mass_doc = 0;

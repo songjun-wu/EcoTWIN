@@ -272,10 +272,10 @@ int Basin::dtor(Control &ctrl){
     if(_doc_GW) delete _doc_GW;
     if(_doc_chanS) delete _doc_chanS;
     if(_litter_fall_C) delete _litter_fall_C;
-    if(_co2_emission_C) delete _co2_emission_C;
     if(_soil_decomposition_C) delete _soil_decomposition_C;
+    if(_soluble_production_C) delete _soluble_production_C;
+    if(_co2_emission_C) delete _co2_emission_C;
     if(_respiration_river_C) delete _respiration_river_C;
-    if(_humus_decomposition_spatial_weights) delete _humus_decomposition_spatial_weights;
     if(_harvest_C) delete _harvest_C;
     if(_C4_flag) delete _C4_flag;
     if(_doc_rain) delete _doc_rain;

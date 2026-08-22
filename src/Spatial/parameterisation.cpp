@@ -545,16 +545,24 @@ int Param::Parameterisation(Control &ctrl){
   _frac_DOC_production_from_litter_CP->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (frac_DOC_production_from_litter_CP[k]!=nodata) {
+        double logp = log(frac_DOC_production_from_litter_CP[k]);
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_DOC_production_from_litter_CP->val[j] += param_category->val[k][j] * frac_DOC_production_from_litter_CP[k];
+          _frac_DOC_production_from_litter_CP->val[j] += param_category->val[k][j] * logp;
      }}}
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _frac_DOC_production_from_litter_CP->val[j] = exp(_frac_DOC_production_from_litter_CP->val[j]);
+     }
   
   _frac_DOC_production_from_soil_CP->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (frac_DOC_production_from_soil_CP[k]!=nodata) {
+        double logp = log(frac_DOC_production_from_soil_CP[k]);
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _frac_DOC_production_from_soil_CP->val[j] += param_category->val[k][j] * frac_DOC_production_from_soil_CP[k];
+          _frac_DOC_production_from_soil_CP->val[j] += param_category->val[k][j] * logp;
      }}}
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _frac_DOC_production_from_soil_CP->val[j] = exp(_frac_DOC_production_from_soil_CP->val[j]);
+     }
   
   _ref_frac_soluble_to_doc->reset();
     for (int k=0; k<param_category->n_category; k++){
@@ -602,9 +610,13 @@ int Param::Parameterisation(Control &ctrl){
   _ref_decomp_rate_doc->reset();
     for (int k=0; k<param_category->n_category; k++){
       if (ref_decomp_rate_doc[k]!=nodata) {
+        double logp = log(ref_decomp_rate_doc[k]);
         for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-          _ref_decomp_rate_doc->val[j] += param_category->val[k][j] * ref_decomp_rate_doc[k];
+          _ref_decomp_rate_doc->val[j] += param_category->val[k][j] * logp;
      }}}
+    for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+      _ref_decomp_rate_doc->val[j] = exp(_ref_decomp_rate_doc->val[j]);
+     }
 
   }
 

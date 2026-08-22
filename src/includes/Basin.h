@@ -305,10 +305,10 @@ class Basin {
   svector *_doc_GW;  // DOC in Groundwater storage [mgN/L]
   svector *_doc_chanS;  // DOC in Channel storage [mgN/L]
   svector *_litter_fall_C;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
-  svector *_co2_emission_C;  // CO2 fluxes summarised in carbon [gC/m2]
   svector *_soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
+  svector *_soluble_production_C;  // Soluble carbon production summarised in carbon [gC/m2]
+  svector *_co2_emission_C;  // CO2 fluxes summarised in carbon [gC/m2]
   svector *_respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
-  svector *_humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
   svector *_harvest_C;  // Crop harvest summarised in carbon [gC/m2]
   svector *_C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
   svector *_doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
@@ -483,8 +483,9 @@ class Basin {
   int Carbon_management(Control &ctrl, Param &par);  // Carbon management process (harvest and herbivory loss)
   int Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par);   // Solve soil carbon decomposition
   int Carbon_decomposition_process(Control &ctrl, Atmosphere &atm, Param &par, int j,
+                                    double theta, double thetaS,
                                     double &db_dpm_litter_CP, double &db_rpm_litter_CP, double &db_bio_CP, double &db_humus_CP,
-                                    double &DOC_pool, double &db_soil_decomposition_C, double &db_CO2_emission,
+                                    double &DOC_pool, double &db_soil_decomposition_C, double &db_CO2_emission, double &db_soluble_production_C,
                                     double &db_DIN_pool, double &db_soil_minerl_N,
                                     double db_fct_Ts, double db_fct_theta, double fct_depth);
   int Carbon_instream_transformation(Control &ctrl, Atmosphere &atm, Param &par);  // In-stream decomposition of DOC

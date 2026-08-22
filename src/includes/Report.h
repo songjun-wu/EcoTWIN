@@ -138,10 +138,10 @@ class Report {
     ofstream of__doc_GW;  // DOC in Groundwater storage [mgN/L]
     ofstream of__doc_chanS;  // DOC in Channel storage [mgN/L]
     ofstream of__litter_fall_C;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
-    ofstream of__co2_emission_C;  // CO2 fluxes summarised in carbon [gC/m2]
     ofstream of__soil_decomposition_C;  // Soil decomposition summarised in carbon [gC/m2]
+    ofstream of__soluble_production_C;  // Soluble carbon production summarised in carbon [gC/m2]
+    ofstream of__co2_emission_C;  // CO2 fluxes summarised in carbon [gC/m2]
     ofstream of__respiration_river_C;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
-    ofstream of__humus_decomposition_spatial_weights;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
     ofstream of__harvest_C;  // Crop harvest summarised in carbon [gC/m2]
     ofstream of__C4_flag;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     ofstream of__doc_rain;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1
@@ -272,10 +272,10 @@ class Report {
     svector *_doc_GW_acc;  // DOC in Groundwater storage [mgN/L]
     svector *_doc_chanS_acc;  // DOC in Channel storage [mgN/L]
     svector *_litter_fall_C_acc;  // Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]
-    svector *_co2_emission_C_acc;  // CO2 fluxes summarised in carbon [gC/m2]
     svector *_soil_decomposition_C_acc;  // Soil decomposition summarised in carbon [gC/m2]
+    svector *_soluble_production_C_acc;  // Soluble carbon production summarised in carbon [gC/m2]
+    svector *_co2_emission_C_acc;  // CO2 fluxes summarised in carbon [gC/m2]
     svector *_respiration_river_C_acc;  // Aquatic heterotrophic respiration summarised in carbon [gC/m2]
-    svector *_humus_decomposition_spatial_weights_acc;  // Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]
     svector *_harvest_C_acc;  // Crop harvest summarised in carbon [gC/m2]
     svector *_C4_flag_acc;  //  C4 dominant vegetaion? 0 - No (C3); 1 - Yes (C4)
     svector *_doc_rain_acc;  // The organic carbon concentration in rain water [mgC/L], only needed when carbon_sim_1 = 1

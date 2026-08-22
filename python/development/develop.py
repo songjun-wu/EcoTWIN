@@ -422,10 +422,11 @@ Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that con
           ['_doc_chanS',  [Opt.cond['carbon_sim_1']], 'DOC in Channel storage [mgN/L]', 'grid', 'spatial', 'doc_chanS', 1],
 
           ['_litter_fall_C',  [Opt.cond['carbon_sim_1']], 'Litter fall summarised from green and reserve pool to non-wood litter pool, and wood pool to litter wood pool [gC/m2]', 'grid', 'new', 'litter_fall_C', 1],
-          ['_co2_emission_C',  [Opt.cond['carbon_sim_1']], 'CO2 fluxes summarised in carbon [gC/m2]', 'grid', 'new', 'co2_emission_C', 1],
           ['_soil_decomposition_C',  [Opt.cond['carbon_sim_1']], 'Soil decomposition summarised in carbon [gC/m2]', 'grid', 'new', 'soil_decomposition_C', 1],
+          ['_soluble_production_C',  [Opt.cond['carbon_sim_1']], 'Soluble carbon production summarised in carbon [gC/m2]', 'grid', 'new', 'soluble_production_C', 1],
+          ['_co2_emission_C',  [Opt.cond['carbon_sim_1']], 'CO2 fluxes summarised in carbon [gC/m2]', 'grid', 'new', 'co2_emission_C', 1],
           ['_respiration_river_C',  [Opt.cond['carbon_sim_1']], 'Aquatic heterotrophic respiration summarised in carbon [gC/m2]', 'grid', 'new', 'respiration_river_C', 1],
-          ['_humus_decomposition_spatial_weights',  [Opt.cond['carbon_sim_1']], 'Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]', 'grid', 'spatial', 'humus_decomposition_spatial_weights', 0],
+          #['_humus_decomposition_spatial_weights',  [Opt.cond['carbon_sim_1']], 'Humus decomposition weights based on the spatial pattern of soil carbon storage [gC/m2]', 'grid', 'spatial', 'humus_decomposition_spatial_weights', 0],
           ['_harvest_C',  [Opt.cond['carbon_sim_1']], 'Crop harvest summarised in carbon [gC/m2]', 'grid', 'new', 'harvest_C', 1],
           
           

@@ -119,8 +119,9 @@ int Report::dtor(Control &ctrl){
   if (of__doc_GW.is_open())  of__doc_GW.close();
   if (of__doc_chanS.is_open())  of__doc_chanS.close();
   if (of__litter_fall_C.is_open())  of__litter_fall_C.close();
-  if (of__co2_emission_C.is_open())  of__co2_emission_C.close();
   if (of__soil_decomposition_C.is_open())  of__soil_decomposition_C.close();
+  if (of__soluble_production_C.is_open())  of__soluble_production_C.close();
+  if (of__co2_emission_C.is_open())  of__co2_emission_C.close();
   if (of__respiration_river_C.is_open())  of__respiration_river_C.close();
   if (of__harvest_C.is_open())  of__harvest_C.close();
   if (of__leaching_mass_doc.is_open())  of__leaching_mass_doc.close();
@@ -238,8 +239,9 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__doc_GW==2) delete _doc_GW_acc;
   if (ctrl.report__doc_chanS==2) delete _doc_chanS_acc;
   if (ctrl.report__litter_fall_C==2) delete _litter_fall_C_acc;
-  if (ctrl.report__co2_emission_C==2) delete _co2_emission_C_acc;
   if (ctrl.report__soil_decomposition_C==2) delete _soil_decomposition_C_acc;
+  if (ctrl.report__soluble_production_C==2) delete _soluble_production_C_acc;
+  if (ctrl.report__co2_emission_C==2) delete _co2_emission_C_acc;
   if (ctrl.report__respiration_river_C==2) delete _respiration_river_C_acc;
   if (ctrl.report__harvest_C==2) delete _harvest_C_acc;
   if (ctrl.report__leaching_mass_doc==2) delete _leaching_mass_doc_acc;
