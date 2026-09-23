@@ -221,3 +221,10 @@ class Opt:
                         'general_description':'The format of fertilization inputs\n# 1: A raster map showing the potential fertilization amount in g/m2\n# 2: Specificed for each vegetation type in Crop_info.ini',
                         'description':'The fertilization inputs are from a raster map'}
     
+
+    cond['spatial_parameterization_0']   = {'key':'opt_spatial_parameterization', 'value':0, 
+                        'general_description':'The spatial parameterization of parameters\n# 0: Parameters inferred only from def.py\n# 1: Spatial adjustment based on adjustment maps for specific parameters',
+                        'description':'Parameters inferred only from def.py'}
+    cond['spatial_parameterization_1']   = {'key':'opt_spatial_parameterization', 'value':1, 
+                        'general_description':'The spatial parameterization of parameters\n# 0: Parameters inferred only from def.py\n# 1: Spatial adjustment based on adjustment maps for specific parameters',
+                        'description':'Spatial adjustment based on adjustment maps for specific parameters'}

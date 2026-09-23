@@ -238,6 +238,10 @@ int Basin::dtor(Control &ctrl){
     if(_leaching_mass_no3) delete _leaching_mass_no3;
     if(_drainage_mass_no3) delete _drainage_mass_no3;
   }
+  if (ctrl.opt_spatial_parameterization == 1){
+    if(_param_correction_doc) delete _param_correction_doc;
+    if(_param_correction_no3) delete _param_correction_no3;
+  }
   /* end of Nitrogen */
 
   /* Carbon */

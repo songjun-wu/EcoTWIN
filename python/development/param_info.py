@@ -185,8 +185,8 @@ class Param:
     # Carbon decomposition
     ref['frac_DOC_production_from_litter_CP'] = {'type':'global',   'log':1, 'file':'frac_DOC_production_from_litter_CP',   'min':[2e-4], 'max':[1e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of litter carbon pool [-]  # 2e-3 in literature
     ref['frac_DOC_production_from_soil_CP'] = {'type':'global',   'log':1, 'file':'frac_DOC_production_from_soil_CP',   'min':[5e-3], 'max':[5e-1], 'fix_value':None,} # The fraction of DOC production from decomposition of soil carbon pool [-]  # 1e-2 in literature
-    ref['ref_frac_soluble_to_doc'] = {'type':'global',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':[5e-4], 'max':[0.99], 'fix_value':None} # Reference fraction of soluble carbon going to DOC pool [-]
-    ref['frac_soluble_to_doc_weights'] = {'type':'soil',   'log':0, 'file':'frac_soluble_to_doc_weights',   'min':[0.3, 0.3, 0.3, 0.3, 0.5, 0.0, 0.8], 'max':[0.6, 0.6, 0.6, 0.6, 0.8, 0.2, 1.0], 'fix_value':None} # The weights for reference fraction of soluble carbon going to DOC pool [-]
+    ref['ref_frac_soluble_to_doc'] = {'type':'spatial_distributed_global',   'log':1, 'file':'ref_frac_soluble_to_doc',   'min':[5e-4], 'max':[0.99], 'fix_value':None,} # Reference fraction of soluble carbon going to DOC pool [-]
+    ref['frac_soluble_to_doc_weights'] = {'type':'soil',   'log':0, 'file':'frac_soluble_to_doc_weights',   'min':[0.3, 0.3, 0.3, 0.3, 0.5, 0.0, 0.8], 'max':[0.6, 0.6, 0.6, 0.6, 0.8, 0.2, 1.0], 'fix_value':None,} # The weights for reference fraction of soluble carbon going to DOC pool [-]
     
 
     # Reference decomposition rates of carbon pools
@@ -204,14 +204,14 @@ class Param:
     ref['denitrification_river']   = {'type':'global_landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-3], 'max':[1e-1], 'fix_value':None, 'weights':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 1.0],} # Reference rates of aquatic denitrification [gN m-2 day-1]
     #ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':None,}
     #ref['primary_production_aquatic']   = {'type':'landuse',   'log':0, 'file':'primary_production_aquatic',   'min':[1e-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None,}
-    ref['denitrification_soil']   = {'type':'global_landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-5], 'max':[1e-1], 'fix_value':None, 'weights':[1,1,1,1,1,1,1.3],}
+    ref['denitrification_soil']   = {'type':'spatial_distributed_global_landuse',   'log':1, 'file':'denitrification_soil',   'min':[1e-5], 'max':[1e-1], 'fix_value':None, 'weights':[1,1,1,1,1,1,1.3],}
     #ref['degradation_soil']   = {'type':'landuse',   'log':1, 'file':'degradation_soil',   'min':[1e-6]*Info.N_landuse, 'max':[1e-4,1e-4,1e-4,1e-4,1e-5,1e-5], 'fix_value':None,}
     #ref['mineralisation_soil']   = {'type':'landuse',   'log':1, 'file':'mineralisation_soil',   'min':[1e-5]*Info.N_landuse, 'max':[0.4,0.4,0.3,0.2,0.1,0.01], 'fix_value':None,}
     #ref['dissolution_soil']   = {'type':'landuse',   'log':1, 'file':'dissolution_soil',   'min':[1e-3]*Info.N_landuse, 'max':[200]*Info.N_landuse, 'fix_value':None,}
-    ref['deni_soil_moisture_thres']   = {'type':'global',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.1], 'max':[0.7], 'fix_value':None,}
+    ref['deni_soil_moisture_thres']   = {'type':'spatial_distributed_global',   'log':0, 'file':'deni_soil_moisture_thres',   'min':[0.1], 'max':[0.7], 'fix_value':None,}
 
-    ref['NC_ratio_plant_green'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_green',   'min':[30], 'max':[70], 'fix_value':[1/50],} # Nitrogen carbon ratio in vegetation green pool  [gN/gC]; log:2 means the parameter values are the inverse of the nitrogen carbon ratio for mathematic simplicity
-    ref['NC_ratio_plant_wood'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_wood',   'min':[50], 'max':[250], 'fix_value':[1/100],} # Nitrogen carbon ratio in vegetation wood pool  [gN/gC]
+    ref['NC_ratio_plant_green'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_green',   'min':[30], 'max':[70], 'fix_value':[1/40],} # Nitrogen carbon ratio in vegetation green pool  [gN/gC]; log:2 means the parameter values are the inverse of the nitrogen carbon ratio for mathematic simplicity
+    ref['NC_ratio_plant_wood'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_wood',   'min':[50], 'max':[250], 'fix_value':[1/90],} # Nitrogen carbon ratio in vegetation wood pool  [gN/gC]
     ref['NC_ratio_dpm_litter'] = {'type':'global',   'log':2, 'file':'NC_ratio_dpm_litter',   'min':[40], 'max':[150], 'fix_value':[1/80],} # Nitrogen carbon ratio in the litter pool of decomposable plant material  [gN/gC]
     ref['NC_ratio_rpm_litter'] = {'type':'global',   'log':2, 'file':'NC_ratio_rpm_litter',   'min':[200], 'max':[1400], 'fix_value':[1/250],} # Nitrogen carbon ratio in the litter pool of resistant plant material  [gN/gC]
     
@@ -221,23 +221,23 @@ class Param:
     # Only for testing: the best results via mannual configuration
     """
     # Hydrology
-    ref['drainage_intensity']   = {'type':'global_landuse',  'log':0, 'file':'drainage_intensity',   'min':[0.0], 'max':[0.99], 'fix_value':None, 'weights':[0,0,0,0,0,0,0],}  # The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
-    ref['Ks_vadose']   = {'type':'global',   'log':1, 'file':'Ks_vadose',   'min':[3e-2], 'max':[3e-2], 'fix_value':None,}  # The reference conductivity of vadose zone for interflow routing [m/day] [1e-3, 1]
-    ref['Ks_GW']   = {'type':'global',   'log':1, 'file':'Ks_GW',   'min':[1e-6], 'max':[1e-6], 'fix_value':None,}  # The reference conductivity of GW zone for interflow routing [m/day]
+    #ref['drainage_intensity']   = {'type':'global_landuse',  'log':0, 'file':'drainage_intensity',   'min':[0.0], 'max':[0.99], 'fix_value':None, 'weights':[0,0,0,0,0,0,0],}  # The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
+    #ref['Ks_vadose']   = {'type':'global',   'log':1, 'file':'Ks_vadose',   'min':[3e-2], 'max':[3e-2], 'fix_value':None,}  # The reference conductivity of vadose zone for interflow routing [m/day] [1e-3, 1]
+    #ref['Ks_GW']   = {'type':'global',   'log':1, 'file':'Ks_GW',   'min':[1e-6], 'max':[1e-6], 'fix_value':None,}  # The reference conductivity of GW zone for interflow routing [m/day]
     
     # isotope
-    ref['Echan_alpha']   = {'type':'global',   'log':1, 'file':'Echan_alpha',   'min':[0.15], 'max':[0.15], 'fix_value':None,}  # Correction factor in Priestley-Taylor equation
+    #ref['Echan_alpha']   = {'type':'global',   'log':1, 'file':'Echan_alpha',   'min':[0.15], 'max':[0.15], 'fix_value':None,}  # Correction factor in Priestley-Taylor equation
     
     # DOC
-    ref['frac_DOC_production_from_soil_CP'] = {'type':'global',   'log':1, 'file':'frac_DOC_production_from_soil_CP',   'min':[7e-2], 'max':[7e-2], 'fix_value':None,} # The fraction of DOC production from decomposition of soil carbon pool [-]  # 1e-2 in literature
-    ref['ref_decomp_rate_doc'] = {'type':'global_landuse',   'log':1, 'file':'ref_decomp_rate_doc',   'min':[1.5e-3], 'max':[1.5e-3], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.9],} # Reference decomposition rate of DOC pool [day-1]
+    #ref['frac_DOC_production_from_soil_CP'] = {'type':'global',   'log':1, 'file':'frac_DOC_production_from_soil_CP',   'min':[7e-2], 'max':[7e-2], 'fix_value':None,} # The fraction of DOC production from decomposition of soil carbon pool [-]  # 1e-2 in literature
+    #ref['ref_decomp_rate_doc'] = {'type':'global_landuse',   'log':1, 'file':'ref_decomp_rate_doc',   'min':[1.5e-3], 'max':[1.5e-3], 'fix_value':None, 'weights':[1,1,1,1,1,1,0.9],} # Reference decomposition rate of DOC pool [day-1]
     
     # Nitrate
-    ref['NC_ratio_plant_green'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_green',   'min':[49], 'max':[50], 'fix_value':None,} # Nitrogen carbon ratio in vegetation green pool  [gN/gC]; log:2 means the parameter values are the inverse of the nitrogen carbon ratio for mathematic simplicity
-    ref['NC_ratio_plant_wood'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_wood',   'min':[99], 'max':[100], 'fix_value':None,} # Nitrogen carbon ratio in vegetation wood pool  [gN/gC]
-    ref['NC_ratio_dpm_litter'] = {'type':'global',   'log':2, 'file':'NC_ratio_dpm_litter',   'min':[79], 'max':[80], 'fix_value':None,} # Nitrogen carbon ratio in the litter pool of decomposable plant material  [gN/gC]
-    ref['NC_ratio_rpm_litter'] = {'type':'global',   'log':2, 'file':'NC_ratio_rpm_litter',   'min':[249], 'max':[250], 'fix_value':None,} # Nitrogen carbon ratio in the litter pool of resistant plant material  [gN/gC]
-    ref['denitrification_soil']   = {'type':'global_landuse',   'log':1, 'file':'denitrification_soil',   'min':[1.5e-2], 'max':[1.5e-2], 'fix_value':None, 'weights':[1,1,1,1,1,1,1.3],}
+    #ref['NC_ratio_plant_green'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_green',   'min':[49], 'max':[50], 'fix_value':None,} # Nitrogen carbon ratio in vegetation green pool  [gN/gC]; log:2 means the parameter values are the inverse of the nitrogen carbon ratio for mathematic simplicity
+    #ref['NC_ratio_plant_wood'] = {'type':'global',   'log':2, 'file':'NC_ratio_plant_wood',   'min':[99], 'max':[100], 'fix_value':None,} # Nitrogen carbon ratio in vegetation wood pool  [gN/gC]
+    #ref['NC_ratio_dpm_litter'] = {'type':'global',   'log':2, 'file':'NC_ratio_dpm_litter',   'min':[79], 'max':[80], 'fix_value':None,} # Nitrogen carbon ratio in the litter pool of decomposable plant material  [gN/gC]
+    #ref['NC_ratio_rpm_litter'] = {'type':'global',   'log':2, 'file':'NC_ratio_rpm_litter',   'min':[249], 'max':[250], 'fix_value':None,} # Nitrogen carbon ratio in the litter pool of resistant plant material  [gN/gC]
+    #ref['denitrification_soil']   = {'type':'global_landuse',   'log':1, 'file':'denitrification_soil',   'min':[1.5e-2], 'max':[1.5e-2], 'fix_value':None, 'weights':[1,1,1,1,1,1,1.3],}
     """
 
 

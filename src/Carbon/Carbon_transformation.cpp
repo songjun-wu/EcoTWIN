@@ -107,23 +107,23 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       // Calculate the factor of groundwater depth
       fct_groundwater_depth = exp(-par._f_groundwater_depth_decay_exp_base->val[j] * sqrt(groundwater_table));
       // Mobilisation of bounded DOC to mobile DOC
-      ref_frac_soluble_to_doc = par._ref_frac_soluble_to_doc->val[j] * par._frac_soluble_to_doc_weights->val[j];
-      DOC_mobilisation = soluble_CP1 * ref_frac_soluble_to_doc * fct_groundwater_depth;
+      ref_frac_soluble_to_doc = min(1.0, par._ref_frac_soluble_to_doc->val[j] * par._frac_soluble_to_doc_weights->val[j] * fct_groundwater_depth);
+      DOC_mobilisation = soluble_CP1 * ref_frac_soluble_to_doc;
       DOC_pool_layer1 += DOC_mobilisation;
       soluble_CP1 -= DOC_mobilisation;
-      DOC_mobilisation = soluble_CP2 * ref_frac_soluble_to_doc * fct_groundwater_depth;
+      DOC_mobilisation = soluble_CP2 * ref_frac_soluble_to_doc;
       DOC_pool_layer2 += DOC_mobilisation;
       soluble_CP2 -= DOC_mobilisation;
-      DOC_mobilisation = soluble_CP3 * ref_frac_soluble_to_doc * fct_groundwater_depth;
+      DOC_mobilisation = soluble_CP3 * ref_frac_soluble_to_doc;
       DOC_pool_layer3 += DOC_mobilisation;
       soluble_CP3 -= DOC_mobilisation;
 
 
       // Decomposition of DOC pool
       // Nitrogen has been released to mineral pool during DOC production. Therefore, no nitrogen is released during DOC decomposition
-      frac_DOC_decomposition_layer1 = par._ref_decomp_rate_doc->val[j];
-      frac_DOC_decomposition_layer2 = par._ref_decomp_rate_doc->val[j];
-      frac_DOC_decomposition_layer3 = par._ref_decomp_rate_doc->val[j];
+      frac_DOC_decomposition_layer1 = par._ref_decomp_rate_doc->val[j] * fct_Ts;
+      frac_DOC_decomposition_layer2 = par._ref_decomp_rate_doc->val[j] * fct_Ts;
+      frac_DOC_decomposition_layer3 = par._ref_decomp_rate_doc->val[j] * fct_Ts;
       delta_doc_layer1 = (soluble_CP1 + DOC_pool_layer1) * frac_DOC_decomposition_layer1;
       delta_doc_layer2 = (soluble_CP2 + DOC_pool_layer2) * frac_DOC_decomposition_layer2;
       delta_doc_layer3 = (soluble_CP3 + DOC_pool_layer3) * frac_DOC_decomposition_layer3;

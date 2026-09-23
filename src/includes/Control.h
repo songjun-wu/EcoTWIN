@@ -188,6 +188,10 @@ struct Control{
   // 1: A raster map showing the potential fertilization amount in g/m2
   // 2: Specificed for each vegetation type in Crop_info.ini
   int opt_fert_input;
+  // The spatial parameterization of parameters
+  // 0: Parameters inferred only from def.py
+  // 1: Spatial adjustment based on adjustment maps for specific parameters
+  int opt_spatial_parameterization;
   /* end of Options */
 
 
@@ -309,6 +313,8 @@ struct Control{
   string fn__no3_GW;  // no3 in Groundwater storage [mgN/L]
   string fn__no3_chanS;  // no3 in Channel storage [mgN/L]
   string fn__NC_ratio_soil_pool;  // Initial nitrogen carbon ratio of soil organic pools []
+  string fn__param_correction_doc;  // Spatial correction of DOC parameters [decimal]
+  string fn__param_correction_no3;  // Spatial correction of NO3 parameters [decimal]
   /* end of Nitrogen */
 
   /* Carbon */

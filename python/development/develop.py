@@ -494,6 +494,11 @@ Nitrogen = [['_plant_mobile_NP', [Opt.cond['nitrogen_sim_1']], 'Plant mobile nit
             #['_fast_pool_N_dissolved_to_DIN', [Opt.cond['nitrogen_sim_1']], 'Fast pool nitrogen dissolved to DIN [gN/m2]', 'grid', 'new', 'fast_pool_N_dissolved_to_DIN', 0],
             #['_humus_N_release_by_respiration', [Opt.cond['nitrogen_sim_1']], 'Humus nitrogen released by respiration [gN/m2]', 'grid', 'new', 'humus_N_release_by_respiration', 0],
             #['_no3_hydro_input_mass', [Opt.cond['nitrogen_sim_1']], 'Hydrological input of NO3 [gN/m2]', 'grid', 'new', 'no3_hydro_input_mass', 0],  # only for debug
+
+            # test
+            ['_param_correction_doc', [Opt.cond['spatial_parameterization_1']], 'Spatial correction of DOC parameters [decimal]', 'grid', 'spatial', 'param_correction_doc', 0],
+            ['_param_correction_no3', [Opt.cond['spatial_parameterization_1']], 'Spatial correction of NO3 parameters [decimal]', 'grid', 'spatial', 'param_correction_no3', 0],
+
             ]
 
 

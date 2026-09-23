@@ -244,6 +244,10 @@
     _leaching_mass_no3 = new svector(_sortedGrid.size);
     _drainage_mass_no3 = new svector(_sortedGrid.size);
   }
+  if (ctrl.opt_spatial_parameterization == 1){
+    _param_correction_doc = new svector(ctrl.path_BasinFolder + ctrl.fn__param_correction_doc, _rowNum, _colNum, _sortedGrid);
+    _param_correction_no3 = new svector(ctrl.path_BasinFolder + ctrl.fn__param_correction_no3, _rowNum, _colNum, _sortedGrid);
+  }
   /* end of Nitrogen */
 
   /* Carbon */

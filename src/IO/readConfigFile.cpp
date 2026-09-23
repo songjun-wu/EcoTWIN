@@ -85,6 +85,7 @@ int Control::ReadConfigFile(string fname){
   readInto(opt_init_doc, "opt_init_doc", lines);
   readInto(opt_init_no3, "opt_init_no3", lines);
   readInto(opt_fert_input, "opt_fert_input", lines);
+  readInto(opt_spatial_parameterization, "opt_spatial_parameterization", lines);
   /* end of Options */
 
   /* GIS */
@@ -230,6 +231,8 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__no3_GW, "no3_groundwater_storage", lines);
   readInto(fn__no3_chanS, "no3_chanS", lines);
   readInto(fn__NC_ratio_soil_pool, "NC_ratio_soil_pool", lines);
+  readInto(fn__param_correction_doc, "param_correction_doc", lines);
+  readInto(fn__param_correction_no3, "param_correction_no3", lines);
   /* end of Nitrogen */
 
   /* Reference states or fluxes parameterisation */

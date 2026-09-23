@@ -32,6 +32,18 @@ int Basin::Parameter_correction(Control &ctrl, Param &par){
     // Maximum carbon content in wood pool needs to be corrected by spatial maps of forest biomass (in gC/m2)
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
       par._plant_wood_CP_max->val[j] *= _plant_wood_CP_forest_max->val[j];
+   }
+  }
+
+
+  // Spatial correction of specific parameters
+  if (ctrl.opt_spatial_parameterization==1){
+  
+    if (ctrl.opt_carbon_sim==1){
+      for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+        par._ref_frac_soluble_to_doc->val[j] *= _param_correction_doc->val[j];
+        par._denitrification_soil->val[j] *= _param_correction_no3->val[j];       
+      }
     }
   }
 

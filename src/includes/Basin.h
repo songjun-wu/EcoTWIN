@@ -271,6 +271,8 @@ class Basin {
   svector *_NC_ratio_soil_pool;  // Initial nitrogen carbon ratio of soil organic pools []
   svector *_leaching_mass_no3;  // Leaching of NO3 [gN/m2]
   svector *_drainage_mass_no3;  // Drainage of NO3 [gN/m2]
+  svector *_param_correction_doc;  // Spatial correction of DOC parameters [decimal]
+  svector *_param_correction_no3;  // Spatial correction of NO3 parameters [decimal]
   /* end of Nitrogen */
 
 

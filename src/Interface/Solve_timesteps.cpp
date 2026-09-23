@@ -26,6 +26,7 @@ int Basin::Solve_timesteps(Control &ctrl, Param &par, Atmosphere &atm) {
     //cout <<endl<<ctrl.year << "-"<<ctrl.month<<"-"<<ctrl.day<<"     ";  // todo
     //for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) { // todo
       //if (_sortedGrid.row[j] == 1 and _sortedGrid.col[j] == 11) cout << j<<"  "; // todo
+      //par._f_groundwater_depth_decay_exp_base->val[j] = 0.3;  // todo
     //}
 
 

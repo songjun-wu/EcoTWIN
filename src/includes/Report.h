@@ -166,6 +166,8 @@ class Report {
     ofstream of__NC_ratio_soil_pool;  // Initial nitrogen carbon ratio of soil organic pools []
     ofstream of__leaching_mass_no3;  // Leaching of NO3 [gN/m2]
     ofstream of__drainage_mass_no3;  // Drainage of NO3 [gN/m2]
+    ofstream of__param_correction_doc;  // Spatial correction of DOC parameters [decimal]
+    ofstream of__param_correction_no3;  // Spatial correction of NO3 parameters [decimal]
 
     svector *_I_acc;  // Canopy storage [m]
     svector *_snow_acc;  // Snow depth in [m]
@@ -300,6 +302,8 @@ class Report {
     svector *_NC_ratio_soil_pool_acc;  // Initial nitrogen carbon ratio of soil organic pools []
     svector *_leaching_mass_no3_acc;  // Leaching of NO3 [gN/m2]
     svector *_drainage_mass_no3_acc;  // Drainage of NO3 [gN/m2]
+    svector *_param_correction_doc_acc;  // Spatial correction of DOC parameters [decimal]
+    svector *_param_correction_no3_acc;  // Spatial correction of NO3 parameters [decimal]
     /* end of Report */
 
     //ctor
