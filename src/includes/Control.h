@@ -253,6 +253,11 @@ struct Control{
   string fn__d18o_P;  // d18O in precipitation [‰]
   /* end of Climate */
 
+
+  /* Climate_time_series */
+  string fn__atmCO2_db;  // Atmospheric CO2 concentration in time series [ppm]
+  /* end of Climate_time_series */
+
   /* Storages */
   string fn__I;  // Canopy storage [m]
   string fn__snow;  // Snow depth in [m]

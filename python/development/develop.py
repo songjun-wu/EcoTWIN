@@ -41,10 +41,11 @@ Climate = [ ['_P', [Opt.cond['none']], 'Precipitation [m]', 'grid', 'spatial_TS'
             ['_Rnet', [Opt.cond['none']], 'Net radiation [W/m2]', 'grid', 'spatial_TS', 'Net_radiation', 0],
             ['_Rswd', [Opt.cond['carbon_sim_1'], Opt.cond['nitrogen_sim_1']], 'Shortwave downward radiation [W/m2]', 'grid', 'spatial_TS', 'Shortwave_downward_radiation', 0],
 
-            ['_d18o_P', [Opt.cond['tracking_isotope_1']], 'd18O in precipitation [‰]', 'grid', 'spatial_TS', 'd18O_Precipitation', 0],
+            ['_d18o_P', [Opt.cond['tracking_isotope_1']], 'd18O in precipitation [‰]', 'grid', 'spatial_TS', 'd18O_Precipitation', 0],           
+        ]
 
-
-            
+Climate_time_series = [
+            ['_atmCO2_db', [Opt.cond['carbon_sim_1']], 'Atmospheric CO2 concentration in time series [ppm]', 'float', 'float_TS', 'atmCO2_db', 0],
         ]
 
 GroundTs = [
@@ -574,6 +575,9 @@ develop_tools.extract_multiple_classes(src=os.path.dirname(os.path.dirname(homep
 signs_atmos = ['Climate']
 datas_atmos = [Climate]
 
+signs_atmos_time_series = ['Climate_time_series']
+datas_atmos_time_series = [Climate_time_series]
+
 signs_groundTs = ['GroundTs']
 datas_groundTs = [GroundTs]
 
@@ -586,19 +590,20 @@ datas_basin = [GIS, Storages, Fluxes, Tracking, Phenology, Carbon, Nitrogen]
 signs_param = ['Parameters']
 datas_param = [Parameters]
 
-signs_control = signs_atmos + signs_groundTs + signs_ManagementTs + signs_basin + signs_param
-datas_control = datas_atmos + datas_groundTs + datas_ManagementTs + datas_basin + datas_param
+signs_control = signs_atmos + signs_atmos_time_series + signs_groundTs + signs_ManagementTs + signs_basin + signs_param
+datas_control = datas_atmos + datas_atmos_time_series + datas_groundTs + datas_ManagementTs + datas_basin + datas_param
 
 
 
 
-define_variables.includes(fname=path + 'includes/Atmosphere.h', signs=signs_atmos, datas=datas_atmos, max_category=setting.max_category)
-define_variables.destructor(fname=path + 'Destructors/AtmosphereDestruct.cpp', signs=signs_atmos, datas=datas_atmos)
+define_variables.includes(fname=path + 'includes/Atmosphere.h', signs=signs_atmos+signs_atmos_time_series, datas=datas_atmos+datas_atmos_time_series, max_category=setting.max_category)
+define_variables.destructor(fname=path + 'Destructors/AtmosphereDestruct.cpp', signs=signs_atmos+signs_atmos_time_series, datas=datas_atmos+datas_atmos_time_series)
 
 
-define_variables.constructor(fname=path + 'Constructors/AtmosphereConstruct.cpp', signs=signs_atmos, datas=datas_atmos)
+define_variables.constructor(fname=path + 'Constructors/AtmosphereConstruct.cpp', signs=signs_atmos+signs_atmos_time_series, datas=datas_atmos+datas_atmos_time_series)
 
 define_variables.atmos_read_climate_maps(fname=path + 'Atmosphere/read_climate_maps.cpp', signs=signs_atmos, datas=datas_atmos)
+define_variables.atmos_read_climate_time_series(fname=path + 'Atmosphere/read_climate_time_series.cpp', signs=signs_atmos_time_series, datas=datas_atmos_time_series)
 
 
 define_variables.includes(fname=path + 'includes/Basin.h', signs=signs_groundTs+signs_ManagementTs+signs_basin, datas=datas_groundTs+datas_ManagementTs+datas_basin, max_category=setting.max_category)

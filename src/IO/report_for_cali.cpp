@@ -29,7 +29,7 @@ int Basin::Report_for_cali(Control &ctrl){
       vector_no3_chanS.push_back(_no3_chanS->val[idx]);
       vector_doc_chanS.push_back(_doc_chanS->val[idx]);
 
-      //if(ctrl.current_ts/86400 == 0) cout << i << "   "<< idx<<"   "<< _sortedGrid.row[idx] << "   "<<_sortedGrid.col[idx] << "   "<< _no3_layer3->val[idx] << endl;  // todo
+      //if(ctrl.current_ts/86400 == 0) cout << i << "   "<< idx<<"   "<< _sortedGrid.row[idx] << "   "<<_sortedGrid.col[idx] << "   "<< _chnlength->val[idx] << endl;  // todo
   }
 
   return EXIT_SUCCESS;

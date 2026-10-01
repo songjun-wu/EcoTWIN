@@ -20,6 +20,9 @@ def includes(fname, signs, datas, max_category):
         if sign == 'Irrigation':
             for kk in range(len(data)):
                 content.append('  vector<double> ' + data[kk][0] + ';\n')
+        if sign == 'Climate_time_series':
+            for kk in range(len(data)):
+                content.append('  double ' + data[kk][0] + ';\n')
         with open(fname, 'r') as f:
             lines = f.readlines()
             start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')
@@ -29,7 +32,7 @@ def includes(fname, signs, datas, max_category):
                 for i in range(len(grouped_data[key])):
                     if grouped_data[key][i][3] == 'grid':
                         content.append('  svector *' + grouped_data[key][i][0] + ';  // ' + grouped_data[key][i][2] + '\n')
-                    if grouped_data[key][i][4] == 'spatial_TS':
+                    if grouped_data[key][i][4] == 'spatial_TS' or grouped_data[key][i][4] == 'float_TS':
                         content.append('  ifstream if_' + grouped_data[key][i][0] + ';  // ' + grouped_data[key][i][2] + '\n')         
             content = lines[:start] + content + lines[end:]
         
@@ -67,8 +70,14 @@ def atmos_read_climate_maps(fname, signs, datas):
             content = []
             keys, grouped_data = group_text(data)
             for key in keys:
-                text = ['  read_climate_maps(if_' + grouped_data[key][i][0] + ', *' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
-                content.append(if_condition_build(key, text))               
+
+                text = [
+                    '  read_climate_maps(if_' + grouped_data[key][i][0] + ', *' + grouped_data[key][i][0] + ');\n' 
+                    for i in range(len(grouped_data[key]))
+                ]
+                
+                if len(text) > 0:
+                    content.append(if_condition_build(key, text))       
             content = lines[:start] + content + lines[end:]
         if(('').join(content) != ('').join(lines)):
             with open(fname, 'w') as f:
@@ -84,8 +93,13 @@ def atmos_read_climate_maps(fname, signs, datas):
             content = []
             keys, grouped_data = group_text(data)
             for key in keys:
-                text = ['  init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] + ', if_' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
-                content.append(if_condition_build(key, text))               
+                text = [
+                        '  init_climate_maps(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] +
+                        ', if_' + grouped_data[key][i][0] + ');\n'
+                        for i in range(len(grouped_data[key]))
+                    ]
+                if len(text) > 0:
+                    content.append(if_condition_build(key, text))               
             content = lines[:start] + content + lines[end:]
         if(('').join(content) != ('').join(lines)):
             with open(fname, 'w') as f:
@@ -101,12 +115,65 @@ def atmos_read_climate_maps(fname, signs, datas):
             content = []
             keys, grouped_data = group_text(data)
             for key in keys:
-                text = ['  update_climate_maps(if_' + grouped_data[key][i][0] + ', *' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
+
+
+                text = [
+                    '  update_climate_maps(if_' + grouped_data[key][i][0] + ', *' + grouped_data[key][i][0] + ');\n'
+                    for i in range(len(grouped_data[key]))
+                ]
+                if len(text) > 0:
+                    content.append(if_condition_build(key, text))               
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+
+
+def atmos_read_climate_time_series(fname, signs, datas):
+
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Atmosphere::open_climate_time_series(Control &ctrl)', 'int Atmosphere::read_climate_time_series(Control &ctrl)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+                text = ['  open_climate_TS(ctrl.path_ClimateFolder + ctrl.fn_' + grouped_data[key][i][0] + ', if_' + grouped_data[key][i][0] + ');\n' for i in range(len(grouped_data[key]))]
                 content.append(if_condition_build(key, text))               
             content = lines[:start] + content + lines[end:]
         if(('').join(content) != ('').join(lines)):
             with open(fname, 'w') as f:
                 f.writelines(content)
+    
+    for j in range(len(signs)):
+        sign = signs[j]
+        data = datas[j] 
+        with open(fname, 'r') as f:
+            lines = f.readlines()
+            start, end = locate_text(lines, 'int Atmosphere::read_climate_time_series(Control &ctrl)', 'int Atmosphere::open_climate_TS(string fname, ifstream &ifHandle)')
+            end -= 3
+            content = []
+            keys, grouped_data = group_text(data)
+            for key in keys:
+
+                text = [
+                    '  read_climate_TS(if_' + grouped_data[key][i][0] + ', ' + grouped_data[key][i][0] + ');\n' 
+                    for i in range(len(grouped_data[key]))
+                ]
+                
+                if len(text) > 0:
+                    content.append(if_condition_build(key, text))       
+            content = lines[:start] + content + lines[end:]
+        if(('').join(content) != ('').join(lines)):
+            with open(fname, 'w') as f:
+                f.writelines(content)
+    
+
+
+
 
 def basin_read_groundTs_maps(fname, signs, datas):
 
@@ -278,7 +345,7 @@ def basin_includes(fname, signs, datas):
 def destructor(fname, signs, datas):
     for j in range(len(signs)):
         sign = signs[j]
-        data = datas[j] 
+        data = datas[j]
         with open(fname, 'r') as f:
             lines = f.readlines()
             start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')
@@ -287,7 +354,7 @@ def destructor(fname, signs, datas):
             for key in keys:
                 text = []
                 for i in range(len(grouped_data[key])):                  
-                    if grouped_data[key][i][4] == 'spatial_TS':
+                    if grouped_data[key][i][4] == 'spatial_TS' or grouped_data[key][i][4] == 'float_TS':
                         text.append('  if (if_'+grouped_data[key][i][0]+'.is_open())  if_'+grouped_data[key][i][0]+'.close();\n')  
                     if grouped_data[key][i][3] == 'grid' or grouped_data[key][i][3] == 'grid_param':
                         text.append('  if('+grouped_data[key][i][0]+') delete '+grouped_data[key][i][0]+';\n')
@@ -335,12 +402,13 @@ def constructor(fname, signs, datas):
             keys, grouped_data = group_text(data)
             for key in keys:
                 text = []
-                for i in range(len(grouped_data[key])):                  
+                for i in range(len(grouped_data[key])):
                     if grouped_data[key][i][4] == 'new' or grouped_data[key][i][4] == 'spatial_TS' or grouped_data[key][i][4] == 'spatial_param':
                         text.append('  '+grouped_data[key][i][0]+' = new svector(_sortedGrid.size);\n')  
                     if grouped_data[key][i][4] == 'spatial':
-                        text.append('  '+grouped_data[key][i][0]+' = new svector(ctrl.path_BasinFolder + ctrl.fn_'+grouped_data[key][i][0]+', _rowNum, _colNum, _sortedGrid);\n')  
-                content.append(if_condition_build(key, text))
+                        text.append('  '+grouped_data[key][i][0]+' = new svector(ctrl.path_BasinFolder + ctrl.fn_'+grouped_data[key][i][0]+', _rowNum, _colNum, _sortedGrid);\n')
+                if len(text) > 0:
+                    content.append(if_condition_build(key, text))
             content = lines[:start] + content + lines[end:]
         if(('').join(content) != ('').join(lines)):
             with open(fname, 'w') as f:
@@ -396,13 +464,14 @@ def control_includes(fname, options, signs, datas, reports, static_config=False)
         Contents = []
         for data in (datas[j]):
 
-            if 'spatial' in data[4]:
+            if 'spatial' in data[4] or 'float_TS' in data[4]:
                 Contents.append(data)
         with open(fname, 'r') as f:
             lines = f.readlines()
             start, end = locate_text(lines, '/* '+sign+' */', '/* end of '+sign+' */')            
             content = []          
             for i in range(len(Contents)):
+                
                 content.append('  string fn_'+Contents[i][0]+';  // '+Contents[i][2] +'\n')
             content = lines[:start] + content + lines[end:]
         if(('').join(content) != ('').join(lines)):

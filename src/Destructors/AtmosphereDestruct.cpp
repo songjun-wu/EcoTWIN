@@ -52,6 +52,13 @@ int Atmosphere::dtor(Control &ctrl){
   }
   /* end of Climate */
 
+
+  /* Climate_time_series */
+  if (ctrl.opt_carbon_sim == 1){
+    if (if__atmCO2_db.is_open())  if__atmCO2_db.close();
+  }
+  /* end of Climate_time_series */
+
   return EXIT_SUCCESS;
 
 }

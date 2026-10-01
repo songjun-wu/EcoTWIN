@@ -44,6 +44,9 @@
   }
   /* end of Climate */
 
+  /* Climate_time_series */
+  /* end of Climate_time_series */
+
 
   if (ctrl.opt_climate_input_format == 2) {
     _climzones = new svector(ctrl.path_BasinFolder + ctrl.fn__climzones, _rowNum, _colNum, _sortedGrid);
@@ -54,7 +57,7 @@
     _climzones->val[j] -= 1;
   }
 
-  
+  // Read climate maps
   if (ctrl.opt_climate_input_format == 1){
     open_climate(ctrl);
     read_climate(ctrl);
@@ -62,5 +65,7 @@
     init_climate(ctrl); // create maps for climate parameters
     update_climate(ctrl); // update maps for climate parameters
   }
-  
+  // Read climate time series
+    open_climate_time_series(ctrl);
+    read_climate_time_series(ctrl);
  }

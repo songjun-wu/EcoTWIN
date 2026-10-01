@@ -59,6 +59,8 @@ def read_configs(fname, options, signs, datas, reports, static_config):
         for data in (datas[j]):
             if 'spatial' in data[4] and (data[4]!='spatial_param'):
                 Contents.append(data)
+            elif 'float_TS' in data[4]:
+                Contents.append(data)
 
         with open(fname, 'r') as f:
             lines = f.readlines()
@@ -161,14 +163,23 @@ def gen_config_template(path, options, signs, datas, reports, parameters, max_ca
                     var_name = data[0][1:]
                 else:
                     var_name = data[0]
+                
                 #var_name = ('').join(data[0].split('_'))
-                if 'spatial_TS' in data[4]:
+                if 'spatial_TS' in data[4]:  # Spatial time series
                     text.append(data[5]+'  =  '+ var_name + '.bin   # '+data[2] + '\n')
                 elif 'spatial_param' in data[4]:
                     text.append(data[5]+'  =  '+ var_name + '   # '+data[2] + '\n')
                 else:
                     text.append(data[5]+'  =  '+ var_name + '.asc   # '+data[2] + '\n')
                 counter += 1
+
+            if 'float_TS' in data[4]:  # double time series (lumped over space)
+                if data[0][0] == '_':
+                    var_name = data[0][1:]
+                else:
+                    var_name = data[0]
+                text.append(data[5]+'  =  '+ var_name + '.bin   # '+data[2] + '\n')
+
             
 
     text.append('\n\n### Reports\n')

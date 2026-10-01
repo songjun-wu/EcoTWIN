@@ -91,6 +91,7 @@ int main(){
       } else if  (oControl->opt_climate_input_format == 2) {
         oAtmosphere->update_climate(*oControl);
       }
+      oAtmosphere->read_climate_time_series(*oControl);
       advance_climate = 0;
     }
 

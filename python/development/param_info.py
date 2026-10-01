@@ -127,7 +127,7 @@ class Param:
     ref['ET_weight'] = {'type':'global_soil',   'log':0, 'file':'ET_weight',   'min':[0.5], 'max':[1.5], 'fix_value':None, 'weights':[1,1,1,1,1,0.8,1],} # Evaporation and Transpiration should be adjusted due to potential underestimation of daily simulaton compared to integral of hourly simulatont [-]
 
     # === GW recharge === 
-    ref['perc_vadose_coeff']   = {'type':'global',   'log':1, 'file':'perc_vadose_coeff',   'min':[1e-3], 'max':[1], 'fix_value':None,} # Coefficient parameter for GW recharge [1e-5, 1]
+    ref['perc_vadose_coeff']   = {'type':'spatial_distributed_global',   'log':1, 'file':'perc_vadose_coeff',   'min':[1e-3], 'max':[1], 'fix_value':None,} # Coefficient parameter for GW recharge [1e-5, 1]
     ref['init_GW'] = {'type':'global',   'log':0, 'file':'init_GW',   'min':[1], 'max':[50], 'fix_value':None,} # Initial GW storage in m
 
     # === Routing === 
@@ -143,7 +143,7 @@ class Param:
     ref['ratio_to_interf'] = {'type':'global',   'log':0, 'file':'ratio_to_interf',   'min':[0], 'max':[1], 'fix_value':None,}  #[0,1]
 
     # === Channel === 
-    ref['Echan_alpha']   = {'type':'global',   'log':1, 'file':'Echan_alpha',   'min':[1e-2], 'max':[2], 'fix_value':None,}  # Correction factor in Priestley-Taylor equation
+    ref['Echan_alpha']   = {'type':'spatial_distributed_global',   'log':1, 'file':'Echan_alpha',   'min':[1e-2], 'max':[2], 'fix_value':None,}  # Correction factor in Priestley-Taylor equation
 
     # === Mixing === 
     ref['nearsurface_mixing']   = {'type':'global',   'log':0, 'file':'nearsurface_mixing',   'min':[0], 'max':[1], 'fix_value':None,} 
@@ -151,7 +151,7 @@ class Param:
     
 
     # === Tracking ===      
-    ref['CG_n_soil'] = {'type':'landuse',   'log':0, 'file':'CG_n_soil',   'min':[0.5]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None,}
+    ref['CG_n_soil'] = {'type':'global',   'log':0, 'file':'CG_n_soil',   'min':[0.5], 'max':[1], 'fix_value':None,}
     #ref['delta_d18o_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_d18o_init_GW',   'min':[-5]*Info.N_soil, 'max':[5]*Info.N_soil, 'fix_value':None,} # The adjustment of initial d18o composition
 
 
@@ -161,7 +161,7 @@ class Param:
 
     # === Carbon simulation ===
     # Initialization
-    ref['delta_doc_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_doc_init_GW',   'min':[-1]*Info.N_landuse, 'max':[1]*Info.N_landuse, 'fix_value':None,} # The adjustment of initial doc composition
+    ref['delta_doc_init_GW'] = {'type':'global',   'log':0, 'file':'delta_doc_init_GW',   'min':[-1], 'max':[1], 'fix_value':None,} # The adjustment of initial doc composition
     #ref['carboxylation_rate'] = {'type':'landuse',   'log':0, 'file':'carboxylation_rate',   'min':np.array([95,75,75,35,0,0])*1e-6, 'max':np.array([105,85,85,65,30,30])*1e-6, 'fix_value':None,} # Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)]
     #ref['ETransport'] = {'type':'landuse',   'log':0, 'file':'ETransport',   'min':np.array([180,130,130,100,20,20])*1e-6, 'max':np.array([200,160,160,120,80,80])*1e-6, 'fix_value':None,} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)
     # Assimilation
@@ -199,7 +199,7 @@ class Param:
     ref['respiration_river'] = {'type':'global',   'log':1, 'file':'respiration_river',   'min':[1e-3], 'max':[1e-1], 'fix_value':None,} # Reference rates of aquatic heterotrophic respiration [gC m-2 day-1]
 
     # === Nitrogen simulation ===
-    ref['delta_no3_init_GW'] = {'type':'landuse',   'log':0, 'file':'delta_no3_init_GW',   'min':[-3,-2,-2,-2,-2,-2,-2], 'max':[0,0,0,0,0,0,0], 'fix_value':None,} # The adjustment of initial no3 composition
+    ref['delta_no3_init_GW'] = {'type':'global',   'log':0, 'file':'delta_no3_init_GW',   'min':[-3], 'max':[0], 'fix_value':None,} # The adjustment of initial no3 composition
     
     ref['denitrification_river']   = {'type':'global_landuse',   'log':1, 'file':'denitrification_river',   'min':[1e-3], 'max':[1e-1], 'fix_value':None, 'weights':[0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 1.0],} # Reference rates of aquatic denitrification [gN m-2 day-1]
     #ref['autotrophic_uptake_aquatic']   = {'type':'landuse',   'log':0, 'file':'autotrophic_uptake_aquatic',   'min':[1e2]*Info.N_landuse, 'max':[5e2]*Info.N_landuse, 'fix_value':None,}
@@ -247,3 +247,5 @@ class Param:
     #ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-5], 'max':[-4.9], 'fix_value':None,}  # the more negative the more transpiration
     #ref['drainage_intensity']   = {'type':'global_landuse',  'log':1, 'file':'drainage_intensity',   'min':[1e-2], 'max':[1e-1], 'fix_value':None, 'weights':[1,0,0,0,0,0,0],}  # The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
     
+
+

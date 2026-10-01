@@ -41,8 +41,8 @@ int Basin::Parameter_correction(Control &ctrl, Param &par){
   
     if (ctrl.opt_carbon_sim==1){
       for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
-        par._ref_frac_soluble_to_doc->val[j] *= _param_correction_doc->val[j];
-        par._denitrification_soil->val[j] *= _param_correction_no3->val[j];       
+        par._frac_DOC_production_from_soil_CP->val[j] *= _param_correction_doc->val[j];
+        par._denitrification_soil->val[j] *= _param_correction_no3->val[j];   
       }
     }
   }

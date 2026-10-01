@@ -138,6 +138,10 @@ int Control::ReadConfigFile(string fname){
   readInto(fn__d18o_P, "d18O_Precipitation", lines);
   /* end of Climate */
 
+  /* Climate_time_series */
+  readInto(fn__atmCO2_db, "atmCO2_db", lines);
+  /* end of Climate_time_series */
+
   /* Storages */ 
   readInto(fn__I, "canopy_storage", lines);
   readInto(fn__snow, "snow_depth", lines);

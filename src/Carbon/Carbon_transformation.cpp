@@ -97,17 +97,24 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       
       
       // Mobilisation of bounded DOC to mobile DOC
-      // First calculate the groundwater table depth
+      // Calculate the factor of groundwater depth
       double excess_soil_water, groundwater_table, fct_groundwater_depth, DOC_mobilisation, ref_frac_soluble_to_doc;
       excess_soil_water = max(0.0, theta1 - _thetaFC1->val[j]) / (_thetaS1->val[j] - _thetaFC1->val[j]) * depth1 + 
                           max(0.0, theta2 - _thetaFC2->val[j]) / (_thetaS2->val[j] - _thetaFC2->val[j]) * depth2 + 
                           max(0.0, theta3 - _thetaFC3->val[j]) / (_thetaS3->val[j] - _thetaFC3->val[j]) * depth3;
       groundwater_table = _initial_groundwater_table->val[j] * par._f_groundwater_depth_rescale_factor->val[j] - excess_soil_water;   // Groundwater table depth [m]
       if (groundwater_table < roundoffERR) groundwater_table = 0.0;
-      // Calculate the factor of groundwater depth
       fct_groundwater_depth = exp(-par._f_groundwater_depth_decay_exp_base->val[j] * sqrt(groundwater_table));
+
+      // Calculate the factor of rain event
+      double fct_fast_flow_layer1, fct_fast_flow_layer2, fct_fast_flow_layer3;
+      double fast_flow_threshold = 0.01;  // 0.01 m == 10 mm / day
+      fct_fast_flow_layer1 = 1.0 - exp( - _infilt->val[j] / fast_flow_threshold);
+      //fct_fast_flow_layer2 = 1.0 - exp( - _infilt->val[j] / fast_flow_threshold);
+
+
       // Mobilisation of bounded DOC to mobile DOC
-      ref_frac_soluble_to_doc = min(1.0, par._ref_frac_soluble_to_doc->val[j] * par._frac_soluble_to_doc_weights->val[j] * fct_groundwater_depth);
+      ref_frac_soluble_to_doc = min(1.0, par._ref_frac_soluble_to_doc->val[j] * par._frac_soluble_to_doc_weights->val[j] * (fct_groundwater_depth + fct_fast_flow_layer1));
       DOC_mobilisation = soluble_CP1 * ref_frac_soluble_to_doc;
       DOC_pool_layer1 += DOC_mobilisation;
       soluble_CP1 -= DOC_mobilisation;

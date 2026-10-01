@@ -61,6 +61,12 @@ class Atmosphere {
   /* end of Climate */
 
 
+  /* Climate_time_series */
+  double _atmCO2_db;
+  ifstream if__atmCO2_db;  // Atmospheric CO2 concentration in time series [ppm]
+  /* end of Climate_time_series */
+
+
   
   Atmosphere(Control &ctrl);  // constrcuctor of Basin
   //dtor
@@ -77,6 +83,11 @@ class Atmosphere {
   int update_climate(Control &ctrl);
   int init_climate_maps(string fname, ifstream &ifHandle);
   int update_climate_maps(ifstream &ifHandle, svector &climateMap);
+
+  int open_climate_time_series(Control &ctrl);
+  int read_climate_time_series(Control &ctrl);
+  int open_climate_TS(string fname, ifstream &ifHandle);
+  int read_climate_TS(ifstream &ifHandle, double &climateTimeSeries);
 
 };
 

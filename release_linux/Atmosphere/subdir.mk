@@ -5,18 +5,21 @@
 # Add inputs and outputs from these tool invocations to the build variables
 CPP_SRCS += \
 ../src/Atmosphere/read_climate_maps.cpp \
+../src/Atmosphere/read_climate_time_series.cpp \
 ../src/Atmosphere/read_groundTs_maps.cpp \
 ../src/Atmosphere/read_managementTs_maps.cpp \
 
 
 OBJS += \
 ./Atmosphere/read_climate_maps.o \
+./Atmosphere/read_climate_time_series.o \
 ./Atmosphere/read_groundTs_maps.o \
 ./Atmosphere/read_managementTs_maps.o \
 
 
 CPP_DEPS += \
 ./Atmosphere/read_climate_maps.d \
+./Atmosphere/read_climate_time_series.d \
 ./Atmosphere/read_groundTs_maps.d \
 ./Atmosphere/read_managementTs_maps.d \
 

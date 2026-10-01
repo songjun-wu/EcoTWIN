@@ -120,10 +120,10 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
     // CO2 compensation point without leaf respiration
     gamma = max(1.7e-6*TC_c, 0.0);
 
-    Photosynthesis_C3(j, ctrl.Simul_tstep, PAR_sun, atm._RH->val[j], LAI_sun, Ta_k, TC_c, air_pressure, energy_scaling_factor, co2_mol, co2_leaf_mol, 
+    Photosynthesis_C3(j, ctrl.Simul_tstep, PAR_sun, atm._RH->val[j], LAI_sun, Ta_k, TC_c, air_pressure, energy_scaling_factor, atm._atmCO2_db, co2_leaf_mol, 
       KC, KO, VC_max, Jmax, gamma, water_limitation_factor, carboxylation_rate, *_NPP, *_canopy_conductance);
     
-    Photosynthesis_C3(j, ctrl.Simul_tstep, PAR_shade, atm._RH->val[j], LAI_shade, Ta_k, TC_c, air_pressure, energy_scaling_factor, co2_mol, co2_leaf_mol, 
+    Photosynthesis_C3(j, ctrl.Simul_tstep, PAR_shade, atm._RH->val[j], LAI_shade, Ta_k, TC_c, air_pressure, energy_scaling_factor, atm._atmCO2_db, co2_leaf_mol, 
       KC, KO, VC_max, Jmax, gamma, water_limitation_factor, carboxylation_rate, *_NPP, *_canopy_conductance);
     
   }  // end of for loop over grid cells
@@ -133,7 +133,7 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
 
 
 
-int Basin::Photosynthesis_C3(int j, int timestep, double PAR_mol, double relative_humidity, double LAI, double Ta_k, double TC_c, double air_pressure, double energy_scaling_factor, double co2_mol, double co2_leaf_mol,
+int Basin::Photosynthesis_C3(int j, int timestep, double PAR_mol, double relative_humidity, double LAI, double Ta_k, double TC_c, double air_pressure, double energy_scaling_factor, double atm_co2_mol, double co2_leaf_mol,
                     double KC, double KO, double VC_max, double Jmax, double gamma, double water_limitation_factor, double carboxylation_rate,  svector &sv_NPP, svector &sv_canopy_conductance){
    
     double dark_respiration;
@@ -158,7 +158,7 @@ int Basin::Photosynthesis_C3(int j, int timestep, double PAR_mol, double relativ
     dark_respiration = carboxylation_rate * min(0.015, FRDC3 * exp(ER * energy_scaling_factor) * dark_hib * hitin_hib);
                         
     // Initial guess of CO2 in leaf
-    co2_leaf_mol = co2_mol * ratio_co2_leaf_to_air_C3;  // CO2 concentration in leaf [mol(CO2) / mol(air)]
+    co2_leaf_mol = atm_co2_mol * ratio_co2_leaf_to_air_C3;  // CO2 concentration in leaf [mol(CO2) / mol(air)]
     // Calculate Carboxylilation controlled assimilation JE without water stress
     // The assimilation follows the Farqhuar (1980) formulation for C3 plants
     if (Jmax > min_of_max_carboxylation_rate){
@@ -183,12 +183,12 @@ int Basin::Photosynthesis_C3(int j, int timestep, double PAR_mol, double relativ
       if (A <= 0.0) {
         canopy_conductance_leaf = 0.01;  // Stomatal conductance [mol(H2O) / m2 (leaf area) s-1]
       } else {
-        canopy_conductance_leaf = 0.01 + 1.6 * (1 + 6 / sqrt(max(VPD,0.05))) * A / co2_mol;  // Stomatal conductance [mol(H2O) / m2 (leaf area) s-1]
+        canopy_conductance_leaf = 0.01 + 1.6 * (1 + 6 / sqrt(max(VPD,0.05))) * A / atm_co2_mol;  // Stomatal conductance [mol(H2O) / m2 (leaf area) s-1]
 
 
       // Fick model for co2_leaf_mol calculation
-      double co2_leaf_mol_new = co2_mol - 1.6 * A / canopy_conductance_leaf;  // CO2 concentration in leaf [mol(CO2) / mol(air)]
-      co2_leaf_mol_new = max(0.1*co2_mol, min(0.9*co2_mol, co2_leaf_mol_new));
+      double co2_leaf_mol_new = atm_co2_mol - 1.6 * A / canopy_conductance_leaf;  // CO2 concentration in leaf [mol(CO2) / mol(air)]
+      co2_leaf_mol_new = max(0.1*atm_co2_mol, min(0.9*atm_co2_mol, co2_leaf_mol_new));
 
       if (fabs(co2_leaf_mol_new - co2_leaf_mol) < 1e-7) break;
 
