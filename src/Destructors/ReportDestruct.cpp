@@ -93,6 +93,10 @@ int Report::dtor(Control &ctrl){
   if (of__trans_age_GW.is_open())  of__trans_age_GW.close();
   if (of__trans_age_chanS.is_open())  of__trans_age_chanS.close();
   if (of__NPP.is_open())  of__NPP.close();
+  if (of__GPP.is_open())  of__GPP.close();
+  if (of__plant_green_CP.is_open())  of__plant_green_CP.close();
+  if (of__plant_wood_CP.is_open())  of__plant_wood_CP.close();
+  if (of__plant_reserve_CP.is_open())  of__plant_reserve_CP.close();
   if (of__plant_C.is_open())  of__plant_C.close();
   if (of__dpm_litter_CP1.is_open())  of__dpm_litter_CP1.close();
   if (of__dpm_litter_CP2.is_open())  of__dpm_litter_CP2.close();
@@ -213,6 +217,10 @@ int Report::dtor(Control &ctrl){
   if (ctrl.report__trans_age_GW==2) delete _trans_age_GW_acc;
   if (ctrl.report__trans_age_chanS==2) delete _trans_age_chanS_acc;
   if (ctrl.report__NPP==2) delete _NPP_acc;
+  if (ctrl.report__GPP==2) delete _GPP_acc;
+  if (ctrl.report__plant_green_CP==2) delete _plant_green_CP_acc;
+  if (ctrl.report__plant_wood_CP==2) delete _plant_wood_CP_acc;
+  if (ctrl.report__plant_reserve_CP==2) delete _plant_reserve_CP_acc;
   if (ctrl.report__plant_C==2) delete _plant_C_acc;
   if (ctrl.report__dpm_litter_CP1==2) delete _dpm_litter_CP1_acc;
   if (ctrl.report__dpm_litter_CP2==2) delete _dpm_litter_CP2_acc;

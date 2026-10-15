@@ -65,6 +65,7 @@ int Basin::Initialisation_each_timestep(Control &ctrl, Param &par) {
     
     // ===== Carbon and Nitrogen variables =====
     if (ctrl.opt_carbon_sim==1) {
+        _GPP->reset();
         _NPP->reset();
         _canopy_conductance->reset();
         //_plant_uptake->reset();

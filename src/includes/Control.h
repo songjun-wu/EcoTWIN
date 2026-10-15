@@ -503,6 +503,10 @@ struct Control{
   int report__trans_age_GW;  // report Transient age in Groundwater storage [days]
   int report__trans_age_chanS;  // report Transient age in Channel storage [days]
   int report__NPP;  // report Net primary production [gC/(m2*Ts)] 
+  int report__GPP;  // report Gross primary production [gC/(m2*Ts)] 
+  int report__plant_green_CP;  // report  Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]
+  int report__plant_wood_CP;  // report   Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]
+  int report__plant_reserve_CP;  // report  Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]
   int report__plant_C;  // report  The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]
   int report__dpm_litter_CP1;  // report Decomposable Plant Material litter carbon pool in layer 1
   int report__dpm_litter_CP2;  // report Decomposable Plant Material litter carbon pool in layer 2

@@ -165,8 +165,8 @@ class Param:
     #ref['carboxylation_rate'] = {'type':'landuse',   'log':0, 'file':'carboxylation_rate',   'min':np.array([95,75,75,35,0,0])*1e-6, 'max':np.array([105,85,85,65,30,30])*1e-6, 'fix_value':None,} # Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)]
     #ref['ETransport'] = {'type':'landuse',   'log':0, 'file':'ETransport',   'min':np.array([180,130,130,100,20,20])*1e-6, 'max':np.array([200,160,160,120,80,80])*1e-6, 'fix_value':None,} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants)
     # Assimilation
-    ref['carboxylation_rate'] = {'type':'global_landuse',   'log':0, 'file':'carboxylation_rate',   'min':[0.8], 'max':[1.2], 'fix_value':None, 'weights':np.array([80,80,80,80,70,15,80])*1e-6,} # Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)]; np.array([100,80,80,50,70,70])*1e-6
-    ref['ETransport'] = {'type':'global_landuse',   'log':0, 'file':'ETransport',   'min':[0.8], 'max':[1.2], 'fix_value':None, 'weights':np.array([145,145,145,145,130,30,145])*1e-6,} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants); np.array([190,145,145,110,130,130])*1e-6
+    ref['carboxylation_rate'] = {'type':'global_landuse',   'log':0, 'file':'carboxylation_rate',   'min':[0.2], 'max':[1.2], 'fix_value':None, 'weights':np.array([80,80,80,80,70,15,80])*1e-6,} # Carboxylation rate at 25 degree celcius [mol(CO2)/(m2*s)]; np.array([100,80,80,50,70,70])*1e-6
+    ref['ETransport'] = {'type':'global_landuse',   'log':0, 'file':'ETransport',   'min':[0.2], 'max':[1.2], 'fix_value':None, 'weights':np.array([145,145,145,145,130,30,145])*1e-6,} # Maximum electron transport rate at 25 Celsius [1.E-6 * Mol/m^2 leafarea/s] (Jmax=1.9*V_max^25 for C3 plants); np.array([190,145,145,110,130,130])*1e-6
     # Plant phenology
     ref['C_in_LeafArea'] = {'type':'landuse',   'log':0, 'file':'C_in_LeafArea',   'min':[], 'max':[], 'fix_value':np.array([0.45, 0.45, 0.45, 0.25, 0.3, 0.3, 0.3])/12,} # Carbon content per leaf area in [m2(leaf)/gC] <== [m2(leaf)/mol(Carbon)/12]
     ref['LAI_shed_coef'] = {'type':'landuse',   'log':0, 'file':'LAI_shed_coef',   'min':[], 'max':[], 'fix_value':np.array([0.0055, 0.0055, 0.0055, 0.0027, 0.0027, 0.0027, 0.0055]),} # Leaf shedding coefficient related to LAI; Time in which leaves are constantly shedded [days-1]
@@ -247,5 +247,3 @@ class Param:
     #ref['rE']   =               {'type':'global',  'log':0, 'file':'rE',   'min':[-5], 'max':[-4.9], 'fix_value':None,}  # the more negative the more transpiration
     #ref['drainage_intensity']   = {'type':'global_landuse',  'log':1, 'file':'drainage_intensity',   'min':[1e-2], 'max':[1e-1], 'fix_value':None, 'weights':[1,0,0,0,0,0,0],}  # The intensity of drainage based on the density of drainage network [-], only needed when drainage is enabled
     
-
-

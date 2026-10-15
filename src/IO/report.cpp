@@ -110,6 +110,10 @@ int Report::Report_create_maps(Control &ctrl){
   if (ctrl.report__trans_age_GW==2) _trans_age_GW_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__trans_age_chanS==2) _trans_age_chanS_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__NPP==2) _NPP_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__GPP==2) _GPP_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__plant_green_CP==2) _plant_green_CP_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__plant_wood_CP==2) _plant_wood_CP_acc = new svector(ctrl._sortedGrid.size);
+  if (ctrl.report__plant_reserve_CP==2) _plant_reserve_CP_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__plant_C==2) _plant_C_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__dpm_litter_CP1==2) _dpm_litter_CP1_acc = new svector(ctrl._sortedGrid.size);
   if (ctrl.report__dpm_litter_CP2==2) _dpm_litter_CP2_acc = new svector(ctrl._sortedGrid.size);
@@ -237,6 +241,10 @@ int Report::Report_update_maps(Control &ctrl, Basin &Bsn){
   if (ctrl.report__trans_age_GW==2) _trans_age_GW_acc->plus(*Bsn._trans_age_GW);
   if (ctrl.report__trans_age_chanS==2) _trans_age_chanS_acc->plus(*Bsn._trans_age_chanS);
   if (ctrl.report__NPP==2) _NPP_acc->plus(*Bsn._NPP);
+  if (ctrl.report__GPP==2) _GPP_acc->plus(*Bsn._GPP);
+  if (ctrl.report__plant_green_CP==2) _plant_green_CP_acc->plus(*Bsn._plant_green_CP);
+  if (ctrl.report__plant_wood_CP==2) _plant_wood_CP_acc->plus(*Bsn._plant_wood_CP);
+  if (ctrl.report__plant_reserve_CP==2) _plant_reserve_CP_acc->plus(*Bsn._plant_reserve_CP);
   if (ctrl.report__plant_C==2) _plant_C_acc->plus(*Bsn._plant_C);
   if (ctrl.report__dpm_litter_CP1==2) _dpm_litter_CP1_acc->plus(*Bsn._dpm_litter_CP1);
   if (ctrl.report__dpm_litter_CP2==2) _dpm_litter_CP2_acc->plus(*Bsn._dpm_litter_CP2);
@@ -505,6 +513,18 @@ int Report::Report_Initialisation(Control &ctrl){
   if (ctrl.report__NPP==1)  report_create(ctrl.path_ResultsFolder+"net_primary_production_TS.bin", of__NPP);
   else if (ctrl.report__NPP==2)  report_create(ctrl.path_ResultsFolder+"net_primary_production_map.bin", of__NPP);
 
+  if (ctrl.report__GPP==1)  report_create(ctrl.path_ResultsFolder+"gross_primary_production_TS.bin", of__GPP);
+  else if (ctrl.report__GPP==2)  report_create(ctrl.path_ResultsFolder+"gross_primary_production_map.bin", of__GPP);
+
+  if (ctrl.report__plant_green_CP==1)  report_create(ctrl.path_ResultsFolder+"plant_green_CP_TS.bin", of__plant_green_CP);
+  else if (ctrl.report__plant_green_CP==2)  report_create(ctrl.path_ResultsFolder+"plant_green_CP_map.bin", of__plant_green_CP);
+
+  if (ctrl.report__plant_wood_CP==1)  report_create(ctrl.path_ResultsFolder+"plant_wood_CP_TS.bin", of__plant_wood_CP);
+  else if (ctrl.report__plant_wood_CP==2)  report_create(ctrl.path_ResultsFolder+"plant_wood_CP_map.bin", of__plant_wood_CP);
+
+  if (ctrl.report__plant_reserve_CP==1)  report_create(ctrl.path_ResultsFolder+"plant_reserve_CP_TS.bin", of__plant_reserve_CP);
+  else if (ctrl.report__plant_reserve_CP==2)  report_create(ctrl.path_ResultsFolder+"plant_reserve_CP_map.bin", of__plant_reserve_CP);
+
   if (ctrl.report__plant_C==1)  report_create(ctrl.path_ResultsFolder+"plant_C_TS.bin", of__plant_C);
   else if (ctrl.report__plant_C==2)  report_create(ctrl.path_ResultsFolder+"plant_C_map.bin", of__plant_C);
 
@@ -739,6 +759,10 @@ int Report::Report_to_Ts(Control &ctrl, Basin &Bsn){
   if (ctrl.report__trans_age_GW==1) {reportTS(ctrl, Bsn._trans_age_GW, of__trans_age_GW);}
   if (ctrl.report__trans_age_chanS==1) {reportTS(ctrl, Bsn._trans_age_chanS, of__trans_age_chanS);}
   if (ctrl.report__NPP==1) {reportTS(ctrl, Bsn._NPP, of__NPP);}
+  if (ctrl.report__GPP==1) {reportTS(ctrl, Bsn._GPP, of__GPP);}
+  if (ctrl.report__plant_green_CP==1) {reportTS(ctrl, Bsn._plant_green_CP, of__plant_green_CP);}
+  if (ctrl.report__plant_wood_CP==1) {reportTS(ctrl, Bsn._plant_wood_CP, of__plant_wood_CP);}
+  if (ctrl.report__plant_reserve_CP==1) {reportTS(ctrl, Bsn._plant_reserve_CP, of__plant_reserve_CP);}
   if (ctrl.report__plant_C==1) {reportTS(ctrl, Bsn._plant_C, of__plant_C);}
   if (ctrl.report__dpm_litter_CP1==1) {reportTS(ctrl, Bsn._dpm_litter_CP1, of__dpm_litter_CP1);}
   if (ctrl.report__dpm_litter_CP2==1) {reportTS(ctrl, Bsn._dpm_litter_CP2, of__dpm_litter_CP2);}
@@ -867,6 +891,10 @@ int Report::Report_to_maps(Control &ctrl){
   if (ctrl.report__trans_age_GW==2) {reportMap(ctrl, _trans_age_GW_acc, ctrl._sortedGrid, of__trans_age_GW);}
   if (ctrl.report__trans_age_chanS==2) {reportMap(ctrl, _trans_age_chanS_acc, ctrl._sortedGrid, of__trans_age_chanS);}
   if (ctrl.report__NPP==2) {reportMap(ctrl, _NPP_acc, ctrl._sortedGrid, of__NPP);}
+  if (ctrl.report__GPP==2) {reportMap(ctrl, _GPP_acc, ctrl._sortedGrid, of__GPP);}
+  if (ctrl.report__plant_green_CP==2) {reportMap(ctrl, _plant_green_CP_acc, ctrl._sortedGrid, of__plant_green_CP);}
+  if (ctrl.report__plant_wood_CP==2) {reportMap(ctrl, _plant_wood_CP_acc, ctrl._sortedGrid, of__plant_wood_CP);}
+  if (ctrl.report__plant_reserve_CP==2) {reportMap(ctrl, _plant_reserve_CP_acc, ctrl._sortedGrid, of__plant_reserve_CP);}
   if (ctrl.report__plant_C==2) {reportMap(ctrl, _plant_C_acc, ctrl._sortedGrid, of__plant_C);}
   if (ctrl.report__dpm_litter_CP1==2) {reportMap(ctrl, _dpm_litter_CP1_acc, ctrl._sortedGrid, of__dpm_litter_CP1);}
   if (ctrl.report__dpm_litter_CP2==2) {reportMap(ctrl, _dpm_litter_CP2_acc, ctrl._sortedGrid, of__dpm_litter_CP2);}

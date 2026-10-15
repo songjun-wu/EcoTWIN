@@ -318,6 +318,10 @@ int Control::ReadConfigFile(string fname){
   readInto(report__trans_age_GW, "report_trans_age_groundwater_storage", lines);
   readInto(report__trans_age_chanS, "report_trans_age_chanS", lines);
   readInto(report__NPP, "report_net_primary_production", lines);
+  readInto(report__GPP, "report_gross_primary_production", lines);
+  readInto(report__plant_green_CP, "report_plant_green_CP", lines);
+  readInto(report__plant_wood_CP, "report_plant_wood_CP", lines);
+  readInto(report__plant_reserve_CP, "report_plant_reserve_CP", lines);
   readInto(report__plant_C, "report_plant_C", lines);
   readInto(report__dpm_litter_CP1, "report_dpm_litter_CP1", lines);
   readInto(report__dpm_litter_CP2, "report_dpm_litter_CP2", lines);

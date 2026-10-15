@@ -248,6 +248,7 @@ class Basin {
 
   /* Phenology */
   svector *_NPP;  // Net primary production [gC/(m2*Ts)] 
+  svector *_GPP;  // Gross primary production [gC/(m2*Ts)] 
   svector *_canopy_conductance;  // Stomatal conductance for whole canopy  [m s-1]
   /* end of Phenology */
 
@@ -370,6 +371,12 @@ class Basin {
   vector<double> vector_d18o_chanS;
   vector<double> vector_no3_chanS;
   vector<double> vector_doc_chanS;
+  // todo
+  vector<double> vector_snow_depth;
+  vector<double> vector_ET;
+  vector<double> vector_water_storage;
+  vector<double> vector_NPP;
+  vector<double> vector_GPP;
   
  
   
@@ -478,7 +485,7 @@ class Basin {
   int Sort_crop_management(Control &ctrl, Param &par);  // Sort crop management (harvest and herbivory loss)
   int Assimilation(Control &ctrl, Atmosphere &atm, Param &par);  // GPP and NPP calculation
   int Photosynthesis_C3(int j, int timestep, double PAR_mol, double RH, double LAI, double Ta_k, double TC_c, double air_pressure, double energy_scaling_factor, double co2_mol, double co2_leaf_mol, 
-    double KC, double KO, double VC_max, double Jmax, double gamma, double water_limitation_factor, double carboxylation_rate, svector &sv_NPP, svector &sv_canopy_conductance);  // C3 photosynthesis based on Farquhar (1980)
+    double KC, double KO, double VC_max, double Jmax, double gamma, double water_limitation_factor, double carboxylation_rate, svector &sv_GPP, svector &sv_NPP, svector &sv_canopy_conductance);  // C3 photosynthesis based on Farquhar (1980)
   int Set_carbon_constant();  // Set constants for carbon simulation (tansformation rates between different carbon pools)
   //int Solve_soil_profile_carbon(Control &ctrl, Atmosphere &atm, Param &par);  // Solve soil carbon processes (addition, transport, decomposition)
   int Carbon_addition(Control &ctrl, Param &par);  // Carbon addition process (from vegetation pools to litter pools)
@@ -537,7 +544,7 @@ class Basin {
   //int Check_mass_balance(Control &ctrl, Param &par, Atmosphere &atm);
 
   /* Save TS output to speed up calibration; Temporary implementation */
-  int Report_for_cali(Control &ctrl);
+  int Report_for_cali(Control &ctrl, Param &par);
   int Save_for_cali(Control &ctrl);
   bool save_vector_to_binary(const std::vector<double>& vec, const std::string& filename);
 

@@ -376,14 +376,14 @@ Parameters = [# ======= Hydrology =======
   
 
 Phenology = [['_NPP', [Opt.cond['carbon_sim_1']], 'Net primary production [gC/(m2*Ts)] ', 'grid', 'new', 'net_primary_production', 1],
-             #['_GPP', [Opt.cond['carbon_sim_1']], 'Gross primary production [gC/(m2*Ts)] ', 'grid', 'new', 'gross_primary_production', 1],
+             ['_GPP', [Opt.cond['carbon_sim_1']], 'Gross primary production [gC/(m2*Ts)] ', 'grid', 'new', 'gross_primary_production', 1],
              #['_WoodLitterSize', [Opt.cond['carbon_sim_1']], 'Size of wood litter [-] ', 'grid', 'new', 'WoodLitterSize', 0],
              ['_canopy_conductance', [Opt.cond['carbon_sim_1']], 'Stomatal conductance for whole canopy  [m s-1]', 'grid', 'new', 'canopy_conductance', 0],
              ]
 
-Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]', 'grid', 'spatial', 'plant_green_CP', 0],
-          ['_plant_wood_CP', [Opt.cond['carbon_sim_1']], '  Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]', 'grid', 'spatial', 'plant_wood_CP', 0],
-          ['_plant_reserve_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]', 'grid', 'spatial', 'plant_reserve_CP', 0],
+Carbon = [['_plant_green_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that contains carbon of the "green" or living parts of plants (leaves, fine roots, vascular tissues), except carbon stored as reserve  [gC/m2]', 'grid', 'spatial', 'plant_green_CP', 1],
+          ['_plant_wood_CP', [Opt.cond['carbon_sim_1']], '  Carbon pool that contains the carbon of the woody parts of plants (stems, branches, roots)  [gC/m2]', 'grid', 'spatial', 'plant_wood_CP', 1],
+          ['_plant_reserve_CP', [Opt.cond['carbon_sim_1']], ' Carbon pool that contains the carbon stored in sugars and starches that the plants keep as an energy reserve (free of nitrogen)  [gC/m2]', 'grid', 'spatial', 'plant_reserve_CP', 1],
           #['_harvest_CP', [Opt.cond['carbon_sim_1']], '  Carbon pool that contains carbon from that part of crop harvest to be consumed by people or animals  [gC/m2]', 'grid', 'spatial', 'harvest_CP', 1]
           ['_plant_C', [Opt.cond['carbon_sim_1']], ' The total carbon content of plants (sum of green, wood, and reserve pool)  [gC/m2]', 'grid', 'new', 'plant_C', 1],
           ['_plant_wood_CP_forest_max', [Opt.cond['carbon_sim_1']], 'The maximum carbon content in wood pool for forest species [molC/m2] ', 'grid', 'spatial', 'plant_wood_CP_forest_max', 0],

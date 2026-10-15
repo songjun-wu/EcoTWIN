@@ -218,6 +218,7 @@
   /* Phenology */
   if (ctrl.opt_carbon_sim == 1){
     _NPP = new svector(_sortedGrid.size);
+    _GPP = new svector(_sortedGrid.size);
     _canopy_conductance = new svector(_sortedGrid.size);
   }
   /* end of Phenology */

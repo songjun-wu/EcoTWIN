@@ -212,6 +212,7 @@ int Basin::dtor(Control &ctrl){
   /* Phenology */
   if (ctrl.opt_carbon_sim == 1){
     if(_NPP) delete _NPP;
+    if(_GPP) delete _GPP;
     if(_canopy_conductance) delete _canopy_conductance;
   }
   /* end of Phenology */

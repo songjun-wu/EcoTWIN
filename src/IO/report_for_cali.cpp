@@ -17,7 +17,7 @@
 
 #include "Basin.h"
 
-int Basin::Report_for_cali(Control &ctrl){
+int Basin::Report_for_cali(Control &ctrl, Param &par){
   
   // Only report discharge, in-stream d18o, and in-stream nitrate for calibration
   int length = ctrl._Tsmask.cell.size();
@@ -29,6 +29,13 @@ int Basin::Report_for_cali(Control &ctrl){
       vector_no3_chanS.push_back(_no3_chanS->val[idx]);
       vector_doc_chanS.push_back(_doc_chanS->val[idx]);
 
+      // todo
+      vector_snow_depth.push_back(_snow->val[idx]);
+      vector_ET.push_back(_Es->val[idx] + _Tr->val[idx] + _Echan->val[idx]);
+      vector_water_storage.push_back(_snow->val[idx] + _theta1->val[idx]*_depth1->val[idx] + _theta2->val[idx]*_depth2->val[idx] + _theta3->val[idx]*par._depth3->val[idx] + _vadose->val[idx]);
+      vector_NPP.push_back(_NPP->val[idx]);
+      vector_GPP.push_back(_GPP->val[idx]);
+      
       //if(ctrl.current_ts/86400 == 0) cout << i << "   "<< idx<<"   "<< _sortedGrid.row[idx] << "   "<<_sortedGrid.col[idx] << "   "<< _chnlength->val[idx] << endl;  // todo
   }
 
@@ -41,6 +48,13 @@ int Basin::Save_for_cali(Control &ctrl){
   save_vector_to_binary(vector_d18o_chanS, ctrl.path_ResultsFolder+"d18o_chanS_TS.bin");
   save_vector_to_binary(vector_no3_chanS, ctrl.path_ResultsFolder+"no3_chanS_TS.bin");
   save_vector_to_binary(vector_doc_chanS, ctrl.path_ResultsFolder+"doc_chanS_TS.bin");
+
+  // todo: soft validation
+  save_vector_to_binary(vector_snow_depth, ctrl.path_ResultsFolder+"snow_depth_TS.bin");
+  save_vector_to_binary(vector_ET, ctrl.path_ResultsFolder+"ET_TS.bin");
+  save_vector_to_binary(vector_water_storage, ctrl.path_ResultsFolder+"water_storage_TS.bin");
+  save_vector_to_binary(vector_NPP, ctrl.path_ResultsFolder+"NPP_TS.bin");
+  save_vector_to_binary(vector_GPP, ctrl.path_ResultsFolder+"GPP_TS.bin");
 
   return EXIT_SUCCESS;
 }

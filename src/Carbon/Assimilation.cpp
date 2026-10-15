@@ -121,10 +121,10 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
     gamma = max(1.7e-6*TC_c, 0.0);
 
     Photosynthesis_C3(j, ctrl.Simul_tstep, PAR_sun, atm._RH->val[j], LAI_sun, Ta_k, TC_c, air_pressure, energy_scaling_factor, atm._atmCO2_db, co2_leaf_mol, 
-      KC, KO, VC_max, Jmax, gamma, water_limitation_factor, carboxylation_rate, *_NPP, *_canopy_conductance);
+      KC, KO, VC_max, Jmax, gamma, water_limitation_factor, carboxylation_rate, *_GPP, *_NPP, *_canopy_conductance);
     
     Photosynthesis_C3(j, ctrl.Simul_tstep, PAR_shade, atm._RH->val[j], LAI_shade, Ta_k, TC_c, air_pressure, energy_scaling_factor, atm._atmCO2_db, co2_leaf_mol, 
-      KC, KO, VC_max, Jmax, gamma, water_limitation_factor, carboxylation_rate, *_NPP, *_canopy_conductance);
+      KC, KO, VC_max, Jmax, gamma, water_limitation_factor, carboxylation_rate, *_GPP, *_NPP, *_canopy_conductance);
     
   }  // end of for loop over grid cells
 
@@ -134,7 +134,7 @@ int Basin::Assimilation(Control &ctrl, Atmosphere &atm, Param &par){
 
 
 int Basin::Photosynthesis_C3(int j, int timestep, double PAR_mol, double relative_humidity, double LAI, double Ta_k, double TC_c, double air_pressure, double energy_scaling_factor, double atm_co2_mol, double co2_leaf_mol,
-                    double KC, double KO, double VC_max, double Jmax, double gamma, double water_limitation_factor, double carboxylation_rate,  svector &sv_NPP, svector &sv_canopy_conductance){
+                    double KC, double KO, double VC_max, double Jmax, double gamma, double water_limitation_factor, double carboxylation_rate,  svector &sv_GPP, svector &sv_NPP, svector &sv_canopy_conductance){
    
     double dark_respiration;
     double maintenance_respiration; 
@@ -203,6 +203,7 @@ int Basin::Photosynthesis_C3(int j, int timestep, double PAR_mol, double relativ
     // Calculate NPP (gC/m²(ground)/yr) and canopy conductance (m s-1)
     maintenance_respiration = dark_respiration / 0.25;  // leaf fraction of plant-total (autotrophic) respiration
     grow_respiration = max(0.0, (0.25 * (GPP - maintenance_respiration)));
+    sv_GPP.val[j] += GPP * timestep * molC_m2_to_gC_m2 * LAI;  // GPP in gC/m²(ground)/timestep
     sv_NPP.val[j] += (GPP - maintenance_respiration - grow_respiration) * timestep * molC_m2_to_gC_m2 * LAI;  // NPP in gC/m²(ground)/timestep
     sv_canopy_conductance.val[j] += canopy_conductance_leaf * R_gas * Ta_k / air_pressure * LAI;  // Canopy conductance in m s-1
 

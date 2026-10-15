@@ -106,6 +106,10 @@ Control::Control(){
   }
   if (!(opt_carbon_sim == 1)){
     report__NPP = 0;
+    report__GPP = 0;
+    report__plant_green_CP = 0;
+    report__plant_wood_CP = 0;
+    report__plant_reserve_CP = 0;
     report__plant_C = 0;
     report__dpm_litter_CP1 = 0;
     report__dpm_litter_CP2 = 0;
