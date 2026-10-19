@@ -145,6 +145,7 @@ class Basin {
   svector *_Qupstream;  // Upstream inflow [m3/s]
   svector *_Echan;  // Channel evaporation [m]
   svector *_tmp;  // Temporal variable for testing [-]
+  svector *_tmp_no_use;  // Temporal variable for testing [-]
   svector *_snowacc;  // Snow accumulation for testing [m]
   svector *_TchanS;  // Instream temperature conceptualised as 20-day's average of air temperature [degree C]
   svector *_rinfilt;  // Reinflitration into soil layer 1 [m]

@@ -137,6 +137,7 @@ int Basin::dtor(Control &ctrl){
   if(_Qupstream) delete _Qupstream;
   if(_Echan) delete _Echan;
   if(_tmp) delete _tmp;
+  if(_tmp_no_use) delete _tmp_no_use;
   if(_snowacc) delete _snowacc;
   if(_TchanS) delete _TchanS;
   if (ctrl.opt_reinfil == 1){

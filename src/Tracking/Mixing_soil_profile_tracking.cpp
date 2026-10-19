@@ -58,7 +58,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         // flag2: drainage
         // flag3: Fickian diffusion
         // flag4: Whether solute is stable water isotope
-        Solve_soil_transport(par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_vadose, *_d18o_chanS, *_tmp, *_tmp, false, ctrl.opt_drainage, false, true);
+        Solve_soil_transport(par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_vadose, *_d18o_chanS, *_tmp_no_use, *_tmp_no_use, false, ctrl.opt_drainage, false, true);
         // Fractionation due to soil evaporation (only for layer 1 but happens after percolation)
         _tmp->equals(*_theta1_old);
         _tmp->multiply(*_depth1);
@@ -76,7 +76,7 @@ int Basin::Mixing_soil_profile_tracking(Control &ctrl, Atmosphere &atm, Param &p
         // flag2: drainage
         // flag3: Fickian diffusion
         // flag4: Whether solute is stable water isotope
-        Solve_soil_transport(par, *_age_pond, *_age_layer1, *_age_layer2, *_age_layer3, *_age_vadose, *_age_chanS, *_tmp, *_tmp, false, ctrl.opt_drainage, false, false);
+        Solve_soil_transport(par, *_age_pond, *_age_layer1, *_age_layer2, *_age_layer3, *_age_vadose, *_age_chanS, *_tmp_no_use, *_tmp_no_use, false, ctrl.opt_drainage, false, false);
     }
 
 

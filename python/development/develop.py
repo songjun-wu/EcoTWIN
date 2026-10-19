@@ -230,6 +230,7 @@ Fluxes   = [#['_D', [Opt.cond['none']], 'Interception [m]', 'grid', 'new', 'inte
             ['_PE', [Opt.cond['evap_1']], 'Potential evaporation [m]', 'grid', 'new', None, 0],
             ['_PT', [Opt.cond['evap_1']], 'Potential transpiration [m]', 'grid', 'new', None, 0],
             ['_tmp', [Opt.cond['none']], 'Temporal variable for testing [-]', 'grid', 'new', None, 0],
+            ['_tmp_no_use', [Opt.cond['none']], 'Temporal variable for testing [-]', 'grid', 'new', None, 0],
             ['_snowacc', [Opt.cond['none']], 'Snow accumulation for testing [m]', 'grid', 'new', None, 0],
             ['_TchanS', [Opt.cond['none']], "Instream temperature conceptualised as 20-day's average of air temperature [degree C]", 'grid', 'new', None, 0],
 

@@ -53,9 +53,6 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
         if (ctrl.opt_drainage == 1){
             drainage_depth =  _drainage_depth->val[j];;  // Drainage depth [m]
             drainage_intensity = par._drainage_intensity->val[j];  // Drainage intensity [0-1] = parameter Drainage intensity [0-1] * reference drainage density [length-1] (in parameterisation)
-            relative_drainage_depth;  // Drainage depth relative to the bottom of soil layer [0-1]
-            relative_grounwater_table;  // Groundwater table relative to the bottom of soil layer [0-1]
-            drainage1, drainage2, drainage3;  // Drainage amount for each soil layer [m]
 
             drainage1 = 0.0;
             drainage2 = 0.0;
@@ -138,6 +135,7 @@ int Basin::Percolation_1(Control &ctrl, Param &par) {
             _drainage_from_layer2->val[j] = drainage2;
             _drainage_from_layer3->val[j] = drainage3;
             _drainage_from_soil->val[j] = drainage1 + drainage2 + drainage3;
+            _vadose->val[j] += _drainage_from_soil->val[j];  // Drainage is added to vadose storage
         }   
     }
     return EXIT_SUCCESS;

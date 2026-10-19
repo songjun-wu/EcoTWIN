@@ -81,6 +81,7 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
     double conc_pond, conc_layer1, conc_layer2, conc_layer3, conc_vadose;
     double ST1, ST2, ST3;
     double pond_old, conc_pond_old, conc_layer1_old, pond_to_mix;
+    double vadose_old;
     double input_water, input_mass, input_conc;
 
     // Variables for Fickian diffusion
@@ -105,6 +106,8 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         ST1 = _theta1_old->val[j] * _depth1->val[j];
         ST2 = _theta2_old->val[j] * _depth2->val[j];
         ST3 = _theta3_old->val[j] * par._depth3->val[j];
+
+        vadose_old = _vadose_old->val[j];
 
 
         /* Mixing */
@@ -143,7 +146,8 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
         input_mass = conc_pond * _preferential_flow->val[j] + conc_layer3 * _Perc3->val[j];
         input_conc = input_mass / input_water;
         sv_leaching_mass.val[j] = input_mass;
-        Mixing_full(_vadose_old->val[j], conc_vadose, input_water, input_conc);  // Update vadose concentration
+        Mixing_full(vadose_old, conc_vadose, input_water, input_conc);  // Update vadose concentration
+        vadose_old += input_water;
         
 
         
@@ -151,17 +155,12 @@ int Basin::Solve_soil_transport(Param &par, svector &sv_conc_pond, svector &sv_c
 
         // Mixing drainage with channel storage if activated
         if (drainage_flag == 1) {
-          to_channel = _sortedGrid.to_channel[j];
-          // There is no need for mixing if this is the outlet or there is not stream network within the catchment
-          // In this context, drainage just routes beyond catchment boundary without further tracking
-          if (_drainage_from_soil->val[j] > roundoffERR and to_channel != -1) { 
-            mass_drainage = _drainage_from_layer1->val[j] * conc_layer1 + _drainage_from_layer2->val[j] * conc_layer2 + _drainage_from_layer3->val[j] * conc_layer3;
-            sv_conc_chanS.val[to_channel] = (sv_conc_chanS.val[to_channel] * _tmp->val[to_channel] + mass_drainage) / (_tmp->val[to_channel] + _drainage_from_soil->val[j]);
-            _tmp->val[to_channel] += _drainage_from_soil->val[j];
-            sv_drainage_mass.val[j] = mass_drainage;   // Summary statistics of drainage mass
-          } else {
-            sv_drainage_mass.val[j] = 0;
-          } // End of if (_drainage_from_soil->val[j] > roundoffERR)
+
+          input_water = _drainage_from_soil->val[j];
+          input_mass = _drainage_from_layer1->val[j] * conc_layer1 + _drainage_from_layer2->val[j] * conc_layer2 + _drainage_from_layer3->val[j] * conc_layer3;
+          input_conc = input_mass / input_water;
+          Mixing_full(vadose_old, conc_vadose, input_water, input_conc);
+          vadose_old += input_water;
         }  // End of if (drainage_flag == 1)
 
 

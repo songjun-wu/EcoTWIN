@@ -143,6 +143,7 @@
   _Qupstream = new svector(_sortedGrid.size);
   _Echan = new svector(_sortedGrid.size);
   _tmp = new svector(_sortedGrid.size);
+  _tmp_no_use = new svector(_sortedGrid.size);
   _snowacc = new svector(_sortedGrid.size);
   _TchanS = new svector(_sortedGrid.size);
   if (ctrl.opt_reinfil == 1){

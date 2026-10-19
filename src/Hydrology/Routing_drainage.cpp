@@ -19,6 +19,7 @@
 
 int Basin::Routing_drainage(){
 
+    /*
     int to_channel;  // The closest channel index of the current cell; -1 if there is no stream network within the catchment or at outlet cell
 
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
@@ -29,5 +30,7 @@ int Basin::Routing_drainage(){
         }
 
     }
+    */
+
     return EXIT_SUCCESS;
 }
