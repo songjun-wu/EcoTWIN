@@ -83,6 +83,7 @@ int Param::dtor(Control &ctrl){
     if(_Ks_GW) delete _Ks_GW;
     if(_lat_to_Chn_GW) delete _lat_to_Chn_GW;
     if(_GWfExp) delete _GWfExp;
+    if(_bedrock_leakage_ratio) delete _bedrock_leakage_ratio;
   }
   if (ctrl.opt_routQ == 1){
     if(_Manningn) delete _Manningn;

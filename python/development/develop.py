@@ -297,6 +297,7 @@ Parameters = [# ======= Hydrology =======
               ['_lat_to_Chn_GW', [Opt.cond['routGWf_1']], 'The ratio between conductivities of lateral flow and channel recharge in GW zone [-]', 'grid', 'spatial_param', 'lat_to_Chn_GW', 0],
               ['_interfExp', [Opt.cond['routinterf_1']], 'The exponetial weighting parameter for interflow flow routing towards channel  [-]', 'grid', 'spatial_param', 'interfExp', 0],
               ['_GWfExp', [Opt.cond['routGWf_1']], 'The exponetial weighting parameter for GW flow routing towards channel  [-]', 'grid', 'spatial_param', 'GWfExp', 0],
+              ['_bedrock_leakage_ratio', [Opt.cond['routGWf_1']], 'The ratio of bedrock leakage to GW flow [-]', 'grid', 'spatial_param', 'bedrock_leakage_ratio', 0],
               ['_Manningn', [Opt.cond['routQ_1']], 'Manning N for stream routing [-], only needed when opt_routQ = 1', 'grid', 'spatial_param', 'Manningn', 0],
               # Channel 
               ['_Echan_alpha', [Opt.cond['chanE_1'], Opt.cond['chanE_2']], 'correction factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2', 'grid', 'spatial_param', 'Echan_alpha', 0],

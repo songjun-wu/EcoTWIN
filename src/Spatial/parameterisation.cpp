@@ -404,6 +404,13 @@ int Param::Parameterisation(Control &ctrl){
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
       _GWfExp->val[j] = exp(_GWfExp->val[j]);
      }
+  
+  _bedrock_leakage_ratio->reset();
+    for (int k=0; k<param_category->n_category; k++){
+      if (bedrock_leakage_ratio[k]!=nodata) {
+        for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
+          _bedrock_leakage_ratio->val[j] += param_category->val[k][j] * bedrock_leakage_ratio[k];
+     }}}
 
   }
 

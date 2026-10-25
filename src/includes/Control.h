@@ -389,6 +389,7 @@ struct Control{
   string fn__lat_to_Chn_GW;  // The ratio between conductivities of lateral flow and channel recharge in GW zone [-]
   string fn__interfExp;  // The exponetial weighting parameter for interflow flow routing towards channel  [-]
   string fn__GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
+  string fn__bedrock_leakage_ratio;  // The ratio of bedrock leakage to GW flow [-]
   string fn__Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   string fn__Echan_alpha;  // correction factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
   string fn__irrigation_FC_thres;  // The soil moisture threshold for irrigation [-]

@@ -93,6 +93,7 @@ Param::Param(Control &ctrl){
     _Ks_GW = new svector(_sortedGrid.size);
     _lat_to_Chn_GW = new svector(_sortedGrid.size);
     _GWfExp = new svector(_sortedGrid.size);
+    _bedrock_leakage_ratio = new svector(_sortedGrid.size);
   }
   if (ctrl.opt_routQ == 1){
     _Manningn = new svector(_sortedGrid.size);

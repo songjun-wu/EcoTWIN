@@ -89,7 +89,7 @@ int Basin::Evapotranspiration_1(Control &ctrl, Param &par, Atmosphere &atm){
         ST1 -= Tr1;
         PT -= Tr1;
         // Soil evaporation
-        Esoil = min(PE*min(ST1/depth1/FC1, 1.0), ST1 - minimum_theta) * ET_weight;
+        Esoil = min(PE*min(ST1/depth1/FC1, 1.0) * ET_weight, ST1 - minimum_theta);
         ST1 -= Esoil;
 
         

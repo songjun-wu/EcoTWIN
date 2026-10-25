@@ -26,6 +26,9 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
     double GWflow_toChn;  // Output of GWflow to stream
     double GWflow_toTrestrial; // Output of GWflow to downstream cell (terrestrial only)
 
+    double active_GW, passive_GW;
+    double maximum_active_GW = 5.0;
+
     double dx = ctrl._dx;
     double dtdx = ctrl.Simul_tstep / dx;
     double alpha = 0;
@@ -54,10 +57,11 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
             // GWflow to channel
             if (chnlength > 0){  // If there is channel in this grid cell
                 // Here Ks3 is not used because GW routing should be independent from soil proporties
-                GWflow_toChn = GWflow_to_go * par._Ks_GW->val[j] * (1 - exp(-1 * par._GWfExp->val[j] * GWflow_to_go)) * par._lat_to_Chn_GW->val[j];  // [m2/s]
+                active_GW = min(GWflow_to_go, maximum_active_GW);
+                GWflow_toChn = active_GW * par._Ks_GW->val[j] * (1 - exp(-1 * par._GWfExp->val[j] * active_GW)) * par._lat_to_Chn_GW->val[j];  // [m2/s]
                 GWflow_toChn *= dtdx; // Store GWflow to channel in [m]
                 GWflow_toChn *= (chnlength/dx); // Adjusted with channel length; [m]
-                GWflow_toChn = min(GWflow_toChn, GWflow_to_go);  // Cannot exceed water to go
+                GWflow_toChn = min(GWflow_toChn, active_GW);  // Cannot exceed water to go
                 GWflow_to_go -=  GWflow_toChn;    // [m]
             }
 
@@ -72,6 +76,10 @@ int Basin::Routing_GWflow_1(Control &ctrl, Param &par){
             GWflow_toTrestrial = min(GWflow_toTrestrial, GWflow_to_go);  // Cannot exceed water to go
             GWflow_to_go -= GWflow_toTrestrial; // [m]
             GWflow_out += GWflow_toTrestrial;  // [m]
+
+            // Bedrock leakage
+            passive_GW = max(GWflow_to_go - maximum_active_GW, 0.0);
+            GWflow_to_go -= passive_GW * par._bedrock_leakage_ratio->val[j];  // todo
 
             // Remaining water = GW storage
             _GW->val[j] = GWflow_to_go; // GWflow_to_go = _GW->val[j] + GWflow_in - GWflow_toChn - GWflow_toTrestrial

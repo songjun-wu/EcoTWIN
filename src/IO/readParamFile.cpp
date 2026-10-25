@@ -69,6 +69,7 @@ int Param::ReadParamFile(Control &ctrl, string fname){
   readIntoParam(lat_to_Chn_GW, "lat_to_Chn_GW", lines);
   readIntoParam(interfExp, "interfExp", lines);
   readIntoParam(GWfExp, "GWfExp", lines);
+  readIntoParam(bedrock_leakage_ratio, "bedrock_leakage_ratio", lines);
   readIntoParam(Manningn, "Manningn", lines);
   readIntoParam(Echan_alpha, "Echan_alpha", lines);
   readIntoParam(irrigation_FC_thres, "irrigation_FC_thres", lines);

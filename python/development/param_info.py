@@ -175,8 +175,8 @@ class Param:
     ref['plant_reserve_CP_max'] = {'type':'landuse',   'log':0, 'file':'plant_reserve_CP_max',   'min':[], 'max':[], 'fix_value':[4*4,4*3,4*3,2*6,3*4.5,3*4.5,4*4],} # Term to calculate maximum carbon content in reserve pool at optimal conditions [-]: first term is the ratio of ratio of vegetation green pool to reserve pool at maximum LAI, while second term is maximum LAI
     
     # Distribute NPP to vegetation pools
-    ref['frac_NPP_to_green'] = {'type':'landuse',   'log':0, 'file':'frac_NPP_to_green',   'min':[], 'max':[], 'fix_value':[0.8,0.8,0.8,0.6,0.8,0.8,0.55],} # The fraction of NPP addition to vegetation green pool [-]
-    ref['frac_NPP_to_wood'] = {'type':'landuse',   'log':0, 'file':'frac_NPP_to_wood',   'min':[], 'max':[], 'fix_value':[0.05,0.05,0.05,0.3,0.05,0.05,0.3],} # The fraction of NPP addition to wood green pool [-]
+    ref['frac_NPP_to_green'] = {'type':'landuse',   'log':0, 'file':'frac_NPP_to_green',   'min':[], 'max':[], 'fix_value':[0.8,0.8,0.8,0.6,0.8,0.8,0.75],} # The fraction of NPP addition to vegetation green pool [-]
+    ref['frac_NPP_to_wood'] = {'type':'landuse',   'log':0, 'file':'frac_NPP_to_wood',   'min':[], 'max':[], 'fix_value':[0.05,0.05,0.05,0.3,0.05,0.05,0.1],} # The fraction of NPP addition to wood green pool [-]
 
     # Distribute litter to soil carbon pools
     ref['alpha_litter_distribution_nonwood'] = {'type':'landuse',   'log':0, 'file':'alpha_litter_distribution_nonwood',   'min':[0.25], 'max':[1.6], 'fix_value':[1.5, 1.1, 0.87, 0.45, 0.7, 0.7, 0.87],} # The fraction of non-wood plant materials going to decomposable plant material litter pool [-]

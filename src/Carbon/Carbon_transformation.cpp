@@ -24,8 +24,8 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
     double fct_Ts, fct_theta1, fct_theta2, fct_theta3, fct_depth_layer1, fct_depth_layer2, fct_depth_layer3, fdepth_decay_Exp; // factors for soil decomposition
 
     // Varaibles for nitrogen simulation
-    double frac_DOC_decomposition_layer1, frac_DOC_decomposition_layer2, frac_DOC_decomposition_layer3;  // Decomposition rate of DOC pool in three soil layers [day-1]
-    double delta_doc_layer1, delta_doc_layer2, delta_doc_layer3;
+    double frac_DOC_decomposition_layer1, frac_DOC_decomposition_layer2, frac_DOC_decomposition_layer3, frac_DOC_decomposition_vadose;  // Decomposition rate of DOC pool in three soil layers [day-1]
+    double delta_doc_layer1, delta_doc_layer2, delta_doc_layer3, delta_doc_vadose;
 
 
 
@@ -53,6 +53,7 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       double DOC_pool_layer1 = _doc_layer1->val[j] * theta1 * depth1;
       double DOC_pool_layer2 = _doc_layer2->val[j] * theta2 * depth2;
       double DOC_pool_layer3 = _doc_layer3->val[j] * theta3 * depth3;
+      double DOC_pool_vadose = _doc_vadose->val[j] * _vadose->val[j];
       double soluble_CP1 = _soluble_CP1->val[j];
       double soluble_CP2 = _soluble_CP2->val[j];
       double soluble_CP3 = _soluble_CP3->val[j];
@@ -131,18 +132,21 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       frac_DOC_decomposition_layer1 = par._ref_decomp_rate_doc->val[j] * fct_Ts;
       frac_DOC_decomposition_layer2 = par._ref_decomp_rate_doc->val[j] * fct_Ts;
       frac_DOC_decomposition_layer3 = par._ref_decomp_rate_doc->val[j] * fct_Ts;
+      frac_DOC_decomposition_vadose = par._ref_decomp_rate_doc->val[j] * fct_Ts;
       delta_doc_layer1 = (soluble_CP1 + DOC_pool_layer1) * frac_DOC_decomposition_layer1;
       delta_doc_layer2 = (soluble_CP2 + DOC_pool_layer2) * frac_DOC_decomposition_layer2;
       delta_doc_layer3 = (soluble_CP3 + DOC_pool_layer3) * frac_DOC_decomposition_layer3;
+      delta_doc_vadose = DOC_pool_vadose * frac_DOC_decomposition_vadose;  // Vadose zone only has DOC pool
       soluble_CP1 *= (1 - frac_DOC_decomposition_layer1);
       soluble_CP2 *= (1 - frac_DOC_decomposition_layer2);
       soluble_CP3 *= (1 - frac_DOC_decomposition_layer3);
       DOC_pool_layer1 *= (1 - frac_DOC_decomposition_layer1);
       DOC_pool_layer2 *= (1 - frac_DOC_decomposition_layer2);
       DOC_pool_layer3 *= (1 - frac_DOC_decomposition_layer3);
+      DOC_pool_vadose *= (1 - frac_DOC_decomposition_vadose);
 
       // DOC decomposition is also considered as a part of soil respiration
-      _co2_emission_C->val[j] += delta_doc_layer1 + delta_doc_layer2 + delta_doc_layer3;
+      _co2_emission_C->val[j] += delta_doc_layer1 + delta_doc_layer2 + delta_doc_layer3 + delta_doc_vadose;
       
 
 
@@ -153,6 +157,9 @@ int Basin::Carbon_transformation(Control &ctrl, Atmosphere &atm, Param &par){
       _doc_layer1->val[j] = DOC_pool_layer1 / (theta1 * depth1);
       _doc_layer2->val[j] = DOC_pool_layer2 / (theta2 * depth2);
       _doc_layer3->val[j] = DOC_pool_layer3 / (theta3 * depth3);
+      if (_vadose->val[j] > 0){
+        _doc_vadose->val[j] = DOC_pool_vadose / (_vadose->val[j]);
+      }
       _no3_layer1->val[j] = DIN_pool_layer1 / (theta1 * depth1);
       _no3_layer2->val[j] = DIN_pool_layer2 / (theta2 * depth2);
       _no3_layer3->val[j] = DIN_pool_layer3 / (theta3 * depth3);

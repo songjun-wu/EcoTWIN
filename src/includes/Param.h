@@ -83,6 +83,7 @@ class Param {
   vector<double> lat_to_Chn_GW;
   vector<double> interfExp;
   vector<double> GWfExp;
+  vector<double> bedrock_leakage_ratio;
   vector<double> Manningn;
   vector<double> Echan_alpha;
   vector<double> irrigation_FC_thres;
@@ -162,6 +163,7 @@ class Param {
   svector *_Ks_GW;  // The reference conductivity of GW zone for interflow routing [m/s]
   svector *_lat_to_Chn_GW;  // The ratio between conductivities of lateral flow and channel recharge in GW zone [-]
   svector *_GWfExp;  // The exponetial weighting parameter for GW flow routing towards channel  [-]
+  svector *_bedrock_leakage_ratio;  // The ratio of bedrock leakage to GW flow [-]
   svector *_Manningn;  // Manning N for stream routing [-], only needed when opt_routQ = 1
   svector *_Echan_alpha;  // correction factor in Priestley-Taylor equation [-], only needed when opt_chanE = 1 or 2
   svector *_irrigation_coeff;  // Irrigation coefficient to determine the actual water demand from water deficit [-], only needed when irrigation is enabled
