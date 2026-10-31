@@ -96,13 +96,13 @@ int Basin::Mixing_routing_tracking(Control &ctrl, Param &par){
 
     // Isotopes
     if (ctrl.opt_tracking_isotope==1) {
-        Solve_routing_transport(ctrl, par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_vadose, *_d18o_GW, *_d18o_chanS);
+        Solve_routing_transport(ctrl, par, *_d18o_pond, *_d18o_layer1, *_d18o_layer2, *_d18o_layer3, *_d18o_vadose, *_d18o_GW, *_d18o_chanS, *_tmp_no_use);
     }
             
 
     // Cumulative Age
     if (ctrl.opt_tracking_age==1) {
-        Solve_routing_transport(ctrl, par, *_age_pond, *_age_layer1, *_age_layer2, *_age_layer3, *_age_vadose, *_age_GW, *_age_chanS);
+        Solve_routing_transport(ctrl, par, *_age_pond, *_age_layer1, *_age_layer2, *_age_layer3, *_age_vadose, *_age_GW, *_age_chanS, *_tmp_no_use);
     }
 
     

@@ -33,6 +33,8 @@ int Basin::Parameter_correction(Control &ctrl, Param &par){
     for (unsigned int j = 0; j < _sortedGrid.row.size(); j++) {
       par._plant_wood_CP_max->val[j] *= _plant_wood_CP_forest_max->val[j];
    }
+   // Correct the wood carbon content to the maximum allowed value during land use transformation
+   _plant_wood_CP->lower_than(*par._plant_wood_CP_max);  
   }
 
 

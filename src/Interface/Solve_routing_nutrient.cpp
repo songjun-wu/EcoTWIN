@@ -95,10 +95,10 @@ int Basin::Solve_routing_nutrient(Control &ctrl, Param &par){
     
 
     if (ctrl.opt_carbon_sim==1){
-      Solve_routing_transport(ctrl, par, *_doc_pond, *_doc_layer1, *_doc_layer2, *_doc_layer3, *_doc_vadose, *_doc_GW, *_doc_chanS);
+      Solve_routing_transport(ctrl, par, *_doc_pond, *_doc_layer1, *_doc_layer2, *_doc_layer3, *_doc_vadose, *_doc_GW, *_doc_chanS, *_leaching_mass_doc);
     }
     if (ctrl.opt_nitrogen_sim==1){
-      Solve_routing_transport(ctrl, par, *_no3_pond, *_no3_layer1, *_no3_layer2, *_no3_layer3, *_no3_vadose, *_no3_GW, *_no3_chanS);
+      Solve_routing_transport(ctrl, par, *_no3_pond, *_no3_layer1, *_no3_layer2, *_no3_layer3, *_no3_vadose, *_no3_GW, *_no3_chanS, *_leaching_mass_no3);
       //Solve_routing_transport(ctrl, par, *_don_pond, *_don_layer1, *_don_layer2, *_don_layer3, *_don_vadose, *_don_GW, *_don_chanS);
     }
     

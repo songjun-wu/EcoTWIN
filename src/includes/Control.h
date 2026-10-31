@@ -43,12 +43,12 @@ struct Control{
   /* Settings */ 
   long Simul_start;
   long Simul_end;
-  int Simul_tstep;
-  int Clim_input_tstep;
-  int Ground_input_tstep;
-  int Management_input_tstep;
-  int Report_interval;
-  int Update_interval;
+  long Simul_tstep;
+  long Clim_input_tstep;
+  long Ground_input_tstep;
+  long Management_input_tstep;
+  long Report_interval;
+  long Update_interval;
   int num_category;  // Number of categories for parameterisation
   int rock_category;  // Category of rock landscapes
   /* end of Settings */

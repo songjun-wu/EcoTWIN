@@ -303,9 +303,9 @@ int Basin::Soil_proporty(Control &ctrl, Param &par){
             _theta1->val[j] = max(_theta1->val[j], _thetaWP1->val[j]);
             _theta2->val[j] = max(_theta2->val[j], _thetaWP2->val[j]);
             _theta3->val[j] = max(_theta3->val[j], _thetaWP3->val[j]);
-            _theta1->val[j] = min(_theta1->val[j], _thetaFC1->val[j]);
-            _theta2->val[j] = min(_theta2->val[j], _thetaFC2->val[j]);
-            _theta3->val[j] = min(_theta3->val[j], _thetaFC3->val[j]);
+            _theta1->val[j] = min(_theta1->val[j], _thetaS1->val[j]);
+            _theta2->val[j] = min(_theta2->val[j], _thetaS2->val[j]);
+            _theta3->val[j] = min(_theta3->val[j], _thetaS3->val[j]);
         }
     }
     

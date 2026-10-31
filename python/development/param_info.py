@@ -124,11 +124,13 @@ class Param:
     # === Evapotranspiration === 
     #ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.8]*Info.N_landuse, 'max':[0.95, 0.95, 0.95, 0.999, 0.92, 0.81, 0.95], 'fix_value':None,} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
     ref['froot_coeff']   = {'type':'landuse',   'log':1, 'file':'froot_coeff',   'min':[0.91]*Info.N_landuse, 'max':[0.98]*Info.N_landuse, 'fix_value':[0.95, 0.95, 0.94, 0.965, 0.95, 0.95, 0.95],} # The higher the more deeper roots [max for crops: 0.95, for forest: 0.999]
-    ref['ET_weight'] = {'type':'global_soil',   'log':0, 'file':'ET_weight',   'min':[0.5], 'max':[1.5], 'fix_value':None, 'weights':[1,1,1,1,1,0.8,1],} # Evaporation and Transpiration should be adjusted due to potential underestimation of daily simulaton compared to integral of hourly simulatont [-]
+    ref['ET_weight'] = {'type':'global_soil',   'log':0, 'file':'ET_weight',   'min':[0.1], 'max':[1.5], 'fix_value':None, 'weights':[1,1,1,1,1,0.8,1],} # Evaporation and Transpiration should be adjusted due to potential underestimation of daily simulaton compared to integral of hourly simulatont [-]
 
     # === GW recharge === 
     ref['perc_vadose_coeff']   = {'type':'spatial_distributed_global',   'log':1, 'file':'perc_vadose_coeff',   'min':[1e-3], 'max':[1], 'fix_value':None,} # Coefficient parameter for GW recharge [1e-5, 1]
     ref['init_GW'] = {'type':'global',   'log':0, 'file':'init_GW',   'min':[1], 'max':[50], 'fix_value':None,} # Initial GW storage in m
+    ref['bedrock_leakage_ratio'] = {'type':'global',   'log':0, 'file':'bedrock_leakage_ratio',   'min':[0], 'max':[1], 'fix_value':[5e-4],} # The ratio of bedrock leakage to GW flow [-]
+
 
     # === Routing === 
     ref['pOvf_toChn']   = {'type':'global',   'log':1, 'file':'pOvf_toChn',   'min':[1e-3], 'max':[1], 'fix_value':[1],}  # Proportion of overland flow routed to stream (corrected by channel lenght and cell size) [1e-3, 1]

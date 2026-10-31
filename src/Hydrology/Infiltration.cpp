@@ -91,13 +91,16 @@ int Basin::Infiltration_1(Control &ctrl, Param &par) {
 
         deltaF = deltaF > input ? input : deltaF;
         double fraction_preferential_flow = par._preferential_flow_coeff->val[j];
-        _pond->val[j] -= deltaF;
+        double available_storage = max(0.0, (_thetaS1->val[j] - theta1) * depth1);
+        
         // Infiltration to soil matrix
-        _infilt->val[j] = deltaF * (1 - fraction_preferential_flow);
+        _infilt->val[j] = min(deltaF * (1 - fraction_preferential_flow), available_storage);
         _theta1->val[j] += _infilt->val[j] / depth1;
         // Preferential flow due to exstenice of macropores in rock landscapes
         _preferential_flow->val[j] = deltaF * fraction_preferential_flow;
         _vadose->val[j] += _preferential_flow->val[j];
+        // Update ponding water
+        _pond->val[j] -= _infilt->val[j] + _preferential_flow->val[j];
 
         
              

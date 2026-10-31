@@ -19,7 +19,8 @@
 
 int Basin::Solve_routing_transport(Control &ctrl, Param &par, \
                                    svector &_sv_conc_pond, svector &_sv_conc_layer1, svector &_sv_conc_layer2, svector &_sv_conc_layer3, \
-                                   svector &_sv_conc_vadose, svector &_sv_conc_GW, svector &_sv_conc_chanS){
+                                   svector &_sv_conc_vadose, svector &_sv_conc_GW, svector &_sv_conc_chanS,
+                                   svector &sv_leaching_mass){
 
     /* Update the storages for routing flux mixing
     ### Ponding water:
@@ -146,6 +147,9 @@ int Basin::Solve_routing_transport(Control &ctrl, Param &par, \
             Mixing_full(_vadose_old->val[j], _sv_conc_vadose.val[j], rPerc3, _sv_conc_layer3.val[j]); 
             // GW mixing with repercolation from vadose
             if (ctrl.opt_baseflow_mixing == 0) Mixing_full(_GW_old->val[j], _sv_conc_GW.val[j], rPerc_vadose, _sv_conc_vadose.val[j]);
+
+            // Summary leaching mass
+            sv_leaching_mass.val[j] += rPerc3 * _sv_conc_layer3.val[j];
         }
 
 
